@@ -4,7 +4,7 @@ import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,
 import {createMultiplayer} from './multiplayer.js?v=20260913-heroes1';
 import {createRewards} from './rewards.js?v=20260913-heroes1';
 import {portrait} from './characters.js?v=20260913-heroes1';
-import {setupChildUI} from './child-ui.js?v=20260913-ipad1';
+import {setupChildUI} from './child-ui.js?v=20260913-family1';
 import {setupCozyUI} from './cozy-ui.js?v=20260913-heroes1';
 import {createStudentAuth} from './student-auth.js?v=20260913-tutor1';
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
@@ -21,7 +21,7 @@ const memory={};
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return memory[key]??fallback;}}
 function write(key,value){memory[key]=value;try{localStorage.setItem(key,JSON.stringify(value));return true;}catch{return false;}}
 let pending=read('zhuyin.pending.v2',[]);if(!Array.isArray(pending))pending=[];
-$('app').innerHTML=`<header><a class="brand" href="./${demo?'?demo=1':''}"><img class="brand-app-icon" src="assets/icons/apple-touch-icon-v1.png" alt="">注音探險島</a><div class="top-actions"><span id="connection" role="status">讀取老師任務…</span><a href="teacher.html">老師專區 ↗</a></div></header>
+$('app').innerHTML=`<header><a class="brand" href="./${demo?'?demo=1':''}"><img class="brand-app-icon" src="assets/icons/apple-touch-icon-v1.png" alt="">注音探險島</a><div class="top-actions"><span id="connection" role="status">讀取老師任務…</span><a href="${demo?'teacher.html':'parents.html'}">${demo?'老師專區':'親子專區'} ↗</a></div></header>
 <main id="home"><section class="hero"><div><p class="eyebrow">每天一點點，聲音變熟悉</p><h1>準備好了嗎？<br>一起去<span>聲音探險！</span></h1><p>仔細聽、動手拼。<br>每一次練習，都是一次新的發現。</p><div id="learned" class="learned"></div></div><div class="island" aria-hidden="true"><div class="cloud"></div><span class="sun">✦</span><div class="mountain back"></div><div class="mountain front"></div><div class="ground"></div><div class="tree t1">♠</div><div class="tree t2">♠</div><div class="mascot"><span>•ᴗ•</span><b>ㄅ</b></div><span class="floating f1">ㄧ</span><span class="floating f2">ㄠ</span></div></section>
 <aside id="demo-note" class="notice" ${demo?'':'hidden'}>老師試玩：不傳送成績。拼音為待確認的合成示範音。<button id="demo-basic" class="text-button">第一週六音</button><button id="demo-expanded" class="text-button">含結合韻</button></aside>
 <section class="setup"><label>我是 <select id="seat" aria-label="選擇座號"><option value="">選擇座號</option></select></label><div class="segmented" aria-label="遊玩方式"><button id="solo" class="selected" aria-pressed="true">一人闖關</button><button id="duo" aria-pressed="false">兩人輪流</button></div><label id="partner-label" hidden>夥伴 <select id="partner" aria-label="夥伴座號"></select></label><span id="collection" class="small"></span></section>

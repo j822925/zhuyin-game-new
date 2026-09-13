@@ -3,7 +3,7 @@ export function setupChildUI({demo,onPreviewBonus,onBeforeVoice}){
  const hideText=node=>{for(const child of node.childNodes)if(child.nodeType===Node.TEXT_NODE)child.textContent='';};
  const icon=(id,text,label)=>{if($(id)){$(id).textContent=text;$(id).setAttribute('aria-label',label);}};
  const heading=document.querySelector('.hero h1');heading.textContent='👂 🎵';heading.setAttribute('aria-label','一起去聲音探險');
- document.querySelector('.top-actions a').textContent='⚙';document.querySelector('.top-actions a').setAttribute('aria-label','老師專區');
+ document.querySelector('.top-actions a').textContent='⚙';document.querySelector('.top-actions a').setAttribute('aria-label',demo?'老師專區':'親子專區');
  for(const [id,symbol,label] of [['solo','👤','一人練習'],['duo','🐰 ⇄ 🦊','雙人輪流練習'],['race','⚡','雙人搶答'],['leave','⌂','回到島嶼'],['reload','⟳','重新讀取老師任務'],['again','↻','再玩一次'],['back-home','⌂','回到島嶼'],['check-spelling','✓','確認拼音'],['race-leave','⌂','回到島嶼'],['race-fullscreen','⛶','全螢幕']])icon(id,symbol,label);
  for(const select of [$('seat'),$('partner')]){hideText(select.parentElement);select.before(document.createTextNode(select.id==='seat'?'🔢 ':'＋ '));}
  const demoNote=$('demo-note');if(demo){const details=document.createElement('details');details.className='teacher-demo-controls';const summary=document.createElement('summary');summary.textContent='⚙ 老師試玩設定';details.append(summary);demoNote.before(details);details.append(demoNote);const bonus=document.createElement('button');bonus.className='text-button';bonus.textContent='試玩補充：20 星星＋50 糖果';bonus.onclick=onPreviewBonus;demoNote.append(bonus);}
