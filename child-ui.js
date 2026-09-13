@@ -6,7 +6,6 @@ export function setupChildUI({demo,onPreviewBonus,onBeforeVoice}){
  document.querySelector('.top-actions a').textContent='⚙';document.querySelector('.top-actions a').setAttribute('aria-label','老師專區');
  for(const [id,symbol,label] of [['solo','👤','一人練習'],['duo','🐰 ⇄ 🦊','雙人輪流練習'],['race','⚡','雙人搶答'],['leave','⌂','回到島嶼'],['reload','⟳','重新讀取老師任務'],['again','↻','再玩一次'],['back-home','⌂','回到島嶼'],['check-spelling','✓','確認拼音'],['race-leave','⌂','回到島嶼'],['race-fullscreen','⛶','全螢幕']])icon(id,symbol,label);
  for(const select of [$('seat'),$('partner')]){hideText(select.parentElement);select.before(document.createTextNode(select.id==='seat'?'🔢 ':'＋ '));}
- const difficulty=$('difficulty');for(const option of difficulty.options)option.textContent=option.value+' ●';
  const demoNote=$('demo-note');if(demo){const details=document.createElement('details');details.className='teacher-demo-controls';const summary=document.createElement('summary');summary.textContent='⚙ 老師試玩設定';details.append(summary);demoNote.before(details);details.append(demoNote);const bonus=document.createElement('button');bonus.className='text-button';bonus.textContent='試玩補充：20 星星＋50 糖果';bonus.onclick=onPreviewBonus;demoNote.append(bonus);}
  document.querySelector('.result-card h1').textContent='🎉';
  document.querySelectorAll('.slots+p').forEach(p=>p.classList.add('sr-only'));

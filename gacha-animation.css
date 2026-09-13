@@ -1,0 +1,9 @@
+.gacha-reveal .capsule{position:relative;display:block;width:112px;height:130px;margin:auto;filter:drop-shadow(0 8px 5px #53745126)}
+.capsule-top,.capsule-bottom{position:absolute;left:0;width:112px;box-sizing:border-box;border:4px solid #6b957c;transition:transform .38s ease,opacity .38s ease}
+.capsule-top{top:0;height:67px;border-radius:60px 60px 10px 10px;background:linear-gradient(125deg,#fffdf0,#f5ce85)}
+.capsule-bottom{top:63px;height:67px;border-radius:10px 10px 60px 60px;background:linear-gradient(125deg,#e7f0d6,#a5c99b)}
+.capsule-star{position:absolute;top:36px;left:34px;font-size:42px;color:#de9646;transition:opacity .3s}
+.gacha-shaking .capsule{animation:capsule-wiggle .6s ease-in-out 5}
+.gacha-opening .capsule-top{transform:translate(-12px,-28px) rotate(-18deg);opacity:0}.gacha-opening .capsule-bottom{transform:translate(12px,20px) rotate(14deg);opacity:0}.gacha-opening .capsule-star{opacity:0}
+@keyframes capsule-wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg) translateY(-3px)}75%{transform:rotate(9deg) translateY(-3px)}}
+@media(prefers-reduced-motion:reduce){.gacha-shaking .capsule,.gacha-reveal.reveal-pop{animation:none}.capsule-top,.capsule-bottom,.capsule-star{transition:none}}

@@ -1,0 +1,7 @@
+.teacher-player{position:sticky;top:0;z-index:10;background:#fff8e8;border:2px solid #dddfc7;border-radius:18px;padding:8px 16px;margin:10px auto;max-width:900px;display:flex;align-items:center;gap:16px;box-shadow:0 3px 9px #38594915}
+.teacher-player span{flex:1;font-size:16px;min-width:0}.teacher-player audio{width:280px;max-width:55%;height:44px}
+.sample-play{display:block;width:100%;min-height:56px;padding:12px;border:2px solid #d2ddcb;border-radius:16px;background:#fffaf0;color:#315e4c;font:inherit;cursor:pointer}
+.sample-play[aria-pressed=true]{background:#e1eed7;border-color:#6d9363}.sample-play:focus-visible{outline:3px solid #d88b3c;outline-offset:2px}
+.sample-pages{display:flex;align-items:center;justify-content:center;gap:18px;margin:16px 0}.sample-pages button{min-height:48px;padding:8px 16px;border-radius:14px;border:1px solid #aec4b2;background:#edf4e6;font:inherit;color:#315e4c}.sample-pages button:disabled{opacity:.4}
+.teacher-page #syllables,.teacher-page #compounds,.teacher-page #base{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}.teacher-page .audio-item details{margin-top:8px}.teacher-page .audio-item summary{cursor:pointer;min-height:36px}
+@media(max-width:600px){.teacher-player{gap:8px;margin:6px}.teacher-player span{font-size:14px}.sample-pages{gap:8px}.sample-pages button{padding:8px}}

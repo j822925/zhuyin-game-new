@@ -1,5 +1,6 @@
 import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20260913-tutor1';
 import {cappedRoundAward,rewardParticipants,taipeiDay} from './learning-rewards.js?v=20260913-tutor1';
+import {startGachaAnimation} from './gacha-animation.js?v=20260913-ipad1';
 export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onChange}){
  const $=id=>document.getElementById(id),cache=new Map();let category='animal',busy=false,activeSeat='',previewPersistent=true,revealed=false;
  function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return fallback;}}
@@ -15,6 +16,7 @@ export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onCh
  $('exchange-cancel').onclick=()=>exchange.close();exchange.addEventListener('cancel',e=>{if(busy)e.preventDefault();});
  function render(){const seat=activeSeat||getSeat(),w=wallet(seat);$('wallet-stars').textContent='★ '+w.stars;$('wallet-candies').textContent='🍬 '+(w.candies||0);button.querySelector('span').textContent='★ '+w.stars;
   $('pool-animal').setAttribute('aria-pressed',String(category==='animal'));$('pool-fairy').setAttribute('aria-pressed',String(category==='fairy'));
+  $('pool-animal').disabled=busy;$('pool-fairy').disabled=busy;$('collection-close').disabled=busy;
   const available=CHARACTERS.filter(c=>c.category===category&&c.enabled!==false);
   $('draw-character').disabled=busy||(!revealed&&(w.stars<DRAW_COST||!available.length||(!demo&&!getConfig()?.rewardsWrites)));
   $('draw-character').textContent=revealed?'✓':'★ '+DRAW_COST+' → 🥚';$('draw-character').setAttribute('aria-label',revealed?'收好角色，回到轉蛋':'花五顆星星抽角色，重複得一顆糖果');
@@ -31,6 +33,7 @@ export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onCh
  for(const value of ['animal','fairy'])$('pool-'+value).onclick=()=>{if(busy)return;category=value;revealed=false;$('gacha-reveal').textContent='🥚';$('gacha-message').textContent='';render();};
  $('draw-character').onclick=async()=>{
   if(busy||!activeSeat)return;if(revealed){revealed=false;$('gacha-reveal').textContent='🥚';render();return;}busy=true;render();$('gacha-message').textContent='';
+  const animation=startGachaAnimation($('gacha-reveal'));
   try{
    let c,duplicate=false;
    if(demo){const result=drawCharacter(wallet(activeSeat),category);if(result.error)return;cache.set(activeSeat,result.wallet);store(key(activeSeat),result.wallet);c=result.character;duplicate=result.duplicate;}
@@ -43,10 +46,11 @@ export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onCh
     if(!status.saved)throw new Error('unconfirmed');
     store(requestKey,null);c=CHARACTERS.find(c=>c.id===status.character);duplicate=status.duplicate===true;await refresh();
    }
-   if(c){revealed=true;$('gacha-reveal').innerHTML=portrait(c)+(duplicate?'<strong class="candy-bonus">🍬 +1</strong>':'<strong class="candy-bonus">✨</strong>');$('gacha-reveal').classList.remove('reveal-pop');void $('gacha-reveal').offsetWidth;$('gacha-reveal').classList.add('reveal-pop');}
+   if(!c)throw new Error('missing-character');
+   await animation.open();animation.finish();revealed=true;$('gacha-reveal').innerHTML=portrait(c)+(duplicate?'<strong class="candy-bonus">🍬 +1</strong>':'<strong class="candy-bonus">✨</strong>');$('gacha-reveal').classList.remove('reveal-pop');void $('gacha-reveal').offsetWidth;$('gacha-reveal').classList.add('reveal-pop');
    onChange?.();if(!previewPersistent)$('gacha-message').textContent='老師提醒：此瀏覽器無法保存試玩角色，關閉後可能遺失。';
   }catch{$('gacha-message').textContent='尚未確認抽取結果，請保持連線再試一次，不會重複扣星星。';}
-  finally{busy=false;render();}
+  finally{animation.finish();if(!revealed)$('gacha-reveal').textContent='🥚';busy=false;render();}
  };
  $('exchange-confirm').onclick=async()=>{
   if(busy||!exchangeId)return;busy=true;$('exchange-confirm').disabled=true;$('exchange-cancel').disabled=true;

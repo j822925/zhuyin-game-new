@@ -2,9 +2,9 @@ import {createLittleTeacher} from './little-teacher.js?v=20260913-tutor1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260913-tutor1';
 import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round} from './core.js?v=20260913-tutor1';
 import {createMultiplayer} from './multiplayer.js?v=20260913-tutor1';
-import {createRewards} from './rewards.js?v=20260913-tutor1';
+import {createRewards} from './rewards.js?v=20260913-ipad1';
 import {portrait} from './characters.js?v=20260913-tutor1';
-import {setupChildUI} from './child-ui.js?v=20260913-tutor1';
+import {setupChildUI} from './child-ui.js?v=20260913-ipad1';
 import {setupCozyUI} from './cozy-ui.js?v=20260913-tutor1';
 import {createStudentAuth} from './student-auth.js?v=20260913-tutor1';
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
@@ -14,7 +14,8 @@ const names={single:'聲音森林',spelling:'拼音工坊'};
 const $=id=>document.getElementById(id);
 const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const audio=new Audio();audio.preload='auto';
-let config,catalog=[],duo=false,mode='single',rounds=[],active=0,currentPool=[],seats=[],choices=3,selected={},audioReady=false,session=0,saving=false,latestIds=[];
+const choices=4;
+let config,catalog=[],duo=false,mode='single',rounds=[],active=0,currentPool=[],seats=[],selected={},audioReady=false,session=0,saving=false,latestIds=[];
 let playStyle='solo';
 const memory={};
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return memory[key]??fallback;}}
@@ -24,7 +25,7 @@ $('app').innerHTML=`<header><a class="brand" href="./${demo?'?demo=1':''}"><img 
 <main id="home"><section class="hero"><div><p class="eyebrow">每天一點點，聲音變熟悉</p><h1>準備好了嗎？<br>一起去<span>聲音探險！</span></h1><p>仔細聽、動手拼。<br>每一次練習，都是一次新的發現。</p><div id="learned" class="learned"></div></div><div class="island" aria-hidden="true"><div class="cloud"></div><span class="sun">✦</span><div class="mountain back"></div><div class="mountain front"></div><div class="ground"></div><div class="tree t1">♠</div><div class="tree t2">♠</div><div class="mascot"><span>•ᴗ•</span><b>ㄅ</b></div><span class="floating f1">ㄧ</span><span class="floating f2">ㄠ</span></div></section>
 <aside id="demo-note" class="notice" ${demo?'':'hidden'}>老師試玩：不傳送成績。拼音為待確認的合成示範音。<button id="demo-basic" class="text-button">第一週六音</button><button id="demo-expanded" class="text-button">含結合韻</button></aside>
 <section class="setup"><label>我是 <select id="seat" aria-label="選擇座號"><option value="">選擇座號</option></select></label><div class="segmented" aria-label="遊玩方式"><button id="solo" class="selected" aria-pressed="true">一人闖關</button><button id="duo" aria-pressed="false">兩人輪流</button></div><label id="partner-label" hidden>夥伴 <select id="partner" aria-label="夥伴座號"></select></label><span id="collection" class="small"></span></section>
-<section class="section-heading"><div><p class="eyebrow">選一座島，練一種本領</p><h2>今天想去哪裡？</h2></div><label class="difficulty">選項難度 <select id="difficulty"><option value="2">暖身 · 2 選 1</option><option value="3" selected>探險 · 3 選 1</option><option value="4">挑戰 · 4 選 1</option></select></label></section>
+<section class="section-heading"><div><p class="eyebrow">選一座島，練一種本領</p><h2>今天想去哪裡？</h2></div></section>
 <section class="worlds" aria-label="選擇關卡">${[['single','forest','♧','ㄅ','01 · 聽音辨識','聽一聽，找出正確的注音。'],['spelling','workshop','⌂','ㄅ + ㄠ','02 · 拼音練習','點選或拖曳，拼出聽到的聲音。']].map(([id,theme,art,symbol,subtitle,description])=>`<button class="world ${theme}" data-mode="${id}" disabled><span class="world-art">${art}<i>${symbol}</i></span><small>${subtitle}</small><h3>${names[id]}</h3><p>${description}</p><span class="world-status">讀取中…</span></button>`).join('')}</section><p id="home-message" class="message" role="status"></p><div class="home-foot"><span>不搶快，也能很厲害。先聽清楚，再慢慢選。</span><button id="reload" class="text-button">重新讀取老師任務</button></div></main>
 <main id="game" hidden><div class="game-top"><button id="leave" class="text-button">← 回島嶼</button><span id="world-title"></span><span id="question-number"></span></div><div class="progress-track"><div id="progress-fill"></div></div><div id="player-turn" class="player-turn"></div><section class="question-card"><p id="instruction" class="instruction"></p><button id="listen" class="listen" aria-label="播放題目聲音">♪<span>再聽一次</span></button><p id="audio-status" class="audio-status" role="status"></p><div id="options" class="options"></div><div id="spelling" hidden><div class="slots"><button class="slot" data-slot="initial" aria-label="聲符位置">聲符</button><span class="spelling-tone" hidden></span><button class="slot" data-slot="final" aria-label="韻符或結合韻位置">韻符</button></div><p class="small">點一下積木，或把它拖到上方的位置</p><div id="tiles" class="tiles"></div><button id="check-spelling" class="primary" disabled>拼好了！</button></div><p id="feedback" class="feedback" aria-live="polite"></p><button id="next" class="primary next" hidden>下一題 →</button></section><p class="game-hint">選錯了也沒關係，再聽一次就好。</p></main>
 <main id="result" hidden><section class="result-card"><div class="celebration" aria-hidden="true">✦</div><p class="eyebrow">今天又前進了一步</p><h1>探險完成！</h1><div id="result-details"></div><p id="save-status" class="small" role="status"></p><button id="retry-save" class="text-button" hidden>重新傳送紀錄</button><div class="result-actions"><button id="again" class="primary">再練一次</button><button id="back-home" class="secondary">回到島嶼</button></div></section></main>
@@ -74,9 +75,9 @@ async function start(id){
  if(playStyle==='race'){
   if(currentPool.length<2){$('home-message').textContent='搶答至少需要兩種已教聲音。請先用單人或輪流練習。';return;}
   if(!demo&&!config.raceWrites){$('home-message').textContent='老師提醒：搶答紀錄需要新版後台，目前可先在老師試玩體驗。';return;}
-  audio.pause();session++;latestIds=[];teamUI.start({seats,mode,questionPool:currentPool,questions:config.questions,choices:Number($('difficulty').value)});return;
+  audio.pause();session++;latestIds=[];teamUI.start({seats,mode,questionPool:currentPool,questions:config.questions,choices});return;
  }
- session++;active=0;choices=Number($('difficulty').value);rounds=seats.map(()=>new Round(questionDeck(currentPool,config.questions)));latestIds=[];
+ session++;active=0;rounds=seats.map(()=>new Round(questionDeck(currentPool,config.questions)));latestIds=[];
  screen('game');renderQuestion();
 }
 function setAnswerEnabled(enabled){enabled=enabled&&!tutor.open;document.querySelectorAll('.option,.tile,.slot').forEach(b=>b.disabled=!enabled);$('check-spelling').disabled=!enabled||!selected.initial||!selected.final;tutorButton.disabled=!rounds[active]?.canUseTutor||tutor.open;}
