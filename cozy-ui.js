@@ -1,4 +1,4 @@
-import {CHARACTERS,portrait} from './characters.js?v=20260913-tutor1';
+import {CHARACTERS,portrait} from './characters.js?v=20260913-heroes1';
 export function setupCozyUI(){
  document.body.classList.add('cozy-ui');
  document.querySelector('.top-actions').append(document.getElementById('voice-help'));
@@ -11,5 +11,5 @@ export function setupCozyUI(){
   const card=document.querySelector(`[data-mode="${mode}"]`);card.setAttribute('aria-label',({single:'聽音辨識：聲符、韻符與結合韻',spelling:'拼音練習'})[mode]);
   card.querySelector('.world-art').innerHTML=portrait(character(id))+`<i>${symbol}</i>`;
  }
- for(const [id,characterId] of [['pool-animal','fox'],['pool-fairy','moon']])document.getElementById(id).innerHTML=portrait(character(characterId));
+ for(const [id,characterId] of [['pool-animal','fox'],['pool-fairy','moon'],['pool-hero','swordsman']])document.getElementById(id).innerHTML=portrait(character(characterId));
 }

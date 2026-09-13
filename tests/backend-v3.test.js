@@ -9,6 +9,17 @@ function backend(){
  return {tables,advance:ms=>now+=ms,get:p=>p.api==='wallet'?ctx.wallet_(String(p.seat).padStart(2,'0')):p.api==='status'?{saved:ctx.findRound_(sheet('過關紀錄'),p.id)||ctx.findRound_(sheet('測試紀錄'),p.id)}:p.api==='draw-status'?{character:tables['角色交易'].find(r=>r[5]===p.id)?.[3]}:JSON.parse(ctx.doGet({parameter:p}).text),post:d=>JSON.parse(ctx.doPost({postData:{contents:JSON.stringify(d)}}).text)};
 }
 const practice=(seat='01')=>({roundId:crypto.randomUUID(),seat,total:10,mistakes:0,mode:'single',results:Array.from({length:10},()=>({target:'ㄅ',firstCorrect:true,errors:0,seconds:1}))});
+test('冒險小隊可抽取、重複得糖果、重送不重扣；可用糖果指定兌換',()=>{
+ const b=backend();b.tables['角色交易']=[['時間','座號'],[new Date(),1,'fixture','rabbit',15,'fixture',50,true,'']];
+ const draw={kind:'gacha',roundId:crypto.randomUUID(),seat:'01',category:'hero'};
+ assert.equal(b.post(draw).character,'swordsman');assert.equal(b.post(draw).duplicateRequest,true);
+ assert.equal(b.post({...draw,roundId:crypto.randomUUID()}).duplicate,true);
+ let w=b.get({api:'wallet',seat:'01'});assert.equal(w.stars,5);assert.equal(w.candies,51);assert.equal(w.owned.filter(id=>id==='swordsman').length,1);
+ const redeem={kind:'redeem',roundId:crypto.randomUUID(),seat:'01',character:'astronaut'};
+ assert.equal(b.post(redeem).saved,true);assert.equal(b.post(redeem).duplicateRequest,true);
+ w=b.get({api:'wallet',seat:'01'});assert.equal(w.candies,1);assert.ok(w.owned.includes('astronaut'));assert.deepEqual([...w.owned].slice(0,2),['rabbit','fox']);
+ assert.equal(b.get({api:'config'}).heroWrites,true);
+});
 test('小老師延長回合全對仍有三顆星，第二回合毅力一顆，重送不重領',()=>{const b=backend();for(let n=0;n<2;n++){const p=practice();p.mode='spelling';p.total=11;p.results.push({...p.results[0]});p.results[0].tutorUsed=true;p.results[2].tutorReviewOf=1;const out=b.post(p);assert.equal(out.saved,true);assert.equal(out.awards[0].perfectStars,3);assert.equal(out.awards[0].perseveranceStars,n);assert.equal(b.post(p).duplicate,true);}assert.equal(b.get({api:'wallet',seat:'01'}).stars,7);assert.ok(JSON.stringify(b.tables['過關紀錄'][1]).includes('tutorUsed'));});
 test('末題求助十二題正常記錄，未完成複習不能領取星星',()=>{const b=backend(),p=practice();p.mode='spelling';p.total=12;p.results.push({...p.results[0],tutorSpacer:true},{...p.results[0],tutorReviewOf:10});p.results[9].tutorUsed=true;assert.equal(b.post(p).awards[0].stars,3);const bad=structuredClone(p);bad.roundId=crypto.randomUUID();bad.results[11].target='ㄆ';assert.equal(b.post(bad).saved,false);});
 test('輪流加題不會靠更多正確題數取得比賽優勢',()=>{const b=backend(),a=practice('01'),z=practice('15');a.mode=z.mode='spelling';a.total=11;a.results.push({...a.results[0]});a.results[0].tutorUsed=true;a.results[2].tutorReviewOf=1;const c={kind:'turn',seats:['01','15'],rounds:[a,z].map(({total,mistakes,results})=>({total,mistakes,results}))};a.competition=z.competition=c;assert.equal(b.post(a).awards[0].stars,1);assert.equal(b.post(z).awards[0].stars,1);});

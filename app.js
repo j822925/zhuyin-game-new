@@ -1,11 +1,11 @@
 import {createLittleTeacher} from './little-teacher.js?v=20260913-tutor1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260913-tutor1';
-import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round} from './core.js?v=20260913-tutor1';
-import {createMultiplayer} from './multiplayer.js?v=20260913-tutor1';
-import {createRewards} from './rewards.js?v=20260913-ipad1';
-import {portrait} from './characters.js?v=20260913-tutor1';
+import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round} from './core.js?v=20260913-heroes1';
+import {createMultiplayer} from './multiplayer.js?v=20260913-heroes1';
+import {createRewards} from './rewards.js?v=20260913-heroes1';
+import {portrait} from './characters.js?v=20260913-heroes1';
 import {setupChildUI} from './child-ui.js?v=20260913-ipad1';
-import {setupCozyUI} from './cozy-ui.js?v=20260913-tutor1';
+import {setupCozyUI} from './cozy-ui.js?v=20260913-heroes1';
 import {createStudentAuth} from './student-auth.js?v=20260913-tutor1';
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
 const API='https://script.google.com/macros/s/AKfycbzthN7YNMjzy_kBbKSOXMb0MLeTsy3hjk_ILn0Av7iHKaBEWjxAKOjL06SMfDQan8ac/exec';

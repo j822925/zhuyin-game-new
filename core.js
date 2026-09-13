@@ -10,7 +10,7 @@ export function normalizeConfig(input) {
   const symbols = cleanSymbols(legacy ? input : input?.symbols);
   const compounds = cleanSymbols(legacy ? input : input?.compounds).filter(x=>COMPOUNDS.includes(x));
   const seats = legacy ? Array.from({length:20},(_,i)=>String(i+1).padStart(2,'0')) : (input?.seats ?? []);
-  return {symbols:symbols.filter(x=>BASE.includes(x)), compounds:[...new Set([...symbols.filter(x=>COMPOUNDS.includes(x)),...compounds])], seats: [...new Set(seats.map(String).filter(x=>/^\d{1,3}$/.test(x)).map(x=>x.padStart(2,'0')))], questions:QUESTIONS_PER_ROUND, tutorWrites:input?.tutorWrites===true, authRequired:input?.authRequired===true,verifiedWrites:input?.version>=2, raceWrites:input?.raceWrites===true, rewardsWrites:input?.rewardsWrites===true, spellingApproved:input?.spellingApproved===true, legacy};
+  return {symbols:symbols.filter(x=>BASE.includes(x)), compounds:[...new Set([...symbols.filter(x=>COMPOUNDS.includes(x)),...compounds])], seats: [...new Set(seats.map(String).filter(x=>/^\d{1,3}$/.test(x)).map(x=>x.padStart(2,'0')))], questions:QUESTIONS_PER_ROUND, tutorWrites:input?.tutorWrites===true, heroWrites:input?.heroWrites===true, authRequired:input?.authRequired===true,verifiedWrites:input?.version>=2, raceWrites:input?.raceWrites===true, rewardsWrites:input?.rewardsWrites===true, spellingApproved:input?.spellingApproved===true, legacy};
 }
 export function createCatalog(rows) {
   return rows.map(([initial,final,word,tone=1,meta={}],index)=>{

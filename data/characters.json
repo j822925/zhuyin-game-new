@@ -218,5 +218,115 @@
     "image": "assets/characters/cozy-v1/lavender.png",
     "starter": false,
     "enabled": true
+  },
+  {
+    "id": "swordsman",
+    "name": "蒼葉劍士",
+    "category": "hero",
+    "color": "#337f87",
+    "light": "#fff4dc",
+    "emoji": "🗡️",
+    "image": "assets/characters/heroes-v1/swordsman.png",
+    "starter": false,
+    "enabled": true
+  },
+  {
+    "id": "astronaut",
+    "name": "星航太空人",
+    "category": "hero",
+    "color": "#425579",
+    "light": "#fff4dc",
+    "emoji": "🚀",
+    "image": "assets/characters/heroes-v1/astronaut.png",
+    "starter": false,
+    "enabled": true
+  },
+  {
+    "id": "footballer",
+    "name": "疾風足球員",
+    "category": "hero",
+    "color": "#448c62",
+    "light": "#fff4dc",
+    "emoji": "⚽",
+    "image": "assets/characters/heroes-v1/footballer.png",
+    "starter": false,
+    "enabled": true
+  },
+  {
+    "id": "ninja",
+    "name": "夜影忍者",
+    "category": "hero",
+    "color": "#595083",
+    "light": "#fff4dc",
+    "emoji": "🥷",
+    "image": "assets/characters/heroes-v1/ninja.png",
+    "starter": false,
+    "enabled": true
+  },
+  {
+    "id": "mecha",
+    "name": "藍盾機甲",
+    "category": "hero",
+    "color": "#436dab",
+    "light": "#fff4dc",
+    "emoji": "🤖",
+    "image": "assets/characters/heroes-v1/mecha.png",
+    "starter": false,
+    "enabled": true
+  },
+  {
+    "id": "racer",
+    "name": "赤焰賽車手",
+    "category": "hero",
+    "color": "#c6504e",
+    "light": "#fff4dc",
+    "emoji": "🏎️",
+    "image": "assets/characters/heroes-v1/racer.png",
+    "starter": false,
+    "enabled": true
+  },
+  {
+    "id": "dragon-knight",
+    "name": "翡翠龍騎士",
+    "category": "hero",
+    "color": "#638f72",
+    "light": "#fff4dc",
+    "emoji": "🐉",
+    "image": "assets/characters/heroes-v1/dragon-knight.png",
+    "starter": false,
+    "enabled": true
+  },
+  {
+    "id": "ocean-explorer",
+    "name": "海洋探險家",
+    "category": "hero",
+    "color": "#379ba1",
+    "light": "#fff4dc",
+    "emoji": "🤿",
+    "image": "assets/characters/heroes-v1/ocean-explorer.png",
+    "starter": false,
+    "enabled": true
+  },
+  {
+    "id": "firefighter",
+    "name": "勇氣消防員",
+    "category": "hero",
+    "color": "#deaa42",
+    "light": "#fff4dc",
+    "emoji": "🚒",
+    "image": "assets/characters/heroes-v1/firefighter.png",
+    "starter": false,
+    "enabled": true
+  },
+  {
+    "id": "lightning-pilot",
+    "name": "閃電飛行員",
+    "category": "hero",
+    "color": "#997d4d",
+    "light": "#fff4dc",
+    "emoji": "✈️",
+    "image": "assets/characters/heroes-v1/lightning-pilot.png",
+    "starter": false,
+    "enabled": true
   }
 ]

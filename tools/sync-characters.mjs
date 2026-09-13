@@ -8,7 +8,7 @@ export function validateCatalog(rows,{checkAssets=true}={}){
  const ids=new Set();
  for(const c of rows){
   if(!/^[a-z][a-z0-9-]*$/.test(c.id)||ids.has(c.id))throw new Error('角色編號重複或格式不正確：'+c.id);ids.add(c.id);
-  if(typeof c.name!=='string'||!c.name.trim()||!['animal','fairy'].includes(c.category))throw new Error('角色名稱或分類不正確：'+c.id);
+  if(typeof c.name!=='string'||!c.name.trim()||!['animal','fairy','hero'].includes(c.category))throw new Error('角色名稱或分類不正確：'+c.id);
   if(!/^assets\/characters\/[a-zA-Z0-9_/-]+\.(png|webp)$/.test(c.image)||c.image.includes('..'))throw new Error('角色圖片路徑不正確：'+c.id);
   if(checkAssets&&!existsSync(path.join(root,c.image)))throw new Error('缺少圖片：'+c.image);
   if(typeof c.enabled!=='boolean'||typeof c.starter!=='boolean')throw new Error('enabled / starter 必須為布林值：'+c.id);

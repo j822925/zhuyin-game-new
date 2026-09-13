@@ -1,4 +1,4 @@
-import {CHARACTER_CATALOG} from './data/character-catalog.js?v=20260913-tutor1';
+import {CHARACTER_CATALOG} from './data/character-catalog.js?v=20260913-heroes1';
 export const CHARACTERS=CHARACTER_CATALOG;
 export const STARTERS=CHARACTERS.filter(c=>c.starter).map(c=>c.id);
 export const DRAW_COST=5;
@@ -16,7 +16,7 @@ export function characterSvg(c){
  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 170"><ellipse cx="80" cy="155" rx="51" ry="9" fill="${p}" opacity=".17"/>${art}</svg>`;
 }
 const escapeAttr=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export function portrait(c,className='character-portrait'){return `<img class="${escapeAttr(className)}" src="${escapeAttr((c.image?c.image+'?v=cozy-final':'')||'data:image/svg+xml,'+encodeURIComponent(characterSvg(c)))}" alt="${escapeAttr(c.name)}" draggable="false">`;}
+export function portrait(c,className='character-portrait',loading='eager'){return `<img loading="${loading==='lazy'?'lazy':'eager'}" decoding="async" class="${escapeAttr(className)}" src="${escapeAttr((c.image?c.image+'?v=cozy-final':'')||'data:image/svg+xml,'+encodeURIComponent(characterSvg(c)))}" alt="${escapeAttr(c.name)}" draggable="false">`;}
 export function drawCharacter(wallet,category,rng=Math.random){
  const available=CHARACTERS.filter(c=>c.category===category&&c.enabled!==false);
  if(!available.length)return {error:'complete'};

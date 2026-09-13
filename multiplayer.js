@@ -1,6 +1,6 @@
 import {Race} from './race-core.js?v=20260913-tutor1';
 import {questionDeck,optionsFor} from './core.js?v=20260913-tutor1';
-import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260913-tutor1';
+import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260913-heroes1';
 
 const animals=CHARACTERS.map(c=>[c.emoji,c.name]);
 const keys=[['a','s','d','f'],['h','j','k','l']];

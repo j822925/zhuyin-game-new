@@ -8,7 +8,7 @@ test('角色清單是前端與後台的共同來源，保留舊收藏編號',()=
  const source=JSON.parse(readFileSync(new URL('../data/characters.json',import.meta.url),'utf8'));
  assert.deepEqual(validateCatalog(source),CHARACTERS);
  assert.deepEqual(STARTERS,['rabbit','fox']);
- assert.deepEqual(CHARACTERS.map(c=>c.id),['rabbit','fox','panda','cat','bear','koala','frog','penguin','lion','owl','rose','moon','sea','forest','sun','snow','rainbow','berry','star','lavender']);
+ assert.deepEqual(CHARACTERS.slice(0,20).map(c=>c.id),['rabbit','fox','panda','cat','bear','koala','frog','penguin','lion','owl','rose','moon','sea','forest','sun','snow','rainbow','berry','star','lavender']);
  for(const c of CHARACTERS)assert.ok(portrait(c).includes(c.image));
 });
 test('所有角色是真正透明 PNG，而非假棋盤背景',()=>{

@@ -1,4 +1,4 @@
-import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20260913-tutor1';
+import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20260913-heroes1';
 import {cappedRoundAward,rewardParticipants,taipeiDay} from './learning-rewards.js?v=20260913-tutor1';
 import {startGachaAnimation} from './gacha-animation.js?v=20260913-ipad1';
 export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onChange}){
@@ -10,13 +10,13 @@ export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onCh
  function wallet(seat){if(!cache.has(seat))cache.set(seat,demo?read(key(seat),defaultWallet()):defaultWallet());return cache.get(seat);}
  const button=document.createElement('button');button.id='open-collection';button.className='collection-button';button.setAttribute('aria-label','我的星星與角色');button.innerHTML='🥚 <span>★ 0</span>';
  document.querySelector('.top-actions').prepend(button);
- const dialog=document.createElement('dialog');dialog.id='collection-dialog';dialog.innerHTML=`<div class="collection-top"><strong id="wallet-stars">★ 0</strong><strong id="wallet-candies">🍬 0</strong><button id="collection-close" class="icon-button" aria-label="回到遊戲">✕</button></div><div class="gacha-pools"><button id="pool-animal" aria-label="動物轉蛋" aria-pressed="true">🐾</button><button id="pool-fairy" aria-label="精靈轉蛋" aria-pressed="false">🧚</button></div><div id="gacha-reveal" class="gacha-reveal" aria-live="polite">🥚</div><button id="draw-character" class="primary" aria-label="花五顆星星抽角色，重複得一顆糖果">★ ${DRAW_COST} → 🥚</button><p id="gacha-message" role="status"></p><div id="character-gallery" class="character-gallery"></div>`;
+ const dialog=document.createElement('dialog');dialog.id='collection-dialog';dialog.innerHTML=`<div class="collection-top"><strong id="wallet-stars">★ 0</strong><strong id="wallet-candies">🍬 0</strong><button id="collection-close" class="icon-button" aria-label="回到遊戲">✕</button></div><div class="gacha-pools"><button id="pool-animal" aria-label="動物轉蛋" aria-pressed="true">🐾</button><button id="pool-fairy" aria-label="精靈轉蛋" aria-pressed="false">🧚</button><button id="pool-hero" aria-label="冒險小隊轉蛋" aria-pressed="false">🗡️</button></div><div id="gacha-reveal" class="gacha-reveal" aria-live="polite">🥚</div><button id="draw-character" class="primary" aria-label="花五顆星星抽角色，重複得一顆糖果">★ ${DRAW_COST} → 🥚</button><p id="gacha-message" role="status"></p><div id="character-gallery" class="character-gallery"></div>`;
  document.body.append(dialog);
  const exchange=document.createElement('dialog');exchange.className='exchange-dialog';exchange.innerHTML='<div id="exchange-character"></div><p>🍬 50 → 🎁</p><button class="primary" id="exchange-confirm" aria-label="確認花五十顆糖果兌換角色">✓</button> <button class="secondary" id="exchange-cancel" aria-label="取消兌換">✕</button>';document.body.append(exchange);let exchangeId=null;
  $('exchange-cancel').onclick=()=>exchange.close();exchange.addEventListener('cancel',e=>{if(busy)e.preventDefault();});
  function render(){const seat=activeSeat||getSeat(),w=wallet(seat);$('wallet-stars').textContent='★ '+w.stars;$('wallet-candies').textContent='🍬 '+(w.candies||0);button.querySelector('span').textContent='★ '+w.stars;
   $('pool-animal').setAttribute('aria-pressed',String(category==='animal'));$('pool-fairy').setAttribute('aria-pressed',String(category==='fairy'));
-  $('pool-animal').disabled=busy;$('pool-fairy').disabled=busy;$('collection-close').disabled=busy;
+  $('pool-animal').disabled=busy;$('pool-fairy').disabled=busy;$('pool-hero').disabled=busy;$('pool-hero').hidden=!demo&&!getConfig()?.heroWrites;$('pool-hero').setAttribute('aria-pressed',String(category==='hero'));$('collection-close').disabled=busy;
   const available=CHARACTERS.filter(c=>c.category===category&&c.enabled!==false);
   $('draw-character').disabled=busy||(!revealed&&(w.stars<DRAW_COST||!available.length||(!demo&&!getConfig()?.rewardsWrites)));
   $('draw-character').textContent=revealed?'✓':'★ '+DRAW_COST+' → 🥚';$('draw-character').setAttribute('aria-label',revealed?'收好角色，回到轉蛋':'花五顆星星抽角色，重複得一顆糖果');
@@ -30,7 +30,7 @@ export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onCh
  }
  button.onclick=async()=>{if(!getSeat()){document.getElementById('seat').focus();document.getElementById('home-message').textContent='👆 🔢';return;}activeSeat=getSeat();revealed=false;$('gacha-reveal').textContent='🥚';$('gacha-message').textContent=demo?'':getConfig()?.rewardsWrites?'':'老師提醒：正式星星紀錄尚未開放，目前可在老師試玩體驗。';render();dialog.showModal();await refresh();};
  $('collection-close').onclick=()=>{if(!busy)dialog.close();};dialog.addEventListener('cancel',e=>{if(busy)e.preventDefault();});
- for(const value of ['animal','fairy'])$('pool-'+value).onclick=()=>{if(busy)return;category=value;revealed=false;$('gacha-reveal').textContent='🥚';$('gacha-message').textContent='';render();};
+ for(const value of ['animal','fairy','hero'])$('pool-'+value).onclick=()=>{if(busy)return;category=value;revealed=false;$('gacha-reveal').textContent='🥚';$('gacha-message').textContent='';render();};
  $('draw-character').onclick=async()=>{
   if(busy||!activeSeat)return;if(revealed){revealed=false;$('gacha-reveal').textContent='🥚';render();return;}busy=true;render();$('gacha-message').textContent='';
   const animation=startGachaAnimation($('gacha-reveal'));
