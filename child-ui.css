@@ -1,5 +1,5 @@
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-#collection-dialog .character-card.locked img{filter:none;opacity:.75}
+#collection-dialog .character-card.locked img,#exchange-character img{filter:brightness(0);opacity:.68}
 .child-ui #leave,.child-ui #reload,.child-ui #race-leave,.child-ui #race-fullscreen{font-size:30px;min-width:58px;min-height:58px;text-decoration:none}
 .child-ui .top-actions a{font-size:28px;min-width:48px;min-height:48px;display:grid;place-items:center;text-decoration:none}
 .child-ui .slot:not(.filled){font-size:0}.child-ui .slot:not(.filled):after{content:'↓';font-size:33px}
