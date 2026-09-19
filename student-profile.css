@@ -6,3 +6,8 @@
 .profile-top{position:sticky;top:-22px;z-index:2;background:#fffaf0;padding:10px 0;border-bottom:1px solid #e5d9be}.profile-playing[hidden]{display:none}#profile-dialog #profile-close{flex-shrink:0}
 @media(min-width:800px){.cozy-ui #game{display:grid;grid-template-columns:minmax(0,1fr) clamp(200px,25vw,300px);gap:10px 22px;align-items:center}.cozy-ui #game>.game-top,.cozy-ui #game>.progress-track,.cozy-ui #game>.game-hint{grid-column:1/-1}.cozy-ui #game>.question-card{grid-column:1;grid-row:3;margin:0;width:100%;min-width:0;box-sizing:border-box}.cozy-ui #player-turn{grid-column:2;grid-row:3;text-align:center;min-width:0}.cozy-ui #player-turn.profile-playing{flex-direction:column;border:0;background:radial-gradient(ellipse,#e7edce,transparent 70%)}.cozy-ui #player-turn .playing-character,.cozy-ui #player-turn .turn-banner .animal-face{width:100%;height:350px}.cozy-ui #player-turn .turn-banner{flex-direction:column;align-items:center;padding:14px 8px}.cozy-ui #player-turn .turn-banner>b{display:none}.cozy-ui #player-turn strong{font-size:24px}.cozy-ui #game .options{gap:12px}.cozy-ui #game .option{min-width:100px}.cozy-ui #player-turn .turn-person-name{max-width:100%}}
 @media(min-width:800px) and (max-height:700px){.cozy-ui #player-turn .playing-character,.cozy-ui #player-turn .turn-banner .animal-face{height:270px}}
+/* Reserve the scrollbar lane and anchor companions independently of answer-panel height. */
+html{scrollbar-gutter:stable}
+@supports not (scrollbar-gutter:stable){html{overflow-y:scroll}}
+@media(min-width:800px){.cozy-ui #player-turn{align-self:start}}
+@media(min-width:651px){#exam-player.exam-companion{align-self:start}}
