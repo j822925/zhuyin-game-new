@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 280" fill="none">
+ <defs><radialGradient id="shell" cx=".32" cy=".28" r=".8"><stop stop-color="#FFFDEB"/><stop offset=".4" stop-color="#FFF0BB"/><stop offset=".77" stop-color="#E7BA58"/><stop offset="1" stop-color="#B88434"/></radialGradient><linearGradient id="gold" x1="60" y1="20" x2="180" y2="240" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF3B4"/><stop offset=".5" stop-color="#C8943E"/><stop offset=".7" stop-color="#FFE6A0"/><stop offset="1" stop-color="#B77926"/></linearGradient><linearGradient id="gem" x1="95" y1="90" x2="151" y2="151" gradientUnits="userSpaceOnUse"><stop stop-color="#DCD9FF"/><stop offset=".5" stop-color="#AA88DA"/><stop offset="1" stop-color="#684AA0"/></linearGradient></defs>
+ <ellipse cx="120" cy="257" rx="75" ry="10" fill="#A57A3D" opacity=".2"/>
+ <path d="M27 89q25 2 35 36L48 155Q13 128 12 108q14 8 23 8-13-14-8-27M213 89q-25 2-35 36l14 30q35-27 36-47-14 8-23 8 13-14 8-27" fill="#FFF7DC" stroke="#DFBE77" stroke-width="3"/>
+ <ellipse cx="120" cy="35" rx="40" ry="11" stroke="#E8C466" stroke-width="5"/>
+ <path d="M120 38C87 38 41 115 38 175c-3 55 29 78 82 78s85-23 82-78c-3-60-49-137-82-137Z" fill="url(#shell)" stroke="#AD8135" stroke-width="4"/>
+ <path d="M120 48c-24 0-64 65-70 120-5 48 17 72 70 72s75-24 70-72c-6-55-46-120-70-120Z" stroke="#FFF6CD" stroke-width="3"/>
+ <path d="M44 158q31 23 76 23t76-23M46 183q29 24 74 24t74-24" stroke="url(#gold)" stroke-width="7"/>
+ <path d="M55 158q5-34 26-35-11 16 0 24 10 6 16-6M185 158q-5-34-26-35 11 16 0 24-10 6-16-6M75 217q20 19 33 5m57-5q-20 19-33 5" stroke="#BD8E3F" stroke-width="3" stroke-linecap="round"/>
+ <path d="m120 91 13 26 29 4-21 20 5 29-26-14-26 14 5-29-21-20 29-4Z" fill="url(#gem)" stroke="#B78130" stroke-width="5" stroke-linejoin="round"/>
+ <path d="m120 99 10 22 25 3-18 17 4 22-21-11-21 11 4-22-18-17 25-3Z" stroke="#FFF1BB" stroke-width="2" stroke-linejoin="round"/>
+ <path d="m120 113 4 12 12 4-12 4-4 12-4-12-12-4 12-4Z" fill="#FFF9DF"/>
+ <path d="M83 85q-16 19-23 48" stroke="#FFFDF2" stroke-width="9" stroke-linecap="round" opacity=".85"/>
+ <path d="m120 55 5 10-5 10-5-10Z" fill="#B491D4" stroke="#AE8237" stroke-width="2"/>
+ <circle cx="120" cy="218" r="6" fill="#BE9CE4" stroke="#AE8237" stroke-width="2"/>
+ <path d="m58 61 3 9 9 3-9 3-3 9-3-9-9-3 9-3ZM185 51l3 9 9 3-9 3-3 9-3-9-9-3 9-3Z" fill="#FFF4C4" stroke="#D7AB53" stroke-width="2"/>
+</svg>

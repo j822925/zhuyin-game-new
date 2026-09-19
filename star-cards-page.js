@@ -1,6 +1,6 @@
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
 import {createStudentAuth} from './student-auth.js?v=20260913-tutor1';
-import {createStarCollection} from './star-cards-ui.js?v=20260919-star1';
+import {createStarCollection} from './star-cards-ui.js?v=20260919-egg1';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config,seat='',busy=false;
 const auth=createStudentAuth({demo:false,getConfig:()=>config,post:d=>client.post(d)});
