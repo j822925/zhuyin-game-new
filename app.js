@@ -8,6 +8,7 @@ import {setupChildUI} from './child-ui.js?v=20260913-family1';
 import {setupCozyUI} from './cozy-ui.js?v=20260913-heroes1';
 import {createStudentAuth} from './student-auth.js?v=20260913-tutor1';
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
+import {setupExamEntry} from './exam-entry.js?v=20260919-exam1';
 const API='https://zhuyin-api.j822925.workers.dev/api';
 const demo=new URLSearchParams(location.search).get('demo')==='1';
 const names={single:'聲音森林',spelling:'拼音工坊'};
@@ -43,6 +44,7 @@ const tutor=createLittleTeacher({onReturn:()=>{clearSpelling();audio.src=rounds[
 tutorButton.onclick=()=>{const r=rounds[active];if(mode!=='spelling'||!r?.canUseTutor||tutor.open)return;const result=r.useTutor(currentPool);if(result.ignored)return;voiceHelp.stop();audio.pause();audioReady=false;clearSpelling();setAnswerEnabled(false);$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;$('progress-fill').style.width=`${r.index/r.deck.length*100}%`;tutor.show(r.current);};
 function clearSpelling(){selected={};for(const b of document.querySelectorAll('.slot')){b.textContent='';b.classList.remove('filled');b.setAttribute('aria-label',b.dataset.slot==='initial'?'聲符位置':'韻符或結合韻位置');}showSpellingTone(document.querySelector('#spelling .slots'),rounds[active].current);$('check-spelling').disabled=true;}
 setupCozyUI();
+setupExamEntry({endpoint:API,home:$('home'),demo});
 function screen(id){for(const name of ['home','game','result'])$(name).hidden=name!==id;window.scrollTo(0,0);}
 function refreshHome(){
  const previous=$('seat').value,partner=$('partner').value;
