@@ -1,8 +1,9 @@
 import {createLittleTeacher} from './little-teacher.js?v=20260913-tutor1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260913-tutor1';
 import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round} from './core.js?v=20260913-heroes1';
-import {createMultiplayer} from './multiplayer.js?v=20260913-heroes1';
-import {createRewards} from './rewards.js?v=20260913-heroes1';
+import {createMultiplayer} from './multiplayer.js?v=20260919-profile1';
+import {createRewards} from './rewards.js?v=20260919-profile1';
+import {createStudentProfile} from './student-profile.js?v=20260919-profile1';
 import {portrait} from './characters.js?v=20260913-heroes1';
 import {setupChildUI} from './child-ui.js?v=20260913-family1';
 import {setupCozyUI} from './cozy-ui.js?v=20260913-heroes1';
@@ -35,17 +36,19 @@ const raceButton=document.createElement('button');raceButton.id='race';raceButto
 const apiClient=createApiClient(API);
 const postJSON=payload=>apiClient.post(payload);
 const auth=createStudentAuth({demo,getConfig:()=>config,post:postJSON});
-let rewards;
-const teamUI=createMultiplayer({getOwned:seat=>rewards?.owned(seat),getSeats:()=>[$('seat').value,$('partner').value],onExit:home,onFinish:(payload,html)=>{screen('result');$('result-details').innerHTML=html;persistResults([payload]);}});
-rewards=createRewards({demo,getConfig:()=>config,getSeat:()=>auth.verified($('seat').value)?$('seat').value:'',getSeats:()=>[$('seat').value,$('partner').value].filter(s=>auth.verified(s)),jsonGet,post:payload=>auth.request(payload),onChange:()=>{teamUI.refreshPicker();if($('seat').value)document.querySelector('.mascot').innerHTML=portrait(rewards.avatar($('seat').value));}});
+let rewards,profiles;
+const teamUI=createMultiplayer({getIdentity:seat=>profiles?.identity(seat),getOwned:seat=>rewards?.owned(seat),getSeats:()=>[$('seat').value,$('partner').value],onExit:home,onFinish:(payload,html)=>{screen('result');$('result-details').innerHTML=html;persistResults([payload]);}});
+function renderIdentity(){teamUI.refreshPicker();profiles?.renderHeader();if($('seat').value)document.querySelector('.mascot').innerHTML=portrait(profiles?.identity($('seat').value).character||rewards.avatar($('seat').value));}
+rewards=createRewards({demo,getConfig:()=>config,getSeat:()=>auth.verified($('seat').value)?$('seat').value:'',getSeats:()=>[$('seat').value,$('partner').value].filter(s=>auth.verified(s)),jsonGet,post:payload=>auth.request(payload),onChange:renderIdentity});
 const voiceHelp=setupChildUI({demo,onPreviewBonus:()=>rewards.previewBonus(),onBeforeVoice:()=>audio.pause()});
 const tutorButton=document.createElement('button');tutorButton.id='little-teacher';tutorButton.hidden=true;tutorButton.setAttribute('aria-label','小老師：看答案，聽拼音示範');tutorButton.innerHTML='<img src="assets/characters/cozy-v1/owl.png" alt=""><span aria-hidden="true">🎓</span>';$('audio-status').after(tutorButton);
 const tutor=createLittleTeacher({onReturn:()=>{clearSpelling();audio.src=rounds[active].current.audio;play();}});
 tutorButton.onclick=()=>{const r=rounds[active];if(mode!=='spelling'||!r?.canUseTutor||tutor.open)return;const result=r.useTutor(currentPool);if(result.ignored)return;voiceHelp.stop();audio.pause();audioReady=false;clearSpelling();setAnswerEnabled(false);$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;$('progress-fill').style.width=`${r.index/r.deck.length*100}%`;tutor.show(r.current);};
 function clearSpelling(){selected={};for(const b of document.querySelectorAll('.slot')){b.textContent='';b.classList.remove('filled');b.setAttribute('aria-label',b.dataset.slot==='initial'?'聲符位置':'韻符或結合韻位置');}showSpellingTone(document.querySelector('#spelling .slots'),rounds[active].current);$('check-spelling').disabled=true;}
 setupCozyUI();
+profiles=createStudentProfile({demo,auth,getSeat:()=>$('seat').value,getSeats:()=>[$('seat').value,$('partner').value],getOwned:seat=>rewards.owned(seat),getAvatar:seat=>rewards.avatar(seat),onChange:renderIdentity,isHome:()=>!$('home').hidden});
 setupExamEntry({endpoint:API,home:$('home'),demo});
-function screen(id){for(const name of ['home','game','result'])$(name).hidden=name!==id;window.scrollTo(0,0);}
+function screen(id){for(const name of ['home','game','result'])$(name).hidden=name!==id;profiles?.renderHeader();window.scrollTo(0,0);}
 function refreshHome(){
  const previous=$('seat').value,partner=$('partner').value;
  for(const id of ['seat','partner'])$(id).innerHTML='<option value="">選擇座號</option>'+config.seats.map(x=>`<option value="${safe(x)}">${safe(x)} 號</option>`).join('');
@@ -73,6 +76,7 @@ async function start(id){
  if(seats.some(s=>!config.seats.includes(s))||new Set(seats).size!==seats.length){$('home-message').textContent=duo?'請先選好兩位不同的小朋友座號。':'請先選擇你的座號。';$('seat').focus();return;}
  if(!demo&&!config.verifiedWrites){$('home-message').textContent='請老師先更新後台再開始，才能確認成績有成功儲存。';return;}
  for(const seat of seats)if(!await auth.ensure(seat))return;
+ await profiles.refresh();
  mode=id;currentPool=poolFor(mode,config,catalog);if(!currentPool.length||(mode==='spelling'&&!config.spellingApproved))return;
  if(playStyle==='race'){
   if(currentPool.length<2){$('home-message').textContent='搶答至少需要兩種已教聲音。請先用單人或輪流練習。';return;}
@@ -97,7 +101,7 @@ function renderQuestion(){
  tutor.close();tutorButton.hidden=mode!=='spelling'||(!demo&&!config.tutorWrites);
  const r=rounds[active],q=r.current;document.getElementById('game').classList.toggle('spelling-active',mode==='spelling');r.questionStarted=Date.now();selected={};audio.pause();audio.src=q.audio;audioReady=false;
  $('world-title').textContent=names[mode];$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;
- $('progress-fill').style.width=`${r.index/r.deck.length*100}%`;$('player-turn').textContent=duo?'':`🔢 ${seats[active]}`;
+ $('progress-fill').style.width=`${r.index/r.deck.length*100}%`;$('player-turn').classList.toggle('profile-playing',!duo);if(duo)$('player-turn').replaceChildren();else profiles.renderPlayer($('player-turn'),seats[active]);
  $('instruction').textContent=mode==='spelling'?'聽一聽，用注音積木拼出聲音':'仔細聽，選出正確的注音';$('feedback').textContent='';$('next').hidden=true;$('options').replaceChildren();$('spelling').hidden=mode!=='spelling';
  if(mode!=='spelling'){for(const option of optionsFor(q,currentPool,choices)){const b=document.createElement('button');b.className='option';b.textContent=option.label;b.onclick=()=>answer(option.label,b);$('options').append(b);}}
  else{showSpellingTone(document.querySelector('#spelling .slots'),q);document.querySelectorAll('.slot').forEach(b=>{b.textContent=b.dataset.slot==='initial'?'聲符':'韻符';b.classList.remove('filled');b.setAttribute('aria-label',b.dataset.slot==='initial'?'聲符位置':'韻符或結合韻位置');});$('tiles').replaceChildren();for(const kind of ['initial','final']){const row=document.createElement('div');row.className='tile-row';const target=q[kind],other=[...new Set(currentPool.map(x=>x[kind]))].filter(x=>x!==target);for(const value of shuffle([target,...shuffle(other).slice(0,choices-1)])){const b=document.createElement('button');b.className='tile';setVerticalSymbols(b,value);b.setAttribute('aria-label',value);b.dataset.kind=kind;b.draggable=true;b.onclick=()=>place(kind,value);b.ondragstart=e=>e.dataTransfer.setData('text/plain',JSON.stringify({kind,value}));b.onpointerup=e=>{if(e.pointerType==='mouse')return;const slot=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-slot]');if(slot?.dataset.slot===kind)place(kind,value);};row.append(b);}$('tiles').append(row);}}
@@ -131,7 +135,7 @@ document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(b.datase
 function selectStyle(style){playStyle=style;duo=style!=='solo';for(const id of ['solo','duo','race']){const selected=id===(style==='turn'?'duo':style);$(id).classList.toggle('selected',selected);$(id).setAttribute('aria-pressed',String(selected));}$('partner-label').hidden=!duo;teamUI.setStyle(style);if(config)refreshHome();if(style!=='solo'&&$('partner').value&&!auth.verified($('partner').value))$('partner').onchange();}
 $('solo').onclick=()=>selectStyle('solo');$('duo').onclick=()=>selectStyle('turn');$('race').onclick=()=>selectStyle('race');
 const selectedIdentities={seat:'',partner:''};
-for(const id of ['seat','partner'])$(id).onchange=async()=>{const seat=$(id).value;auth.forget(selectedIdentities[id]);auth.forget(seat);selectedIdentities[id]=seat;if(seat&&!await auth.ensure(seat))$(id).value='';await rewards.refresh();if(!demo)flushPending();};
+for(const id of ['seat','partner'])$(id).onchange=async()=>{const seat=$(id).value;auth.forget(selectedIdentities[id]);auth.forget(seat);profiles.clearSeat(selectedIdentities[id]);profiles.clearSeat(seat);selectedIdentities[id]=seat;if(seat&&!await auth.ensure(seat))$(id).value='';await rewards.refresh();await profiles.refresh();if(!demo)flushPending();};
 $('listen').onclick=play;$('check-spelling').onclick=()=>answer((selected.initial||'')+(selected.final||''));$('next').onclick=next;$('reload').onclick=load;$('demo-basic').onclick=()=>demoConfig(false);$('demo-expanded').onclick=()=>demoConfig(true);$('again').onclick=()=>start(mode);$('retry-save').onclick=flushPending;
 function home(){session++;tutor.close();audio.pause();teamUI.stop();screen('home');if(config)refreshHome();}
 $('back-home').onclick=home;$('leave').onclick=()=>{$('leave-dialog').showModal();};$('stay').onclick=()=>$('leave-dialog').close();$('confirm-leave').onclick=()=>{$('leave-dialog').close();home();};

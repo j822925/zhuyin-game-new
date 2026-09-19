@@ -5,10 +5,10 @@ import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260913-heroes1';
 const animals=CHARACTERS.map(c=>[c.emoji,c.name]);
 const keys=[['a','s','d','f'],['h','j','k','l']];
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export function createMultiplayer({onExit,onFinish,getOwned,getSeats}){
+export function createMultiplayer({onExit,onFinish,getOwned,getSeats,getIdentity}){
  const $=id=>document.getElementById(id);
  let picked=[0,1],race=null,participants=[],pool=[],count=3,questionMode='single',running=false,generation=0,ready=[false,false];
- let turnCallback=null,roundStarted=0,questionStarted=0,currentOptions=[];
+ let turnCallback=null,roundStarted=0,questionStarted=0,currentOptions=[],style='solo';
  const sound=new Audio();sound.preload='auto';
  const picker=document.createElement('div');picker.id='animal-picker';picker.className='animal-picker';picker.hidden=true;
  document.querySelector('.setup').after(picker);
@@ -22,8 +22,8 @@ export function createMultiplayer({onExit,onFinish,getOwned,getSeats}){
  $('game').after(stage);
  const leave=document.createElement('dialog');leave.innerHTML='<h2>先結束這場比賽嗎？</h2><p>未完成的比賽不會記錄。</p><button class="primary" id="race-stay">繼續比賽</button> <button class="secondary" id="race-exit">離開</button>';
  document.body.append(leave);
- function character(i){return animals[picked[i]][0];}
- function teamMarkup(i){return `<span class="animal-face">${portrait(CHARACTERS[picked[i]])}</span><span>${i===0?'藍隊':'橘隊'} · ${escape(participants[i]||'')} 號</span>`;}
+ function character(i){return (style==='turn'&&getIdentity?.(participants[i])?.character.emoji)||animals[picked[i]][0];}
+ function teamMarkup(i){const person=getIdentity?.(participants[i]),c=style==='turn'&&person?person.character:CHARACTERS[picked[i]];return `<span class="animal-face">${portrait(c)}</span><span class="turn-person-name"><small>${i===0?'藍隊':'橘隊'} · ${escape(participants[i]||'')} 號</small><strong>${escape(person?.name||participants[i]+' 號')}</strong></span>`;}
  function drawPicker(){
   const seats=getSeats?.()||[];for(let i=0;i<2;i++){const owned=getOwned?.(seats[i])||STARTERS;if(!owned.includes(CHARACTERS[picked[i]].id)||picked[i]===picked[1-i])picked[i]=CHARACTERS.findIndex((c,n)=>owned.includes(c.id)&&n!==picked[1-i]);}
   picker.innerHTML='<p>各選一隻小動物；藍隊在左邊，橘隊在右邊。</p><div class="animal-teams">'+[0,1].map(i=>`<section class="team-${i}"><h3>${i===0?'◀ 藍隊':'橘隊 ▶'}</h3><div class="animal-choices">${animals.map(([emoji,name],n)=>`<button data-player="${i}" data-animal="${n}" aria-label="${i===0?'藍隊':'橘隊'}選${name}" aria-pressed="${picked[i]===n}" ${picked[1-i]===n||!(getOwned?.(seats[i])||STARTERS).includes(CHARACTERS[n].id)?'disabled':''}>${portrait(CHARACTERS[n])}</button>`).join('')}</div></section>`).join('')+'</div>';
@@ -32,7 +32,7 @@ export function createMultiplayer({onExit,onFinish,getOwned,getSeats}){
  drawPicker();
  function stop(){running=false;generation++;sound.pause();if(document.fullscreenElement===stage)document.exitFullscreen().catch(()=>{});stage.hidden=true;if(turn.open)turn.close();turnCallback=null;document.body.classList.remove('turn-team-0','turn-team-1','race-active');}
  function turnPrompt(i,seats,callback){participants=seats;turnCallback=callback;document.body.classList.remove('turn-team-0','turn-team-1');document.body.classList.add('turn-team-'+i);$('player-turn').innerHTML=`<div class="turn-banner team-${i}">${teamMarkup(i)}<b>▼</b></div>`;
-  turn.className='team-'+i;$('turn-gate-content').innerHTML=`<button id="turn-ready" class="turn-ready" aria-label="${animals[picked[i]][1]}準備好了">${teamMarkup(i)}<strong>▶</strong></button><p>輪到這隻小動物！點牠開始。</p>`;
+  turn.className='team-'+i;$('turn-gate-content').innerHTML=`<h2>現在輪到你！</h2><button id="turn-ready" class="turn-ready" aria-label="${escape(participants[i])} 號 ${escape(getIdentity?.(participants[i])?.name||'')}，換我了，開始答題">${teamMarkup(i)}<strong>換我了 ▶</strong></button><p>確認名字和角色，再點「換我了」。</p>`;
   $('turn-ready').onclick=()=>{turn.close();const cb=turnCallback;turnCallback=null;cb?.();};turn.showModal();
  }
  turn.addEventListener('cancel',e=>e.preventDefault());
@@ -80,7 +80,7 @@ export function createMultiplayer({onExit,onFinish,getOwned,getSeats}){
  $('race-fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await stage.requestFullscreen();}catch{$('race-message').textContent='此瀏覽器無法切換全螢幕；可使用大螢幕瀏覽器的全螢幕功能。';}};
  document.addEventListener('keydown',e=>{if(!running||leave.open||e.repeat||e.ctrlKey||e.altKey||e.metaKey||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;for(let i=0;i<2;i++){const n=keys[i].indexOf(e.key.toLowerCase());if(n>=0){e.preventDefault();choose(i,n);return;}}});
  return {
-  setStyle(style){picker.hidden=style==='solo';if(style==='solo')document.body.classList.remove('turn-team-0','turn-team-1');},
+  setStyle(value){style=value;picker.hidden=style!=='race';if(style==='solo')document.body.classList.remove('turn-team-0','turn-team-1');},
   character,turnPrompt,stop,refreshPicker:drawPicker,
   start({seats,mode,questionPool,questions,choices}){stop();participants=[...seats];questionMode=mode;pool=questionPool;count=choices;race=new Race(questionDeck(pool,questions));ready=[false,false];running=true;roundStarted=Date.now();['home','game','result'].forEach(id=>$(id).hidden=true);stage.hidden=false;document.body.classList.add('race-active');window.scrollTo(0,0);renderRaceQuestion();}
  };

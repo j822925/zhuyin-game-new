@@ -1,11 +1,16 @@
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
 import {createStudentAuth} from './student-auth.js?v=20260913-tutor1';
 import {createStarCollection} from './star-cards-ui.js?v=20260919-star1';
+import {PROFILE_CHARACTERS} from './student-profile.js?v=20260919-profile1';
+import {portrait} from './characters.js?v=20260913-heroes1';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config=null,seat='',examId=new URLSearchParams(location.search).get('id')||'',state=null,busy=false,heard=false,selection={},offset=0,expiryTried=false,renderVersion=0;
 const pendingMemory=new Map();
 const auth=createStudentAuth({demo:false,getConfig:()=>config,post:d=>client.post(d)}),audio=new Audio();audio.preload='auto';
 const starCollection=createStarCollection({root:$('star-collection'),request});
+const examPlayer=document.createElement('div');examPlayer.id='exam-player';examPlayer.className='profile-playing';examPlayer.hidden=true;document.querySelector('main>header').after(examPlayer);
+let identityVersion=0;
+async function showExamIdentity(){const version=++identityVersion,root=examPlayer;root.hidden=false;root.replaceChildren();const label=document.createElement('strong');label.textContent=seat+' 號';root.append(label);try{const p=await request({kind:'profile'});if(version!==identityVersion)return;const c=PROFILE_CHARACTERS.find(c=>c.id===p.avatar);label.textContent=seat+' 號・'+(p.nickname||p.name||'我的小考');if(c){const art=document.createElement('span');art.className='playing-character';art.innerHTML=portrait(c);root.prepend(art);}}catch{/* A cosmetic profile outage must not block or lose the exam. */}}
 const messages={exam_closed:'目前不是這場小考的作答時間。',exam_unavailable:'這場小考不存在或已取消。',exam_not_started:'尚未開始這場小考。',exam_sequence:'進度已更新，請按恢復進度。',id_conflict:'這一題已送出，不能改答案。請按恢復進度。',authentication_required:'請重新驗證密碼，再接續小考。'};
 const key=()=>`zhuyin.exam.pending.${examId}.${seat}`;
 function readPending(){try{const p=pendingMemory.has(key())?pendingMemory.get(key()):JSON.parse(localStorage.getItem(key()));return p?.kind==='exam-answer'&&p.examId===examId&&p.seat===seat&&Number.isInteger(p.index)&&typeof p.answer==='string'?p:null;}catch{return null;}}
@@ -24,7 +29,7 @@ function render(out){renderVersion++;state=out;offset=out.serverNow-Date.now();e
  if(out.exam.mode==='single')buttons('choices',out.question.choices,'answer');else{for(const kind of ['initial','final']){$(kind+'-slot').textContent='';buttons(kind+'-choices',out.question.choices[kind],kind);}$('tone').textContent=out.question.toneMark;}
  enable();listen();
 }
-async function resume(){if(!seat||!examId)return;if(!await auth.ensure(seat))return;const pending=readPending();if(pending){let out;try{out=await request(pending);}catch(e){if(!['id_conflict','exam_sequence'].includes(e.message))throw e;out=await request({kind:'exam-resume'});if(!out.finished&&out.answered<=pending.index)throw e;}clearPending();render(out);}else render(await request({kind:'exam-start'}));}
+async function resume(){if(!seat||!examId)return;if(!await auth.ensure(seat))return;showExamIdentity();const pending=readPending();if(pending){let out;try{out=await request(pending);}catch(e){if(!['id_conflict','exam_sequence'].includes(e.message))throw e;out=await request({kind:'exam-resume'});if(!out.finished&&out.answered<=pending.index)throw e;}clearPending();render(out);}else render(await request({kind:'exam-start'}));}
 $('start').onclick=()=>{seat=$('seat').value;examId=$('exam-select').value;if(!seat||!examId){$('home-message').textContent='請選座號與小考。';return;}history.replaceState(null,'','?id='+encodeURIComponent(examId));run(resume);};
 $('recover').onclick=()=>run(resume);$('listen').onclick=listen;
 $('submit').onclick=()=>run(async()=>{const payload={kind:'exam-answer',seat,examId,index:state.question.index,answer:state.exam.mode==='single'?selection.answer:selection.initial+selection.final};savePending(payload);const out=await request(payload);clearPending();render(out);});

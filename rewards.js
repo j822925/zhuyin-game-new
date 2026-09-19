@@ -21,7 +21,7 @@ export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onCh
   $('draw-character').disabled=busy||(!revealed&&(w.stars<DRAW_COST||!available.length||(!demo&&!getConfig()?.rewardsWrites)));
   $('draw-character').textContent=revealed?'✓':'★ '+DRAW_COST+' → 🥚';$('draw-character').setAttribute('aria-label',revealed?'收好角色，回到轉蛋':'花五顆星星抽角色，重複得一顆糖果');
   $('character-gallery').innerHTML=CHARACTERS.filter(c=>c.category===category&&c.enabled!==false).map(c=>`<button class="character-card ${w.owned.includes(c.id)?'owned':'locked'}" data-character="${c.id}" aria-label="${c.name}${w.owned.includes(c.id)?'，已收集':'，五十顆糖果兌換'}" ${busy||(!w.owned.includes(c.id)&&(w.candies||0)<REDEEM_COST)?'disabled':''}>${portrait(c)}<span>${w.owned.includes(c.id)?'✓':(w.candies||0)>=REDEEM_COST?'🍬 50':'🔒'}</span><small>${c.name}</small></button>`).join('');
-  dialog.querySelectorAll('[data-character]').forEach(b=>b.onclick=()=>{const c=CHARACTERS.find(c=>c.id===b.dataset.character);if(!w.owned.includes(c.id)){exchangeId=c.id;$('exchange-character').innerHTML=portrait(c);exchange.showModal();return;}$('gacha-reveal').innerHTML=portrait(c);store('zhuyin.avatar.'+seat,c.id);onChange?.();});
+  dialog.querySelectorAll('[data-character]').forEach(b=>b.onclick=()=>{const c=CHARACTERS.find(c=>c.id===b.dataset.character);if(!w.owned.includes(c.id)){exchangeId=c.id;$('exchange-character').innerHTML=portrait(c);exchange.showModal();return;}$('gacha-reveal').innerHTML=portrait(c);$('gacha-message').textContent='想使用這個角色？請回首頁點自己的頭貼，在「我的角色」選擇並儲存。';});
  }
  async function refresh(){
   const seats=[...new Set(getSeats().filter(Boolean))];
