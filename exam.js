@@ -1,9 +1,10 @@
+import {audioSource} from './audio-source.js?v=20260920-le4';
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
 import {createStudentAuth} from './student-auth.js?v=20260913-tutor1';
 import {createStarCollection} from './star-cards-ui.js?v=20260919-egg1';
 import {PROFILE_CHARACTERS} from './student-profile.js?v=20260919-profile1';
 import {portrait} from './characters.js?v=20260913-heroes1';
-import {createExamReview} from './exam-review.js?v=20260919-egg1';
+import {createExamReview} from './exam-review.js?v=20260920-le4';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config=null,seat='',examId=new URLSearchParams(location.search).get('id')||'',state=null,busy=false,heard=false,selection={},offset=0,expiryTried=false,renderVersion=0;
 const pendingMemory=new Map();
@@ -28,7 +29,7 @@ function render(out){renderVersion++;reviewPlayer.stop();state=out;offset=out.se
  if(out.finished){clearPending();$('score').textContent=`答對 ${out.correct}／25 題，${out.correct*4} 分${out.unanswered?`；${out.unanswered} 題未作答`:''}。`;$('stars').textContent=`⭐ 獲得 ${out.stars} 顆星星（本場只發一次，不另加練習獎勵）。${out.starTicket?' 滿分！可以在下方抽一張限定星使卡片。':''}`;$('clock').textContent='已交卷';$('star-collection').hidden=!out.starTicket;if(out.starTicket)starCollection.load();return;}
  $('exam-title').textContent=out.exam.title;
  if(out.review){$('progress').textContent=`第 ${out.review.index+1}／25 題・答案已保存，正在複習`;$('review-answer').textContent=out.review.label;enable();reviewPlayer.show(out.review);return;}
- $('progress').textContent=`第 ${out.question.index+1}／25 題・已保存 ${out.answered} 題`;$('audio-status').textContent='請先聽題目';audio.src=out.question.audio;
+ $('progress').textContent=`第 ${out.question.index+1}／25 題・已保存 ${out.answered} 題`;$('audio-status').textContent='請先聽題目';audio.src=audioSource(out.question.audio);
  $('choices').hidden=out.exam.mode!=='single';$('spelling-area').hidden=out.exam.mode!=='spelling';
  if(out.exam.mode==='single')buttons('choices',out.question.choices,'answer');else{for(const kind of ['initial','final']){$(kind+'-slot').textContent='';buttons(kind+'-choices',out.question.choices[kind],kind);}$('tone').textContent=out.question.toneMark;}
  enable();listen();

@@ -1,3 +1,4 @@
+import {audioSource} from './audio-source.js?v=20260920-le4';
 // One native player for the entire catalogue: avoid hundreds of Safari media controls.
 export const PAGE_SIZE=18;
 export function samplePage(rows,initial='',page=0){
@@ -18,7 +19,7 @@ export function setupTeacherAudio({BASE,COMPOUNDS,createCatalog}){
   const b=document.createElement('button');b.type='button';b.className='sample-play';b.textContent='▶ '+text;b.setAttribute('aria-pressed','false');
   b.onclick=()=>{
    release();selected=b;b.setAttribute('aria-pressed','true');label.textContent=text;const id=playId;
-   player.src=file;
+   player.src=audioSource(file);
    // Play directly inside the tap handler so Safari retains the user gesture.
    player.play().catch(()=>{if(id===playId){label.textContent='未能播放，請再點一次 ▶ 或檢查網路。';b.setAttribute('aria-pressed','false');}});
   };return b;
@@ -35,7 +36,7 @@ export function setupTeacherAudio({BASE,COMPOUNDS,createCatalog}){
  COMPOUNDS.forEach((s,i)=>add($('compounds'),s,'audio/compound/c'+String(i+1).padStart(2,'0')+'.mp3'));
  const baseDetails=$('base').closest('details');
  baseDetails.addEventListener('toggle',()=>{if(baseDetails.open&&!$('base').children.length)BASE.forEach((s,i)=>add($('base'),s,'audio/audio_F'+(i+1)+'.WAV'));});
- return fetch('data/syllables.json?v=20260913-tutor1').then(r=>{if(!r.ok)throw new Error('catalog');return r.json();}).then(rows=>{
+ return fetch('data/syllables.json?v=20260920-le4').then(r=>{if(!r.ok)throw new Error('catalog');return r.json();}).then(rows=>{
   const all=createCatalog(rows).map((s,index)=>({...s,original:index<44?s.audio.replace('syllable-clear/','syllable/'):null}));
   const filter=$('syllable-initial-filter');let page=0;
   for(const initial of BASE.slice(0,21)){const option=document.createElement('option');option.value=initial;option.textContent=initial;filter.append(option);}

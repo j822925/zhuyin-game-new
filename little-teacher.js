@@ -1,3 +1,4 @@
+import {audioSource} from './audio-source.js?v=20260920-le4';
 import {BASE,COMPOUNDS} from './core.js?v=20260913-tutor1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260913-tutor1';
 export function tutorClips(q){
@@ -13,7 +14,7 @@ export function createLittleTeacher({onReturn}){
  async function playStep(token){
   if(token!==generation||!dialog.open)return;
   parts.forEach((p,i)=>p.classList.toggle('speaking',step===i));answer.classList.toggle('speaking',step===2);status.textContent=['① 👂','② 👂','③ 👂'][step];
-  voice.src=clips[step];
+  voice.src=audioSource(clips[step]);
   const fail=()=>{if(token!==generation)return;stop();status.textContent='🔇 請按 🔊 重試';};
   voice.onerror=fail;
   voice.onended=()=>{if(token!==generation)return;if(step<2){step++;timer=setTimeout(()=>playStep(token),450);}else{stop();status.textContent='🙋 ✨';}};

@@ -1,3 +1,4 @@
+import {audioSource} from './audio-source.js?v=20260920-le4';
 // Completion means an actual ended event, not merely a resolved play() promise.
 export function playToEnd(audio,{signal,timeoutMs=20000}={}){
  return new Promise((resolve,reject)=>{
@@ -23,5 +24,5 @@ export function createExamReview({audio,button,status,onDone}){
   finally{if(v===generation){running=false;button.disabled=false;button.textContent=count>=2?'✓ 接續小考':`🔊 繼續聽第 ${count+1} 遍`;}}
  }
  button.onclick=play;
- return {stop,show(value){stop();review=value;count=0;audio.src=value.audio;button.textContent='🔊 一起再聽兩遍';button.disabled=false;void play();}};
+ return {stop,show(value){stop();review=value;count=0;audio.src=audioSource(value.audio);button.textContent='🔊 一起再聽兩遍';button.disabled=false;void play();}};
 }
