@@ -1,6 +1,9 @@
 /* Cozy village skin. Learning state and blue/orange team colors are unchanged. */
 :root{--green:#477e68;--ink:#344e43;--muted:#637d6b;--cream:#f7f3e5;--line:#d8ddc8}
-body.cozy-ui{background:radial-gradient(ellipse at 4% 15%,#dcebd0 0,transparent 35%),radial-gradient(ellipse at 95% 75%,#e2ebce 0,transparent 36%),#f7f3e5;background-attachment:fixed}
+/* A viewport layer keeps the meadow glow independent of document/answer height,
+   including iPad browsers that do not consistently support background-attachment. */
+body.cozy-ui{background:#f7f3e5;isolation:isolate}
+body.cozy-ui::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 4% 15%,#dcebd0 0,transparent 35%),radial-gradient(ellipse at 95% 75%,#e2ebce 0,transparent 36%),#f7f3e5}
 .cozy-ui header{border:0;height:82px}.cozy-ui .brand-icon{background:#67937a;border:3px solid #fffbed;box-shadow:0 3px #c4d1b4;border-radius:50%;width:48px;height:48px}
 .cozy-ui .top-actions a,.cozy-ui .icon-button{background:#fffbed;border:2px solid #ddcfb2;border-radius:50%;box-shadow:0 3px #cfc3a9}
 .cozy-ui .hero{display:block;position:relative;height:245px;margin:3px 0 22px;padding:0;border:6px solid #fffbed;border-radius:38px;background:#c1ddc0 url('assets/ui/meadow-v1.png') center 53%/cover;box-shadow:0 6px #d2d9ba;overflow:hidden}
