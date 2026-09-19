@@ -1,9 +1,11 @@
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
 import {createStudentAuth} from './student-auth.js?v=20260913-tutor1';
+import {createStarCollection} from './star-cards-ui.js?v=20260919-star1';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config=null,seat='',examId=new URLSearchParams(location.search).get('id')||'',state=null,busy=false,heard=false,selection={},offset=0,expiryTried=false,renderVersion=0;
 const pendingMemory=new Map();
 const auth=createStudentAuth({demo:false,getConfig:()=>config,post:d=>client.post(d)}),audio=new Audio();audio.preload='auto';
+const starCollection=createStarCollection({root:$('star-collection'),request});
 const messages={exam_closed:'目前不是這場小考的作答時間。',exam_unavailable:'這場小考不存在或已取消。',exam_not_started:'尚未開始這場小考。',exam_sequence:'進度已更新，請按恢復進度。',id_conflict:'這一題已送出，不能改答案。請按恢復進度。',authentication_required:'請重新驗證密碼，再接續小考。'};
 const key=()=>`zhuyin.exam.pending.${examId}.${seat}`;
 function readPending(){try{const p=pendingMemory.has(key())?pendingMemory.get(key()):JSON.parse(localStorage.getItem(key()));return p?.kind==='exam-answer'&&p.examId===examId&&p.seat===seat&&Number.isInteger(p.index)&&typeof p.answer==='string'?p:null;}catch{return null;}}
@@ -16,7 +18,7 @@ async function listen(){if(!state?.question)return;const version=renderVersion;t
 function choose(kind,value,button){selection[kind]=value;for(const b of document.querySelectorAll(`[data-choice="${kind}"]`))b.classList.toggle('selected',b===button);if(kind!=='answer')$(kind+'-slot').textContent=value;enable();}
 function buttons(id,values,kind){$(id).replaceChildren();for(const value of values){const b=document.createElement('button');b.type='button';b.textContent=value;b.dataset.choice=kind;b.setAttribute('aria-label',value);b.onclick=()=>choose(kind,value,b);$(id).append(b);}}
 function render(out){renderVersion++;state=out;offset=out.serverNow-Date.now();expiryTried=false;audio.pause();heard=false;selection={};$('login-area').hidden=true;$('result').hidden=!out.finished;$('question-area').hidden=!!out.finished;
- if(out.finished){clearPending();$('score').textContent=`答對 ${out.correct}／25 題，${out.correct*4} 分${out.unanswered?`；${out.unanswered} 題未作答`:''}。`;$('stars').textContent=`⭐ 獲得 ${out.stars} 顆星星（本場只發一次，不另加練習獎勵）。${out.starTicket?' 滿分星使資格已保留！角色與抽獎畫面準備中，完成後可領取。':''}`;$('clock').textContent='已交卷';return;}
+ if(out.finished){clearPending();$('score').textContent=`答對 ${out.correct}／25 題，${out.correct*4} 分${out.unanswered?`；${out.unanswered} 題未作答`:''}。`;$('stars').textContent=`⭐ 獲得 ${out.stars} 顆星星（本場只發一次，不另加練習獎勵）。${out.starTicket?' 滿分！可以在下方抽一張限定星使卡片。':''}`;$('clock').textContent='已交卷';$('star-collection').hidden=!out.starTicket;if(out.starTicket)starCollection.load();return;}
  $('exam-title').textContent=out.exam.title;$('progress').textContent=`第 ${out.question.index+1}／25 題・已保存 ${out.answered} 題`;$('audio-status').textContent='請先聽題目';audio.src=out.question.audio;
  $('choices').hidden=out.exam.mode!=='single';$('spelling-area').hidden=out.exam.mode!=='spelling';
  if(out.exam.mode==='single')buttons('choices',out.question.choices,'answer');else{for(const kind of ['initial','final']){$(kind+'-slot').textContent='';buttons(kind+'-choices',out.question.choices[kind],kind);}$('tone').textContent=out.question.toneMark;}
