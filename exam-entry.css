@@ -1,0 +1,15 @@
+/* Big, stable landmarks for classroom instructions. Whole cards are links. */
+.special-destinations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:10px 0 24px}
+.destination-card{--edge:#bbcea7;--shadow:#a3b891;display:flex;align-items:center;gap:14px;position:relative;min-width:0;min-height:150px;padding:14px 18px;color:#344e43;text-decoration:none;border:3px solid var(--edge);border-radius:28px;background:linear-gradient(130deg,#f9fced,#e7f0da);box-shadow:0 5px 0 var(--shadow),inset 0 0 0 4px #fffbed;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .15s,box-shadow .15s}
+.destination-stars{--edge:#d6c5df;--shadow:#b9a4c4;background:linear-gradient(130deg,#fffbef,#eee5f4);color:#634777}
+.destination-icon{display:block;width:112px;height:112px;flex:0 0 112px;object-fit:contain;filter:drop-shadow(0 4px 2px #65553515)}
+.destination-copy{display:flex;flex-direction:column;gap:8px;min-width:0;flex:1}
+.destination-title{font-size:26px;line-height:1.35;letter-spacing:.03em}
+.destination-detail{font-size:15px;line-height:1.6;overflow-wrap:anywhere}
+.destination-arrow{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:50%;background:#fffbed;border:2px solid var(--edge);font-size:23px}
+.destination-card:focus-visible{outline:4px solid #bc7621;outline-offset:5px}
+.destination-card:active{transform:translateY(3px);box-shadow:0 2px 0 var(--shadow),inset 0 0 0 4px #fffbed}
+.destination-exam.exam-open .destination-detail{font-weight:700;color:#305b3d}
+@media(hover:hover){.destination-card:hover{transform:translateY(-2px)}}
+@media(max-width:760px){.special-destinations{gap:12px;margin-bottom:22px}.destination-card{flex-direction:column;gap:4px;padding:12px 10px;text-align:center;border-radius:24px}.destination-icon{width:96px;height:96px;flex-basis:96px}.destination-title{font-size:22px}.destination-detail{font-size:13px}.destination-copy{gap:5px;width:100%}.destination-arrow{display:none}}
+@media(prefers-reduced-motion:reduce){.destination-card{transition:none}.destination-card:hover,.destination-card:active{transform:none}}
