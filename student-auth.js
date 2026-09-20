@@ -1,4 +1,5 @@
-// Production tokens live only in memory. PINs never enter URLs or score payloads.
+import {createStudentSession} from './student-session.js?v=20260920-login1';
+// PINs never enter storage, URLs or score payloads. Primary sessions survive same-tab navigation.
 export function loginFeedback(code,retryAfter){
  if(code==='invalid_pin')return {icon:'🔁 🔒',label:'密碼不正確，請再試一次'};
  if(code==='locked'){const seconds=Math.min(300,Math.max(1,Math.ceil(Number(retryAfter)||300)));return {icon:'⏳ '+Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0'),label:'暫時鎖定，請等 '+seconds+' 秒後再試，或請老師協助'};}
@@ -8,6 +9,12 @@ export function loginFeedback(code,retryAfter){
 }
 export function createStudentAuth({demo,getConfig,post}){
  const sessions=new Map();let busy=false,active=null,buffer='',resolvePrompt=null;
+ let storage;try{storage=sessionStorage;}catch{}
+ const tab=createStudentSession({storage,key:'zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':'+(demo?'demo':'live')});
+ const restored=tab.read();let primary=restored?.seat||'';if(restored)sessions.set(primary,{token:restored.token,expires:restored.expires});
+ // Back/forward cache must not revive a previous student's in-memory login after switching.
+ window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});
+ function forget(seat){sessions.delete(seat);if(primary===seat){primary='';tab.clear();}}
  const dialog=document.createElement('dialog');dialog.id='pin-dialog';dialog.innerHTML='<div class="pin-top"><strong id="pin-seat"></strong><button type="button" id="pin-cancel" class="icon-button" aria-label="取消登入">✕</button></div><div class="pin-lock" aria-hidden="true">🔒</div><output id="pin-dots" aria-label="已輸入零位密碼">○ ○ ○ ○</output><p id="pin-status" role="status"></p><div class="pin-pad">'+[1,2,3,4,5,6,7,8,9,'clear',0,'back'].map(n=>`<button type="button" data-pin="${n}" aria-label="${n==='clear'?'全部清除':n==='back'?'刪除一位':n}">${n==='clear'?'↺':n==='back'?'⌫':n}</button>`).join('')+'</div>';
  document.body.append(dialog);
  const $=id=>document.getElementById(id);
@@ -33,19 +40,22 @@ export function createStudentAuth({demo,getConfig,post}){
  dialog.querySelectorAll('[data-pin]').forEach(b=>b.onclick=()=>key(b.dataset.pin));$('pin-cancel').onclick=()=>finish(false);
  dialog.addEventListener('cancel',e=>{e.preventDefault();if(!busy)finish(false);});
  dialog.addEventListener('keydown',e=>{if(/^\d$/.test(e.key)){e.preventDefault();key(e.key);}else if(e.key==='Backspace'){e.preventDefault();key('back');}});
- function verified(seat){const s=sessions.get(seat);return !!s&&s.expires>Date.now();}
+ function verified(seat){const s=sessions.get(seat);if(s&&s.expires>Date.now())return true;if(s)forget(seat);return false;}
  return {
   verified,
-  forget(seat){sessions.delete(seat);},
+  forget,
+  forgetAll(){sessions.clear();primary='';tab.clear();},
+  currentSeat(){return verified(primary)?primary:'';},
+  setPrimary(seat){if(!verified(seat))return false;primary=seat;tab.save({seat,...sessions.get(seat)});return true;},
   async ensure(seat){if(!seat)return false;if(verified(seat))return true;if(active)return false;
    if(!demo&&!getConfig()?.authRequired){document.getElementById('home-message').textContent='請老師先部署密碼後台，才能登入。';return false;}
-   active=seat;buffer='';$('pin-seat').textContent='🔢 '+seat;$('pin-status').textContent='';$('pin-status').removeAttribute('aria-label');$('pin-status').removeAttribute('title');display();dialog.showModal();return new Promise(resolve=>resolvePrompt=resolve);
+   active=seat;buffer='';$('pin-seat').textContent='🔢 '+seat+' 號・輸入密碼';$('pin-status').textContent='';$('pin-status').removeAttribute('aria-label');$('pin-status').removeAttribute('title');display();dialog.showModal();return new Promise(resolve=>resolvePrompt=resolve);
   },
   decorate(payload){
    const list=payload.kind==='race'?payload.seats:payload.competition?.seats;
    const seats=list||[payload.seat];for(const seat of seats)if(!verified(seat))throw new Error('authentication_required');
    return list?{...payload,authTokens:Object.fromEntries(seats.map(s=>[s,sessions.get(s).token]))}:{...payload,token:sessions.get(payload.seat).token};
   },
-  async request(payload){const out=await post(this.decorate(payload));if(out.error==='authentication_required'){for(const seat of payload.seats||payload.competition?.seats||[payload.seat])sessions.delete(seat);throw new Error(out.error);}return out;}
+  async request(payload){const out=await post(this.decorate(payload));if(out.error==='authentication_required'){for(const seat of payload.seats||payload.competition?.seats||[payload.seat])forget(seat);throw new Error(out.error);}return out;}
  };
 }

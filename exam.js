@@ -1,6 +1,6 @@
 import {audioSource} from './audio-source.js?v=20260920-le4';
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
-import {createStudentAuth} from './student-auth.js?v=20260913-tutor1';
+import {createStudentAuth} from './student-auth.js?v=20260920-login1';
 import {createStarCollection} from './star-cards-ui.js?v=20260919-egg1';
 import {PROFILE_CHARACTERS} from './student-profile.js?v=20260920-sprites1';
 import {portrait} from './characters.js?v=20260913-heroes1';
@@ -34,11 +34,12 @@ function render(out){renderVersion++;reviewPlayer.stop();state=out;offset=out.se
  if(out.exam.mode==='single')buttons('choices',out.question.choices,'answer');else{for(const kind of ['initial','final']){$(kind+'-slot').textContent='';buttons(kind+'-choices',out.question.choices[kind],kind);}$('tone').textContent=out.question.toneMark;}
  enable();listen();
 }
-async function resume(){if(!seat||!examId)return;if(!await auth.ensure(seat))return;showExamIdentity();const pending=readPending();if(pending){let out;try{out=await request(pending);}catch(e){if(!['id_conflict','exam_sequence'].includes(e.message))throw e;out=await request({kind:'exam-resume'});if(!out.finished&&out.answered<=pending.index)throw e;}clearPending();render(out);}else render(await request({kind:'exam-start'}));}
+async function resume(){if(!seat||!examId)return;if(!await auth.ensure(seat))return;auth.setPrimary(seat);showExamIdentity();const pending=readPending();if(pending){let out;try{out=await request(pending);}catch(e){if(!['id_conflict','exam_sequence'].includes(e.message))throw e;out=await request({kind:'exam-resume'});if(!out.finished&&out.answered<=pending.index)throw e;}clearPending();render(out);}else render(await request({kind:'exam-start'}));}
 $('start').onclick=()=>{seat=$('seat').value;examId=$('exam-select').value;if(!seat||!examId){$('home-message').textContent='請選座號與小考。';return;}history.replaceState(null,'','?id='+encodeURIComponent(examId));run(resume);};
 $('recover').onclick=()=>run(resume);$('listen').onclick=listen;
 $('submit').onclick=()=>{if(!state?.question||state.review)return;run(async()=>{const payload={kind:'exam-answer',seat,examId,reviewEnabled:true,index:state.question.index,answer:state.exam.mode==='single'?selection.answer:selection.initial+selection.final};savePending(payload);const out=await request(payload);clearPending();render(out);});};
 setInterval(()=>{if(!state||state.finished)return;const remaining=Math.max(0,state.exam.ends-Date.now()-offset);$('clock').textContent=`⏱ 剩下 ${Math.floor(remaining/60000)} 分 ${Math.floor(remaining%60000/1000)} 秒`;if(!remaining){enable();if(!state.review&&!busy&&!expiryTried){expiryTried=true;run(async()=>render(await request({kind:'exam-resume'})));}}},1000);
 window.addEventListener('online',()=>{if(seat&&examId&&!busy&&!state?.review)run(resume);});
 async function load(){try{const [c,list]=await Promise.all([client.get({api:'config'}),client.get({api:'exams'})]);config=c;for(const s of c.seats)$('seat').append(new Option(s+' 號',s));for(const e of list.exams)$('exam-select').append(new Option(e.title+'（'+(e.mode==='spelling'?'拼音':'聽音')+'）',e.id));if(examId&&![...$('exam-select').options].some(o=>o.value===examId))$('exam-select').append(new Option('接續／查看原小考',examId));if(examId)$('exam-select').value=examId;$('start').disabled=false;if(!$('exam-select').options.length){$('home-message').textContent='目前沒有安排小考。';$('start').disabled=true;}}catch{$('home-message').textContent='無法讀取小考，請重新整理或確認網路。';}}
-load();
+$('seat').onchange=()=>{if($('seat').value!==auth.currentSeat())auth.forgetAll();};
+load().then(()=>{if(config?.seats.includes(auth.currentSeat()))$('seat').value=auth.currentSeat();});

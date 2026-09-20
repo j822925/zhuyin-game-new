@@ -1,10 +1,10 @@
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
-import {createStudentAuth} from './student-auth.js?v=20260913-tutor1';
+import {createStudentAuth} from './student-auth.js?v=20260920-login1';
 import {createStarCollection} from './star-cards-ui.js?v=20260919-egg1';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config,seat='',busy=false;
 const auth=createStudentAuth({demo:false,getConfig:()=>config,post:d=>client.post(d)});
 const collection=createStarCollection({root:$('star-collection'),request:async d=>{const out=await auth.request({...d,seat});if(out.error)throw Error(out.error);return out;}});
-$('open').onclick=async()=>{if(busy)return;seat=$('seat').value;if(!seat){$('home-message').textContent='請先選擇座號。';return;}busy=true;$('open').disabled=true;$('seat').disabled=true;try{if(!await auth.ensure(seat))return;$('home-message').textContent=seat+' 號的收藏；更換座號請重新整理。';$('login-area').hidden=true;$('star-collection').hidden=false;await collection.load();}catch{$('home-message').textContent='登入失敗，請再試一次。';}finally{busy=false;$('open').disabled=false;$('seat').disabled=false;}};
-$('seat').onchange=()=>{$('star-collection').hidden=true;};
-async function load(){try{config=await client.get({api:'config'});for(const s of config.seats)$('seat').append(new Option(s+' 號',s));$('open').disabled=false;}catch{$('home-message').textContent='無法載入，請重新整理。';}}load();
+$('open').onclick=async()=>{if(busy)return;seat=$('seat').value;if(!seat){$('home-message').textContent='請先選擇座號。';return;}busy=true;$('open').disabled=true;$('seat').disabled=true;try{if(!await auth.ensure(seat))return;auth.setPrimary(seat);$('home-message').textContent=seat+' 號的收藏；更換座號請回遊戲按「換人登入」。';$('login-area').hidden=true;$('star-collection').hidden=false;await collection.load();}catch{$('home-message').textContent='登入失敗，請再試一次。';}finally{busy=false;$('open').disabled=false;$('seat').disabled=false;}};
+$('seat').onchange=()=>{$('star-collection').hidden=true;if($('seat').value!==auth.currentSeat())auth.forgetAll();};
+async function load(){try{config=await client.get({api:'config'});for(const s of config.seats)$('seat').append(new Option(s+' 號',s));$('open').disabled=false;if(config.seats.includes(auth.currentSeat())){$('seat').value=auth.currentSeat();await $('open').onclick();}}catch{$('home-message').textContent='無法載入，請重新整理。';}}load();

@@ -39,7 +39,7 @@ export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onCh
  async function refresh(){
   const seats=[...new Set(getSeats().filter(Boolean))];
   if(!demo&&getConfig()?.rewardsWrites){await Promise.all(seats.map(async seat=>{const v=(refreshVersions.get(seat)||0)+1;refreshVersions.set(seat,v);try{const data=await within(jsonGet('?api=wallet&seat='+encodeURIComponent(seat)),5000);if(refreshVersions.get(seat)===v&&data&&Number.isInteger(data.stars)&&Array.isArray(data.owned))cache.set(seat,data);}catch{}}));}
-  if(getSeat()){if(!dialog.open)activeSeat=getSeat();render();}onChange?.();
+  if(getSeat()){if(!dialog.open)activeSeat=getSeat();render();}else if(!dialog.open){activeSeat='';render();}onChange?.();
  }
  button.onclick=async()=>{if(!getSeat()){document.getElementById('seat').focus();document.getElementById('home-message').textContent='👆 🔢';return;}activeSeat=getSeat();revealed=false;$('gacha-reveal').textContent='🥚';$('gacha-message').textContent=demo?'':getConfig()?.rewardsWrites?'':'老師提醒：正式星星紀錄尚未開放，目前可在老師試玩體驗。';render();dialog.showModal();await refresh();};
  $('collection-close').onclick=()=>{if(!busy)dialog.close();};dialog.addEventListener('cancel',e=>{if(busy)e.preventDefault();});

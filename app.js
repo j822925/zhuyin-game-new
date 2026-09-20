@@ -3,12 +3,13 @@ import {createLittleTeacher} from './little-teacher.js?v=20260920-le4';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260913-tutor1';
 import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round} from './core.js?v=20260913-heroes1';
 import {createMultiplayer} from './multiplayer.js?v=20260919-profile1';
-import {createRewards} from './rewards.js?v=20260919-egg1';
+import {createRewards} from './rewards.js?v=20260920-login1';
 import {createStudentProfile} from './student-profile.js?v=20260920-sprites1';
 import {portrait} from './characters.js?v=20260913-heroes1';
 import {setupChildUI} from './child-ui.js?v=20260913-family1';
 import {setupCozyUI} from './cozy-ui.js?v=20260913-heroes1';
-import {createStudentAuth} from './student-auth.js?v=20260913-tutor1';
+import {createStudentAuth} from './student-auth.js?v=20260920-login1';
+import {setupStudentLoginGate} from './student-login-gate.js?v=20260920-login1';
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
 import {setupExamEntry} from './exam-entry.js?v=20260919-entry1';
 const API='https://zhuyin-api.j822925.workers.dev/api';
@@ -37,9 +38,9 @@ const raceButton=document.createElement('button');raceButton.id='race';raceButto
 const apiClient=createApiClient(API);
 const postJSON=payload=>apiClient.post(payload);
 const auth=createStudentAuth({demo,getConfig:()=>config,post:postJSON});
-let rewards,profiles;
+let rewards,profiles,loginGate;
 const teamUI=createMultiplayer({getIdentity:seat=>profiles?.identity(seat),getOwned:seat=>rewards?.owned(seat),getSeats:()=>[$('seat').value,$('partner').value],onExit:home,onFinish:(payload,html)=>{screen('result');$('result-details').innerHTML=html;persistResults([payload]);}});
-function renderIdentity(){teamUI.refreshPicker();profiles?.renderHeader();if($('seat').value)document.querySelector('.mascot').innerHTML=portrait(profiles?.identity($('seat').value).character||rewards.avatar($('seat').value));}
+function renderIdentity(){teamUI.refreshPicker();profiles?.renderHeader();if($('change-student'))$('change-student').hidden=!auth.verified($('seat').value);document.querySelector('.mascot').innerHTML=portrait(auth.verified($('seat').value)?profiles?.identity($('seat').value).character||rewards.avatar($('seat').value):rewards.avatar(''));}
 rewards=createRewards({demo,getConfig:()=>config,getSeat:()=>auth.verified($('seat').value)?$('seat').value:'',getSeats:()=>[$('seat').value,$('partner').value].filter(s=>auth.verified(s)),jsonGet,post:payload=>auth.request(payload),onChange:renderIdentity});
 const voiceHelp=setupChildUI({demo,onPreviewBonus:()=>rewards.previewBonus(),onBeforeVoice:()=>audio.pause()});
 const tutorButton=document.createElement('button');tutorButton.id='little-teacher';tutorButton.hidden=true;tutorButton.setAttribute('aria-label','小老師：看答案，聽拼音示範');tutorButton.innerHTML='<img src="assets/characters/cozy-v1/owl.png" alt=""><span aria-hidden="true">🎓</span>';$('audio-status').after(tutorButton);
@@ -55,7 +56,7 @@ function refreshHome(){
  for(const id of ['seat','partner'])$(id).innerHTML='<option value="">選擇座號</option>'+config.seats.map(x=>`<option value="${safe(x)}">${safe(x)} 號</option>`).join('');
  $('seat').value=previous;$('partner').value=partner;
  $('learned').innerHTML='<span class="label">老師已教</span>'+[...config.symbols,...config.compounds].map(x=>`<span>${safe(x)}</span>`).join('');
- for(const button of document.querySelectorAll('[data-mode]')){const id=button.dataset.mode,pool=poolFor(id,config,catalog);button.disabled=!pool.length||(id==='spelling'&&!config.spellingApproved);button.querySelector('.world-status').textContent=!pool.length?'等待老師安排學過的內容':id==='spelling'&&!config.spellingApproved?'等老師確認示範音後開放':`${pool.length} 種聲音 · 每人 ${config.questions} 題`;}
+ for(const button of document.querySelectorAll('[data-mode]')){const id=button.dataset.mode,pool=poolFor(id,config,catalog);button.disabled=auth.verified($('seat').value)&&(!pool.length||(id==='spelling'&&!config.spellingApproved));button.querySelector('.world-status').textContent=!pool.length?'等待老師安排學過的內容':id==='spelling'&&!config.spellingApproved?'等老師確認示範音後開放':`${pool.length} 種聲音 · 每人 ${config.questions} 題`;}
  $('connection').textContent=demo?'老師試玩模式':'已讀取老師任務';
  $('collection').textContent=playStyle==='race'?'左右搶答 · 比賽另存，不計入每日練習／全對':duo?'輪流答題，每人完成一整回合':'慢慢練，一次比一次熟悉';
 }
@@ -65,9 +66,13 @@ async function load(){
  try{catalog=createCatalog(await fetch('data/syllables.json?v=20260920-le4').then(r=>{if(!r.ok)throw new Error();return r.json();}));
   config=normalizeConfig(demo?{version:2,symbols:({fo2:['ㄈ','ㄛ'],lve4:['ㄌ','ㄩㄝ']})[new URLSearchParams(location.search).get('lesson')]||['ㄅ','ㄆ','ㄇ','ㄉ','ㄧ','ㄠ'],compounds:[],seats:Array.from({length:15},(_,i)=>String(i+1)),questions:10,spellingApproved:true}:await jsonGet('?api=config'));
   refreshHome();if(config.legacy)$('home-message').textContent='老師提醒：目前連接舊版後台。正式記錄前，請先更新後台；現在仍可讀取已教注音。';
-  // Pending records wait until their student has authenticated.
- }catch{$('connection').textContent='尚未連線';$('home-message').textContent='還沒讀到老師的任務，請確認網路後再試一次。';document.querySelectorAll('[data-mode]').forEach(b=>b.disabled=true);}
- finally{$('reload').disabled=false;}
+  const restored=auth.currentSeat();if(restored&&!config.seats.includes(restored))auth.forgetAll();
+  if(!$('seat').value&&auth.currentSeat()){$('seat').value=auth.currentSeat();selectedIdentities.seat=$('seat').value;}
+  await rewards.refresh();await profiles.refresh();refreshHome();
+  // Resume only records whose seat is authenticated; other students still require their PIN.
+  if(!demo&&auth.currentSeat())flushPending();
+ }catch{$('connection').textContent='尚未連線';$('home-message').textContent='還沒讀到老師的任務，請確認網路後再試一次。';document.querySelectorAll('[data-mode]').forEach(b=>b.disabled=auth.verified($('seat').value));}
+ finally{$('reload').disabled=false;loginGate?.update();}
 }
 function demoConfig(expanded){config=normalizeConfig({version:2,symbols:expanded?BASE:['ㄅ','ㄆ','ㄇ','ㄉ','ㄧ','ㄠ'],compounds:expanded?COMPOUNDS:[],seats:Array.from({length:15},(_,i)=>String(i+1)),questions:10,spellingApproved:true});refreshHome();}
 async function start(id){
@@ -136,10 +141,22 @@ document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(b.datase
 function selectStyle(style){playStyle=style;duo=style!=='solo';for(const id of ['solo','duo','race']){const selected=id===(style==='turn'?'duo':style);$(id).classList.toggle('selected',selected);$(id).setAttribute('aria-pressed',String(selected));}$('partner-label').hidden=!duo;teamUI.setStyle(style);if(config)refreshHome();if(style!=='solo'&&$('partner').value&&!auth.verified($('partner').value))$('partner').onchange();}
 $('solo').onclick=()=>selectStyle('solo');$('duo').onclick=()=>selectStyle('turn');$('race').onclick=()=>selectStyle('race');
 const selectedIdentities={seat:'',partner:''};
-for(const id of ['seat','partner'])$(id).onchange=async()=>{const seat=$(id).value;auth.forget(selectedIdentities[id]);auth.forget(seat);profiles.clearSeat(selectedIdentities[id]);profiles.clearSeat(seat);selectedIdentities[id]=seat;if(seat&&!await auth.ensure(seat))$(id).value='';await rewards.refresh();await profiles.refresh();if(!demo)flushPending();};
+for(const id of ['seat','partner'])$(id).onchange=async()=>{const seat=$(id).value;
+ if(id==='partner'&&seat&&seat===$('seat').value){$('partner').value='';$('home-message').textContent='請選另一位小朋友的座號，不能和自己一樣喔。';return;}
+ if(id==='seat'){auth.forgetAll();profiles.clearSeat(selectedIdentities.partner);$('partner').value='';selectedIdentities.partner='';}else{auth.forget(selectedIdentities[id]);auth.forget(seat);}
+ profiles.clearSeat(selectedIdentities[id]);profiles.clearSeat(seat);selectedIdentities[id]=seat;
+ if(seat&&!await auth.ensure(seat))$(id).value='';else if(id==='seat')auth.setPrimary(seat);
+ await rewards.refresh();await profiles.refresh();if(config)refreshHome();renderIdentity();if(!demo)flushPending();};
 $('listen').onclick=play;$('check-spelling').onclick=()=>answer((selected.initial||'')+(selected.final||''));$('next').onclick=next;$('reload').onclick=load;$('demo-basic').onclick=()=>demoConfig(false);$('demo-expanded').onclick=()=>demoConfig(true);$('again').onclick=()=>start(mode);$('retry-save').onclick=flushPending;
 function home(){session++;tutor.close();audio.pause();teamUI.stop();screen('home');if(config)refreshHome();}
 $('back-home').onclick=home;$('leave').onclick=()=>{$('leave-dialog').showModal();};$('stay').onclick=()=>$('leave-dialog').close();$('confirm-leave').onclick=()=>{$('leave-dialog').close();home();};
+// Home is an in-app action, not a document reload that discards the current round/session.
+document.querySelector('.brand').onclick=e=>{e.preventDefault();if(!$('game').hidden||!$('race-game').hidden)$('leave-dialog').showModal();else home();};
+const changeStudent=document.createElement('button');changeStudent.id='change-student';changeStudent.type='button';changeStudent.textContent='🔄 換人登入';changeStudent.hidden=true;$('seat').parentElement.after(changeStudent);
+loginGate=setupStudentLoginGate({auth,getSeat:()=>$('seat').value,getSeats:()=>config?.seats||[],selectSeat:async seat=>{$('seat').value=seat;await $('seat').onchange();},onRetry:load,onHome:home});
+changeStudent.onclick=()=>{auth.forgetAll();for(const id of ['seat','partner']){profiles.clearSeat(selectedIdentities[id]);selectedIdentities[id]='';$(id).value='';}rewards.refresh();renderIdentity();home();loginGate.open();};
+// Even before the lesson finishes loading, a child can always reach the sign-in guide.
+document.querySelectorAll('[data-mode]').forEach(b=>b.disabled=false);
 document.querySelectorAll('.slot').forEach(b=>{b.onclick=()=>{if(rounds[active].locked||!audioReady)return;delete selected[b.dataset.slot];b.setAttribute('aria-label',b.dataset.slot==='initial'?'聲符位置':'韻符或結合韻位置');if(b.dataset.slot==='final')showSpellingTone(document.querySelector('#spelling .slots'),rounds[active].current);b.classList.remove('filled');b.textContent=b.dataset.slot==='initial'?'聲符':'韻符';$('check-spelling').disabled=true;};b.ondragover=e=>e.preventDefault();b.ondrop=e=>{e.preventDefault();try{const item=JSON.parse(e.dataTransfer.getData('text/plain'));if(item.kind===b.dataset.slot)place(item.kind,item.value);}catch{}};});
 // Pointer capture makes drag-and-drop work on touch tablets as well as mouse devices.
 let touchStart;
