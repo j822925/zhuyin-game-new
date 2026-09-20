@@ -1,6 +1,7 @@
 import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260913-heroes1';
 import {STAR_CARDS} from './data/star-cards.js?v=20260919-star1';
-export const PROFILE_CHARACTERS=[...CHARACTERS,...STAR_CARDS.map(c=>({...c,emoji:'✨',name:c.symbol+'之星使・'+c.name}))];
+import {STAR_SPRITES} from './data/star-sprites.js?v=20260920-sprites1';
+export const PROFILE_CHARACTERS=[...CHARACTERS,...STAR_CARDS.map(c=>({...c,image:STAR_SPRITES[c.id],emoji:'✨',name:c.symbol+'之星使・'+c.name}))];
 const $=id=>document.getElementById(id);
 export function createStudentProfile({demo,auth,getSeat,getSeats,getOwned,getAvatar,onChange,isHome=()=>true}){
  const cache=new Map();let version=0,openedSeat='',draftAvatar='',busy=false,loaded=false;

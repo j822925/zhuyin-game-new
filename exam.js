@@ -2,7 +2,7 @@ import {audioSource} from './audio-source.js?v=20260920-le4';
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
 import {createStudentAuth} from './student-auth.js?v=20260913-tutor1';
 import {createStarCollection} from './star-cards-ui.js?v=20260919-egg1';
-import {PROFILE_CHARACTERS} from './student-profile.js?v=20260919-profile1';
+import {PROFILE_CHARACTERS} from './student-profile.js?v=20260920-sprites1';
 import {portrait} from './characters.js?v=20260913-heroes1';
 import {createExamReview} from './exam-review.js?v=20260920-le4';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
