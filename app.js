@@ -34,7 +34,8 @@ $('app').innerHTML=`<header><a class="brand" href="./${demo?'?demo=1':''}"><img 
 <main id="game" hidden><div class="game-top"><button id="leave" class="text-button">← 回島嶼</button><span id="world-title"></span><span id="question-number"></span></div><div class="progress-track"><div id="progress-fill"></div></div><div id="player-turn" class="player-turn"></div><section class="question-card"><p id="instruction" class="instruction"></p><button id="listen" class="listen" aria-label="播放題目聲音">♪<span>再聽一次</span></button><p id="audio-status" class="audio-status" role="status"></p><div id="options" class="options"></div><div id="spelling" hidden><div class="slots"><button class="slot" data-slot="initial" aria-label="聲符位置">聲符</button><span class="spelling-tone" hidden></span><button class="slot" data-slot="final" aria-label="韻符或結合韻位置">韻符</button></div><p class="small">點一下積木，或把它拖到上方的位置</p><div id="tiles" class="tiles"></div><button id="check-spelling" class="primary" disabled>拼好了！</button></div><p id="feedback" class="feedback" aria-live="polite"></p><button id="next" class="primary next" hidden>下一題 →</button></section><p class="game-hint">選錯了也沒關係，再聽一次就好。</p></main>
 <main id="result" hidden><section class="result-card"><div class="celebration" aria-hidden="true">✦</div><p class="eyebrow">今天又前進了一步</p><h1>探險完成！</h1><div id="result-details"></div><p id="save-status" class="small" role="status"></p><button id="retry-save" class="text-button" hidden>重新傳送紀錄</button><div class="result-actions"><button id="again" class="primary">再練一次</button><button id="back-home" class="secondary">回到島嶼</button></div></section></main>
 <dialog id="leave-dialog"><h2>要先離開這次探險嗎？</h2><p>完成整回合才會記錄成績，這回合還沒完成喔。</p><div class="result-actions"><button id="stay" class="primary">繼續探險</button><button id="confirm-leave" class="secondary">回到島嶼</button></div></dialog><footer>注音探險島<span>聽見聲音，看見進步。</span></footer>`;
-const raceButton=document.createElement('button');raceButton.id='race';raceButton.textContent='⚡ 雙人搶答';raceButton.setAttribute('aria-pressed','false');$('duo').after(raceButton);
+const raceButton=document.createElement('button');raceButton.id='race';raceButton.textContent=demo?'⚡ 雙人搶答':'⚡ 連線搶答';raceButton.setAttribute('aria-pressed','false');$('duo').after(raceButton);
+if(!demo)$('duo').textContent='🤝 連線輪流';
 const apiClient=createApiClient(API);
 const postJSON=payload=>apiClient.post(payload);
 const auth=createStudentAuth({demo,getConfig:()=>config,post:postJSON});
@@ -58,7 +59,7 @@ function refreshHome(){
  $('learned').innerHTML='<span class="label">老師已教</span>'+[...config.symbols,...config.compounds].map(x=>`<span>${safe(x)}</span>`).join('');
  for(const button of document.querySelectorAll('[data-mode]')){const id=button.dataset.mode,pool=poolFor(id,config,catalog);button.disabled=auth.verified($('seat').value)&&(!pool.length||(id==='spelling'&&!config.spellingApproved));button.querySelector('.world-status').textContent=!pool.length?'等待老師安排學過的內容':id==='spelling'&&!config.spellingApproved?'等老師確認示範音後開放':`${pool.length} 種聲音 · 每人 ${config.questions} 題`;}
  $('connection').textContent=demo?'老師試玩模式':'已讀取老師任務';
- $('collection').textContent=playStyle==='race'?'左右搶答 · 比賽另存，不計入每日練習／全對':duo?'輪流答題，每人完成一整回合':'慢慢練，一次比一次熟悉';
+ $('collection').textContent=playStyle==='race'?(demo?'左右搶答':'兩台裝置連線搶答')+' · 比賽另存，不計入每日練習／全對':duo?(demo?'輪流答題':'兩台裝置連線輪流')+'，每人完成一整回合':'慢慢練，一次比一次熟悉';
 }
 async function jsonGet(params=''){const p=new URLSearchParams(params);if(p.get('api')&&p.get('api')!=='config')return auth.request({kind:'query',api:p.get('api'),seat:p.get('seat')||$('seat').value,id:p.get('id')||''});return apiClient.get(Object.fromEntries(p));}
 async function load(){
@@ -78,6 +79,11 @@ function demoConfig(expanded){config=normalizeConfig({version:2,symbols:expanded
 async function start(id){
  voiceHelp.stop();
  if(!config)return;
+ if(!demo&&playStyle!=='solo'){
+  if(!await auth.ensure($('seat').value))return;
+  auth.setPrimary($('seat').value);
+  location.href='online.html?mode='+encodeURIComponent(playStyle)+'&lesson='+encodeURIComponent(id);return;
+ }
  seats=[$('seat').value];if(duo)seats.push($('partner').value);
  if(seats.some(s=>!config.seats.includes(s))||new Set(seats).size!==seats.length){$('home-message').textContent=duo?'請先選好兩位不同的小朋友座號。':'請先選擇你的座號。';$('seat').focus();return;}
  if(!demo&&!config.verifiedWrites){$('home-message').textContent='請老師先更新後台再開始，才能確認成績有成功儲存。';return;}
@@ -138,7 +144,7 @@ function persistResults(results){
 async function send(payload){const status=await auth.request(payload);if(status.saved!==true)throw new Error(status.error||'unconfirmed');if(latestIds.includes(payload.roundId)&&Array.isArray(status.awards)&&!document.getElementById('award-'+payload.roundId)){const line=document.createElement('div');line.id='award-'+payload.roundId;line.className='round-awards';for(const award of status.awards){const p=document.createElement('p');p.textContent=`🔢 ${award.seat}　⭐ +${award.stars}`;line.append(p);}$('result-details').append(line);}}
 async function flushPending(){if(saving||demo||!config?.verifiedWrites)return;saving=true;$('retry-save').disabled=true;const attempted=new Set();try{for(const payload of [...pending]){attempted.add(payload.roundId);try{await send(payload);pending=pending.filter(x=>x.roundId!==payload.roundId);write('zhuyin.pending.v2',pending);}catch{/* Keep failed rounds and try the others. */}}}finally{saving=false;$('retry-save').disabled=false;const outstanding=pending.some(x=>latestIds.includes(x.roundId)),stored=write('zhuyin.pending.v2',pending);$('retry-save').hidden=!outstanding;$('save-status').textContent=outstanding?(stored?'紀錄已暫存在這台裝置，尚未確認存入後台。':'此裝置無法暫存，請勿關閉頁面。')+'請保持連線並重新傳送。':'老師已收到這次的完整紀錄！';rewards.refresh();if(pending.some(x=>!attempted.has(x.roundId)))flushPending();}}
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(b.dataset.mode));
-function selectStyle(style){playStyle=style;duo=style!=='solo';for(const id of ['solo','duo','race']){const selected=id===(style==='turn'?'duo':style);$(id).classList.toggle('selected',selected);$(id).setAttribute('aria-pressed',String(selected));}$('partner-label').hidden=!duo;teamUI.setStyle(style);if(config)refreshHome();if(style!=='solo'&&$('partner').value&&!auth.verified($('partner').value))$('partner').onchange();}
+function selectStyle(style){playStyle=style;duo=style!=='solo';for(const id of ['solo','duo','race']){const selected=id===(style==='turn'?'duo':style);$(id).classList.toggle('selected',selected);$(id).setAttribute('aria-pressed',String(selected));}$('partner-label').hidden=!duo||!demo;teamUI.setStyle(style);if(config)refreshHome();if(demo&&style!=='solo'&&$('partner').value&&!auth.verified($('partner').value))$('partner').onchange();}
 $('solo').onclick=()=>selectStyle('solo');$('duo').onclick=()=>selectStyle('turn');$('race').onclick=()=>selectStyle('race');
 const selectedIdentities={seat:'',partner:''};
 for(const id of ['seat','partner'])$(id).onchange=async()=>{const seat=$(id).value;
