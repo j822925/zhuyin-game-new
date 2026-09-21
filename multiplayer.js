@@ -5,13 +5,13 @@ import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260913-heroes1';
 const animals=CHARACTERS.map(c=>[c.emoji,c.name]);
 const keys=[['a','s','d','f'],['h','j','k','l']];
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export function createMultiplayer({onExit,onFinish,getOwned,getSeats,getIdentity}){
+export function createMultiplayer({onExit,onFinish,getOwned,getSeats,getIdentity,localPicker=true}){
  const $=id=>document.getElementById(id);
  let picked=[0,1],race=null,participants=[],pool=[],count=3,questionMode='single',running=false,generation=0,ready=[false,false];
  let turnCallback=null,roundStarted=0,questionStarted=0,currentOptions=[],style='solo';
  const sound=new Audio();sound.preload='auto';
  const picker=document.createElement('div');picker.id='animal-picker';picker.className='animal-picker';picker.hidden=true;
- document.querySelector('.setup').after(picker);
+ if(localPicker)document.querySelector('.setup').after(picker);
  const turn=document.createElement('dialog');turn.id='turn-gate';turn.innerHTML='<div id="turn-gate-content"></div>';
  document.body.append(turn);
  const stage=document.createElement('main');stage.id='race-game';stage.hidden=true;
@@ -25,6 +25,7 @@ export function createMultiplayer({onExit,onFinish,getOwned,getSeats,getIdentity
  function character(i){return (style==='turn'&&getIdentity?.(participants[i])?.character.emoji)||animals[picked[i]][0];}
  function teamMarkup(i){const person=getIdentity?.(participants[i]),c=style==='turn'&&person?person.character:CHARACTERS[picked[i]];return `<span class="animal-face">${portrait(c)}</span><span class="turn-person-name"><small>${i===0?'藍隊':'橘隊'} · ${escape(participants[i]||'')} 號</small><strong>${escape(person?.name||participants[i]+' 號')}</strong></span>`;}
  function drawPicker(){
+  if(!localPicker)return;
   const seats=getSeats?.()||[];for(let i=0;i<2;i++){const owned=getOwned?.(seats[i])||STARTERS;if(!owned.includes(CHARACTERS[picked[i]].id)||picked[i]===picked[1-i])picked[i]=CHARACTERS.findIndex((c,n)=>owned.includes(c.id)&&n!==picked[1-i]);}
   picker.innerHTML='<p>各選一隻小動物；藍隊在左邊，橘隊在右邊。</p><div class="animal-teams">'+[0,1].map(i=>`<section class="team-${i}"><h3>${i===0?'◀ 藍隊':'橘隊 ▶'}</h3><div class="animal-choices">${animals.map(([emoji,name],n)=>`<button data-player="${i}" data-animal="${n}" aria-label="${i===0?'藍隊':'橘隊'}選${name}" aria-pressed="${picked[i]===n}" ${picked[1-i]===n||!(getOwned?.(seats[i])||STARTERS).includes(CHARACTERS[n].id)?'disabled':''}>${portrait(CHARACTERS[n])}</button>`).join('')}</div></section>`).join('')+'</div>';
   picker.querySelectorAll('[data-animal]').forEach(b=>b.onclick=()=>{picked[Number(b.dataset.player)]=Number(b.dataset.animal);drawPicker();});
@@ -80,7 +81,7 @@ export function createMultiplayer({onExit,onFinish,getOwned,getSeats,getIdentity
  $('race-fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await stage.requestFullscreen();}catch{$('race-message').textContent='此瀏覽器無法切換全螢幕；可使用大螢幕瀏覽器的全螢幕功能。';}};
  document.addEventListener('keydown',e=>{if(!running||leave.open||e.repeat||e.ctrlKey||e.altKey||e.metaKey||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;for(let i=0;i<2;i++){const n=keys[i].indexOf(e.key.toLowerCase());if(n>=0){e.preventDefault();choose(i,n);return;}}});
  return {
-  setStyle(value){style=value;picker.hidden=style!=='race';if(style==='solo')document.body.classList.remove('turn-team-0','turn-team-1');},
+  setStyle(value){style=value;picker.hidden=!localPicker||style!=='race';if(style==='solo')document.body.classList.remove('turn-team-0','turn-team-1');},
   character,turnPrompt,stop,refreshPicker:drawPicker,
   start({seats,mode,questionPool,questions,choices}){stop();participants=[...seats];questionMode=mode;pool=questionPool;count=choices;race=new Race(questionDeck(pool,questions));ready=[false,false];running=true;roundStarted=Date.now();['home','game','result'].forEach(id=>$(id).hidden=true);stage.hidden=false;document.body.classList.add('race-active');window.scrollTo(0,0);renderRaceQuestion();}
  };
