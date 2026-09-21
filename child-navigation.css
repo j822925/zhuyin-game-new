@@ -1,0 +1,37 @@
+/* Shared child-facing navigation. Keep visible words; do not rely on tiny outline icons. */
+html body a.child-nav,html body button.child-nav{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;
+ box-sizing:border-box!important;min-width:152px!important;min-height:66px!important;width:auto!important;height:auto!important;
+ padding:8px 17px 8px 10px!important;border:2px solid #9a7950!important;border-bottom-width:6px!important;
+ border-radius:23px!important;background:#fff0bd!important;color:#355a48!important;
+ font-family:inherit!important;font-size:23px!important;font-weight:800!important;line-height:1.25!important;
+ text-decoration:none!important;white-space:nowrap!important;letter-spacing:.03em!important;
+ box-shadow:inset 0 0 0 3px #fffcdf,0 3px 0 #d7c49b!important;cursor:pointer;touch-action:manipulation;
+ vertical-align:middle;flex-shrink:0;max-width:100%;
+}
+html body .child-nav .child-nav-icon{display:grid!important;place-items:center;flex:0 0 46px;width:46px;height:46px;border-radius:15px;background:#e0edd2;box-shadow:inset 0 0 0 2px #c1d5ae}
+html body .child-nav .child-nav-icon img{display:block;width:44px!important;height:44px!important;max-width:none!important;object-fit:contain}
+html body .child-nav .child-nav-label{display:inline!important;font-size:inherit!important;color:inherit!important;font-weight:inherit!important}
+html body .child-nav:hover{background:#ffe59c!important}
+html body .child-nav:focus-visible{outline:4px solid #397fa0!important;outline-offset:4px!important}
+html body .child-nav:active{transform:translateY(2px)}
+html body .child-nav:disabled{cursor:wait;opacity:.55}
+html body .child-nav[hidden]{display:none!important}
+html body .child-nav.star-prize-close{position:relative!important;inset:auto!important;margin:0 0 12px auto;z-index:2}
+html body .child-nav.star-prize-done{margin:18px auto 0}
+.profile-top,.collection-top,.pin-top,.tutor-actions,.result-actions{flex-wrap:wrap;gap:12px}
+.cozy-ui #collection-dialog .gacha-pools{position:static;transform:none;margin:16px 0 10px}
+.cozy-ui .collection-top .child-nav{margin-left:auto}
+.cozy-ui header:has(.child-nav){height:auto;min-height:82px;flex-wrap:wrap;gap:12px;padding-block:10px}
+.game-top:has(.child-nav){flex-wrap:wrap;gap:12px;align-items:center}
+.child-home-row{margin:0 0 22px}
+header:has(> .child-nav){flex-wrap:wrap;gap:12px;height:auto}
+@media(max-width:600px){
+ html body a.child-nav,html body button.child-nav{min-width:140px!important;min-height:62px!important;font-size:21px!important;padding:7px 12px 7px 8px!important;gap:8px!important}
+ html body .child-nav .child-nav-icon{flex-basis:42px;width:42px;height:42px}
+ html body .child-nav .child-nav-icon img{width:40px!important;height:40px!important}
+ .cozy-ui .top-actions{flex-wrap:wrap;gap:8px}
+ .cozy-ui .collection-top strong{font-size:24px}
+ .profile-top h2{margin-block:8px}
+}
+@media(prefers-reduced-motion:reduce){html body .child-nav:active{transform:none}}
