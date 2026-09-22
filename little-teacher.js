@@ -1,4 +1,4 @@
-import {audioSource} from './audio-source.js?v=20260920-le4';
+import {audioSource} from './audio-source.js?v=20260922-compound-level1';
 import {BASE,COMPOUNDS} from './core.js?v=20260913-tutor1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260913-tutor1';
 export function tutorClips(q){

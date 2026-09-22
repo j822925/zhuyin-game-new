@@ -1,4 +1,4 @@
-import {audioSource} from './audio-source.js?v=20260920-le4';
+import {audioSource} from './audio-source.js?v=20260922-compound-level1';
 // One native player for the entire catalogue: avoid hundreds of Safari media controls.
 export const PAGE_SIZE=18;
 export function samplePage(rows,initial='',page=0){

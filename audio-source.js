@@ -1,7 +1,11 @@
-// Keep saved question IDs/paths compatible while bypassing the old pronunciation cache.
+// Preserve saved question paths while refreshing corrected pronunciation assets.
 export function audioSource(source){
- if(typeof source!=='string'||source.split(/[?#]/,1)[0]!=='audio/syllable-clear/s141.wav')return source;
+ if(typeof source!=='string')return source;
+ const base=source.split(/[?#]/,1)[0];
+ const version=base==='audio/syllable-clear/s141.wav'?'20260920-le4':
+  /^audio\/compound\/c(?:0[1-9]|1[0-9]|2[0-2])\.mp3$/.test(base)?'20260922-compound-level1':null;
+ if(!version)return source;
  const [pathAndQuery,hash]=source.split('#',2),[path,query]=pathAndQuery.split('?',2),params=new URLSearchParams(query);
- params.set('v','20260920-le4');
+ params.set('v',version);
  return path+'?'+params+(hash===undefined?'':'#'+hash);
 }

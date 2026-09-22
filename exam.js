@@ -1,10 +1,10 @@
-import {audioSource} from './audio-source.js?v=20260920-le4';
+import {audioSource} from './audio-source.js?v=20260922-compound-level1';
 import {createApiClient} from './api-client.js?v=20260913-tutor1';
 import {createStudentAuth} from './student-auth.js?v=20260920-login1';
 import {createStarCollection} from './star-cards-ui.js?v=20260919-egg1';
 import {PROFILE_CHARACTERS} from './student-profile.js?v=20260920-sprites1';
 import {portrait} from './characters.js?v=20260913-heroes1';
-import {createExamReview} from './exam-review.js?v=20260920-le4';
+import {createExamReview} from './exam-review.js?v=20260922-compound-level1';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config=null,seat='',examId=new URLSearchParams(location.search).get('id')||'',state=null,exams=[],busy=false,heard=false,selection={},offset=0,expiryTried=false,renderVersion=0;
 const pendingMemory=new Map();

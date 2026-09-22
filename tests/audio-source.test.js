@@ -14,10 +14,19 @@ test('saved old le4 audio paths bypass cache; unrelated sounds stay unchanged',(
  const file='audio/syllable-clear/s141.wav',fresh=file+'?v=20260920-le4';
  assert.equal(audioSource(file),fresh);assert.equal(audioSource(fresh),fresh);
  assert.equal(audioSource(file+'?v=old&x=1#part'),file+'?v=20260920-le4&x=1#part');
- for(const other of ['audio/syllable-clear/s14.wav','audio/syllable-clear/s142.wav','audio/audio_F1.WAV','audio/compound/c01.mp3',undefined])assert.equal(audioSource(other),other);
+ for(const other of ['audio/syllable-clear/s14.wav','audio/syllable-clear/s142.wav','audio/audio_F1.WAV',undefined])assert.equal(audioSource(other),other);
 });
 test('all game, tutor, sample and exam audio players use the corrected cache version',()=>{
  for(const [file,assignment] of [['app.js','audio.src=audioSource(q.audio)'],['little-teacher.js','voice.src=audioSource(clips[step])'],['teacher-audio.js','player.src=audioSource(file)'],['exam.js','audio.src=audioSource(out.question.audio)'],['exam-review.js','audio.src=audioSource(value.audio)']]){
   const code=readFileSync(new URL('../'+file,import.meta.url),'utf8');assert.ok(code.includes(assignment),file);
  }
+});
+
+test('all 22 compound recordings refresh cached and saved paths without changing question IDs',()=>{
+ for(let i=1;i<=22;i++){
+  const file='audio/compound/c'+String(i).padStart(2,'0')+'.mp3',fresh=file+'?v=20260922-compound-level1';
+  assert.equal(audioSource(file),fresh);assert.equal(audioSource(fresh),fresh);
+  assert.equal(audioSource(file+'?x=1&v=old#play'),file+'?x=1&v=20260922-compound-level1#play');
+ }
+ for(const other of ['audio/compound/c00.mp3','audio/compound/c23.mp3','audio/compound/c1.mp3','https://example.com/audio/compound/c01.mp3'])assert.equal(audioSource(other),other);
 });

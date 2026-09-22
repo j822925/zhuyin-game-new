@@ -17,5 +17,6 @@ test('family audio uses the complete shared catalogue without score or login cod
  assert.match(script,/setupTeacherAudio\(\{BASE,COMPOUNDS,createCatalog\}\)/);
  assert.doesNotMatch(script,/api\.js|rewards|authenticate|submit|saveScore/);
  assert.match(read('teacher.html'),/demo=1/);
- assert.match(read('index.html'),/app.js\?v=20260913-family1/);
+ const index=read('index.html'),version=index.match(/name="application-version" content="([^"]+)"/)?.[1];
+ assert.ok(version);assert.ok(index.includes('app.js?v='+version));
 });
