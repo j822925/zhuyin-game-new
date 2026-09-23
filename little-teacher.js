@@ -1,8 +1,9 @@
-import {audioSource} from './audio-source.js?v=20260922-compound-level1';
+import {audioSource} from './audio-source.js?v=20260923-provided1';
+import {SUPPLIED_TUTOR_AUDIO} from './data/supplied-audio.js?v=20260923-provided1';
 import {BASE,COMPOUNDS} from './core.js?v=20260913-tutor1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260913-tutor1';
 export function tutorClips(q){
- const symbolAudio=s=>BASE.includes(s)?'audio/audio_F'+(BASE.indexOf(s)+1)+'.WAV':'audio/compound/c'+String(COMPOUNDS.indexOf(s)+1).padStart(2,'0')+'.mp3';
+ const symbolAudio=s=>SUPPLIED_TUTOR_AUDIO[s]||(BASE.includes(s)?'audio/audio_F'+(BASE.indexOf(s)+1)+'.WAV':'audio/compound/c'+String(COMPOUNDS.indexOf(s)+1).padStart(2,'0')+'.mp3');
  return [symbolAudio(q.initial),symbolAudio(q.final),q.audio];
 }
 export function createLittleTeacher({onReturn}){

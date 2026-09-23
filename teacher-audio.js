@@ -1,4 +1,4 @@
-import {audioSource} from './audio-source.js?v=20260922-compound-level1';
+import {audioSource} from './audio-source.js?v=20260923-provided1';
 // One native player for the entire catalogue: avoid hundreds of Safari media controls.
 export const PAGE_SIZE=18;
 export function samplePage(rows,initial='',page=0){
@@ -13,6 +13,7 @@ export function setupTeacherAudio({BASE,COMPOUNDS,createCatalog}){
  const label=document.createElement('span');label.id='teacher-playing';label.textContent='點選 ▶ 試聽';label.setAttribute('role','status');
  const player=document.createElement('audio');player.id='teacher-audio';player.controls=true;player.preload='none';player.setAttribute('aria-label','示範音播放器');
  panel.append(label,player);document.querySelector('header').after(panel);
+ const suppliedLink=document.createElement('a');suppliedLink.href='supplied-audio.html';suppliedLink.textContent='🎧 小老師新錄音與補檔清單';panel.append(suppliedLink);
  let selected=null,playId=0;
  function release(){playId++;player.pause();player.removeAttribute('src');player.load();selected?.setAttribute('aria-pressed','false');selected=null;label.textContent='點選 ▶ 試聽';}
  function button(text,file){

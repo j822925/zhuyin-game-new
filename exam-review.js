@@ -1,4 +1,4 @@
-import {audioSource} from './audio-source.js?v=20260922-compound-level1';
+import {audioSource} from './audio-source.js?v=20260923-provided1';
 // Completion means an actual ended event, not merely a resolved play() promise.
 export function playToEnd(audio,{signal,timeoutMs=20000}={}){
  return new Promise((resolve,reject)=>{

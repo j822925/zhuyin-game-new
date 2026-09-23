@@ -1,0 +1,4775 @@
+{
+  "date": "2026-09-23",
+  "source": "使用者提供：注音符號音檔",
+  "files": [
+    {
+      "file": "m_12_48.mp3",
+      "label": "ㄐㄧㄢ",
+      "seconds": 3.47,
+      "sha256": "b7e4332b5b50b1f7b2e7f0a227edeb0073f791e37260c6f2335d1cf0fb77e5d5",
+      "path": "audio/supplied-20260923/m_12_48.mp3"
+    },
+    {
+      "file": "m_12_49.mp3",
+      "label": "ㄐㄧㄣ",
+      "seconds": 3.03,
+      "sha256": "cb711f7c2769d591ad2f27532d9704e102a2d419435af6723b01ab96de6f3706",
+      "path": "audio/supplied-20260923/m_12_49.mp3"
+    },
+    {
+      "file": "m_12_50.mp3",
+      "label": "ㄐㄧㄤ",
+      "seconds": 3.11,
+      "sha256": "f4acfae2865d7ba16992395d94df41a216133dfbe21a4b92861f562ba6a07cdf",
+      "path": "audio/supplied-20260923/m_12_50.mp3"
+    },
+    {
+      "file": "m_12_51.mp3",
+      "label": "ㄐㄧㄥ",
+      "seconds": 3.13,
+      "sha256": "5d04af230085bc8b3c23394092bcaba2952781ee42c77d00437cbc3db66fca60",
+      "path": "audio/supplied-20260923/m_12_51.mp3"
+    },
+    {
+      "file": "m_13_48.mp3",
+      "label": "ㄑㄧㄢ",
+      "seconds": 3.24,
+      "sha256": "1938f952f26c9b66fcd60188e109cc7da1cd1b1e1bb1a9d4f1dc8ba594a30f2c",
+      "path": "audio/supplied-20260923/m_13_48.mp3"
+    },
+    {
+      "file": "m_13_49.mp3",
+      "label": "ㄑㄧㄣ",
+      "seconds": 3.32,
+      "sha256": "734aed0bc6960dafc6fa77560f55e9e243660c7e8089f2407d12acab78b9478b",
+      "path": "audio/supplied-20260923/m_13_49.mp3"
+    },
+    {
+      "file": "m_13_50.mp3",
+      "label": "ㄑㄧㄤ",
+      "seconds": 3.24,
+      "sha256": "48e225307835321e2c5d0d54eee6c578b5c6af74fe7c58b1844f5ddf9f171f09",
+      "path": "audio/supplied-20260923/m_13_50.mp3"
+    },
+    {
+      "file": "m_13_51.mp3",
+      "label": "ㄑㄧㄥ",
+      "seconds": 3.03,
+      "sha256": "31a47a3508c566f81b2e91bb29186828c2ad1aac6b596e4adf45c930295bf0c6",
+      "path": "audio/supplied-20260923/m_13_51.mp3"
+    },
+    {
+      "file": "m_14_48.mp3",
+      "label": "ㄒㄧㄢ",
+      "seconds": 3.24,
+      "sha256": "19b1ad9c6c86eca26342c9e796353854b1b02e2e6a074bd0a0343ba355b9e5ca",
+      "path": "audio/supplied-20260923/m_14_48.mp3"
+    },
+    {
+      "file": "m_14_49.mp3",
+      "label": "ㄒㄧㄣ",
+      "seconds": 3.42,
+      "sha256": "48fd22d4d29098b61facf0d718fe98df4b5c9a2ba3c8852295104a238098f0ac",
+      "path": "audio/supplied-20260923/m_14_49.mp3"
+    },
+    {
+      "file": "m_14_50.mp3",
+      "label": "ㄒㄧㄤ",
+      "seconds": 3.29,
+      "sha256": "08341b61a6c3ae1ea935a0410fcb6156938c06054476598676d6e24bc7934c86",
+      "path": "audio/supplied-20260923/m_14_50.mp3"
+    },
+    {
+      "file": "m_14_51.mp3",
+      "label": "ㄒㄧㄥ",
+      "seconds": 3.24,
+      "sha256": "19db233b2e815f44dd45a87a5434afafea6288d75b16ef16c7bf07b7ebbb6fa8",
+      "path": "audio/supplied-20260923/m_14_51.mp3"
+    },
+    {
+      "file": "m_1_48.mp3",
+      "label": "ㄅㄧㄢ",
+      "seconds": 3.11,
+      "sha256": "4a7ec93d4a972b7e3f608b78a67d1f9fe2404eab6045975020df381238a212d4",
+      "path": "audio/supplied-20260923/m_1_48.mp3"
+    },
+    {
+      "file": "m_1_49.mp3",
+      "label": "ㄅㄧㄣ",
+      "seconds": 3.11,
+      "sha256": "fc14c393698a910705f343d22b66aced72633daae2c017ee551e1901c139d237",
+      "path": "audio/supplied-20260923/m_1_49.mp3"
+    },
+    {
+      "file": "m_1_51.mp3",
+      "label": "ㄅㄧㄥ",
+      "seconds": 2.95,
+      "sha256": "cc08acda12679dea66e3e2f6306c8ff90922a6b8c03089f50b3dbfa7f058049c",
+      "path": "audio/supplied-20260923/m_1_51.mp3"
+    },
+    {
+      "file": "m_2_48.mp3",
+      "label": "ㄆㄧㄢ",
+      "seconds": 3.47,
+      "sha256": "00f38fb5929f8852e7b0e87a2089fd20009912c8679f149ed4c98d69097631e4",
+      "path": "audio/supplied-20260923/m_2_48.mp3"
+    },
+    {
+      "file": "m_2_49.mp3",
+      "label": "ㄆㄧㄣ",
+      "seconds": 3.21,
+      "sha256": "8f49ee158cd3e3c17db814b5054163b76f5c2f7a2470d1f7cd54c551036abf6a",
+      "path": "audio/supplied-20260923/m_2_49.mp3"
+    },
+    {
+      "file": "m_2_51.mp3",
+      "label": "ㄆㄧㄥ",
+      "seconds": 3.13,
+      "sha256": "a696b3ad2e9ff3dfefe2355a3612279faee36aa29877e911961bc11bacd30634",
+      "path": "audio/supplied-20260923/m_2_51.mp3"
+    },
+    {
+      "file": "m_3_48_39.mp3",
+      "label": "ㄇㄧㄢˊ",
+      "seconds": 3.5,
+      "sha256": "67881129c5f1cd4af5b71919ff90e60db375eaf28cf9a9c41ce337ec78bf8496",
+      "path": "audio/supplied-20260923/m_3_48_39.mp3"
+    },
+    {
+      "file": "m_3_49_39.mp3",
+      "label": "ㄇㄧㄣˊ",
+      "seconds": 3.21,
+      "sha256": "4c22d252781b62f21cbcd179e3a6261ff181bc7e5419b1ca01c665fb8ebe917b",
+      "path": "audio/supplied-20260923/m_3_49_39.mp3"
+    },
+    {
+      "file": "m_3_51_39.mp3",
+      "label": "ㄇㄧㄥˊ",
+      "seconds": 3.13,
+      "sha256": "7e65dcbf9bb028bb6ecc8793cd7faa05e3cf2255f38f73a27e5e2ad22c57d2f8",
+      "path": "audio/supplied-20260923/m_3_51_39.mp3"
+    },
+    {
+      "file": "m_5_48.mp3",
+      "label": "ㄉㄧㄢ",
+      "seconds": 3.21,
+      "sha256": "6fa85a8846128a24dc3979897bda2da2b53af59fe1de9918214a31437eedd496",
+      "path": "audio/supplied-20260923/m_5_48.mp3"
+    },
+    {
+      "file": "m_5_51.mp3",
+      "label": "ㄉㄧㄥ",
+      "seconds": 3.03,
+      "sha256": "62533032c0d561d30a505fc5753c5df571be9a20ff0e75f7877080f3d0dee47a",
+      "path": "audio/supplied-20260923/m_5_51.mp3"
+    },
+    {
+      "file": "m_6_48.mp3",
+      "label": "ㄊㄧㄢ",
+      "seconds": 3.42,
+      "sha256": "2c2d12c65be141400b06d899abefa172f994b751773fc9e44ff921f88a2d8c74",
+      "path": "audio/supplied-20260923/m_6_48.mp3"
+    },
+    {
+      "file": "m_6_51.mp3",
+      "label": "ㄊㄧㄥ",
+      "seconds": 3.03,
+      "sha256": "fa615d4d4e09f921d0aebd01031ea94aa2a100535601e5e5835a8f002209b71c",
+      "path": "audio/supplied-20260923/m_6_51.mp3"
+    },
+    {
+      "file": "m_7_48_39.mp3",
+      "label": "ㄋㄧㄢˊ",
+      "seconds": 3.34,
+      "sha256": "5dfeb7d81f5af9057ab6609453090b63d15c754e8fe5cb02b00026b0f9804739",
+      "path": "audio/supplied-20260923/m_7_48_39.mp3"
+    },
+    {
+      "file": "m_7_49_39.mp3",
+      "label": "ㄋㄧㄣˊ",
+      "seconds": 3.53,
+      "sha256": "dadffb092256cd82ab9f1a0e0953ead9e65a02c6f28d99ca2db7b6b01ac8049b",
+      "path": "audio/supplied-20260923/m_7_49_39.mp3"
+    },
+    {
+      "file": "m_7_50_39.mp3",
+      "label": "ㄋㄧㄤˊ",
+      "seconds": 3.21,
+      "sha256": "83aa569cb30a4dbe4459fecdeac89885f89eb02932f1f49ee80798ab0c96dda3",
+      "path": "audio/supplied-20260923/m_7_50_39.mp3"
+    },
+    {
+      "file": "m_7_51_39.mp3",
+      "label": "ㄋㄧㄥˊ",
+      "seconds": 3.06,
+      "sha256": "f9a26bf178a3a913a4a8ecb271ef30dc448f7a5dd3030a286b30bb52138eda9c",
+      "path": "audio/supplied-20260923/m_7_51_39.mp3"
+    },
+    {
+      "file": "m_8_48_39.mp3",
+      "label": "ㄌㄧㄢˊ",
+      "seconds": 3.16,
+      "sha256": "8f02de7bc69178e69fc428098889505312597fae06ca6420e0ee28ba721ac304",
+      "path": "audio/supplied-20260923/m_8_48_39.mp3"
+    },
+    {
+      "file": "m_8_49_39.mp3",
+      "label": "ㄌㄧㄣˊ",
+      "seconds": 3.34,
+      "sha256": "1e676c988563dd050a521b831c9336c52dd34047e0b4cf8056ee8233a77024bb",
+      "path": "audio/supplied-20260923/m_8_49_39.mp3"
+    },
+    {
+      "file": "m_8_50_39.mp3",
+      "label": "ㄌㄧㄤˊ",
+      "seconds": 3.11,
+      "sha256": "fab3525af6e4890b5c722b2cf9f0b018e4a1df01bf1e6ebdfd636e9a9b83d7ae",
+      "path": "audio/supplied-20260923/m_8_50_39.mp3"
+    },
+    {
+      "file": "m_8_51.mp3",
+      "label": "ㄌㄧㄥ",
+      "seconds": 3.11,
+      "sha256": "fd588b43fe16f8d53bcde114e0226b20097c87b7b7322114922df6d72b5a60d8",
+      "path": "audio/supplied-20260923/m_8_51.mp3"
+    },
+    {
+      "file": "s_1.mp3",
+      "label": "ㄅ",
+      "seconds": 0.81,
+      "sha256": "47c7b071dbdcf8f036390c99831ce02e23ee1f3c278e147a239b1c0c4eb00407",
+      "path": "audio/supplied-20260923/s_1.mp3"
+    },
+    {
+      "file": "s_10.mp3",
+      "label": "ㄎ",
+      "seconds": 0.86,
+      "sha256": "95307bf35c7dd1bbbcbc2a85d91a182e1c7fedbc313dfe79a565adce90d9efc4",
+      "path": "audio/supplied-20260923/s_10.mp3"
+    },
+    {
+      "file": "s_11.mp3",
+      "label": "ㄏ",
+      "seconds": 1.02,
+      "sha256": "cd02fd5c6c522e6f77213168ff73c1e12228e3b30cc8f82558179671355449be",
+      "path": "audio/supplied-20260923/s_11.mp3"
+    },
+    {
+      "file": "s_12.mp3",
+      "label": "ㄐ",
+      "seconds": 0.97,
+      "sha256": "565a4bb2fb9bbb3a318cfa501beea5501f39031d709760800ae2687259221d87",
+      "path": "audio/supplied-20260923/s_12.mp3"
+    },
+    {
+      "file": "s_13.mp3",
+      "label": "ㄑ",
+      "seconds": 1.04,
+      "sha256": "0f98e9945c60a9a67ca8d516b6159c157bee818f32ebbc8060360e200db60076",
+      "path": "audio/supplied-20260923/s_13.mp3"
+    },
+    {
+      "file": "s_14.mp3",
+      "label": "ㄒ",
+      "seconds": 1.1,
+      "sha256": "b427796e11e7fc8a826d8cb156217b29af98f5235c2e1b20f971a172bcf3d212",
+      "path": "audio/supplied-20260923/s_14.mp3"
+    },
+    {
+      "file": "s_15.mp3",
+      "label": "ㄓ",
+      "seconds": 0.97,
+      "sha256": "3b69746d93e71547f7d9047376b5e895272bc024848821ca295b0827bf3e27b0",
+      "path": "audio/supplied-20260923/s_15.mp3"
+    },
+    {
+      "file": "s_16.mp3",
+      "label": "ㄔ",
+      "seconds": 1.02,
+      "sha256": "1537e91f4c14ca111224ecfc41d6db628d33bcf3cbfd4e2463e9bcb7575a37ce",
+      "path": "audio/supplied-20260923/s_16.mp3"
+    },
+    {
+      "file": "s_17.mp3",
+      "label": "ㄕ",
+      "seconds": 1.18,
+      "sha256": "58ab48e9a49a3e3e1dbc781d453a04f59815982854255d9646bdc3be4bd0e433",
+      "path": "audio/supplied-20260923/s_17.mp3"
+    },
+    {
+      "file": "s_18.mp3",
+      "label": "ㄖ",
+      "seconds": 1.1,
+      "sha256": "ab38246bae950ec3bec6f8427282a94a76bda711683268029b4578c638a13581",
+      "path": "audio/supplied-20260923/s_18.mp3"
+    },
+    {
+      "file": "s_19.mp3",
+      "label": "ㄗ",
+      "seconds": 0.99,
+      "sha256": "68cceb7aae3027da3cc35d46e03f895b56444479f655776db5215110cd45bc26",
+      "path": "audio/supplied-20260923/s_19.mp3"
+    },
+    {
+      "file": "s_2.mp3",
+      "label": "ㄆ",
+      "seconds": 0.84,
+      "sha256": "ea06efa8a0214d683d6a9c30e0f48b6ba2b4068ca29589cf82ab2461221f400c",
+      "path": "audio/supplied-20260923/s_2.mp3"
+    },
+    {
+      "file": "s_20.mp3",
+      "label": "ㄘ",
+      "seconds": 1.15,
+      "sha256": "435df4d981118e0815ab8707115e7bd27fb3b82a74aec3a34f657a84843f09d4",
+      "path": "audio/supplied-20260923/s_20.mp3"
+    },
+    {
+      "file": "s_21.mp3",
+      "label": "ㄙ",
+      "seconds": 1.15,
+      "sha256": "c5cf7f50820db2579d41f7f752bbdd828a75f9d769f879f79ddc455f7d185b96",
+      "path": "audio/supplied-20260923/s_21.mp3"
+    },
+    {
+      "file": "s_22.mp3",
+      "label": "ㄧ",
+      "seconds": 1.02,
+      "sha256": "25f75e8b42fbeb41bc24671e43b32acce01de239b46959e0d500f2839cbcbae2",
+      "path": "audio/supplied-20260923/s_22.mp3"
+    },
+    {
+      "file": "s_23.mp3",
+      "label": "ㄨ",
+      "seconds": 0.89,
+      "sha256": "15053311134bd175f52901df829b7120252475a103dd593da785db89e93b1715",
+      "path": "audio/supplied-20260923/s_23.mp3"
+    },
+    {
+      "file": "s_24.mp3",
+      "label": "ㄩ",
+      "seconds": 0.99,
+      "sha256": "25072fb108df2ea99fa5ba2869a865b7f403f17e1060e6459921e163c384a21e",
+      "path": "audio/supplied-20260923/s_24.mp3"
+    },
+    {
+      "file": "s_25.mp3",
+      "label": "ㄚ",
+      "seconds": 0.86,
+      "sha256": "2bb08d081564226c9bb18814d8dcc69bca1117b17a44a1bb3e9bd675a410b55f",
+      "path": "audio/supplied-20260923/s_25.mp3"
+    },
+    {
+      "file": "s_26.mp3",
+      "label": "ㄛ",
+      "seconds": 0.76,
+      "sha256": "d7f9ca64652005b2f4c96bcb54b2f81401f54de05e52b378a5fea8b2f10dec99",
+      "path": "audio/supplied-20260923/s_26.mp3"
+    },
+    {
+      "file": "s_27.mp3",
+      "label": "ㄜ",
+      "seconds": 0.89,
+      "sha256": "62871092c229b3025c4dd6e13008479083420905408faa0f27022e3c126b8997",
+      "path": "audio/supplied-20260923/s_27.mp3"
+    },
+    {
+      "file": "s_28.mp3",
+      "label": "ㄝ",
+      "seconds": 0.76,
+      "sha256": "b420345fd89e02c5415d2a67d3b87b4afc3352a6c426932e014ae48988c37c7d",
+      "path": "audio/supplied-20260923/s_28.mp3"
+    },
+    {
+      "file": "s_29.mp3",
+      "label": "ㄞ",
+      "seconds": 0.99,
+      "sha256": "67038d846b9751ef1265f7251b2effb0bb601b86acb5bb9d4a124f4ea0d0ef29",
+      "path": "audio/supplied-20260923/s_29.mp3"
+    },
+    {
+      "file": "s_3.mp3",
+      "label": "ㄇ",
+      "seconds": 0.91,
+      "sha256": "02c25ce6e3a9f477e8ed50b6f2cac4296ccaa688679658a6429434bd31c25428",
+      "path": "audio/supplied-20260923/s_3.mp3"
+    },
+    {
+      "file": "s_30.mp3",
+      "label": "ㄟ",
+      "seconds": 0.99,
+      "sha256": "642b63c851f6f91aff1249185edd5fb04d3b4595671e436fbedac5e9dad75423",
+      "path": "audio/supplied-20260923/s_30.mp3"
+    },
+    {
+      "file": "s_31.mp3",
+      "label": "ㄠ",
+      "seconds": 1.15,
+      "sha256": "c5d6618251ec8f52bcc7f954d9365069cb8b2530140e5887e57423e7eb9a08ac",
+      "path": "audio/supplied-20260923/s_31.mp3"
+    },
+    {
+      "file": "s_32.mp3",
+      "label": "ㄡ",
+      "seconds": 1.15,
+      "sha256": "8dc50bb3a5485f599edeea242ab257af655a654e34fec0e3e51ee3adbc3cc2a3",
+      "path": "audio/supplied-20260923/s_32.mp3"
+    },
+    {
+      "file": "s_33.mp3",
+      "label": "ㄢ",
+      "seconds": 0.99,
+      "sha256": "d57eb97174b52343d125462003897d23b6a9bdb4546dd6dfe6dc302b54eb02bb",
+      "path": "audio/supplied-20260923/s_33.mp3"
+    },
+    {
+      "file": "s_34.mp3",
+      "label": "ㄣ",
+      "seconds": 1.04,
+      "sha256": "73025e3d0aabed2338c4b416edc40add7caf4e6970154f5a3642fb0adde1e719",
+      "path": "audio/supplied-20260923/s_34.mp3"
+    },
+    {
+      "file": "s_35.mp3",
+      "label": "ㄤ",
+      "seconds": 1.02,
+      "sha256": "6505da2b6c6359d329654e64a63179c02c4385388fbd0d7c49cd5c6c352394a2",
+      "path": "audio/supplied-20260923/s_35.mp3"
+    },
+    {
+      "file": "s_36.mp3",
+      "label": "ㄥ",
+      "seconds": 1.1,
+      "sha256": "aa832e5755323d4ea2189fd8471257ebb3dc554a962ee0069ab050e669021948",
+      "path": "audio/supplied-20260923/s_36.mp3"
+    },
+    {
+      "file": "s_37.mp3",
+      "label": "ㄦ",
+      "seconds": 1.15,
+      "sha256": "ea62e630a2642a95e49350021fe5fac75df1b3c537428943073e7f76e9328001",
+      "path": "audio/supplied-20260923/s_37.mp3"
+    },
+    {
+      "file": "s_4.mp3",
+      "label": "ㄈ",
+      "seconds": 0.89,
+      "sha256": "586bd4bcdc77c9f290b1192205c92c525c834d5cad323bfe2630159ec1cbedd5",
+      "path": "audio/supplied-20260923/s_4.mp3"
+    },
+    {
+      "file": "s_42.mp3",
+      "label": "ㄧㄚ",
+      "seconds": 1.02,
+      "sha256": "020f616c11cde752967a1bc99a27801e84aadedee889fbbdbd462e30d5e1b708",
+      "path": "audio/supplied-20260923/s_42.mp3"
+    },
+    {
+      "file": "s_43.mp3",
+      "label": "ㄧㄛ",
+      "seconds": 0.97,
+      "sha256": "b7940e19a0fab1384e2004f018b2ea7c23ffb8914c8215e23b6a90882a7e6db3",
+      "path": "audio/supplied-20260923/s_43.mp3"
+    },
+    {
+      "file": "s_44.mp3",
+      "label": "ㄧㄝ",
+      "seconds": 1.04,
+      "sha256": "cbb0467f3aea962ef9e23b7fe5074b6b95be3f29ce799823ff7443e2666edf9e",
+      "path": "audio/supplied-20260923/s_44.mp3"
+    },
+    {
+      "file": "s_45.mp3",
+      "label": "ㄧㄞ",
+      "seconds": 0.99,
+      "sha256": "96793dcdbf716bad615c0f9e75d17d324af6197cd458dc68771102dfe25feb21",
+      "path": "audio/supplied-20260923/s_45.mp3"
+    },
+    {
+      "file": "s_46.mp3",
+      "label": "ㄧㄠ",
+      "seconds": 1.02,
+      "sha256": "81bdf836788afe2bf79328dc818a55267cfed98e7e6ee9f7543b3cac708248ad",
+      "path": "audio/supplied-20260923/s_46.mp3"
+    },
+    {
+      "file": "s_47.mp3",
+      "label": "ㄧㄡ",
+      "seconds": 0.99,
+      "sha256": "f179782769008c65ec1fd7fc512257e53f3d9e4c058ca9b756696f7a4c8be296",
+      "path": "audio/supplied-20260923/s_47.mp3"
+    },
+    {
+      "file": "s_48.mp3",
+      "label": "ㄧㄢ",
+      "seconds": 1.15,
+      "sha256": "d8e583272f44ded6fdbb8c8f0f485dbe3c153f8be2a5491c088a4cf94d1c0183",
+      "path": "audio/supplied-20260923/s_48.mp3"
+    },
+    {
+      "file": "s_49.mp3",
+      "label": "ㄧㄣ",
+      "seconds": 1.02,
+      "sha256": "8aa4d8b029b6adc572b4cde4ddf7692dfe16e01fbbe72cccc122c7aaab14bef1",
+      "path": "audio/supplied-20260923/s_49.mp3"
+    },
+    {
+      "file": "s_5.mp3",
+      "label": "ㄉ",
+      "seconds": 0.94,
+      "sha256": "eea77cba9b6c962313c0b603f9f646d5be46ecffcfea385d6c3632e643f66624",
+      "path": "audio/supplied-20260923/s_5.mp3"
+    },
+    {
+      "file": "s_50.mp3",
+      "label": "ㄧㄤ",
+      "seconds": 1.02,
+      "sha256": "dc756844a534d82a7866b8aa80d6f9cf634f35589d24b4932823bb60447f5915",
+      "path": "audio/supplied-20260923/s_50.mp3"
+    },
+    {
+      "file": "s_51.mp3",
+      "label": "ㄧㄥ",
+      "seconds": 1.15,
+      "sha256": "84a8431202f6f264b9ab0fb781387676ff7f94f08ea7866649e71853dcd86e62",
+      "path": "audio/supplied-20260923/s_51.mp3"
+    },
+    {
+      "file": "s_52.mp3",
+      "label": "ㄨㄚ",
+      "seconds": 1.1,
+      "sha256": "85208547e0f0be6a59fde4e43c926dde8bfad830f511f63d31638ec3a05d760b",
+      "path": "audio/supplied-20260923/s_52.mp3"
+    },
+    {
+      "file": "s_53.mp3",
+      "label": "ㄨㄛ",
+      "seconds": 1.18,
+      "sha256": "a5c73e1156dd0dcd2b5f963a2905c8e904e2573f3d4625ee32725e80d0756096",
+      "path": "audio/supplied-20260923/s_53.mp3"
+    },
+    {
+      "file": "s_54.mp3",
+      "label": "ㄨㄞ",
+      "seconds": 1.25,
+      "sha256": "59f0c81cea155fc792caff13dabd5dbe7b9bfe60d3ce738779a308cce8279188",
+      "path": "audio/supplied-20260923/s_54.mp3"
+    },
+    {
+      "file": "s_55.mp3",
+      "label": "ㄨㄟ",
+      "seconds": 1.1,
+      "sha256": "d1827e4ccf99e24a74e10f4a665a18fd8215ab7298526eed3dddc6c933f4dc87",
+      "path": "audio/supplied-20260923/s_55.mp3"
+    },
+    {
+      "file": "s_56.mp3",
+      "label": "ㄨㄢ",
+      "seconds": 1.2,
+      "sha256": "2fc274399a51e5af68ec9759361e189f74097e448aaba327bd7e11c9cea5f081",
+      "path": "audio/supplied-20260923/s_56.mp3"
+    },
+    {
+      "file": "s_57.mp3",
+      "label": "ㄨㄣ",
+      "seconds": 1.1,
+      "sha256": "f8e371e7b71f032f0acb58b897e76d35c9d36ec2bf223258af178dcef9bbb257",
+      "path": "audio/supplied-20260923/s_57.mp3"
+    },
+    {
+      "file": "s_58.mp3",
+      "label": "ㄨㄤ",
+      "seconds": 1.28,
+      "sha256": "e929c8c0be7a8b7edaa6f58f705bc9b5d5f931d8aab63da8f9ac63bff05f6749",
+      "path": "audio/supplied-20260923/s_58.mp3"
+    },
+    {
+      "file": "s_59.mp3",
+      "label": "ㄨㄥ",
+      "seconds": 1.1,
+      "sha256": "872effc1afa2eac55788b014109735ff4fab0d8b977763685e1a3a521aff87c4",
+      "path": "audio/supplied-20260923/s_59.mp3"
+    },
+    {
+      "file": "s_6.mp3",
+      "label": "ㄊ",
+      "seconds": 0.99,
+      "sha256": "d0ee0c302ebe4ed0cafa970f8b6f3576251975b0d4e00ba13eaee6189fa8d712",
+      "path": "audio/supplied-20260923/s_6.mp3"
+    },
+    {
+      "file": "s_60.mp3",
+      "label": "ㄩㄝ",
+      "seconds": 1.2,
+      "sha256": "ac4872e1021b093db43360665b99301dc6839ef942a606d5d481e5d7d73386c2",
+      "path": "audio/supplied-20260923/s_60.mp3"
+    },
+    {
+      "file": "s_7.mp3",
+      "label": "ㄋ",
+      "seconds": 0.99,
+      "sha256": "d832e0ba7a9bf3a2599360fadf8a6bff14242d6b2bbc1d5f27bf301072a0c83f",
+      "path": "audio/supplied-20260923/s_7.mp3"
+    },
+    {
+      "file": "s_8.mp3",
+      "label": "ㄌ",
+      "seconds": 0.97,
+      "sha256": "afe614e28cb0a39dca8a0ccc493339c057e0b12561b937346a2dc21e99dbd37f",
+      "path": "audio/supplied-20260923/s_8.mp3"
+    },
+    {
+      "file": "s_9.mp3",
+      "label": "ㄍ",
+      "seconds": 0.97,
+      "sha256": "2faecb7b5f9166fd07f2a9c52c54017bf9b1a25274e522dde7fb2ce2da62d84f",
+      "path": "audio/supplied-20260923/s_9.mp3"
+    }
+  ],
+  "syllables": [
+    {
+      "id": "s01",
+      "label": "ㄅㄠ",
+      "word": "包",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s01.wav",
+      "expected": "m_1_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s02",
+      "label": "ㄆㄠ",
+      "word": "拋",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s02.wav",
+      "expected": "m_2_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s03",
+      "label": "ㄇㄠ",
+      "word": "貓",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s03.wav",
+      "expected": "m_3_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s04",
+      "label": "ㄉㄠ",
+      "word": "刀",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s04.wav",
+      "expected": "m_5_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s05",
+      "label": "ㄅㄧ",
+      "word": "逼",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s05.wav",
+      "expected": "m_1_22.mp3",
+      "available": false
+    },
+    {
+      "id": "s06",
+      "label": "ㄆㄧ",
+      "word": "批",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s06.wav",
+      "expected": "m_2_22.mp3",
+      "available": false
+    },
+    {
+      "id": "s07",
+      "label": "ㄇㄧ",
+      "word": "咪",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s07.wav",
+      "expected": "m_3_22.mp3",
+      "available": false
+    },
+    {
+      "id": "s08",
+      "label": "ㄉㄧ",
+      "word": "低",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s08.wav",
+      "expected": "m_5_22.mp3",
+      "available": false
+    },
+    {
+      "id": "s09",
+      "label": "ㄅㄚ",
+      "word": "巴",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s09.wav",
+      "expected": "m_1_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s10",
+      "label": "ㄆㄚ",
+      "word": "趴",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s10.wav",
+      "expected": "m_2_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s11",
+      "label": "ㄇㄚ",
+      "word": "媽",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s11.wav",
+      "expected": "m_3_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s12",
+      "label": "ㄉㄚ",
+      "word": "搭",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s12.wav",
+      "expected": "m_5_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s13",
+      "label": "ㄊㄚ",
+      "word": "他",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s13.wav",
+      "expected": "m_6_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s14",
+      "label": "ㄌㄚ",
+      "word": "拉",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s14.wav",
+      "expected": "m_8_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s15",
+      "label": "ㄏㄚ",
+      "word": "哈",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s15.wav",
+      "expected": "m_11_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s16",
+      "label": "ㄅㄛ",
+      "word": "波",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s16.wav",
+      "expected": "m_1_26.mp3",
+      "available": false
+    },
+    {
+      "id": "s17",
+      "label": "ㄆㄛ",
+      "word": "坡",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s17.wav",
+      "expected": "m_2_26.mp3",
+      "available": false
+    },
+    {
+      "id": "s18",
+      "label": "ㄇㄛ",
+      "word": "摸",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s18.wav",
+      "expected": "m_3_26.mp3",
+      "available": false
+    },
+    {
+      "id": "s19",
+      "label": "ㄍㄜ",
+      "word": "歌",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s19.wav",
+      "expected": "m_9_27.mp3",
+      "available": false
+    },
+    {
+      "id": "s20",
+      "label": "ㄎㄜ",
+      "word": "科",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s20.wav",
+      "expected": "m_10_27.mp3",
+      "available": false
+    },
+    {
+      "id": "s21",
+      "label": "ㄏㄜ",
+      "word": "喝",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s21.wav",
+      "expected": "m_11_27.mp3",
+      "available": false
+    },
+    {
+      "id": "s22",
+      "label": "ㄈㄟ",
+      "word": "飛",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s22.wav",
+      "expected": "m_4_30.mp3",
+      "available": false
+    },
+    {
+      "id": "s23",
+      "label": "ㄅㄟ",
+      "word": "杯",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s23.wav",
+      "expected": "m_1_30.mp3",
+      "available": false
+    },
+    {
+      "id": "s24",
+      "label": "ㄏㄟ",
+      "word": "黑",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s24.wav",
+      "expected": "m_11_30.mp3",
+      "available": false
+    },
+    {
+      "id": "s25",
+      "label": "ㄊㄠ",
+      "word": "掏",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s25.wav",
+      "expected": "m_6_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s26",
+      "label": "ㄍㄠ",
+      "word": "高",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s26.wav",
+      "expected": "m_9_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s27",
+      "label": "ㄐㄧ",
+      "word": "雞",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s27.wav",
+      "expected": "m_12_22.mp3",
+      "available": false
+    },
+    {
+      "id": "s28",
+      "label": "ㄑㄧ",
+      "word": "七",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s28.wav",
+      "expected": "m_13_22.mp3",
+      "available": false
+    },
+    {
+      "id": "s29",
+      "label": "ㄒㄧ",
+      "word": "西",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s29.wav",
+      "expected": "m_14_22.mp3",
+      "available": false
+    },
+    {
+      "id": "s30",
+      "label": "ㄉㄨ",
+      "word": "督",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s30.wav",
+      "expected": "m_5_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s31",
+      "label": "ㄊㄨ",
+      "word": "凸",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s31.wav",
+      "expected": "m_6_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s32",
+      "label": "ㄍㄨ",
+      "word": "姑",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s32.wav",
+      "expected": "m_9_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s33",
+      "label": "ㄎㄨ",
+      "word": "哭",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s33.wav",
+      "expected": "m_10_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s34",
+      "label": "ㄏㄨ",
+      "word": "呼",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s34.wav",
+      "expected": "m_11_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s35",
+      "label": "ㄅㄧㄠ",
+      "word": "標",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s35.wav",
+      "expected": "m_1_46.mp3",
+      "available": false
+    },
+    {
+      "id": "s36",
+      "label": "ㄆㄧㄠ",
+      "word": "飄",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s36.wav",
+      "expected": "m_2_46.mp3",
+      "available": false
+    },
+    {
+      "id": "s37",
+      "label": "ㄇㄧㄠ",
+      "word": "喵",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s37.wav",
+      "expected": "m_3_46.mp3",
+      "available": false
+    },
+    {
+      "id": "s38",
+      "label": "ㄉㄧㄠ",
+      "word": "雕",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s38.wav",
+      "expected": "m_5_46.mp3",
+      "available": false
+    },
+    {
+      "id": "s39",
+      "label": "ㄉㄨㄛ",
+      "word": "多",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s39.wav",
+      "expected": "m_5_53.mp3",
+      "available": false
+    },
+    {
+      "id": "s40",
+      "label": "ㄊㄨㄛ",
+      "word": "拖",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s40.wav",
+      "expected": "m_6_53.mp3",
+      "available": false
+    },
+    {
+      "id": "s41",
+      "label": "ㄍㄨㄚ",
+      "word": "瓜",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s41.wav",
+      "expected": "m_9_52.mp3",
+      "available": false
+    },
+    {
+      "id": "s42",
+      "label": "ㄏㄨㄚ",
+      "word": "花",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s42.wav",
+      "expected": "m_11_52.mp3",
+      "available": false
+    },
+    {
+      "id": "s43",
+      "label": "ㄐㄩㄣ",
+      "word": "軍",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s43.wav",
+      "expected": "m_12_62.mp3",
+      "available": false
+    },
+    {
+      "id": "s44",
+      "label": "ㄒㄩㄝ",
+      "word": "靴",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s44.wav",
+      "expected": "m_14_60.mp3",
+      "available": false
+    },
+    {
+      "id": "s45",
+      "label": "ㄅㄞˊ",
+      "word": "白",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s45.wav",
+      "expected": "m_1_29_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s46",
+      "label": "ㄅㄢ",
+      "word": "扳",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s46.wav",
+      "expected": "m_1_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s47",
+      "label": "ㄅㄣ",
+      "word": "奔",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s47.wav",
+      "expected": "m_1_34.mp3",
+      "available": false
+    },
+    {
+      "id": "s48",
+      "label": "ㄅㄤ",
+      "word": "邦",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s48.wav",
+      "expected": "m_1_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s49",
+      "label": "ㄅㄥ",
+      "word": "崩",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s49.wav",
+      "expected": "m_1_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s50",
+      "label": "ㄅㄧㄝ",
+      "word": "鱉",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s50.wav",
+      "expected": "m_1_44.mp3",
+      "available": false
+    },
+    {
+      "id": "s51",
+      "label": "ㄅㄧㄢ",
+      "word": "砭",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s51.wav",
+      "expected": "m_1_48.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_1_48.mp3"
+    },
+    {
+      "id": "s52",
+      "label": "ㄅㄧㄣ",
+      "word": "彬",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s52.wav",
+      "expected": "m_1_49.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_1_49.mp3"
+    },
+    {
+      "id": "s53",
+      "label": "ㄅㄧㄥ",
+      "word": "冰",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s53.wav",
+      "expected": "m_1_51.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_1_51.mp3"
+    },
+    {
+      "id": "s54",
+      "label": "ㄅㄨˇ",
+      "word": "卜",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s54.wav",
+      "expected": "m_1_23_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s55",
+      "label": "ㄆㄞ",
+      "word": "拍",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s55.wav",
+      "expected": "m_2_29.mp3",
+      "available": false
+    },
+    {
+      "id": "s56",
+      "label": "ㄆㄟ",
+      "word": "呸",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s56.wav",
+      "expected": "m_2_30.mp3",
+      "available": false
+    },
+    {
+      "id": "s57",
+      "label": "ㄆㄡˇ",
+      "word": "剖",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s57.wav",
+      "expected": "m_2_32_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s58",
+      "label": "ㄆㄢ",
+      "word": "潘",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s58.wav",
+      "expected": "m_2_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s59",
+      "label": "ㄆㄣˊ",
+      "word": "盆",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s59.wav",
+      "expected": "m_2_34_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s60",
+      "label": "ㄆㄤ",
+      "word": "乓",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s60.wav",
+      "expected": "m_2_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s61",
+      "label": "ㄆㄥ",
+      "word": "抨",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s61.wav",
+      "expected": "m_2_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s62",
+      "label": "ㄆㄧㄝ",
+      "word": "瞥",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s62.wav",
+      "expected": "m_2_44.mp3",
+      "available": false
+    },
+    {
+      "id": "s63",
+      "label": "ㄆㄧㄢ",
+      "word": "偏",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s63.wav",
+      "expected": "m_2_48.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_2_48.mp3"
+    },
+    {
+      "id": "s64",
+      "label": "ㄆㄧㄣ",
+      "word": "拼",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s64.wav",
+      "expected": "m_2_49.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_2_49.mp3"
+    },
+    {
+      "id": "s65",
+      "label": "ㄆㄧㄥ",
+      "word": "乒",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s65.wav",
+      "expected": "m_2_51.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_2_51.mp3"
+    },
+    {
+      "id": "s66",
+      "label": "ㄆㄨ",
+      "word": "仆",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s66.wav",
+      "expected": "m_2_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s67",
+      "label": "ㄇㄞˊ",
+      "word": "霾",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s67.wav",
+      "expected": "m_3_29_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s68",
+      "label": "ㄇㄟˊ",
+      "word": "枚",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s68.wav",
+      "expected": "m_3_30_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s69",
+      "label": "ㄇㄡˊ",
+      "word": "牟",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s69.wav",
+      "expected": "m_3_32_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s70",
+      "label": "ㄇㄢˊ",
+      "word": "瞞",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s70.wav",
+      "expected": "m_3_33_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s71",
+      "label": "ㄇㄣˊ",
+      "word": "門",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s71.wav",
+      "expected": "m_3_34_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s72",
+      "label": "ㄇㄤˊ",
+      "word": "忙",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s72.wav",
+      "expected": "m_3_35_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s73",
+      "label": "ㄇㄥˊ",
+      "word": "萌",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s73.wav",
+      "expected": "m_3_36_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s74",
+      "label": "ㄇㄧㄝˋ",
+      "word": "滅",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s74.wav",
+      "expected": "m_3_44_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s75",
+      "label": "ㄇㄧㄡˋ",
+      "word": "謬",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s75.wav",
+      "expected": "m_3_47_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s76",
+      "label": "ㄇㄧㄢˊ",
+      "word": "眠",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s76.wav",
+      "expected": "m_3_48_39.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_3_48_39.mp3"
+    },
+    {
+      "id": "s77",
+      "label": "ㄇㄧㄣˊ",
+      "word": "民",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s77.wav",
+      "expected": "m_3_49_39.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_3_49_39.mp3"
+    },
+    {
+      "id": "s78",
+      "label": "ㄇㄧㄥˊ",
+      "word": "名",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s78.wav",
+      "expected": "m_3_51_39.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_3_51_39.mp3"
+    },
+    {
+      "id": "s79",
+      "label": "ㄇㄨˇ",
+      "word": "母",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s79.wav",
+      "expected": "m_3_23_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s80",
+      "label": "ㄈㄚ",
+      "word": "發",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s80.wav",
+      "expected": "m_4_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s81",
+      "label": "ㄈㄛˊ",
+      "word": "佛",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s81.wav",
+      "expected": "m_4_26_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s82",
+      "label": "ㄈㄡˇ",
+      "word": "缶",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s82.wav",
+      "expected": "m_4_32_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s83",
+      "label": "ㄈㄢ",
+      "word": "翻",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s83.wav",
+      "expected": "m_4_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s84",
+      "label": "ㄈㄣ",
+      "word": "吩",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s84.wav",
+      "expected": "m_4_34.mp3",
+      "available": false
+    },
+    {
+      "id": "s85",
+      "label": "ㄈㄤ",
+      "word": "方",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s85.wav",
+      "expected": "m_4_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s86",
+      "label": "ㄈㄥ",
+      "word": "封",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s86.wav",
+      "expected": "m_4_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s87",
+      "label": "ㄈㄨ",
+      "word": "伕",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s87.wav",
+      "expected": "m_4_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s88",
+      "label": "ㄉㄜˊ",
+      "word": "德",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s88.wav",
+      "expected": "m_5_27_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s89",
+      "label": "ㄉㄞ",
+      "word": "呆",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s89.wav",
+      "expected": "m_5_29.mp3",
+      "available": false
+    },
+    {
+      "id": "s90",
+      "label": "ㄉㄟˇ",
+      "word": "得",
+      "enabled": false,
+      "oldPath": "audio/syllable-clear/s90.wav",
+      "expected": "m_5_30_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s91",
+      "label": "ㄉㄡ",
+      "word": "兜",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s91.wav",
+      "expected": "m_5_32.mp3",
+      "available": false
+    },
+    {
+      "id": "s92",
+      "label": "ㄉㄢ",
+      "word": "丹",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s92.wav",
+      "expected": "m_5_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s93",
+      "label": "ㄉㄤ",
+      "word": "噹",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s93.wav",
+      "expected": "m_5_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s94",
+      "label": "ㄉㄥ",
+      "word": "登",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s94.wav",
+      "expected": "m_5_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s95",
+      "label": "ㄉㄧㄝ",
+      "word": "爹",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s95.wav",
+      "expected": "m_5_44.mp3",
+      "available": false
+    },
+    {
+      "id": "s96",
+      "label": "ㄉㄧㄡ",
+      "word": "丟",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s96.wav",
+      "expected": "m_5_47.mp3",
+      "available": false
+    },
+    {
+      "id": "s97",
+      "label": "ㄉㄧㄢ",
+      "word": "滇",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s97.wav",
+      "expected": "m_5_48.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_5_48.mp3"
+    },
+    {
+      "id": "s98",
+      "label": "ㄉㄧㄥ",
+      "word": "丁",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s98.wav",
+      "expected": "m_5_51.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_5_51.mp3"
+    },
+    {
+      "id": "s99",
+      "label": "ㄉㄨㄟ",
+      "word": "堆",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s99.wav",
+      "expected": "m_5_55.mp3",
+      "available": false
+    },
+    {
+      "id": "s100",
+      "label": "ㄉㄨㄢ",
+      "word": "端",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s100.wav",
+      "expected": "m_5_56.mp3",
+      "available": false
+    },
+    {
+      "id": "s101",
+      "label": "ㄉㄨㄣ",
+      "word": "蹲",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s101.wav",
+      "expected": "m_5_57.mp3",
+      "available": false
+    },
+    {
+      "id": "s102",
+      "label": "ㄉㄨㄥ",
+      "word": "冬",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s102.wav",
+      "expected": "m_5_59.mp3",
+      "available": false
+    },
+    {
+      "id": "s103",
+      "label": "ㄊㄜˋ",
+      "word": "特",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s103.wav",
+      "expected": "m_6_27_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s104",
+      "label": "ㄊㄞ",
+      "word": "胎",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s104.wav",
+      "expected": "m_6_29.mp3",
+      "available": false
+    },
+    {
+      "id": "s105",
+      "label": "ㄊㄡ",
+      "word": "偷",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s105.wav",
+      "expected": "m_6_32.mp3",
+      "available": false
+    },
+    {
+      "id": "s106",
+      "label": "ㄊㄢ",
+      "word": "坍",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s106.wav",
+      "expected": "m_6_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s107",
+      "label": "ㄊㄤ",
+      "word": "湯",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s107.wav",
+      "expected": "m_6_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s108",
+      "label": "ㄊㄥˊ",
+      "word": "疼",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s108.wav",
+      "expected": "m_6_36_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s109",
+      "label": "ㄊㄧ",
+      "word": "剔",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s109.wav",
+      "expected": "m_6_22.mp3",
+      "available": false
+    },
+    {
+      "id": "s110",
+      "label": "ㄊㄧㄝ",
+      "word": "貼",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s110.wav",
+      "expected": "m_6_44.mp3",
+      "available": false
+    },
+    {
+      "id": "s111",
+      "label": "ㄊㄧㄠˊ",
+      "word": "佻",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s111.wav",
+      "expected": "m_6_46_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s112",
+      "label": "ㄊㄧㄢ",
+      "word": "天",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s112.wav",
+      "expected": "m_6_48.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_6_48.mp3"
+    },
+    {
+      "id": "s113",
+      "label": "ㄊㄧㄥ",
+      "word": "汀",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s113.wav",
+      "expected": "m_6_51.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_6_51.mp3"
+    },
+    {
+      "id": "s114",
+      "label": "ㄊㄨㄟ",
+      "word": "推",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s114.wav",
+      "expected": "m_6_55.mp3",
+      "available": false
+    },
+    {
+      "id": "s115",
+      "label": "ㄊㄨㄢ",
+      "word": "湍",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s115.wav",
+      "expected": "m_6_56.mp3",
+      "available": false
+    },
+    {
+      "id": "s116",
+      "label": "ㄊㄨㄣ",
+      "word": "吞",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s116.wav",
+      "expected": "m_6_57.mp3",
+      "available": false
+    },
+    {
+      "id": "s117",
+      "label": "ㄊㄨㄥ",
+      "word": "通",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s117.wav",
+      "expected": "m_6_59.mp3",
+      "available": false
+    },
+    {
+      "id": "s118",
+      "label": "ㄋㄚˊ",
+      "word": "拿",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s118.wav",
+      "expected": "m_7_25_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s119",
+      "label": "ㄋㄜˋ",
+      "word": "訥",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s119.wav",
+      "expected": "m_7_27_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s120",
+      "label": "ㄋㄞˇ",
+      "word": "乃",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s120.wav",
+      "expected": "m_7_29_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s121",
+      "label": "ㄋㄟˇ",
+      "word": "餒",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s121.wav",
+      "expected": "m_7_30_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s122",
+      "label": "ㄋㄠˊ",
+      "word": "呶",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s122.wav",
+      "expected": "m_7_31_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s123",
+      "label": "ㄋㄢˊ",
+      "word": "男",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s123.wav",
+      "expected": "m_7_33_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s124",
+      "label": "ㄋㄣˋ",
+      "word": "嫩",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s124.wav",
+      "expected": "m_7_34_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s125",
+      "label": "ㄋㄤˊ",
+      "word": "囊",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s125.wav",
+      "expected": "m_7_35_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s126",
+      "label": "ㄋㄥˊ",
+      "word": "能",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s126.wav",
+      "expected": "m_7_36_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s127",
+      "label": "ㄋㄧˊ",
+      "word": "尼",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s127.wav",
+      "expected": "m_7_22_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s128",
+      "label": "ㄋㄧㄝ",
+      "word": "捏",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s128.wav",
+      "expected": "m_7_44.mp3",
+      "available": false
+    },
+    {
+      "id": "s129",
+      "label": "ㄋㄧㄠˇ",
+      "word": "裊",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s129.wav",
+      "expected": "m_7_46_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s130",
+      "label": "ㄋㄧㄡ",
+      "word": "妞",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s130.wav",
+      "expected": "m_7_47.mp3",
+      "available": false
+    },
+    {
+      "id": "s131",
+      "label": "ㄋㄧㄢˊ",
+      "word": "年",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s131.wav",
+      "expected": "m_7_48_39.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_7_48_39.mp3"
+    },
+    {
+      "id": "s132",
+      "label": "ㄋㄧㄣˊ",
+      "word": "您",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s132.wav",
+      "expected": "m_7_49_39.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_7_49_39.mp3"
+    },
+    {
+      "id": "s133",
+      "label": "ㄋㄧㄤˊ",
+      "word": "娘",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s133.wav",
+      "expected": "m_7_50_39.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_7_50_39.mp3"
+    },
+    {
+      "id": "s134",
+      "label": "ㄋㄧㄥˊ",
+      "word": "凝",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s134.wav",
+      "expected": "m_7_51_39.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_7_51_39.mp3"
+    },
+    {
+      "id": "s135",
+      "label": "ㄋㄨˊ",
+      "word": "奴",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s135.wav",
+      "expected": "m_7_23_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s136",
+      "label": "ㄋㄨㄛˊ",
+      "word": "挪",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s136.wav",
+      "expected": "m_7_53_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s137",
+      "label": "ㄋㄨㄢˇ",
+      "word": "暖",
+      "enabled": false,
+      "oldPath": "audio/syllable-clear/s137.wav",
+      "expected": "m_7_56_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s138",
+      "label": "ㄋㄨㄥˊ",
+      "word": "農",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s138.wav",
+      "expected": "m_7_59_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s139",
+      "label": "ㄋㄩˇ",
+      "word": "女",
+      "enabled": false,
+      "oldPath": "audio/syllable-clear/s139.wav",
+      "expected": "m_7_24_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s140",
+      "label": "ㄋㄩㄝˋ",
+      "word": "虐",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s140.wav",
+      "expected": "m_7_60_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s141",
+      "label": "ㄌㄜˋ",
+      "word": "樂",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s141.wav",
+      "expected": "m_8_27_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s142",
+      "label": "ㄌㄞˊ",
+      "word": "來",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s142.wav",
+      "expected": "m_8_29_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s143",
+      "label": "ㄌㄟˊ",
+      "word": "雷",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s143.wav",
+      "expected": "m_8_30_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s144",
+      "label": "ㄌㄠˊ",
+      "word": "牢",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s144.wav",
+      "expected": "m_8_31_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s145",
+      "label": "ㄌㄡˊ",
+      "word": "嘍",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s145.wav",
+      "expected": "m_8_32_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s146",
+      "label": "ㄌㄢˊ",
+      "word": "婪",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s146.wav",
+      "expected": "m_8_33_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s147",
+      "label": "ㄌㄤˊ",
+      "word": "郎",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s147.wav",
+      "expected": "m_8_35_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s148",
+      "label": "ㄌㄥˊ",
+      "word": "稜",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s148.wav",
+      "expected": "m_8_36_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s149",
+      "label": "ㄌㄧˊ",
+      "word": "狸",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s149.wav",
+      "expected": "m_8_22_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s150",
+      "label": "ㄌㄧㄚˇ",
+      "word": "倆",
+      "enabled": false,
+      "oldPath": "audio/syllable-clear/s150.wav",
+      "expected": "m_8_42_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s151",
+      "label": "ㄌㄧㄝˋ",
+      "word": "列",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s151.wav",
+      "expected": "m_8_44_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s152",
+      "label": "ㄌㄧㄠˊ",
+      "word": "聊",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s152.wav",
+      "expected": "m_8_46_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s153",
+      "label": "ㄌㄧㄡˊ",
+      "word": "流",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s153.wav",
+      "expected": "m_8_47_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s154",
+      "label": "ㄌㄧㄢˊ",
+      "word": "帘",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s154.wav",
+      "expected": "m_8_48_39.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_8_48_39.mp3"
+    },
+    {
+      "id": "s155",
+      "label": "ㄌㄧㄣˊ",
+      "word": "林",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s155.wav",
+      "expected": "m_8_49_39.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_8_49_39.mp3"
+    },
+    {
+      "id": "s156",
+      "label": "ㄌㄧㄤˊ",
+      "word": "良",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s156.wav",
+      "expected": "m_8_50_39.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_8_50_39.mp3"
+    },
+    {
+      "id": "s157",
+      "label": "ㄌㄧㄥ",
+      "word": "拎",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s157.wav",
+      "expected": "m_8_51.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_8_51.mp3"
+    },
+    {
+      "id": "s158",
+      "label": "ㄌㄨ",
+      "word": "嚕",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s158.wav",
+      "expected": "m_8_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s159",
+      "label": "ㄌㄨㄛˊ",
+      "word": "螺",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s159.wav",
+      "expected": "m_8_53_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s160",
+      "label": "ㄌㄨㄢˊ",
+      "word": "孿",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s160.wav",
+      "expected": "m_8_56_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s161",
+      "label": "ㄌㄨㄣˊ",
+      "word": "侖",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s161.wav",
+      "expected": "m_8_57_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s162",
+      "label": "ㄌㄨㄥˊ",
+      "word": "隆",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s162.wav",
+      "expected": "m_8_59_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s163",
+      "label": "ㄌㄩˊ",
+      "word": "閭",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s163.wav",
+      "expected": "m_8_24_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s164",
+      "label": "ㄌㄩㄝˋ",
+      "word": "掠",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s164.wav",
+      "expected": "m_8_60_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s165",
+      "label": "ㄍㄚ",
+      "word": "嘎",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s165.wav",
+      "expected": "m_9_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s166",
+      "label": "ㄍㄞ",
+      "word": "該",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s166.wav",
+      "expected": "m_9_29.mp3",
+      "available": false
+    },
+    {
+      "id": "s167",
+      "label": "ㄍㄟˇ",
+      "word": "給",
+      "enabled": false,
+      "oldPath": "audio/syllable-clear/s167.wav",
+      "expected": "m_9_30_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s168",
+      "label": "ㄍㄡ",
+      "word": "溝",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s168.wav",
+      "expected": "m_9_32.mp3",
+      "available": false
+    },
+    {
+      "id": "s169",
+      "label": "ㄍㄢ",
+      "word": "干",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s169.wav",
+      "expected": "m_9_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s170",
+      "label": "ㄍㄣ",
+      "word": "根",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s170.wav",
+      "expected": "m_9_34.mp3",
+      "available": false
+    },
+    {
+      "id": "s171",
+      "label": "ㄍㄤ",
+      "word": "岡",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s171.wav",
+      "expected": "m_9_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s172",
+      "label": "ㄍㄥ",
+      "word": "庚",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s172.wav",
+      "expected": "m_9_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s173",
+      "label": "ㄍㄨㄛ",
+      "word": "郭",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s173.wav",
+      "expected": "m_9_53.mp3",
+      "available": false
+    },
+    {
+      "id": "s174",
+      "label": "ㄍㄨㄞ",
+      "word": "乖",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s174.wav",
+      "expected": "m_9_54.mp3",
+      "available": false
+    },
+    {
+      "id": "s175",
+      "label": "ㄍㄨㄟ",
+      "word": "圭",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s175.wav",
+      "expected": "m_9_55.mp3",
+      "available": false
+    },
+    {
+      "id": "s176",
+      "label": "ㄍㄨㄢ",
+      "word": "官",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s176.wav",
+      "expected": "m_9_56.mp3",
+      "available": false
+    },
+    {
+      "id": "s177",
+      "label": "ㄍㄨㄣˇ",
+      "word": "袞",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s177.wav",
+      "expected": "m_9_57_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s178",
+      "label": "ㄍㄨㄤ",
+      "word": "光",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s178.wav",
+      "expected": "m_9_58.mp3",
+      "available": false
+    },
+    {
+      "id": "s179",
+      "label": "ㄍㄨㄥ",
+      "word": "工",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s179.wav",
+      "expected": "m_9_59.mp3",
+      "available": false
+    },
+    {
+      "id": "s180",
+      "label": "ㄎㄚ",
+      "word": "咖",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s180.wav",
+      "expected": "m_10_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s181",
+      "label": "ㄎㄞ",
+      "word": "揩",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s181.wav",
+      "expected": "m_10_29.mp3",
+      "available": false
+    },
+    {
+      "id": "s182",
+      "label": "ㄎㄠˇ",
+      "word": "考",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s182.wav",
+      "expected": "m_10_31_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s183",
+      "label": "ㄎㄡˇ",
+      "word": "口",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s183.wav",
+      "expected": "m_10_32_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s184",
+      "label": "ㄎㄢ",
+      "word": "刊",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s184.wav",
+      "expected": "m_10_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s185",
+      "label": "ㄎㄣˇ",
+      "word": "肯",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s185.wav",
+      "expected": "m_10_34_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s186",
+      "label": "ㄎㄤ",
+      "word": "康",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s186.wav",
+      "expected": "m_10_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s187",
+      "label": "ㄎㄥ",
+      "word": "坑",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s187.wav",
+      "expected": "m_10_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s188",
+      "label": "ㄎㄨㄚ",
+      "word": "夸",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s188.wav",
+      "expected": "m_10_52.mp3",
+      "available": false
+    },
+    {
+      "id": "s189",
+      "label": "ㄎㄨㄛˋ",
+      "word": "廓",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s189.wav",
+      "expected": "m_10_53_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s190",
+      "label": "ㄎㄨㄞˋ",
+      "word": "快",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s190.wav",
+      "expected": "m_10_54_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s191",
+      "label": "ㄎㄨㄟ",
+      "word": "盔",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s191.wav",
+      "expected": "m_10_55.mp3",
+      "available": false
+    },
+    {
+      "id": "s192",
+      "label": "ㄎㄨㄢ",
+      "word": "寬",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s192.wav",
+      "expected": "m_10_56.mp3",
+      "available": false
+    },
+    {
+      "id": "s193",
+      "label": "ㄎㄨㄣ",
+      "word": "坤",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s193.wav",
+      "expected": "m_10_57.mp3",
+      "available": false
+    },
+    {
+      "id": "s194",
+      "label": "ㄎㄨㄤ",
+      "word": "匡",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s194.wav",
+      "expected": "m_10_58.mp3",
+      "available": false
+    },
+    {
+      "id": "s195",
+      "label": "ㄎㄨㄥ",
+      "word": "崆",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s195.wav",
+      "expected": "m_10_59.mp3",
+      "available": false
+    },
+    {
+      "id": "s196",
+      "label": "ㄏㄞ",
+      "word": "嗨",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s196.wav",
+      "expected": "m_11_29.mp3",
+      "available": false
+    },
+    {
+      "id": "s197",
+      "label": "ㄏㄠ",
+      "word": "蒿",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s197.wav",
+      "expected": "m_11_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s198",
+      "label": "ㄏㄡˊ",
+      "word": "侯",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s198.wav",
+      "expected": "m_11_32_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s199",
+      "label": "ㄏㄢ",
+      "word": "蚶",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s199.wav",
+      "expected": "m_11_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s200",
+      "label": "ㄏㄣˊ",
+      "word": "痕",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s200.wav",
+      "expected": "m_11_34_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s201",
+      "label": "ㄏㄤˊ",
+      "word": "杭",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s201.wav",
+      "expected": "m_11_35_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s202",
+      "label": "ㄏㄥ",
+      "word": "哼",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s202.wav",
+      "expected": "m_11_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s203",
+      "label": "ㄏㄨㄛˊ",
+      "word": "活",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s203.wav",
+      "expected": "m_11_53_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s204",
+      "label": "ㄏㄨㄞˊ",
+      "word": "徊",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s204.wav",
+      "expected": "m_11_54_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s205",
+      "label": "ㄏㄨㄟ",
+      "word": "灰",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s205.wav",
+      "expected": "m_11_55.mp3",
+      "available": false
+    },
+    {
+      "id": "s206",
+      "label": "ㄏㄨㄢ",
+      "word": "歡",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s206.wav",
+      "expected": "m_11_56.mp3",
+      "available": false
+    },
+    {
+      "id": "s207",
+      "label": "ㄏㄨㄣ",
+      "word": "昏",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s207.wav",
+      "expected": "m_11_57.mp3",
+      "available": false
+    },
+    {
+      "id": "s208",
+      "label": "ㄏㄨㄤ",
+      "word": "肓",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s208.wav",
+      "expected": "m_11_58.mp3",
+      "available": false
+    },
+    {
+      "id": "s209",
+      "label": "ㄏㄨㄥ",
+      "word": "烘",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s209.wav",
+      "expected": "m_11_59.mp3",
+      "available": false
+    },
+    {
+      "id": "s210",
+      "label": "ㄐㄧㄚ",
+      "word": "加",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s210.wav",
+      "expected": "m_12_42.mp3",
+      "available": false
+    },
+    {
+      "id": "s211",
+      "label": "ㄐㄧㄝ",
+      "word": "皆",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s211.wav",
+      "expected": "m_12_44.mp3",
+      "available": false
+    },
+    {
+      "id": "s212",
+      "label": "ㄐㄧㄠ",
+      "word": "交",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s212.wav",
+      "expected": "m_12_46.mp3",
+      "available": false
+    },
+    {
+      "id": "s213",
+      "label": "ㄐㄧㄡ",
+      "word": "糾",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s213.wav",
+      "expected": "m_12_47.mp3",
+      "available": false
+    },
+    {
+      "id": "s214",
+      "label": "ㄐㄧㄢ",
+      "word": "尖",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s214.wav",
+      "expected": "m_12_48.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_12_48.mp3"
+    },
+    {
+      "id": "s215",
+      "label": "ㄐㄧㄣ",
+      "word": "巾",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s215.wav",
+      "expected": "m_12_49.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_12_49.mp3"
+    },
+    {
+      "id": "s216",
+      "label": "ㄐㄧㄤ",
+      "word": "江",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s216.wav",
+      "expected": "m_12_50.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_12_50.mp3"
+    },
+    {
+      "id": "s217",
+      "label": "ㄐㄧㄥ",
+      "word": "京",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s217.wav",
+      "expected": "m_12_51.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_12_51.mp3"
+    },
+    {
+      "id": "s218",
+      "label": "ㄐㄩ",
+      "word": "居",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s218.wav",
+      "expected": "m_12_24.mp3",
+      "available": false
+    },
+    {
+      "id": "s219",
+      "label": "ㄐㄩㄝˊ",
+      "word": "決",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s219.wav",
+      "expected": "m_12_60_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s220",
+      "label": "ㄐㄩㄢ",
+      "word": "娟",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s220.wav",
+      "expected": "m_12_61.mp3",
+      "available": false
+    },
+    {
+      "id": "s221",
+      "label": "ㄐㄩㄥˇ",
+      "word": "炯",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s221.wav",
+      "expected": "m_12_63_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s222",
+      "label": "ㄑㄧㄚ",
+      "word": "掐",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s222.wav",
+      "expected": "m_13_42.mp3",
+      "available": false
+    },
+    {
+      "id": "s223",
+      "label": "ㄑㄧㄝˋ",
+      "word": "妾",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s223.wav",
+      "expected": "m_13_44_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s224",
+      "label": "ㄑㄧㄠ",
+      "word": "敲",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s224.wav",
+      "expected": "m_13_46.mp3",
+      "available": false
+    },
+    {
+      "id": "s225",
+      "label": "ㄑㄧㄡ",
+      "word": "丘",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s225.wav",
+      "expected": "m_13_47.mp3",
+      "available": false
+    },
+    {
+      "id": "s226",
+      "label": "ㄑㄧㄢ",
+      "word": "千",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s226.wav",
+      "expected": "m_13_48.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_13_48.mp3"
+    },
+    {
+      "id": "s227",
+      "label": "ㄑㄧㄣ",
+      "word": "侵",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s227.wav",
+      "expected": "m_13_49.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_13_49.mp3"
+    },
+    {
+      "id": "s228",
+      "label": "ㄑㄧㄤ",
+      "word": "羌",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s228.wav",
+      "expected": "m_13_50.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_13_50.mp3"
+    },
+    {
+      "id": "s229",
+      "label": "ㄑㄧㄥ",
+      "word": "卿",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s229.wav",
+      "expected": "m_13_51.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_13_51.mp3"
+    },
+    {
+      "id": "s230",
+      "label": "ㄑㄩ",
+      "word": "屈",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s230.wav",
+      "expected": "m_13_24.mp3",
+      "available": false
+    },
+    {
+      "id": "s231",
+      "label": "ㄑㄩㄝ",
+      "word": "缺",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s231.wav",
+      "expected": "m_13_60.mp3",
+      "available": false
+    },
+    {
+      "id": "s232",
+      "label": "ㄑㄩㄢˊ",
+      "word": "全",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s232.wav",
+      "expected": "m_13_61_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s233",
+      "label": "ㄑㄩㄣˊ",
+      "word": "群",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s233.wav",
+      "expected": "m_13_62_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s234",
+      "label": "ㄑㄩㄥ",
+      "word": "穹",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s234.wav",
+      "expected": "m_13_63.mp3",
+      "available": false
+    },
+    {
+      "id": "s235",
+      "label": "ㄒㄧㄚ",
+      "word": "瞎",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s235.wav",
+      "expected": "m_14_42.mp3",
+      "available": false
+    },
+    {
+      "id": "s236",
+      "label": "ㄒㄧㄝ",
+      "word": "楔",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s236.wav",
+      "expected": "m_14_44.mp3",
+      "available": false
+    },
+    {
+      "id": "s237",
+      "label": "ㄒㄧㄠ",
+      "word": "哮",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s237.wav",
+      "expected": "m_14_46.mp3",
+      "available": false
+    },
+    {
+      "id": "s238",
+      "label": "ㄒㄧㄡ",
+      "word": "休",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s238.wav",
+      "expected": "m_14_47.mp3",
+      "available": false
+    },
+    {
+      "id": "s239",
+      "label": "ㄒㄧㄢ",
+      "word": "仙",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s239.wav",
+      "expected": "m_14_48.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_14_48.mp3"
+    },
+    {
+      "id": "s240",
+      "label": "ㄒㄧㄣ",
+      "word": "心",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s240.wav",
+      "expected": "m_14_49.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_14_49.mp3"
+    },
+    {
+      "id": "s241",
+      "label": "ㄒㄧㄤ",
+      "word": "香",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s241.wav",
+      "expected": "m_14_50.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_14_50.mp3"
+    },
+    {
+      "id": "s242",
+      "label": "ㄒㄧㄥ",
+      "word": "星",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s242.wav",
+      "expected": "m_14_51.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/m_14_51.mp3"
+    },
+    {
+      "id": "s243",
+      "label": "ㄒㄩ",
+      "word": "需",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s243.wav",
+      "expected": "m_14_24.mp3",
+      "available": false
+    },
+    {
+      "id": "s244",
+      "label": "ㄒㄩㄢ",
+      "word": "宣",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s244.wav",
+      "expected": "m_14_61.mp3",
+      "available": false
+    },
+    {
+      "id": "s245",
+      "label": "ㄒㄩㄣ",
+      "word": "勛",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s245.wav",
+      "expected": "m_14_62.mp3",
+      "available": false
+    },
+    {
+      "id": "s246",
+      "label": "ㄒㄩㄥ",
+      "word": "凶",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s246.wav",
+      "expected": "m_14_63.mp3",
+      "available": false
+    },
+    {
+      "id": "s247",
+      "label": "ㄓㄚ",
+      "word": "喳",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s247.wav",
+      "expected": "m_15_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s248",
+      "label": "ㄓㄜ",
+      "word": "遮",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s248.wav",
+      "expected": "m_15_27.mp3",
+      "available": false
+    },
+    {
+      "id": "s249",
+      "label": "ㄓㄞ",
+      "word": "摘",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s249.wav",
+      "expected": "m_15_29.mp3",
+      "available": false
+    },
+    {
+      "id": "s250",
+      "label": "ㄓㄠ",
+      "word": "招",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s250.wav",
+      "expected": "m_15_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s251",
+      "label": "ㄓㄡ",
+      "word": "州",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s251.wav",
+      "expected": "m_15_32.mp3",
+      "available": false
+    },
+    {
+      "id": "s252",
+      "label": "ㄓㄢ",
+      "word": "沾",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s252.wav",
+      "expected": "m_15_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s253",
+      "label": "ㄓㄣ",
+      "word": "珍",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s253.wav",
+      "expected": "m_15_34.mp3",
+      "available": false
+    },
+    {
+      "id": "s254",
+      "label": "ㄓㄤ",
+      "word": "張",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s254.wav",
+      "expected": "m_15_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s255",
+      "label": "ㄓㄥ",
+      "word": "征",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s255.wav",
+      "expected": "m_15_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s256",
+      "label": "ㄓㄨ",
+      "word": "朱",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s256.wav",
+      "expected": "m_15_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s257",
+      "label": "ㄓㄨㄚ",
+      "word": "抓",
+      "enabled": false,
+      "oldPath": "audio/syllable-clear/s257.wav",
+      "expected": "m_15_52.mp3",
+      "available": false
+    },
+    {
+      "id": "s258",
+      "label": "ㄓㄨㄛ",
+      "word": "捉",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s258.wav",
+      "expected": "m_15_53.mp3",
+      "available": false
+    },
+    {
+      "id": "s259",
+      "label": "ㄓㄨㄞˋ",
+      "word": "拽",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s259.wav",
+      "expected": "m_15_54_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s260",
+      "label": "ㄓㄨㄟ",
+      "word": "追",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s260.wav",
+      "expected": "m_15_55.mp3",
+      "available": false
+    },
+    {
+      "id": "s261",
+      "label": "ㄓㄨㄢ",
+      "word": "專",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s261.wav",
+      "expected": "m_15_56.mp3",
+      "available": false
+    },
+    {
+      "id": "s262",
+      "label": "ㄓㄨㄣ",
+      "word": "肫",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s262.wav",
+      "expected": "m_15_57.mp3",
+      "available": false
+    },
+    {
+      "id": "s263",
+      "label": "ㄓㄨㄤ",
+      "word": "妝",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s263.wav",
+      "expected": "m_15_58.mp3",
+      "available": false
+    },
+    {
+      "id": "s264",
+      "label": "ㄓㄨㄥ",
+      "word": "忠",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s264.wav",
+      "expected": "m_15_59.mp3",
+      "available": false
+    },
+    {
+      "id": "s265",
+      "label": "ㄔㄚ",
+      "word": "叉",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s265.wav",
+      "expected": "m_16_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s266",
+      "label": "ㄔㄜˇ",
+      "word": "扯",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s266.wav",
+      "expected": "m_16_27_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s267",
+      "label": "ㄔㄞ",
+      "word": "拆",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s267.wav",
+      "expected": "m_16_29.mp3",
+      "available": false
+    },
+    {
+      "id": "s268",
+      "label": "ㄔㄠ",
+      "word": "抄",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s268.wav",
+      "expected": "m_16_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s269",
+      "label": "ㄔㄡ",
+      "word": "抽",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s269.wav",
+      "expected": "m_16_32.mp3",
+      "available": false
+    },
+    {
+      "id": "s270",
+      "label": "ㄔㄢ",
+      "word": "攙",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s270.wav",
+      "expected": "m_16_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s271",
+      "label": "ㄔㄣˊ",
+      "word": "臣",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s271.wav",
+      "expected": "m_16_34_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s272",
+      "label": "ㄔㄤ",
+      "word": "昌",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s272.wav",
+      "expected": "m_16_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s273",
+      "label": "ㄔㄥ",
+      "word": "撐",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s273.wav",
+      "expected": "m_16_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s274",
+      "label": "ㄔㄨ",
+      "word": "出",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s274.wav",
+      "expected": "m_16_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s275",
+      "label": "ㄔㄨㄚˇ",
+      "word": "抓",
+      "enabled": false,
+      "oldPath": "audio/syllable-clear/s275.wav",
+      "expected": "m_16_52_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s276",
+      "label": "ㄔㄨㄛ",
+      "word": "戳",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s276.wav",
+      "expected": "m_16_53.mp3",
+      "available": false
+    },
+    {
+      "id": "s277",
+      "label": "ㄔㄨㄞˇ",
+      "word": "揣",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s277.wav",
+      "expected": "m_16_54_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s278",
+      "label": "ㄔㄨㄟ",
+      "word": "吹",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s278.wav",
+      "expected": "m_16_55.mp3",
+      "available": false
+    },
+    {
+      "id": "s279",
+      "label": "ㄔㄨㄢ",
+      "word": "川",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s279.wav",
+      "expected": "m_16_56.mp3",
+      "available": false
+    },
+    {
+      "id": "s280",
+      "label": "ㄔㄨㄣ",
+      "word": "春",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s280.wav",
+      "expected": "m_16_57.mp3",
+      "available": false
+    },
+    {
+      "id": "s281",
+      "label": "ㄔㄨㄤ",
+      "word": "窗",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s281.wav",
+      "expected": "m_16_58.mp3",
+      "available": false
+    },
+    {
+      "id": "s282",
+      "label": "ㄔㄨㄥ",
+      "word": "充",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s282.wav",
+      "expected": "m_16_59.mp3",
+      "available": false
+    },
+    {
+      "id": "s283",
+      "label": "ㄕㄚ",
+      "word": "沙",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s283.wav",
+      "expected": "m_17_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s284",
+      "label": "ㄕㄜ",
+      "word": "奢",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s284.wav",
+      "expected": "m_17_27.mp3",
+      "available": false
+    },
+    {
+      "id": "s285",
+      "label": "ㄕㄞ",
+      "word": "篩",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s285.wav",
+      "expected": "m_17_29.mp3",
+      "available": false
+    },
+    {
+      "id": "s286",
+      "label": "ㄕㄟˊ",
+      "word": "誰",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s286.wav",
+      "expected": "m_17_30_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s287",
+      "label": "ㄕㄠ",
+      "word": "梢",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s287.wav",
+      "expected": "m_17_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s288",
+      "label": "ㄕㄡ",
+      "word": "收",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s288.wav",
+      "expected": "m_17_32.mp3",
+      "available": false
+    },
+    {
+      "id": "s289",
+      "label": "ㄕㄢ",
+      "word": "山",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s289.wav",
+      "expected": "m_17_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s290",
+      "label": "ㄕㄣ",
+      "word": "申",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s290.wav",
+      "expected": "m_17_34.mp3",
+      "available": false
+    },
+    {
+      "id": "s291",
+      "label": "ㄕㄤ",
+      "word": "商",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s291.wav",
+      "expected": "m_17_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s292",
+      "label": "ㄕㄥ",
+      "word": "升",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s292.wav",
+      "expected": "m_17_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s293",
+      "label": "ㄕㄨ",
+      "word": "抒",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s293.wav",
+      "expected": "m_17_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s294",
+      "label": "ㄕㄨㄚ",
+      "word": "刷",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s294.wav",
+      "expected": "m_17_52.mp3",
+      "available": false
+    },
+    {
+      "id": "s295",
+      "label": "ㄕㄨㄛˋ",
+      "word": "妁",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s295.wav",
+      "expected": "m_17_53_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s296",
+      "label": "ㄕㄨㄞ",
+      "word": "摔",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s296.wav",
+      "expected": "m_17_54.mp3",
+      "available": false
+    },
+    {
+      "id": "s297",
+      "label": "ㄕㄨㄟˇ",
+      "word": "水",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s297.wav",
+      "expected": "m_17_55_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s298",
+      "label": "ㄕㄨㄢ",
+      "word": "拴",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s298.wav",
+      "expected": "m_17_56.mp3",
+      "available": false
+    },
+    {
+      "id": "s299",
+      "label": "ㄕㄨㄣˇ",
+      "word": "吮",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s299.wav",
+      "expected": "m_17_57_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s300",
+      "label": "ㄕㄨㄤ",
+      "word": "霜",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s300.wav",
+      "expected": "m_17_58.mp3",
+      "available": false
+    },
+    {
+      "id": "s301",
+      "label": "ㄖㄜˇ",
+      "word": "惹",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s301.wav",
+      "expected": "m_18_27_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s302",
+      "label": "ㄖㄠˊ",
+      "word": "蟯",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s302.wav",
+      "expected": "m_18_31_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s303",
+      "label": "ㄖㄡˊ",
+      "word": "柔",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s303.wav",
+      "expected": "m_18_32_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s304",
+      "label": "ㄖㄢˊ",
+      "word": "然",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s304.wav",
+      "expected": "m_18_33_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s305",
+      "label": "ㄖㄣˊ",
+      "word": "人",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s305.wav",
+      "expected": "m_18_34_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s306",
+      "label": "ㄖㄤˊ",
+      "word": "攘",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s306.wav",
+      "expected": "m_18_35_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s307",
+      "label": "ㄖㄥ",
+      "word": "扔",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s307.wav",
+      "expected": "m_18_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s308",
+      "label": "ㄖㄨˊ",
+      "word": "如",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s308.wav",
+      "expected": "m_18_23_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s309",
+      "label": "ㄖㄨㄛˋ",
+      "word": "弱",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s309.wav",
+      "expected": "m_18_53_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s310",
+      "label": "ㄖㄨㄟˇ",
+      "word": "蕊",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s310.wav",
+      "expected": "m_18_55_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s311",
+      "label": "ㄖㄨㄢˇ",
+      "word": "阮",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s311.wav",
+      "expected": "m_18_56_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s312",
+      "label": "ㄖㄨㄣˋ",
+      "word": "閏",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s312.wav",
+      "expected": "m_18_57_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s313",
+      "label": "ㄖㄨㄥˊ",
+      "word": "戎",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s313.wav",
+      "expected": "m_18_59_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s314",
+      "label": "ㄗㄚ",
+      "word": "匝",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s314.wav",
+      "expected": "m_19_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s315",
+      "label": "ㄗㄜˊ",
+      "word": "則",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s315.wav",
+      "expected": "m_19_27_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s316",
+      "label": "ㄗㄞ",
+      "word": "災",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s316.wav",
+      "expected": "m_19_29.mp3",
+      "available": false
+    },
+    {
+      "id": "s317",
+      "label": "ㄗㄟˊ",
+      "word": "賊",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s317.wav",
+      "expected": "m_19_30_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s318",
+      "label": "ㄗㄠ",
+      "word": "遭",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s318.wav",
+      "expected": "m_19_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s319",
+      "label": "ㄗㄡ",
+      "word": "鄒",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s319.wav",
+      "expected": "m_19_32.mp3",
+      "available": false
+    },
+    {
+      "id": "s320",
+      "label": "ㄗㄢ",
+      "word": "簪",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s320.wav",
+      "expected": "m_19_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s321",
+      "label": "ㄗㄣˇ",
+      "word": "怎",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s321.wav",
+      "expected": "m_19_34_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s322",
+      "label": "ㄗㄤ",
+      "word": "臧",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s322.wav",
+      "expected": "m_19_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s323",
+      "label": "ㄗㄥ",
+      "word": "增",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s323.wav",
+      "expected": "m_19_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s324",
+      "label": "ㄗㄨ",
+      "word": "租",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s324.wav",
+      "expected": "m_19_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s325",
+      "label": "ㄗㄨㄛˊ",
+      "word": "昨",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s325.wav",
+      "expected": "m_19_53_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s326",
+      "label": "ㄗㄨㄟˇ",
+      "word": "嘴",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s326.wav",
+      "expected": "m_19_55_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s327",
+      "label": "ㄗㄨㄢˇ",
+      "word": "纂",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s327.wav",
+      "expected": "m_19_56_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s328",
+      "label": "ㄗㄨㄣ",
+      "word": "尊",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s328.wav",
+      "expected": "m_19_57.mp3",
+      "available": false
+    },
+    {
+      "id": "s329",
+      "label": "ㄗㄨㄥ",
+      "word": "宗",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s329.wav",
+      "expected": "m_19_59.mp3",
+      "available": false
+    },
+    {
+      "id": "s330",
+      "label": "ㄘㄚ",
+      "word": "擦",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s330.wav",
+      "expected": "m_20_25.mp3",
+      "available": false
+    },
+    {
+      "id": "s331",
+      "label": "ㄘㄜˋ",
+      "word": "冊",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s331.wav",
+      "expected": "m_20_27_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s332",
+      "label": "ㄘㄞ",
+      "word": "猜",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s332.wav",
+      "expected": "m_20_29.mp3",
+      "available": false
+    },
+    {
+      "id": "s333",
+      "label": "ㄘㄠ",
+      "word": "操",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s333.wav",
+      "expected": "m_20_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s334",
+      "label": "ㄘㄡˋ",
+      "word": "湊",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s334.wav",
+      "expected": "m_20_32_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s335",
+      "label": "ㄘㄢ",
+      "word": "餐",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s335.wav",
+      "expected": "m_20_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s336",
+      "label": "ㄘㄣˊ",
+      "word": "岑",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s336.wav",
+      "expected": "m_20_34_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s337",
+      "label": "ㄘㄤ",
+      "word": "倉",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s337.wav",
+      "expected": "m_20_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s338",
+      "label": "ㄘㄥˊ",
+      "word": "層",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s338.wav",
+      "expected": "m_20_36_39.mp3",
+      "available": false
+    },
+    {
+      "id": "s339",
+      "label": "ㄘㄨ",
+      "word": "粗",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s339.wav",
+      "expected": "m_20_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s340",
+      "label": "ㄘㄨㄛ",
+      "word": "搓",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s340.wav",
+      "expected": "m_20_53.mp3",
+      "available": false
+    },
+    {
+      "id": "s341",
+      "label": "ㄘㄨㄟ",
+      "word": "崔",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s341.wav",
+      "expected": "m_20_55.mp3",
+      "available": false
+    },
+    {
+      "id": "s342",
+      "label": "ㄘㄨㄢˋ",
+      "word": "篡",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s342.wav",
+      "expected": "m_20_56_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s343",
+      "label": "ㄘㄨㄣ",
+      "word": "村",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s343.wav",
+      "expected": "m_20_57.mp3",
+      "available": false
+    },
+    {
+      "id": "s344",
+      "label": "ㄘㄨㄥ",
+      "word": "匆",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s344.wav",
+      "expected": "m_20_59.mp3",
+      "available": false
+    },
+    {
+      "id": "s345",
+      "label": "ㄙㄚˇ",
+      "word": "灑",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s345.wav",
+      "expected": "m_21_25_40.mp3",
+      "available": false
+    },
+    {
+      "id": "s346",
+      "label": "ㄙㄜˋ",
+      "word": "色",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s346.wav",
+      "expected": "m_21_27_41.mp3",
+      "available": false
+    },
+    {
+      "id": "s347",
+      "label": "ㄙㄞ",
+      "word": "腮",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s347.wav",
+      "expected": "m_21_29.mp3",
+      "available": false
+    },
+    {
+      "id": "s348",
+      "label": "ㄙㄠ",
+      "word": "搔",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s348.wav",
+      "expected": "m_21_31.mp3",
+      "available": false
+    },
+    {
+      "id": "s349",
+      "label": "ㄙㄡ",
+      "word": "搜",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s349.wav",
+      "expected": "m_21_32.mp3",
+      "available": false
+    },
+    {
+      "id": "s350",
+      "label": "ㄙㄢ",
+      "word": "三",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s350.wav",
+      "expected": "m_21_33.mp3",
+      "available": false
+    },
+    {
+      "id": "s351",
+      "label": "ㄙㄣ",
+      "word": "森",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s351.wav",
+      "expected": "m_21_34.mp3",
+      "available": false
+    },
+    {
+      "id": "s352",
+      "label": "ㄙㄤ",
+      "word": "桑",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s352.wav",
+      "expected": "m_21_35.mp3",
+      "available": false
+    },
+    {
+      "id": "s353",
+      "label": "ㄙㄥ",
+      "word": "僧",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s353.wav",
+      "expected": "m_21_36.mp3",
+      "available": false
+    },
+    {
+      "id": "s354",
+      "label": "ㄙㄨ",
+      "word": "甦",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s354.wav",
+      "expected": "m_21_23.mp3",
+      "available": false
+    },
+    {
+      "id": "s355",
+      "label": "ㄙㄨㄛ",
+      "word": "唆",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s355.wav",
+      "expected": "m_21_53.mp3",
+      "available": false
+    },
+    {
+      "id": "s356",
+      "label": "ㄙㄨㄟ",
+      "word": "綏",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s356.wav",
+      "expected": "m_21_55.mp3",
+      "available": false
+    },
+    {
+      "id": "s357",
+      "label": "ㄙㄨㄢ",
+      "word": "酸",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s357.wav",
+      "expected": "m_21_56.mp3",
+      "available": false
+    },
+    {
+      "id": "s358",
+      "label": "ㄙㄨㄣ",
+      "word": "飧",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s358.wav",
+      "expected": "m_21_57.mp3",
+      "available": false
+    },
+    {
+      "id": "s359",
+      "label": "ㄙㄨㄥ",
+      "word": "松",
+      "enabled": true,
+      "oldPath": "audio/syllable-clear/s359.wav",
+      "expected": "m_21_59.mp3",
+      "available": false
+    }
+  ],
+  "units": [
+    {
+      "label": "ㄅ",
+      "expected": "s_1.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_1.mp3"
+    },
+    {
+      "label": "ㄆ",
+      "expected": "s_2.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_2.mp3"
+    },
+    {
+      "label": "ㄇ",
+      "expected": "s_3.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_3.mp3"
+    },
+    {
+      "label": "ㄈ",
+      "expected": "s_4.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_4.mp3"
+    },
+    {
+      "label": "ㄉ",
+      "expected": "s_5.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_5.mp3"
+    },
+    {
+      "label": "ㄊ",
+      "expected": "s_6.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_6.mp3"
+    },
+    {
+      "label": "ㄋ",
+      "expected": "s_7.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_7.mp3"
+    },
+    {
+      "label": "ㄌ",
+      "expected": "s_8.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_8.mp3"
+    },
+    {
+      "label": "ㄍ",
+      "expected": "s_9.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_9.mp3"
+    },
+    {
+      "label": "ㄎ",
+      "expected": "s_10.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_10.mp3"
+    },
+    {
+      "label": "ㄏ",
+      "expected": "s_11.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_11.mp3"
+    },
+    {
+      "label": "ㄐ",
+      "expected": "s_12.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_12.mp3"
+    },
+    {
+      "label": "ㄑ",
+      "expected": "s_13.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_13.mp3"
+    },
+    {
+      "label": "ㄒ",
+      "expected": "s_14.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_14.mp3"
+    },
+    {
+      "label": "ㄓ",
+      "expected": "s_15.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_15.mp3"
+    },
+    {
+      "label": "ㄔ",
+      "expected": "s_16.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_16.mp3"
+    },
+    {
+      "label": "ㄕ",
+      "expected": "s_17.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_17.mp3"
+    },
+    {
+      "label": "ㄖ",
+      "expected": "s_18.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_18.mp3"
+    },
+    {
+      "label": "ㄗ",
+      "expected": "s_19.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_19.mp3"
+    },
+    {
+      "label": "ㄘ",
+      "expected": "s_20.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_20.mp3"
+    },
+    {
+      "label": "ㄙ",
+      "expected": "s_21.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_21.mp3"
+    },
+    {
+      "label": "ㄚ",
+      "expected": "s_25.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_25.mp3"
+    },
+    {
+      "label": "ㄛ",
+      "expected": "s_26.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_26.mp3"
+    },
+    {
+      "label": "ㄜ",
+      "expected": "s_27.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_27.mp3"
+    },
+    {
+      "label": "ㄝ",
+      "expected": "s_28.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_28.mp3"
+    },
+    {
+      "label": "ㄞ",
+      "expected": "s_29.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_29.mp3"
+    },
+    {
+      "label": "ㄟ",
+      "expected": "s_30.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_30.mp3"
+    },
+    {
+      "label": "ㄠ",
+      "expected": "s_31.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_31.mp3"
+    },
+    {
+      "label": "ㄡ",
+      "expected": "s_32.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_32.mp3"
+    },
+    {
+      "label": "ㄢ",
+      "expected": "s_33.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_33.mp3"
+    },
+    {
+      "label": "ㄣ",
+      "expected": "s_34.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_34.mp3"
+    },
+    {
+      "label": "ㄤ",
+      "expected": "s_35.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_35.mp3"
+    },
+    {
+      "label": "ㄥ",
+      "expected": "s_36.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_36.mp3"
+    },
+    {
+      "label": "ㄦ",
+      "expected": "s_37.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_37.mp3"
+    },
+    {
+      "label": "ㄧ",
+      "expected": "s_22.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_22.mp3"
+    },
+    {
+      "label": "ㄨ",
+      "expected": "s_23.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_23.mp3"
+    },
+    {
+      "label": "ㄩ",
+      "expected": "s_24.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_24.mp3"
+    },
+    {
+      "label": "ㄧㄚ",
+      "expected": "s_42.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_42.mp3"
+    },
+    {
+      "label": "ㄧㄛ",
+      "expected": "s_43.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_43.mp3"
+    },
+    {
+      "label": "ㄧㄝ",
+      "expected": "s_44.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_44.mp3"
+    },
+    {
+      "label": "ㄧㄞ",
+      "expected": "s_45.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_45.mp3"
+    },
+    {
+      "label": "ㄧㄠ",
+      "expected": "s_46.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_46.mp3"
+    },
+    {
+      "label": "ㄧㄡ",
+      "expected": "s_47.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_47.mp3"
+    },
+    {
+      "label": "ㄧㄢ",
+      "expected": "s_48.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_48.mp3"
+    },
+    {
+      "label": "ㄧㄣ",
+      "expected": "s_49.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_49.mp3"
+    },
+    {
+      "label": "ㄧㄤ",
+      "expected": "s_50.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_50.mp3"
+    },
+    {
+      "label": "ㄧㄥ",
+      "expected": "s_51.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_51.mp3"
+    },
+    {
+      "label": "ㄨㄚ",
+      "expected": "s_52.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_52.mp3"
+    },
+    {
+      "label": "ㄨㄛ",
+      "expected": "s_53.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_53.mp3"
+    },
+    {
+      "label": "ㄨㄞ",
+      "expected": "s_54.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_54.mp3"
+    },
+    {
+      "label": "ㄨㄟ",
+      "expected": "s_55.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_55.mp3"
+    },
+    {
+      "label": "ㄨㄢ",
+      "expected": "s_56.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_56.mp3"
+    },
+    {
+      "label": "ㄨㄣ",
+      "expected": "s_57.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_57.mp3"
+    },
+    {
+      "label": "ㄨㄤ",
+      "expected": "s_58.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_58.mp3"
+    },
+    {
+      "label": "ㄨㄥ",
+      "expected": "s_59.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_59.mp3"
+    },
+    {
+      "label": "ㄩㄝ",
+      "expected": "s_60.mp3",
+      "available": true,
+      "path": "audio/supplied-20260923/s_60.mp3"
+    },
+    {
+      "label": "ㄩㄢ",
+      "expected": "s_61.mp3",
+      "available": false
+    },
+    {
+      "label": "ㄩㄣ",
+      "expected": "s_62.mp3",
+      "available": false
+    },
+    {
+      "label": "ㄩㄥ",
+      "expected": "s_63.mp3",
+      "available": false
+    }
+  ],
+  "extraSyllables": [
+    {
+      "file": "m_12_48_40.mp3",
+      "label": "ㄐㄧㄢˇ",
+      "seconds": 3.29,
+      "sha256": "7f3247b62d163b0e338200abeae11586b9bd13cf2f82286dd7016229022c671d",
+      "path": "audio/supplied-20260923/m_12_48_40.mp3"
+    },
+    {
+      "file": "m_12_48_41.mp3",
+      "label": "ㄐㄧㄢˋ",
+      "seconds": 3.6,
+      "sha256": "3f9c0d2f7608311ed91c22d1dc71ee62c64492a37328c1b4e7d0ad27c8d61f97",
+      "path": "audio/supplied-20260923/m_12_48_41.mp3"
+    },
+    {
+      "file": "m_12_49_40.mp3",
+      "label": "ㄐㄧㄣˇ",
+      "seconds": 3.03,
+      "sha256": "cf69ce1c787aaca4f2ada182937ae69b06b6bc2a55b02b704a1b403d0b415abc",
+      "path": "audio/supplied-20260923/m_12_49_40.mp3"
+    },
+    {
+      "file": "m_12_49_41.mp3",
+      "label": "ㄐㄧㄣˋ",
+      "seconds": 3.42,
+      "sha256": "ffa81bbcafae0b0bb465b966ac10c0c4642abf3786ded8fd937555c6a19129ff",
+      "path": "audio/supplied-20260923/m_12_49_41.mp3"
+    },
+    {
+      "file": "m_12_50_40.mp3",
+      "label": "ㄐㄧㄤˇ",
+      "seconds": 2.93,
+      "sha256": "8672f7922f722acee3a46277290520bade7a28350f4ba9642293d4f2d9784e03",
+      "path": "audio/supplied-20260923/m_12_50_40.mp3"
+    },
+    {
+      "file": "m_12_50_41.mp3",
+      "label": "ㄐㄧㄤˋ",
+      "seconds": 3.4,
+      "sha256": "4c8aabcb1bdc960c850a23585d1a0e9ad7d8fcdec40021014d933e778ac24327",
+      "path": "audio/supplied-20260923/m_12_50_41.mp3"
+    },
+    {
+      "file": "m_12_51_40.mp3",
+      "label": "ㄐㄧㄥˇ",
+      "seconds": 2.8,
+      "sha256": "2333a56bee55bcb2c8f4c2a087e55549b0b81e931586a0996f8d9f8052d4144e",
+      "path": "audio/supplied-20260923/m_12_51_40.mp3"
+    },
+    {
+      "file": "m_12_51_41.mp3",
+      "label": "ㄐㄧㄥˋ",
+      "seconds": 3.13,
+      "sha256": "a4673684a4be9f8ea0a149f988e124a5cef191872f3e07fbf3384df6be02fb59",
+      "path": "audio/supplied-20260923/m_12_51_41.mp3"
+    },
+    {
+      "file": "m_13_48_39.mp3",
+      "label": "ㄑㄧㄢˊ",
+      "seconds": 3.5,
+      "sha256": "a07ab92731088c418f7a16366fda89d7ed78f5e1ef9c4179f8608dc38e48d1e2",
+      "path": "audio/supplied-20260923/m_13_48_39.mp3"
+    },
+    {
+      "file": "m_13_48_40.mp3",
+      "label": "ㄑㄧㄢˇ",
+      "seconds": 3.13,
+      "sha256": "6a0d521b21459ccbc661f046b490af3fa771eeecbb3515c2196cbb1166abc783",
+      "path": "audio/supplied-20260923/m_13_48_40.mp3"
+    },
+    {
+      "file": "m_13_48_41.mp3",
+      "label": "ㄑㄧㄢˋ",
+      "seconds": 3.79,
+      "sha256": "a7fa310791516bc1e3a2ffbf0ed6cabf74877c207b9931c5f38b77599ef79ae1",
+      "path": "audio/supplied-20260923/m_13_48_41.mp3"
+    },
+    {
+      "file": "m_13_49_39.mp3",
+      "label": "ㄑㄧㄣˊ",
+      "seconds": 3.34,
+      "sha256": "6bc876b9a8505f270168452c201fe15f7390b99e748fa219d9ba9fa52259be86",
+      "path": "audio/supplied-20260923/m_13_49_39.mp3"
+    },
+    {
+      "file": "m_13_49_40.mp3",
+      "label": "ㄑㄧㄣˇ",
+      "seconds": 3.06,
+      "sha256": "9074693080dcf4c7f49a9628d550c5b8925343c52ea30d18a63392558138adae",
+      "path": "audio/supplied-20260923/m_13_49_40.mp3"
+    },
+    {
+      "file": "m_13_49_41.mp3",
+      "label": "ㄑㄧㄣˋ",
+      "seconds": 3.47,
+      "sha256": "1853c160e77768ab62787db3b980dabb6d7d30cf3cabfe34fee1e603a6a7108d",
+      "path": "audio/supplied-20260923/m_13_49_41.mp3"
+    },
+    {
+      "file": "m_13_50_39.mp3",
+      "label": "ㄑㄧㄤˊ",
+      "seconds": 3.32,
+      "sha256": "9b9e85aa2a5477277dba3cb202f22068a20267de540c538315094022d88ac5ad",
+      "path": "audio/supplied-20260923/m_13_50_39.mp3"
+    },
+    {
+      "file": "m_13_50_40.mp3",
+      "label": "ㄑㄧㄤˇ",
+      "seconds": 3.11,
+      "sha256": "0a60bd3d5eae0f00277d55700610d5ff3682e685d5da3c830889aa11d686a019",
+      "path": "audio/supplied-20260923/m_13_50_40.mp3"
+    },
+    {
+      "file": "m_13_50_41.mp3",
+      "label": "ㄑㄧㄤˋ",
+      "seconds": 3.68,
+      "sha256": "e18953cc8d2a0247c7b31f389f781ba746ac4b03935124c16a0a5d33171c685c",
+      "path": "audio/supplied-20260923/m_13_50_41.mp3"
+    },
+    {
+      "file": "m_13_51_39.mp3",
+      "label": "ㄑㄧㄥˊ",
+      "seconds": 3.13,
+      "sha256": "7899128138fdc9f60fd6ac518ad83a48daeccd41cb2806bb5a32c1f91c907cc0",
+      "path": "audio/supplied-20260923/m_13_51_39.mp3"
+    },
+    {
+      "file": "m_13_51_40.mp3",
+      "label": "ㄑㄧㄥˇ",
+      "seconds": 3.11,
+      "sha256": "b0401b9895462d10d434c91d4eb419c4efb990e529ed001c9c51493bb233c629",
+      "path": "audio/supplied-20260923/m_13_51_40.mp3"
+    },
+    {
+      "file": "m_13_51_41.mp3",
+      "label": "ㄑㄧㄥˋ",
+      "seconds": 3.21,
+      "sha256": "91392f45eb67627ab108c4a06095d40b5e53fad85e607ad3e0b846d1dec0e5a8",
+      "path": "audio/supplied-20260923/m_13_51_41.mp3"
+    },
+    {
+      "file": "m_14_48_39.mp3",
+      "label": "ㄒㄧㄢˊ",
+      "seconds": 3.47,
+      "sha256": "d1d033daddd4d4349e1f2c832918da668f00b5a009f15ab085cd8e33ac476ced",
+      "path": "audio/supplied-20260923/m_14_48_39.mp3"
+    },
+    {
+      "file": "m_14_48_40.mp3",
+      "label": "ㄒㄧㄢˇ",
+      "seconds": 3.29,
+      "sha256": "67428e267d1dc689ecb9b2d4b0c8ce8de0efdffc1c32b5665b469757b6cabc20",
+      "path": "audio/supplied-20260923/m_14_48_40.mp3"
+    },
+    {
+      "file": "m_14_48_41.mp3",
+      "label": "ㄒㄧㄢˋ",
+      "seconds": 3.6,
+      "sha256": "5ea222d11e1a92f62fed97b25ef1a33116ad427b0ec157b4ed733ac8674598a3",
+      "path": "audio/supplied-20260923/m_14_48_41.mp3"
+    },
+    {
+      "file": "m_14_49_39.mp3",
+      "label": "ㄒㄧㄣˊ",
+      "seconds": 3.42,
+      "sha256": "096cff78bf060a626fa4fc3628226e43775331cb6a3c57a8526422f2f0ca606f",
+      "path": "audio/supplied-20260923/m_14_49_39.mp3"
+    },
+    {
+      "file": "m_14_49_40.mp3",
+      "label": "ㄒㄧㄣˇ",
+      "seconds": 3.16,
+      "sha256": "e464c15c71b0e05983b4def01c30bcfe6c6c57ba36ff39d65dac819a597376ea",
+      "path": "audio/supplied-20260923/m_14_49_40.mp3"
+    },
+    {
+      "file": "m_14_49_41.mp3",
+      "label": "ㄒㄧㄣˋ",
+      "seconds": 3.58,
+      "sha256": "e654100585e243c1b13018037f26807322df68d5ef4764b8f5d895ae8675bdd4",
+      "path": "audio/supplied-20260923/m_14_49_41.mp3"
+    },
+    {
+      "file": "m_14_50_39.mp3",
+      "label": "ㄒㄧㄤˊ",
+      "seconds": 3.4,
+      "sha256": "86ea809147498cfa2b5a4efcdcd0d866b36b3fbe37dd9e0d9dc412aba4a46680",
+      "path": "audio/supplied-20260923/m_14_50_39.mp3"
+    },
+    {
+      "file": "m_14_50_40.mp3",
+      "label": "ㄒㄧㄤˇ",
+      "seconds": 3.03,
+      "sha256": "2d2aa09afd118a8de2dced56717bca60db7693fd8db5af3c74085af2ef8cf367",
+      "path": "audio/supplied-20260923/m_14_50_40.mp3"
+    },
+    {
+      "file": "m_14_50_41.mp3",
+      "label": "ㄒㄧㄤˋ",
+      "seconds": 3.53,
+      "sha256": "1eca6781e3980464533a289dd3fe4100f4061e288fb3e71ce699d2a2fb5a267d",
+      "path": "audio/supplied-20260923/m_14_50_41.mp3"
+    },
+    {
+      "file": "m_14_51_39.mp3",
+      "label": "ㄒㄧㄥˊ",
+      "seconds": 3.32,
+      "sha256": "fa7cc522b2675c2fd893905f5327ed78046edceef36c85dbe52f41677e849bae",
+      "path": "audio/supplied-20260923/m_14_51_39.mp3"
+    },
+    {
+      "file": "m_14_51_40.mp3",
+      "label": "ㄒㄧㄥˇ",
+      "seconds": 3.16,
+      "sha256": "3d0e83b041161994e554862b5925c08d5d26aa8bb23b6a5c07a765e80931c0ab",
+      "path": "audio/supplied-20260923/m_14_51_40.mp3"
+    },
+    {
+      "file": "m_14_51_41.mp3",
+      "label": "ㄒㄧㄥˋ",
+      "seconds": 3.16,
+      "sha256": "8964c59b8d65da9f2a9f493290fa7e2f74388b6b78fdeb2068bba7c8ce1d5fe8",
+      "path": "audio/supplied-20260923/m_14_51_41.mp3"
+    },
+    {
+      "file": "m_1_48_40.mp3",
+      "label": "ㄅㄧㄢˇ",
+      "seconds": 3.03,
+      "sha256": "2fc41bed63173a85b69f6c984e313422c75626fac798821d162610c1430f1e29",
+      "path": "audio/supplied-20260923/m_1_48_40.mp3"
+    },
+    {
+      "file": "m_1_48_41.mp3",
+      "label": "ㄅㄧㄢˋ",
+      "seconds": 3.34,
+      "sha256": "5d713b1fb6f4df1240a8f6f75157ae2e41f0853fe29654ff7fa1eef39a5ad95a",
+      "path": "audio/supplied-20260923/m_1_48_41.mp3"
+    },
+    {
+      "file": "m_1_49_40.mp3",
+      "label": "ㄅㄧㄣˇ",
+      "seconds": 2.95,
+      "sha256": "d3f7d6ea2d596e045ebc1b4e63f951fc79dd18f2d2bc3ecc8f35ccefb8685586",
+      "path": "audio/supplied-20260923/m_1_49_40.mp3"
+    },
+    {
+      "file": "m_1_51_40.mp3",
+      "label": "ㄅㄧㄥˇ",
+      "seconds": 2.77,
+      "sha256": "01f1e60939a806cdd3edb620affb1f3a57ddfe965f54c3077bf4332ece7f904a",
+      "path": "audio/supplied-20260923/m_1_51_40.mp3"
+    },
+    {
+      "file": "m_1_51_41.mp3",
+      "label": "ㄅㄧㄥˋ",
+      "seconds": 3.32,
+      "sha256": "24ed58aa4ffd2cefc81a69166ea3dc1b01eff945ffee8499143054d3f62bb862",
+      "path": "audio/supplied-20260923/m_1_51_41.mp3"
+    },
+    {
+      "file": "m_2_48_39.mp3",
+      "label": "ㄆㄧㄢˊ",
+      "seconds": 3.32,
+      "sha256": "8a9e9774c7e6ffc01e1cdc4ce6e1b069ae60069e47e8f0b2fa9365b091bccf85",
+      "path": "audio/supplied-20260923/m_2_48_39.mp3"
+    },
+    {
+      "file": "m_2_48_40.mp3",
+      "label": "ㄆㄧㄢˇ",
+      "seconds": 3.11,
+      "sha256": "98a6baab9f3abef886552b11fe61ea60f39edcdef44e1c230d38aca7eb938f3c",
+      "path": "audio/supplied-20260923/m_2_48_40.mp3"
+    },
+    {
+      "file": "m_2_48_41.mp3",
+      "label": "ㄆㄧㄢˋ",
+      "seconds": 3.66,
+      "sha256": "f70f73c46620e72f9fb94db25ccdea7e3336f2c8647a2125d74d97a8dc073fb4",
+      "path": "audio/supplied-20260923/m_2_48_41.mp3"
+    },
+    {
+      "file": "m_2_49_39.mp3",
+      "label": "ㄆㄧㄣˊ",
+      "seconds": 3.13,
+      "sha256": "531367ad4f1492db9358c7c94c145c8e66988a8be3070213f113cd5cde05efc4",
+      "path": "audio/supplied-20260923/m_2_49_39.mp3"
+    },
+    {
+      "file": "m_2_49_40.mp3",
+      "label": "ㄆㄧㄣˇ",
+      "seconds": 3.03,
+      "sha256": "8bc337dc4e094ce9fb40290db6ea194cff51c894018b11e62bf48f3c7f185bc9",
+      "path": "audio/supplied-20260923/m_2_49_40.mp3"
+    },
+    {
+      "file": "m_2_49_41.mp3",
+      "label": "ㄆㄧㄣˋ",
+      "seconds": 3.6,
+      "sha256": "d5a8dfe77c9c4a4a3328dc23c0c1954f0c7b8fd9c73a26141bdc1abcf70c24af",
+      "path": "audio/supplied-20260923/m_2_49_41.mp3"
+    },
+    {
+      "file": "m_2_51_39.mp3",
+      "label": "ㄆㄧㄥˊ",
+      "seconds": 3.13,
+      "sha256": "691a3e12ae1a1765e78c765cf8aa86f6e2d1619ebf0e3707afebabaed6ed4776",
+      "path": "audio/supplied-20260923/m_2_51_39.mp3"
+    },
+    {
+      "file": "m_2_51_40.mp3",
+      "label": "ㄆㄧㄥˇ",
+      "seconds": 2.98,
+      "sha256": "5c6ef416e7755e56991064068bd64677ae95e5e6ff2df0d0fe8d8eca1ed30798",
+      "path": "audio/supplied-20260923/m_2_51_40.mp3"
+    },
+    {
+      "file": "m_3_48_40.mp3",
+      "label": "ㄇㄧㄢˇ",
+      "seconds": 3.11,
+      "sha256": "ce865bb91aeba4a77c959fee4cb2f8c833b2268ea0ce41462f6da5eda04b797f",
+      "path": "audio/supplied-20260923/m_3_48_40.mp3"
+    },
+    {
+      "file": "m_3_48_41.mp3",
+      "label": "ㄇㄧㄢˋ",
+      "seconds": 3.79,
+      "sha256": "c72e7e4d8bfb229feb2065b9362b561080efa641acbf29522a0ef371f5d58019",
+      "path": "audio/supplied-20260923/m_3_48_41.mp3"
+    },
+    {
+      "file": "m_3_49_41.mp3",
+      "label": "ㄇㄧㄣˋ",
+      "seconds": 3.53,
+      "sha256": "5fab1a25e3d667c3da6c94ca96c3ae7b636465c88a395698a70bfa3cd75faf5b",
+      "path": "audio/supplied-20260923/m_3_49_41.mp3"
+    },
+    {
+      "file": "m_3_51_40.mp3",
+      "label": "ㄇㄧㄥˇ",
+      "seconds": 2.77,
+      "sha256": "a4bf7b6bf872d448452bd92fd2893101c61d2bc19ee3053b9733365dda8c0d42",
+      "path": "audio/supplied-20260923/m_3_51_40.mp3"
+    },
+    {
+      "file": "m_3_51_41.mp3",
+      "label": "ㄇㄧㄥˋ",
+      "seconds": 3.24,
+      "sha256": "8dbfa43d6826891614a2e5536c670dfb1847336f5651468e35553287d683c27c",
+      "path": "audio/supplied-20260923/m_3_51_41.mp3"
+    },
+    {
+      "file": "m_5_48_40.mp3",
+      "label": "ㄉㄧㄢˇ",
+      "seconds": 3.16,
+      "sha256": "b4982849a0f5c2139fbea750c73476fe43c3591d9a521331c2ae26d4b1307725",
+      "path": "audio/supplied-20260923/m_5_48_40.mp3"
+    },
+    {
+      "file": "m_5_48_41.mp3",
+      "label": "ㄉㄧㄢˋ",
+      "seconds": 3.42,
+      "sha256": "ae300ecdb48a15650065c86dbf85402c97d9cfc206a256caea087db55f6a2ce3",
+      "path": "audio/supplied-20260923/m_5_48_41.mp3"
+    },
+    {
+      "file": "m_5_51_40.mp3",
+      "label": "ㄉㄧㄥˇ",
+      "seconds": 2.87,
+      "sha256": "572c1a3bf973910feb04c226b52e8f93563a4af21a575e486fb32b1c47247a26",
+      "path": "audio/supplied-20260923/m_5_51_40.mp3"
+    },
+    {
+      "file": "m_5_51_41.mp3",
+      "label": "ㄉㄧㄥˋ",
+      "seconds": 2.98,
+      "sha256": "0652b5b5fb2a2010d5d1bf53015f69fa64f6aebb9ab6f3c1de80a452c1a401d4",
+      "path": "audio/supplied-20260923/m_5_51_41.mp3"
+    },
+    {
+      "file": "m_6_48_39.mp3",
+      "label": "ㄊㄧㄢˊ",
+      "seconds": 3.32,
+      "sha256": "70936ec7fb76284e4b5a8f4ad89bee94b8e48be3541316e880bf20341d3e3274",
+      "path": "audio/supplied-20260923/m_6_48_39.mp3"
+    },
+    {
+      "file": "m_6_48_40.mp3",
+      "label": "ㄊㄧㄢˇ",
+      "seconds": 3.06,
+      "sha256": "38d0fa6d302b2386309c002d9daeb653f890a53dae2b37acc68ce799773f0667",
+      "path": "audio/supplied-20260923/m_6_48_40.mp3"
+    },
+    {
+      "file": "m_6_48_41.mp3",
+      "label": "ㄊㄧㄢˋ",
+      "seconds": 3.34,
+      "sha256": "c09ecc2016923f60517d09b8a54ad7c84937f2344005df1ac543c549c994de6c",
+      "path": "audio/supplied-20260923/m_6_48_41.mp3"
+    },
+    {
+      "file": "m_6_51_39.mp3",
+      "label": "ㄊㄧㄥˊ",
+      "seconds": 2.98,
+      "sha256": "7ecd466d551e132638d61a59b6887993d360bd5a500d77469bd148271ee3ac31",
+      "path": "audio/supplied-20260923/m_6_51_39.mp3"
+    },
+    {
+      "file": "m_6_51_40.mp3",
+      "label": "ㄊㄧㄥˇ",
+      "seconds": 2.93,
+      "sha256": "d0d633972eb39a9d92727ca1bb7b9650aba5ef92ea8a975422cd3272b5ca7c22",
+      "path": "audio/supplied-20260923/m_6_51_40.mp3"
+    },
+    {
+      "file": "m_6_51_41.mp3",
+      "label": "ㄊㄧㄥˋ",
+      "seconds": 3.24,
+      "sha256": "7637db4eedb576dc339947b9a9ea6a3606c1aae5a0b7c661793b2fd8768dd3c0",
+      "path": "audio/supplied-20260923/m_6_51_41.mp3"
+    },
+    {
+      "file": "m_7_48.mp3",
+      "label": "ㄋㄧㄢ",
+      "seconds": 3.11,
+      "sha256": "2b0f268d2653fbdc3f603f31303d4aa38507c1ab22b4113833f9b97d6da176d3",
+      "path": "audio/supplied-20260923/m_7_48.mp3"
+    },
+    {
+      "file": "m_7_48_40.mp3",
+      "label": "ㄋㄧㄢˇ",
+      "seconds": 3.11,
+      "sha256": "a03a09822ecfdc2d9e3cc0bc1d80ff923fffbf332c4957b703425e5405db58ca",
+      "path": "audio/supplied-20260923/m_7_48_40.mp3"
+    },
+    {
+      "file": "m_7_48_41.mp3",
+      "label": "ㄋㄧㄢˋ",
+      "seconds": 3.66,
+      "sha256": "4183188c0fae45ec86cfec0afff0529c0cdb6d91e885ae9a0608128eab72ce2a",
+      "path": "audio/supplied-20260923/m_7_48_41.mp3"
+    },
+    {
+      "file": "m_7_50_40.mp3",
+      "label": "ㄋㄧㄤˇ",
+      "seconds": 2.87,
+      "sha256": "33359304ae6932e236e32876e56a0b42b341be1ecfa686e7f5f06df48fb4d921",
+      "path": "audio/supplied-20260923/m_7_50_40.mp3"
+    },
+    {
+      "file": "m_7_51_40.mp3",
+      "label": "ㄋㄧㄥˇ",
+      "seconds": 2.95,
+      "sha256": "fa808d663b167f8f496b263fb7782143c066a7ab9394ba60ad1150c3f39f19db",
+      "path": "audio/supplied-20260923/m_7_51_40.mp3"
+    },
+    {
+      "file": "m_7_51_41.mp3",
+      "label": "ㄋㄧㄥˋ",
+      "seconds": 3.24,
+      "sha256": "e9dbee576c2d10cdea31fa697f31895c6eb752da45c489cdc6a4d16e61879812",
+      "path": "audio/supplied-20260923/m_7_51_41.mp3"
+    },
+    {
+      "file": "m_8_48_40.mp3",
+      "label": "ㄌㄧㄢˇ",
+      "seconds": 3.21,
+      "sha256": "b72edac259fefb50e0eacbd191f5851241836dea002871208cd5973865e66b61",
+      "path": "audio/supplied-20260923/m_8_48_40.mp3"
+    },
+    {
+      "file": "m_8_48_41.mp3",
+      "label": "ㄌㄧㄢˋ",
+      "seconds": 3.5,
+      "sha256": "e7d7e7c82e6d818a450fda7146760ade80a9106e25a67b899ba88d9e29986532",
+      "path": "audio/supplied-20260923/m_8_48_41.mp3"
+    },
+    {
+      "file": "m_8_49_40.mp3",
+      "label": "ㄌㄧㄣˇ",
+      "seconds": 3.06,
+      "sha256": "e698a8eb2e969d71847f7bcf5318032e3c89edc9121e6162312013f7bda36d0f",
+      "path": "audio/supplied-20260923/m_8_49_40.mp3"
+    },
+    {
+      "file": "m_8_49_41.mp3",
+      "label": "ㄌㄧㄣˋ",
+      "seconds": 3.4,
+      "sha256": "96fda4fba2090996f2277356e4f7af606377bd3b404ebd60341648fa59cfcc6a",
+      "path": "audio/supplied-20260923/m_8_49_41.mp3"
+    },
+    {
+      "file": "m_8_50_40.mp3",
+      "label": "ㄌㄧㄤˇ",
+      "seconds": 3.06,
+      "sha256": "95b74ce9764744107ecb675d99d06ebc240656cee8e9da606c765fab0ab3c71a",
+      "path": "audio/supplied-20260923/m_8_50_40.mp3"
+    },
+    {
+      "file": "m_8_50_41.mp3",
+      "label": "ㄌㄧㄤˋ",
+      "seconds": 3.24,
+      "sha256": "2daaa9af2fc329ae571a33b2abd954e6d88782fde3b974fb89e78cd9e0661601",
+      "path": "audio/supplied-20260923/m_8_50_41.mp3"
+    },
+    {
+      "file": "m_8_51_39.mp3",
+      "label": "ㄌㄧㄥˊ",
+      "seconds": 3.06,
+      "sha256": "887ee253ded7af382ccca1d8a34a19bab6f23a0cb94b2fd33e50d89a66ff35c2",
+      "path": "audio/supplied-20260923/m_8_51_39.mp3"
+    },
+    {
+      "file": "m_8_51_40.mp3",
+      "label": "ㄌㄧㄥˇ",
+      "seconds": 2.98,
+      "sha256": "805b7bebd5e01d7629dfccd753461c16b9d6ef3f0e38b47de729c327de25d7f6",
+      "path": "audio/supplied-20260923/m_8_51_40.mp3"
+    },
+    {
+      "file": "m_8_51_41.mp3",
+      "label": "ㄌㄧㄥˋ",
+      "seconds": 3.13,
+      "sha256": "4e3b1252fb419467da696f702773408b52a2085ea609937417199c1459495f0e",
+      "path": "audio/supplied-20260923/m_8_51_41.mp3"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
-import {audioSource} from './audio-source.js?v=20260922-compound-level1';
-import {createLittleTeacher} from './little-teacher.js?v=20260922-compound-level1';
+import {audioSource} from './audio-source.js?v=20260923-provided1';
+import {createLittleTeacher} from './little-teacher.js?v=20260923-provided1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260913-tutor1';
 import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round} from './core.js?v=20260913-heroes1';
 import {createMultiplayer} from './multiplayer.js?v=20260921-picker1';
