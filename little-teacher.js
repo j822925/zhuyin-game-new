@@ -1,5 +1,5 @@
-import {audioSource} from './audio-source.js?v=20260923-provided1';
-import {SUPPLIED_TUTOR_AUDIO} from './data/supplied-audio.js?v=20260923-provided1';
+import {audioSource} from './audio-source.js?v=20260923-listening1';
+import {SUPPLIED_TUTOR_AUDIO} from './data/supplied-audio.js?v=20260923-listening1';
 import {BASE,COMPOUNDS} from './core.js?v=20260913-tutor1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260913-tutor1';
 export function tutorClips(q){

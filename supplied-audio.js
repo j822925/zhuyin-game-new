@@ -22,4 +22,4 @@ player.onerror=()=>{if(player.hasAttribute('src'))$('status').textContent='音�
 window.addEventListener('pagehide',stop);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
 $('filter').onchange=render;$('search').oninput=render;
-try{const response=await fetch('data/supplied-audio-report.json?v=20260923-provided1');if(!response.ok)throw Error();rows=await response.json();$('summary').textContent='已替換：37 個單一注音、19 個結合韻、33 個題目。待補：3 個結合韻、326 個題目。';render();}catch{$('summary').textContent='清單讀取失敗，請重新整理。';}
+try{const response=await fetch('data/supplied-audio-report.json?v=20260923-listening1');if(!response.ok)throw Error();rows=await response.json();$('summary').textContent='已替換：37 個單一注音、19 個結合韻、33 個題目。待補：3 個結合韻、326 個題目。';render();}catch{$('summary').textContent='清單讀取失敗，請重新整理。';}

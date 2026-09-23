@@ -1,4 +1,5 @@
 // User-provided recordings, matched by the reference board's numbered symbols.
+import {BASE,COMPOUNDS} from '../core.js?v=20260913-heroes1';
 // Missing sounds keep their existing paths; never synthesize or change tones.
 export const SUPPLIED_SYLLABLE_AUDIO=Object.freeze({
   "audio/syllable-clear/s51.wav": "audio/supplied-20260923/m_1_48.mp3",
@@ -93,3 +94,10 @@ export const SUPPLIED_TUTOR_AUDIO=Object.freeze({
   "ㄨㄥ": "audio/supplied-20260923/s_59.mp3",
   "ㄩㄝ": "audio/supplied-20260923/s_60.mp3"
 });
+// Game numbering differs from source filenames; resolve by the actual symbol.
+export const SUPPLIED_LISTENING_AUDIO=Object.freeze(Object.fromEntries(
+ [...BASE.map((s,i)=>['audio/audio_F'+(i+1)+'.WAV',s]),
+ ...COMPOUNDS.map((s,i)=>['audio/compound/c'+String(i+1).padStart(2,'0')+'.mp3',s])]
+ .filter(([,s])=>Object.prototype.hasOwnProperty.call(SUPPLIED_TUTOR_AUDIO,s))
+ .map(([path,s])=>[path,SUPPLIED_TUTOR_AUDIO[s]])
+));

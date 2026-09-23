@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {audioSource} from '../audio-source.js';
-import {SUPPLIED_SYLLABLE_AUDIO,SUPPLIED_TUTOR_AUDIO} from '../data/supplied-audio.js';
+import {SUPPLIED_SYLLABLE_AUDIO,SUPPLIED_TUTOR_AUDIO,SUPPLIED_LISTENING_AUDIO} from '../data/supplied-audio.js';
 import {createCatalog,BASE,COMPOUNDS} from '../core.js';
 import {tutorClips} from '../little-teacher.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url));
@@ -31,9 +31,16 @@ test('tutor uses 37 base plus 19 compound recordings; missing three still work',
  assert.equal(clips[1],expected);for(const clip of clips)assert.ok(existsSync(new URL('../'+clip,import.meta.url)),clip);
  }
 });
-test('listening mode sounds remain untouched and public preview cannot write scores',()=>{
- for(let i=1;i<=37;i++)assert.equal(audioSource('audio/audio_F'+i+'.WAV'),'audio/audio_F'+i+'.WAV');
- for(let i=1;i<=22;i++){const p='audio/compound/c'+String(i).padStart(2,'0')+'.mp3';assert.equal(audioSource(p),p+'?v=20260922-compound-level1');}
+test('listening uses 37 base plus 19 compounds by symbol, not source numbering',()=>{
+ assert.equal(Object.keys(SUPPLIED_LISTENING_AUDIO).length,56);
+ for(let i=1;i<=37;i++){const p='audio/audio_F'+i+'.WAV',expected=SUPPLIED_TUTOR_AUDIO[BASE[i-1]];assert.equal(audioSource(p),expected);assert.equal(audioSource(p+'?v=old#clip'),expected+'?v=old#clip');assert.equal(audioSource(expected),expected);}
+ for(let i=1;i<=22;i++){const p='audio/compound/c'+String(i).padStart(2,'0')+'.mp3',expected=SUPPLIED_TUTOR_AUDIO[COMPOUNDS[i-1]]||p+'?v=20260922-compound-level1';assert.equal(audioSource(p),expected);assert.equal(audioSource(expected),expected);}
+ assert.equal(audioSource('audio/audio_F22.WAV'),'audio/supplied-20260923/s_25.mp3'); // ㄚ, not source 22 ㄧ
+ assert.equal(audioSource('audio/audio_F35.WAV'),'audio/supplied-20260923/s_22.mp3'); // ㄧ, not source 35 ㄤ
  assert.doesNotMatch(read('supplied-audio.js').toString(),/saveScore|authenticate|submit|workers.dev/);
  assert.equal(report.extraSyllables.length,75);
+});
+test('game, exam, review, online and family players all load the new resolver',()=>{
+ for(const file of ['app.js','exam.js','exam-review.js','online.js','little-teacher.js','teacher-audio.js'])assert.match(read(file).toString(),/audio-source.js\?v=20260923-listening1/,file);
+ for(const file of ['index.html','exam.html','online.html','parents.html','teacher.html'])assert.match(read(file).toString(),/20260923-listening1/,file);
 });
