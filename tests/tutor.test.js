@@ -3,8 +3,13 @@ import {Round,createCatalog,questionDeck} from '../core.js';import {validLearnin
 const pool=createCatalog([['ㄇ','ㄧ','咪'],['ㄅ','ㄠ','包'],['ㄌ','ㄩㄝ','掠',4]]);
 function payload(r){return {seat:'15',mode:'spelling',total:r.deck.length,mistakes:r.mistakes,results:r.rows};}
 function finish(r){while(r.current){r.answer(r.current.label);r.next();}return payload(r);}
+test('追加複習不會把原本四題答對灌成五題領星',()=>{
+ const r=new Round(questionDeck(pool,10));r.useTutor(pool,()=>0);let original=0;
+ while(r.current){if(!r.current.tutorReviewOf&&!r.current.tutorSpacer&&original++>=4)r.answer('錯');r.answer(r.current.label);r.next();}
+ const p=payload(r);assert(validLearningRound(p));assert.equal(p.results.filter(x=>x.firstCorrect).length,5);assert.equal(rewardParticipants(p)[0].baseStars,0);
+});
 test('看小老師只加一題，在下下題或下下下題出現，不加錯誤',()=>{for(const value of [0,.99]){const r=new Round(questionDeck(pool,10));const source=r.current;r.useTutor(pool,()=>value);assert.equal(r.deck.length,11);assert.equal(r.deck[value===0?2:3].label,source.label);assert.equal(r.errors,0);const p=finish(r);assert.ok(validLearningRound(p));assert.equal(rewardParticipants(p)[0].baseStars,3);}});
-test('同題連點不重複加題；答错再求助不清除原错误',()=>{const r=new Round(questionDeck(pool,10));r.answer('錯');r.useTutor(pool);assert.equal(r.useTutor(pool).ignored,true);assert.equal(r.deck.length,11);assert.equal(r.errors,1);const p=finish(r);assert.equal(p.mistakes,1);assert.ok(validLearningRound(p));assert.equal(rewardParticipants(p)[0].baseStars,0);});
+test('同題連點不重複加題；答错再求助不清除原错误',()=>{const r=new Round(questionDeck(pool,10));r.answer('錯');r.useTutor(pool);assert.equal(r.useTutor(pool).ignored,true);assert.equal(r.deck.length,11);assert.equal(r.errors,1);const p=finish(r);assert.equal(p.mistakes,1);assert.ok(validLearningRound(p));assert.equal(rewardParticipants(p)[0].baseStars,1);});
 test('末題求助加間隔題再重練，共十二題，間隔不超出已教題庫',()=>{const r=new Round(questionDeck(pool,10));for(let i=0;i<9;i++){r.answer(r.current.label);r.next();}const source=r.current;r.useTutor(pool,()=>.99);assert.equal(r.deck.length,12);assert.notEqual(r.deck[10].id,source.id);assert.equal(r.deck[11].id,source.id);assert.ok(validLearningRound(finish(r)));});
 test('連續求助、複習題再次求助仍保留兩三題後出現與回合計數',()=>{for(let trial=0;trial<100;trial++){const r=new Round(questionDeck(pool,10));while(r.current){if(r.index<30&&Math.random()<.7)r.useTutor(pool);r.answer(r.current.label);r.next();}assert.ok(validLearningRound(payload(r)),JSON.stringify(r.rows));}});
 test('兩位學生的題庫與小老師次數互不影響',()=>{const deck=questionDeck(pool,10),a=new Round(deck),b=new Round(deck);a.useTutor(pool);assert.equal(a.deck.length,11);assert.equal(b.deck.length,10);assert.ok(b.canUseTutor);});

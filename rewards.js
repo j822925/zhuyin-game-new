@@ -1,5 +1,5 @@
 import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20260913-heroes1';
-import {cappedRoundAward,rewardParticipants,taipeiDay} from './learning-rewards.js?v=20260913-tutor1';
+import {cappedRoundAward,rewardParticipants,taipeiDay} from './learning-rewards.js?v=20260925-fivecorrect1';
 import {startGachaAnimation} from './gacha-animation.js?v=20260913-ipad1';
 import {createStarPrize} from './star-prize.js?v=20260919-egg1';
 import {confirmReward,within} from './reward-request.js?v=20260919-egg1';
