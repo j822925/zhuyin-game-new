@@ -22,7 +22,7 @@ Isolated local browser checks: all 89 shipped MP3s decoded; sample playback reac
 
 ## User report
 
-supplied-audio.html provides a single native player, searchable full list and missing-only filter, without login or score submission. docs/supplied-audio-missing-20260923.md includes exact missing filenames and tones. A copy also lives in the workspace output folder.
+The former standalone supplement page has been removed. parents.html now provides the full 1450-recording library, shared player, search and pagination, without login or score submission. docs/supplied-audio-missing-20260923.md includes exact missing filenames and tones. A copy also lives in the workspace output folder.
 
 ## Release / rollback
 

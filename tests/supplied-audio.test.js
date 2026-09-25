@@ -39,10 +39,11 @@ test('listening uses 37 base plus 22 compounds by symbol, not source numbering',
  for(let i=1;i<=22;i++){const p='audio/compound/c'+String(i).padStart(2,'0')+'.mp3',expected=SUPPLIED_TUTOR_AUDIO[COMPOUNDS[i-1]]||p+'?v=20260922-compound-level1';assert.equal(audioSource(p),expected);assert.equal(audioSource(expected),expected);}
  assert.equal(audioSource('audio/audio_F22.WAV'),'audio/processed-20260925/s_25.mp3'); // ㄚ, not source 22 ㄧ
  assert.equal(audioSource('audio/audio_F35.WAV'),'audio/processed-20260925/s_22.mp3'); // ㄧ, not source 35 ㄤ
- assert.doesNotMatch(read('supplied-audio.js').toString(),/saveScore|authenticate|submit|workers.dev/);
+ assert.doesNotMatch(read('teacher-audio.js').toString(),/saveScore|authenticate|submit|workers.dev/);
  assert.equal(report.extraSyllables.length,0);
 });
 test('game, exam, review, online and family players all load the new resolver',()=>{
  for(const file of ['app.js','exam.js','exam-review.js','online.js','little-teacher.js','teacher-audio.js'])assert.match(read(file).toString(),/audio-source.js\?v=20260925-pitchhalf1/,file);
- for(const file of ['index.html','exam.html','online.html','parents.html','teacher.html'])assert.match(read(file).toString(),/20260925-pitchhalf1/,file);
+ for(const file of ['index.html','exam.html','online.html'])assert.match(read(file).toString(),/20260925-pitchhalf1/,file);
+ for(const file of ['parents.html','teacher.html'])assert.match(read(file).toString(),/20260925-familyaudio1/,file);
 });
