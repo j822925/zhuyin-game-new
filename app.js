@@ -1,7 +1,7 @@
-import {audioSource} from './audio-source.js?v=20260925-tonefix1';
-import {createLittleTeacher} from './little-teacher.js?v=20260925-tonefix1';
-import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260913-tutor1';
-import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round} from './core.js?v=20260913-heroes1';
+import {audioSource} from './audio-source.js?v=20260925-pitchhalf1';
+import {createLittleTeacher} from './little-teacher.js?v=20260925-pitchhalf1';
+import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260925-pitchhalf1';
+import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round} from './core.js?v=20260925-pitchhalf1';
 import {createMultiplayer} from './multiplayer.js?v=20260921-picker1';
 import {createRewards} from './rewards.js?v=20260920-login1';
 import {createStudentProfile} from './student-profile.js?v=20260920-sprites1';
@@ -47,7 +47,7 @@ const voiceHelp=setupChildUI({demo,onPreviewBonus:()=>rewards.previewBonus(),onB
 const tutorButton=document.createElement('button');tutorButton.id='little-teacher';tutorButton.hidden=true;tutorButton.setAttribute('aria-label','小老師：看答案，聽拼音示範');tutorButton.innerHTML='<img src="assets/characters/cozy-v1/owl.png" alt=""><span aria-hidden="true">🎓</span>';$('audio-status').after(tutorButton);
 const tutor=createLittleTeacher({onReturn:()=>{clearSpelling();audio.src=audioSource(rounds[active].current.audio);play();}});
 tutorButton.onclick=()=>{const r=rounds[active];if(mode!=='spelling'||!r?.canUseTutor||tutor.open)return;const result=r.useTutor(currentPool);if(result.ignored)return;voiceHelp.stop();audio.pause();audioReady=false;clearSpelling();setAnswerEnabled(false);$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;$('progress-fill').style.width=`${r.index/r.deck.length*100}%`;tutor.show(r.current);};
-function clearSpelling(){selected={};for(const b of document.querySelectorAll('.slot')){b.textContent='';b.classList.remove('filled');b.setAttribute('aria-label',b.dataset.slot==='initial'?'聲符位置':'韻符或結合韻位置');}showSpellingTone(document.querySelector('#spelling .slots'),rounds[active].current);$('check-spelling').disabled=true;}
+function clearSpelling(){selected=rounds[active].current.final?{}:{final:''};for(const b of document.querySelectorAll('.slot')){b.textContent='';b.classList.remove('filled');b.setAttribute('aria-label',b.dataset.slot==='initial'?'聲符位置':'韻符或結合韻位置');}showSpellingTone(document.querySelector('#spelling .slots'),rounds[active].current);$('check-spelling').disabled=true;}
 setupCozyUI();
 profiles=createStudentProfile({demo,auth,getSeat:()=>$('seat').value,getSeats:()=>[$('seat').value,$('partner').value],getOwned:seat=>rewards.owned(seat),getAvatar:seat=>rewards.avatar(seat),onChange:renderIdentity,isHome:()=>!$('home').hidden});
 setupExamEntry({endpoint:API,home:$('home'),demo});
@@ -64,7 +64,7 @@ function refreshHome(){
 async function jsonGet(params=''){const p=new URLSearchParams(params);if(p.get('api')&&p.get('api')!=='config')return auth.request({kind:'query',api:p.get('api'),seat:p.get('seat')||$('seat').value,id:p.get('id')||''});return apiClient.get(Object.fromEntries(p));}
 async function load(){
  $('reload').disabled=true;$('home-message').textContent='';
- try{catalog=createCatalog(await fetch('data/syllables.json?v=20260920-le4').then(r=>{if(!r.ok)throw new Error();return r.json();}));
+ try{catalog=createCatalog(await fetch('data/syllables.json?v=20260925-pitchhalf1').then(r=>{if(!r.ok)throw new Error();return r.json();}));
   config=normalizeConfig(demo?{version:2,symbols:({fo2:['ㄈ','ㄛ'],lve4:['ㄌ','ㄩㄝ']})[new URLSearchParams(location.search).get('lesson')]||['ㄅ','ㄆ','ㄇ','ㄉ','ㄧ','ㄠ'],compounds:[],seats:Array.from({length:15},(_,i)=>String(i+1)),questions:10,spellingApproved:true}:await jsonGet('?api=config'));
   refreshHome();if(config.legacy)$('home-message').textContent='老師提醒：目前連接舊版後台。正式記錄前，請先更新後台；現在仍可讀取已教注音。';
   const restored=auth.currentSeat();if(restored&&!config.seats.includes(restored))auth.forgetAll();
@@ -98,7 +98,7 @@ async function start(id){
  session++;active=0;rounds=seats.map(()=>new Round(questionDeck(currentPool,config.questions)));latestIds=[];
  screen('game');renderQuestion();
 }
-function setAnswerEnabled(enabled){enabled=enabled&&!tutor.open;document.querySelectorAll('.option,.tile,.slot').forEach(b=>b.disabled=!enabled);$('check-spelling').disabled=!enabled||!selected.initial||!selected.final;tutorButton.disabled=!rounds[active]?.canUseTutor||tutor.open;}
+function setAnswerEnabled(enabled){enabled=enabled&&!tutor.open;document.querySelectorAll('.option,.tile,.slot').forEach(b=>b.disabled=!enabled);$('check-spelling').disabled=!enabled||!selected.initial||selected.final===undefined;tutorButton.disabled=!rounds[active]?.canUseTutor||tutor.open;}
 async function play(){
  if(tutor.open)return;
  voiceHelp.stop();
@@ -111,15 +111,15 @@ async function play(){
 audio.addEventListener('error',()=>{audioReady=false;setAnswerEnabled(false);$('audio-status').textContent='這段聲音暫時無法播放，請再按一次喇叭。';});
 function renderQuestion(){
  tutor.close();tutorButton.hidden=mode!=='spelling'||(!demo&&!config.tutorWrites);
- const r=rounds[active],q=r.current;document.getElementById('game').classList.toggle('spelling-active',mode==='spelling');r.questionStarted=Date.now();selected={};audio.pause();audio.src=audioSource(q.audio);audioReady=false;
+ const r=rounds[active],q=r.current;document.getElementById('game').classList.toggle('spelling-active',mode==='spelling');r.questionStarted=Date.now();selected=q.final?{}:{final:''};audio.pause();audio.src=audioSource(q.audio);audioReady=false;
  $('world-title').textContent=names[mode];$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;
  $('progress-fill').style.width=`${r.index/r.deck.length*100}%`;$('player-turn').classList.toggle('profile-playing',!duo);if(duo)$('player-turn').replaceChildren();else profiles.renderPlayer($('player-turn'),seats[active]);
  $('instruction').textContent=mode==='spelling'?'聽一聽，用注音積木拼出聲音':'仔細聽，選出正確的注音';$('feedback').textContent='';$('next').hidden=true;$('options').replaceChildren();$('spelling').hidden=mode!=='spelling';
  if(mode!=='spelling'){for(const option of optionsFor(q,currentPool,choices)){const b=document.createElement('button');b.className='option';b.textContent=option.label;b.onclick=()=>answer(option.label,b);$('options').append(b);}}
- else{showSpellingTone(document.querySelector('#spelling .slots'),q);document.querySelectorAll('.slot').forEach(b=>{b.textContent=b.dataset.slot==='initial'?'聲符':'韻符';b.classList.remove('filled');b.setAttribute('aria-label',b.dataset.slot==='initial'?'聲符位置':'韻符或結合韻位置');});$('tiles').replaceChildren();for(const kind of ['initial','final']){const row=document.createElement('div');row.className='tile-row';const target=q[kind],other=[...new Set(currentPool.map(x=>x[kind]))].filter(x=>x!==target);for(const value of shuffle([target,...shuffle(other).slice(0,choices-1)])){const b=document.createElement('button');b.className='tile';setVerticalSymbols(b,value);b.setAttribute('aria-label',value);b.dataset.kind=kind;b.draggable=true;b.onclick=()=>place(kind,value);b.ondragstart=e=>e.dataTransfer.setData('text/plain',JSON.stringify({kind,value}));b.onpointerup=e=>{if(e.pointerType==='mouse')return;const slot=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-slot]');if(slot?.dataset.slot===kind)place(kind,value);};row.append(b);}$('tiles').append(row);}}
+ else{showSpellingTone(document.querySelector('#spelling .slots'),q);document.querySelectorAll('.slot').forEach(b=>{b.hidden=b.dataset.slot==='final'&&!q.final;b.textContent=b.dataset.slot==='initial'?(q.final?'聲符':'注音'):'韻符';b.classList.remove('filled');b.setAttribute('aria-label',b.dataset.slot==='initial'?'聲符位置':'韻符或結合韻位置');});$('tiles').replaceChildren();for(const kind of ['initial','final'].filter(k=>q[k])){const row=document.createElement('div');row.className='tile-row';const target=q[kind],other=[...new Set(currentPool.map(x=>x[kind]))].filter(x=>x&&x!==target);for(const value of shuffle([target,...shuffle(other).slice(0,choices-1)])){const b=document.createElement('button');b.className='tile';setVerticalSymbols(b,value);b.setAttribute('aria-label',value);b.dataset.kind=kind;b.draggable=true;b.onclick=()=>place(kind,value);b.ondragstart=e=>e.dataTransfer.setData('text/plain',JSON.stringify({kind,value}));b.onpointerup=e=>{if(e.pointerType==='mouse')return;const slot=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-slot]');if(slot?.dataset.slot===kind)place(kind,value);};row.append(b);}$('tiles').append(row);}}
  setAnswerEnabled(false);if(duo)teamUI.turnPrompt(active,seats,()=>{r.questionStarted=Date.now();play();});else play();
 }
-function place(kind,value){if(!audioReady||rounds[active].locked)return;if(!currentPool.some(x=>x[kind]===value)||!['initial','final'].includes(kind))return;selected[kind]=value;if(kind==='final')document.querySelector('#spelling .slots').dataset.finalLength=String(Math.max(value.length,rounds[active].current.final.length));const b=document.querySelector(`[data-slot="${kind}"]`);setVerticalSymbols(b,value);b.setAttribute('aria-label',(kind==='initial'?'聲符：':'韻符：')+value);b.classList.add('filled');$('check-spelling').disabled=!selected.initial||!selected.final;}
+function place(kind,value){if(!audioReady||rounds[active].locked)return;if(!currentPool.some(x=>x[kind]===value)||!['initial','final'].includes(kind))return;selected[kind]=value;if(kind==='final')document.querySelector('#spelling .slots').dataset.finalLength=String(Math.max(value.length,rounds[active].current.final.length));const b=document.querySelector(`[data-slot="${kind}"]`);setVerticalSymbols(b,value);b.setAttribute('aria-label',(kind==='initial'?'聲符：':'韻符：')+value);b.classList.add('filled');$('check-spelling').disabled=!selected.initial||selected.final===undefined;}
 function answer(value,button){
  if(!audioReady)return;const r=rounds[active],outcome=r.answer(value);if(outcome.ignored)return;
  if(!outcome.correct){if(button){button.classList.add('wrong');button.disabled=true;} $('feedback').textContent='🔁 👂';play();return;}

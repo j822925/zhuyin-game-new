@@ -1,12 +1,12 @@
 import {CHARACTER_CATALOG} from './data/character-catalog.js';
 import {STAR_SPRITES} from './data/star-sprites.js';
-import {audioSource} from './audio-source.js?v=20260925-tonefix1';
+import {audioSource} from './audio-source.js?v=20260925-pitchhalf1';
 const $=id=>document.getElementById(id),SESSION='zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':live';
 const ENDPOINT=location.hostname==='127.0.0.1'?location.origin:'https://zhuyin-api.j822925.workers.dev';
 
 const avatars=Object.fromEntries(CHARACTER_CATALOG.map(c=>[c.id,c.image]));Object.assign(avatars,STAR_SPRITES);
 const avatar=id=>avatars[id]||CHARACTER_CATALOG.find(c=>c.starter)?.image;
-const messages={invalid_pin:'密碼不正確，再試一次。',locked:'密碼試了太多次，請等五分鐘。',login_required:'登入到期了，請重新選座號、輸入密碼。',room_missing:'找不到這個房間，請問同學新的四位房號。',room_full:'這個房間已經有兩位同學了。',room_closed:'這個房間已結束，回首頁再開一間吧！',already_in_room:'你已經在另一個房間，先回去或離開那間房。',capacity:'現在八間房都在使用，等同學玩完再試。',disabled:'連線對戰暫時休息，晚一點再來。',slow_down:'按得太快了，請稍等一下再試。',device_active:'這個座號正在另一台平板玩。確定要換到這台嗎？',wrong_phase:'正在等同學，請稍等畫面更新。',answer_closed:'本題已收到作答或已結束，請等結果。',stale_command:'畫面已更新，請依目前題目繼續。',temporarily_unavailable:'網路還沒回覆，請稍後按重新連線。',ticket_invalid:'連線驗證過期，請按重新連線。',player_left:'同學先離開了，這場不發獎勵。',teacher_closed:'老師結束了這個房間。',room_expired:'等待時間到了，回首頁重新開房間。',disconnect_timeout:'等候連線逾時，這場未完成，可以重新找同學。',too_many_interruptions:'這場連線不穩，先檢查網路再開新房間。',audio_timeout:'聲音還沒播完，確認音量後一起繼續。'};
+const messages={client_update_required:'這間房使用新題型，請先重新整理遊戲再加入。',invalid_pin:'密碼不正確，再試一次。',locked:'密碼試了太多次，請等五分鐘。',login_required:'登入到期了，請重新選座號、輸入密碼。',room_missing:'找不到這個房間，請問同學新的四位房號。',room_full:'這個房間已經有兩位同學了。',room_closed:'這個房間已結束，回首頁再開一間吧！',already_in_room:'你已經在另一個房間，先回去或離開那間房。',capacity:'現在八間房都在使用，等同學玩完再試。',disabled:'連線對戰暫時休息，晚一點再來。',slow_down:'按得太快了，請稍等一下再試。',device_active:'這個座號正在另一台平板玩。確定要換到這台嗎？',wrong_phase:'正在等同學，請稍等畫面更新。',answer_closed:'本題已收到作答或已結束，請等結果。',stale_command:'畫面已更新，請依目前題目繼續。',temporarily_unavailable:'網路還沒回覆，請稍後按重新連線。',ticket_invalid:'連線驗證過期，請按重新連線。',player_left:'同學先離開了，這場不發獎勵。',teacher_closed:'老師結束了這個房間。',room_expired:'等待時間到了，回首頁重新開房間。',disconnect_timeout:'等候連線逾時，這場未完成，可以重新找同學。',too_many_interruptions:'這場連線不穩，先檢查網路再開新房間。',audio_timeout:'聲音還沒播完，確認音量後一起繼續。'};
 let identityReady=false;
 let session=null,people=[],state=null,roomId='',ws=null,socketGeneration=0,reconnectTimer=null,attempts=0,stopped=false,offset=0,working=false,pinSeat='',pin='',pinBusy=false,audioKey='',playedKey='',lastPong=0,slowPings=0,audioBusy=false,audioGeneration=0;
 messages.not_your_turn='現在是同學的回合，等畫面顯示你的名字再答題。';messages.inactivity='休息一下，兩人按繼續就可以再答題。';
@@ -16,7 +16,7 @@ let device;try{device=sessionStorage.getItem('zhuyin.online-device');if(!device)
 const audio=new Audio();audio.preload='auto';
 function message(code,target='message'){$(target).textContent=messages[code]||code;}
 function store(){try{if(session)sessionStorage.setItem(SESSION,JSON.stringify(session));else sessionStorage.removeItem(SESSION);}catch{}}
-async function api(path,data={}){const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);try{const r=await fetch(ENDPOINT+'/online/api/'+path,{method:'POST',headers:{'Content-Type':'application/json',...(session?{Authorization:'Bearer '+session.token}:{})},body:JSON.stringify(data),signal:controller.signal});const out=await r.json();if(out.error)throw Error(out.error);return out;}catch(e){if(e.message==='login_required'){session=null;identityReady=false;store();disconnect();showLobby();}throw e;}finally{clearTimeout(timeout);}}
+async function api(path,data={}){const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);try{const r=await fetch(ENDPOINT+'/online/api/'+path,{method:'POST',headers:{'Content-Type':'application/json',...(session?{Authorization:'Bearer '+session.token}:{})},body:JSON.stringify({...data,catalogVersion:2}),signal:controller.signal});const out=await r.json();if(out.error)throw Error(out.error);return out;}catch(e){if(e.message==='login_required'){session=null;identityReady=false;store();disconnect();showLobby();}throw e;}finally{clearTimeout(timeout);}}
 function showLobby(){$('create').disabled=!identityReady;$('join-show').disabled=!identityReady;state=null;roomId='';stopAudio();audioKey='';playedKey='';$('recover-room').hidden=true;$('room').hidden=true;$('lobby').hidden=!session;$('login').hidden=!!session;$('logout').hidden=!session;$('identity').textContent=session?session.seat+' 號・'+(session.name||'正在讀取角色…'):'先選自己的座號';if(session)$('my-character').src=avatar(session.avatar);}
 function disconnect(){stopped=true;socketGeneration++;clearTimeout(reconnectTimer);if(ws){ws.onclose=null;ws.close();ws=null;}}
 async function home(){if(roomId&&state&&!['closed','finished'].includes(state.phase)&&!confirm('離開會結束這一場，要回首頁嗎？'))return;try{if(roomId)await api('leave');disconnect();showLobby();message('');location.href='./';}catch(e){message(e.message);}}
@@ -86,17 +86,17 @@ messages.scope_small='這個關卡至少要有兩種已教聲音，請老師確�
 messages.spelling_unavailable='拼音工坊還沒開放，請先選聽音辨識。';
 let spellingSelection={},spellingKey='';
 function renderSpelling(s,key,mine){
- if(spellingKey!==key){spellingKey=key;spellingSelection={};}
+ if(spellingKey!==key){spellingKey=key;spellingSelection=s.question.tiles.final.length===1&&s.question.tiles.final[0]===''?{final:''}:{};}
  const root=$('choices');root.replaceChildren();root.classList.add('spelling-choices');
  const allowed=s.phase==='answer'&&!s.submitted&&ws?.readyState===1&&mine;
- const slots=document.createElement('div');slots.className='spelling-slots';
- for(const kind of ['initial','final']){
+ const slots=document.createElement('div');slots.className='spelling-slots';slots.dataset.neutral=String(s.question.toneMark==='˙');
+ for(const kind of ['initial','final'].filter(k=>s.question.tiles[k].some(Boolean))){
   const b=document.createElement('button');b.textContent=spellingSelection[kind]||(kind==='initial'?'聲符':'韻符');b.disabled=!allowed;b.onclick=()=>{delete spellingSelection[kind];render();};slots.append(b);
  }
- const tone=document.createElement('span');tone.textContent=s.question.toneMark||'';tone.className='tone';slots.append(tone);root.append(slots);
- for(const kind of ['initial','final']){
+ const tone=document.createElement('span');tone.textContent=s.question.toneMark||'';tone.className='tone';if(s.question.toneMark==='˙'){tone.style.order='-1';tone.setAttribute('aria-label','輕聲');}slots.append(tone);root.append(slots);
+ for(const kind of ['initial','final'].filter(k=>s.question.tiles[k].some(Boolean))){
   const row=document.createElement('div');row.className='tile-row';
   for(const value of s.question.tiles[kind]){const b=document.createElement('button');b.textContent=value;b.dataset.tile=kind;b.setAttribute('aria-label',value);b.classList.toggle('selected',spellingSelection[kind]===value);b.disabled=!allowed;b.onclick=()=>{spellingSelection[kind]=value;render();};row.append(b);}root.append(row);
  }
- const check=document.createElement('button'),value=(spellingSelection.initial||'')+(spellingSelection.final||'');check.className='primary';check.textContent='✓ 拼好了！';check.disabled=!allowed||!spellingSelection.initial||!spellingSelection.final||(s.wrongChoices||[]).includes(value);check.onclick=()=>{disableAnswers();send('answer',value);};root.append(check);
+ const check=document.createElement('button'),value=(spellingSelection.initial||'')+(spellingSelection.final||'');check.className='primary';check.textContent='✓ 拼好了！';check.disabled=!allowed||!spellingSelection.initial||spellingSelection.final===undefined||(s.wrongChoices||[]).includes(value);check.onclick=()=>{disableAnswers();send('answer',value);};root.append(check);
 }

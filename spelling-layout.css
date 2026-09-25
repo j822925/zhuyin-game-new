@@ -27,3 +27,10 @@
  .spelling-active #next{grid-column:2;grid-row:3;margin:0;justify-self:center;min-height:50px;padding:5px 20px}
 }
 @media(max-width:550px){#spelling{grid-template-columns:142px minmax(0,1fr);gap:8px}#spelling .slots{padding-left:0;padding-right:44px}#spelling .spelling-tone{left:100px}#spelling .tile-row{gap:6px}#spelling .tile{min-width:52px;font-size:28px;padding:6px 8px}}
+/* Single-unit answers and neutral tone above the upright syllable. */
+#spelling .slots[data-single-part="true"][data-initial-length="2"]{--initial-height:130px}
+#spelling .slots[data-single-part="true"][data-initial-length="3"]{--initial-height:184px}
+#spelling .slots[data-single-part="true"] .spelling-tone{top:50%}
+#spelling .slots[data-neutral="true"]{padding-top:45px}
+#spelling .slots[data-neutral="true"] .spelling-tone{left:62px;top:14px;transform:translateX(-50%)}
+@media(max-width:550px){#spelling .slots[data-neutral="true"] .spelling-tone{left:47px}}

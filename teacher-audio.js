@@ -1,4 +1,4 @@
-import {audioSource} from './audio-source.js?v=20260925-tonefix1';
+import {audioSource} from './audio-source.js?v=20260925-pitchhalf1';
 // One native player for the entire catalogue: avoid hundreds of Safari media controls.
 export const PAGE_SIZE=18;
 export function samplePage(rows,initial='',page=0){
@@ -37,15 +37,15 @@ export function setupTeacherAudio({BASE,COMPOUNDS,createCatalog}){
  COMPOUNDS.forEach((s,i)=>add($('compounds'),s,'audio/compound/c'+String(i+1).padStart(2,'0')+'.mp3'));
  const baseDetails=$('base').closest('details');
  baseDetails.addEventListener('toggle',()=>{if(baseDetails.open&&!$('base').children.length)BASE.forEach((s,i)=>add($('base'),s,'audio/audio_F'+(i+1)+'.WAV'));});
- return fetch('data/syllables.json?v=20260920-le4').then(r=>{if(!r.ok)throw new Error('catalog');return r.json();}).then(rows=>{
+ return fetch('data/syllables.json?v=20260925-pitchhalf1').then(r=>{if(!r.ok)throw new Error('catalog');return r.json();}).then(rows=>{
   const all=createCatalog(rows).map((s,index)=>({...s,original:index<44?s.audio.replace('syllable-clear/','syllable/'):null}));
   const filter=$('syllable-initial-filter');let page=0;
-  for(const initial of BASE.slice(0,21)){const option=document.createElement('option');option.value=initial;option.textContent=initial;filter.append(option);}
+  for(const initial of [...BASE,...COMPOUNDS]){const option=document.createElement('option');option.value=initial;option.textContent=initial;filter.append(option);}
   const nav=document.createElement('nav');nav.className='sample-pages';nav.setAttribute('aria-label','示範音分頁');
   const prev=document.createElement('button'),next=document.createElement('button'),status=document.createElement('span');prev.textContent='← 上一頁';next.textContent='下一頁 →';status.setAttribute('role','status');nav.append(prev,status,next);$('syllables').before(nav);
   function render(){
    release();const slice=samplePage(all,filter.value,page);page=slice.page;$('syllables').replaceChildren();
-   for(const s of slice.items)add($('syllables'),s.displayLabel+' · '+s.word+(s.enabled?'':'（待核對，不出題）'),s.audio,s.original);
+   for(const s of slice.items)add($('syllables'),s.displayLabel+(s.word?' · '+s.word:'')+(s.enabled?'':'（待核對，不出題）'),s.audio,s.original);
    $('syllable-count').textContent=`共 ${all.length} 個示範音，${all.filter(s=>s.enabled).length} 個可出題；目前篩選 ${slice.total} 個，每頁最多 ${PAGE_SIZE} 個。`;
    status.textContent=`${page+1} / ${slice.pages}`;prev.disabled=page===0;next.disabled=page===slice.pages-1;
   }

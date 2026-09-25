@@ -14,16 +14,25 @@ export function normalizeConfig(input) {
 }
 export function createCatalog(rows) {
   return rows.map(([initial,final,word,tone=1,meta={}],index)=>{
-    if(!Number.isInteger(tone)||tone<1||tone>4)throw new Error('Invalid spelling tone');
-    const label=initial+final,mark=['','','ˊ','ˇ','ˋ'][tone];
-    return {id:'s'+String(index+1).padStart(2,'0'),initial,final,word,tone,label,displayLabel:label+mark,toneMark:mark,enabled:meta.enabled!==false,reviewRequired:meta.reviewRequired===true,audio:'audio/syllable-clear/s'+String(index+1).padStart(2,'0')+'.wav'};
+    if(!Number.isInteger(tone)||tone<1||tone>5)throw new Error('Invalid spelling tone');
+    const label=initial+final,mark=['','','ˊ','ˇ','ˋ','˙'][tone];
+    if(COMPOUNDS.includes(label)){initial=label;final='';}
+    if(meta.audio&&!/^audio\/(?:supplied|processed)-\d{8}\/m_\d+(?:_\d+){0,2}\.mp3$/.test(meta.audio))throw new Error('Invalid spelling audio');
+    return {id:'s'+String(index+1).padStart(2,'0'),initial,final,word,tone,label,displayLabel:tone===5?mark+label:label+mark,toneMark:mark,enabled:meta.enabled!==false,reviewRequired:meta.reviewRequired===true,audio:meta.audio||'audio/syllable-clear/s'+String(index+1).padStart(2,'0')+'.wav',...(meta.preferredAudio===true?{preferredAudio:true}:{})};
   });
 }
 export function poolFor(mode,config,catalog) {
   // Keep the existing single record key so login, history and daily caps stay compatible.
   if(mode==='single') return cleanSymbols([...config.symbols,...config.compounds]).map(label=>({id:label,label,audio:BASE.includes(label)?'audio/audio_F'+(BASE.indexOf(label)+1)+'.WAV':'audio/compound/c'+String(COMPOUNDS.indexOf(label)+1).padStart(2,'0')+'.mp3'}));
   if(mode==='compound') return config.compounds.map(label=>({id:label,label,audio:'audio/compound/c'+String(COMPOUNDS.indexOf(label)+1).padStart(2,'0')+'.mp3'}));
-  return catalog.filter(x=>x.enabled!==false&&config.symbols.includes(x.initial)&&(x.final.length===1 ? config.symbols.includes(x.final) : config.compounds.includes(x.final)));
+  const taught=s=>!s||(BASE.includes(s)?config.symbols.includes(s):config.compounds.includes(s));
+  const unique=new Map();
+  // Keep one question and a fixed selected recording; alternate source files stay archived.
+  for(const q of catalog.filter(x=>x.enabled!==false&&taught(x.initial)&&taught(x.final))){const key=q.displayLabel||((q.label||q.initial+(q.final||''))+':'+(q.tone||1)),old=unique.get(key);if(old){if(q.preferredAudio){old.audio=q.audio;old.preferredAudio=true;}}else unique.set(key,{...q});}
+  return [...unique.values()];
+}
+export function spellingChoices(q,pool,rng=Math.random){
+ return Object.fromEntries(['initial','final'].map(k=>[k,!q[k]?['']:shuffle([q[k],...shuffle([...new Set(pool.map(x=>x[k]).filter(Boolean))].filter(x=>x!==q[k]),rng).slice(0,3)],rng)]));
 }
 export function shuffle(items,rng=Math.random) {
   const result=[...items];

@@ -4,3 +4,5 @@
 @media(max-width:650px){.mode-picker{gap:8px}.mode-picker label{font-size:19px;padding:12px 8px;gap:7px}.mode-picker small{font-size:13px}.mode-picker input{width:22px;height:22px}.person.active-turn{border-width:3px}.choices button{max-width:22vw}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important}}
 .spelling-choices{display:flex;flex-direction:column;gap:16px}.spelling-slots,.tile-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.spelling-slots button,.tile-row button{font-size:2rem;min-width:65px;min-height:65px;padding:10px}.spelling-slots{align-items:center}.spelling-slots .tone{font-size:2rem}.spelling-choices .primary{font-size:1.3rem}.spelling-slots button{border:3px dashed #8bab85}.person img{object-fit:contain;object-position:center bottom}.mode-picker{margin-bottom:18px}
+.spelling-slots[data-neutral="true"]{position:relative;padding-top:35px}
+.spelling-slots[data-neutral="true"] .tone{position:absolute;top:0;left:50%;transform:translateX(-50%)}

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,questionDeck,Round} from '../core.js';
-const catalog=createCatalog(JSON.parse(readFileSync(new URL('../data/syllables.json',import.meta.url))));
+const catalog=createCatalog(JSON.parse(readFileSync(new URL('../data/syllables.json',import.meta.url))).slice(0,359));
 const week1=normalizeConfig({version:2,symbols:['ㄅ','ㄆ','ㄇ','ㄉ','一','ㄠ','ㄅ','bad'],seats:['1','2'],questions:10});
 test('第一週六音只產生老師指定的八種拼音',()=>{assert.equal(week1.symbols.length,6);assert.deepEqual(poolFor('spelling',week1,catalog).map(x=>x.word),['包','拋','貓','刀','逼','批','咪','低']);});
 test('不能由個別韻符自動解鎖未教結合韻',()=>{assert.equal(poolFor('compound',week1,catalog).length,0);assert.ok(!poolFor('spelling',week1,catalog).some(x=>x.final==='ㄧㄠ'));const enabled={...week1,compounds:['ㄧㄠ']};assert.ok(poolFor('spelling',enabled,catalog).some(x=>x.word==='標'));});

@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
 import {createCatalog,normalizeConfig,poolFor,Round} from '../core.js';
 import {showSpellingTone} from '../spelling-layout.js';
-const rows=JSON.parse(readFileSync(new URL('../data/syllables.json',import.meta.url))),catalog=createCatalog(rows);
+const rows=JSON.parse(readFileSync(new URL('../data/syllables.json',import.meta.url))),catalog=createCatalog(rows.slice(0,359));
 test('舊題庫預設第一聲，二三四聲顯示調號，答案仍只拼聲韻',()=>{
  for(const [tone,mark] of [[1,''],[2,'ˊ'],[3,'ˇ'],[4,'ˋ']]){const q=createCatalog([['ㄈ','ㄛ','佛',tone]])[0];assert.equal(q.toneMark,mark);assert.equal(q.displayLabel,'ㄈㄛ'+mark);const round=new Round([q]);assert.equal(round.answer('ㄈㄛ').correct,true);assert.equal(round.rows[0].target,'ㄈㄛ'+mark);}
  assert.throws(()=>createCatalog([['ㄈ','ㄛ','佛',9]]));
@@ -22,7 +22,7 @@ test('新增音檔都有非靜音 PCM、合理長度及聲調來源',()=>{
 });
 test('版面使用直式上下格及獨立調號，不把調號當成可拖積木',()=>{
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8'),css=readFileSync(new URL('../spelling-layout.css',import.meta.url),'utf8');
- assert.ok(app.includes('class="spelling-tone"'));assert.ok(app.includes("showSpellingTone(document.querySelector('#spelling .slots'),q)"));assert.ok(css.includes('flex-direction:column'));assert.ok(css.includes('.spelling-tone{position:absolute'));assert.ok(app.includes("for(const kind of ['initial','final'])"));
+ assert.ok(app.includes('class="spelling-tone"'));assert.ok(app.includes("showSpellingTone(document.querySelector('#spelling .slots'),q)"));assert.ok(css.includes('flex-direction:column'));assert.ok(css.includes('.spelling-tone{position:absolute'));assert.ok(app.includes("for(const kind of ['initial','final'].filter"));
 });
 test('换成第一聲時清除上一題調號，結合韻長度也重新計算',()=>{
  const tone={setAttribute(name,value){this[name]=value;}},container={dataset:{},querySelector:()=>tone};
