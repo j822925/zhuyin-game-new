@@ -1,4 +1,4 @@
-import {audioSource} from './audio-source.js?v=20260925-recordings1';
+import {audioSource} from './audio-source.js?v=20260925-tonefix1';
 // One native player for the entire catalogue: avoid hundreds of Safari media controls.
 export const PAGE_SIZE=18;
 export function samplePage(rows,initial='',page=0){

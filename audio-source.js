@@ -1,5 +1,5 @@
 // Preserve saved question paths while refreshing corrected pronunciation assets.
-import {SUPPLIED_SYLLABLE_AUDIO,SUPPLIED_LISTENING_AUDIO} from './data/supplied-audio.js?v=20260925-recordings1';
+import {SUPPLIED_SYLLABLE_AUDIO,SUPPLIED_LISTENING_AUDIO} from './data/supplied-audio.js?v=20260925-tonefix1';
 export function audioSource(source){
  if(typeof source!=='string')return source;
  const base=source.split(/[?#]/,1)[0];

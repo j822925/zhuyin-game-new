@@ -9,15 +9,15 @@ import {tutorClips} from '../little-teacher.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url));
 const report=JSON.parse(read('data/supplied-audio-report.json'));
 const catalog=createCatalog(JSON.parse(read('data/syllables.json')));
-test('394 matched recordings are byte-identical and 89 previous files are reused',()=>{
+test('417 matched recordings are byte-identical and 89 previous files are reused',()=>{
  assert.equal(report.sourceCount,1450);assert.equal(report.previousIdentical,164);assert.deepEqual(report.previousDifferent,[]);
- assert.equal(report.files.length,394);assert.equal(report.files.filter(r=>r.reused).length,89);
+ assert.equal(report.files.length,417);assert.equal(report.files.filter(r=>r.reused).length,89);
  for(const row of report.files){assert.equal(createHash('sha256').update(read(row.path)).digest('hex'),row.sha256,row.file);assert.ok(row.seconds>0&&row.seconds<5);}
 });
-test('335 exact question replacements preserve tone IDs and 24 fallbacks',()=>{
- assert.equal(Object.keys(SUPPLIED_SYLLABLE_AUDIO).length,335);
- assert.equal(report.syllables.filter(r=>!r.available).length,24);
- assert.equal(report.syllables.filter(r=>!r.available&&r.enabled).length,19);
+test('358 exact question replacements preserve tone IDs and 1 fallback',()=>{
+ assert.equal(Object.keys(SUPPLIED_SYLLABLE_AUDIO).length,358);
+ assert.equal(report.syllables.filter(r=>!r.available).length,1);
+ assert.equal(report.syllables.filter(r=>!r.available&&r.enabled).length,0);
  assert.equal(catalog.filter(q=>q.enabled).length,352);
  for(const q of catalog){const row=report.syllables.find(r=>r.id===q.id);assert.equal(row.label,q.displayLabel);assert.equal(row.enabled,q.enabled);
  if(row.available){assert.equal(audioSource(q.audio),row.path);assert.equal(audioSource(q.audio+'?x=1#part'),row.path+'?x=1#part');assert.equal(audioSource(audioSource(q.audio)),row.path);assert.equal(report.files.find(a=>a.path===row.path).label,q.displayLabel);}
@@ -40,9 +40,9 @@ test('listening uses 37 base plus 22 compounds by symbol, not source numbering',
  assert.equal(audioSource('audio/audio_F22.WAV'),'audio/supplied-20260923/s_25.mp3'); // ㄚ, not source 22 ㄧ
  assert.equal(audioSource('audio/audio_F35.WAV'),'audio/supplied-20260923/s_22.mp3'); // ㄧ, not source 35 ㄤ
  assert.doesNotMatch(read('supplied-audio.js').toString(),/saveScore|authenticate|submit|workers.dev/);
- assert.equal(report.extraSyllables.length,1056);
+ assert.equal(report.extraSyllables.length,1033);
 });
 test('game, exam, review, online and family players all load the new resolver',()=>{
- for(const file of ['app.js','exam.js','exam-review.js','online.js','little-teacher.js','teacher-audio.js'])assert.match(read(file).toString(),/audio-source.js\?v=20260925-recordings1/,file);
- for(const file of ['index.html','exam.html','online.html','parents.html','teacher.html'])assert.match(read(file).toString(),/20260925-recordings1/,file);
+ for(const file of ['app.js','exam.js','exam-review.js','online.js','little-teacher.js','teacher-audio.js'])assert.match(read(file).toString(),/audio-source.js\?v=20260925-tonefix1/,file);
+ for(const file of ['index.html','exam.html','online.html','parents.html','teacher.html'])assert.match(read(file).toString(),/20260925-tonefix1/,file);
 });

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {audioSource} from '../audio-source.js';
 import {createCatalog} from '../core.js';
-import {SUPPLIED_LISTENING_AUDIO} from '../data/supplied-audio.js';
+import {SUPPLIED_LISTENING_AUDIO,SUPPLIED_SYLLABLE_AUDIO} from '../data/supplied-audio.js';
 test('le4 uses 樂 without changing saved question identity or tone',()=>{
  const rows=JSON.parse(readFileSync(new URL('../data/syllables.json',import.meta.url)));
  const q=createCatalog(rows)[140];
@@ -12,9 +12,9 @@ test('le4 uses 樂 without changing saved question identity or tone',()=>{
  assert.equal(wav.subarray(0,4).toString(),'RIFF');assert.equal(wav.subarray(8,12).toString(),'WAVE');assert.ok(wav.length>40000);
 });
 test('saved old le4 audio paths bypass cache; unrelated sounds stay unchanged',()=>{
- const file='audio/syllable-clear/s141.wav',fresh=file+'?v=20260920-le4';
+ const file='audio/syllable-clear/s141.wav',fresh=SUPPLIED_SYLLABLE_AUDIO[file];
  assert.equal(audioSource(file),fresh);assert.equal(audioSource(fresh),fresh);
- assert.equal(audioSource(file+'?v=old&x=1#part'),file+'?v=20260920-le4&x=1#part');
+ assert.equal(audioSource(file+'?v=old&x=1#part'),fresh+'?v=old&x=1#part');
  for(const other of ['audio/syllable-clear/s999.wav','audio/audio_F0.WAV','toString','__proto__',undefined])assert.equal(audioSource(other),other);
 });
 test('all game, tutor, sample and exam audio players use the corrected cache version',()=>{
