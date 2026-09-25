@@ -394,7 +394,7 @@ export const SUPPLIED_TUTOR_AUDIO=Object.freeze({
   "ㄣ": "audio/processed-20260925/s_34.mp3",
   "ㄤ": "audio/processed-20260925/s_35.mp3",
   "ㄥ": "audio/processed-20260925/s_36.mp3",
-  "ㄦ": "audio/processed-20260925/s_37.mp3",
+  "ㄦ": "audio/original-er-20260925.wav",
   "ㄧ": "audio/processed-20260925/s_22.mp3",
   "ㄨ": "audio/processed-20260925/s_23.mp3",
   "ㄩ": "audio/processed-20260925/s_24.mp3",

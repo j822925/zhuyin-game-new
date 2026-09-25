@@ -1,5 +1,5 @@
-import {audioSource} from './audio-source.js?v=20260925-pitchhalf1';
-import {createLittleTeacher} from './little-teacher.js?v=20260925-blanks1';
+import {audioSource} from './audio-source.js?v=20260925-originaler1';
+import {createLittleTeacher} from './little-teacher.js?v=20260925-originaler1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260925-blanks1';
 import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round,spellingChoices,spellingParts} from './core.js?v=20260925-blanks1';
 import {createMultiplayer} from './multiplayer.js?v=20260921-picker1';

@@ -1,4 +1,4 @@
-import {audioSource} from './audio-source.js?v=20260925-pitchhalf1';
+import {audioSource} from './audio-source.js?v=20260925-originaler1';
 import {BASE as SYMBOLS,COMPOUNDS as FINALS,poolFor} from './core.js?v=20260925-blanks1';
 export function gameSamples(rows){return poolFor('spelling',{symbols:SYMBOLS,compounds:FINALS},rows).filter(s=>audioSource(s.audio).startsWith('audio/processed-'));}
 // One native player for the entire catalogue: avoid hundreds of Safari media controls.
