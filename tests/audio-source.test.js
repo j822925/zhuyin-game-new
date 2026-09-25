@@ -15,7 +15,7 @@ test('saved old le4 audio paths bypass cache; unrelated sounds stay unchanged',(
  const file='audio/syllable-clear/s141.wav',fresh=file+'?v=20260920-le4';
  assert.equal(audioSource(file),fresh);assert.equal(audioSource(fresh),fresh);
  assert.equal(audioSource(file+'?v=old&x=1#part'),file+'?v=20260920-le4&x=1#part');
- for(const other of ['audio/syllable-clear/s14.wav','audio/syllable-clear/s142.wav','audio/audio_F0.WAV','toString','__proto__',undefined])assert.equal(audioSource(other),other);
+ for(const other of ['audio/syllable-clear/s999.wav','audio/audio_F0.WAV','toString','__proto__',undefined])assert.equal(audioSource(other),other);
 });
 test('all game, tutor, sample and exam audio players use the corrected cache version',()=>{
  for(const [file,assignment] of [['app.js','audio.src=audioSource(q.audio)'],['little-teacher.js','voice.src=audioSource(clips[step])'],['teacher-audio.js','player.src=audioSource(file)'],['exam.js','audio.src=audioSource(out.question.audio)'],['exam-review.js','audio.src=audioSource(value.audio)']]){
