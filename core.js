@@ -31,8 +31,18 @@ export function poolFor(mode,config,catalog) {
   for(const q of catalog.filter(x=>x.enabled!==false&&taught(x.initial)&&taught(x.final))){const key=q.displayLabel||((q.label||q.initial+(q.final||''))+':'+(q.tone||1)),old=unique.get(key);if(old){if(q.preferredAudio){old.audio=q.audio;old.preferredAudio=true;}}else unique.set(key,{...q});}
   return [...unique.values()];
 }
-export function spellingChoices(q,pool,rng=Math.random){
- return Object.fromEntries(['initial','final'].map(k=>[k,!q[k]?['']:shuffle([q[k],...shuffle([...new Set(pool.map(x=>x[k]).filter(Boolean))].filter(x=>x!==q[k]),rng).slice(0,3)],rng)]));
+// Legacy catalog IDs/audio remain stable; a standalone final belongs in the second box.
+export function spellingParts(q){
+ return !q.final&&q.initial&&!BASE.slice(0,21).includes(q.initial)?{...q,initial:'',final:q.initial}:{...q};
+}
+export function spellingChoices(question,pool,rng=Math.random){
+ const q=spellingParts(question),parts=pool.map(spellingParts);
+ return Object.fromEntries(['initial','final'].map(k=>{
+  const wrong=shuffle([...new Set(parts.map(x=>x[k]).filter(Boolean))].filter(x=>x!==q[k]),rng);
+  // Empty is a deliberate answer, not an automatically completed slot.
+  const blank=q[k]!==''&&rng()<0.5?['']:[];
+  return [k,shuffle([q[k],...blank,...wrong.slice(0,3-blank.length)],rng)];
+ }));
 }
 export function shuffle(items,rng=Math.random) {
   const result=[...items];
@@ -58,7 +68,7 @@ export class Round {
   get current(){return this.deck[this.index];}
   get canUseTutor(){return !!this.current&&!this.locked&&!this.taught.has(this.current)&&this.deck.length<=78;}
   useTutor(pool,rng=Math.random){
-    if(!this.canUseTutor||!this.current.initial)return {ignored:true};
+    if(!this.canUseTutor||(!this.current.initial&&!this.current.final))return {ignored:true};
     const source=this.current;this.taught.add(source);
     // Preserve previously promised review positions when inserting another reminder.
     const pending=this.deck.slice(this.index+2,this.index+3).some(q=>q.tutorReviewOf);

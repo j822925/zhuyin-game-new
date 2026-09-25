@@ -44,6 +44,6 @@ test('listening uses 37 base plus 22 compounds by symbol, not source numbering',
 });
 test('game, exam, review, online and family players all load the new resolver',()=>{
  for(const file of ['app.js','exam.js','exam-review.js','online.js','little-teacher.js','teacher-audio.js'])assert.match(read(file).toString(),/audio-source.js\?v=20260925-pitchhalf1/,file);
- for(const file of ['index.html','exam.html','online.html'])assert.match(read(file).toString(),/20260925-pitchhalf1/,file);
+ for(const file of ['index.html','exam.html','online.html'])assert.match(read(file).toString(),/20260925-blanks1/,file);
  for(const file of ['parents.html','teacher.html'])assert.match(read(file).toString(),/20260925-familyaudio1/,file);
 });

@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
-import {createCatalog,poolFor,spellingChoices,questionDeck,BASE,COMPOUNDS,Round} from '../core.js';
+import {createCatalog,poolFor,spellingChoices,spellingParts,questionDeck,BASE,COMPOUNDS,Round} from '../core.js';
 import {tutorClips} from '../little-teacher.js';import {showSpellingTone} from '../spelling-layout.js';
 const report=JSON.parse(readFileSync(new URL('../data/supplied-audio-report.json',import.meta.url))),catalog=createCatalog(JSON.parse(readFileSync(new URL('../data/syllables.json',import.meta.url))));
 test('all 1450 recordings are used exactly once in symbol units or exact-tone questions',()=>{
@@ -23,11 +23,11 @@ test('source tone numbers are independent of numbered tone names',()=>{
  const source={38:5,39:2,40:4,41:3};
  for(const q of catalog.slice(359)){const file=q.audio.split('/').at(-1),parts=file.slice(2,-4).split('_'),n=parts.at(-1);assert.equal(q.tone,source[n]||1,q.id);assert.equal(q.word,'');}
 });
-test('new one-unit or compound questions require explicitly taught units; no empty distractors',()=>{
+test('new one-unit or compound questions require explicitly taught units; explicit blank choices',()=>{
  for(const scope of [{symbols:['ㄅ','ㄚ'],compounds:[]},{symbols:['ㄧ','ㄝ'],compounds:[]},{symbols:[],compounds:['ㄧㄝ']},{symbols:BASE,compounds:COMPOUNDS}]){
   const pool=poolFor('spelling',scope,catalog),taught=new Set([...scope.symbols,...scope.compounds]);
-  for(const q of pool){assert.ok(taught.has(q.initial));assert.ok(!q.final||taught.has(q.final));const choices=spellingChoices(q,pool);
-   assert.ok(choices.initial.includes(q.initial));assert.ok(choices.final.includes(q.final));assert.ok(choices.initial.every(Boolean));if(q.final)assert.ok(choices.final.every(Boolean));else assert.deepEqual(choices.final,['']);
+  for(const source of pool){const q=spellingParts(source);assert.ok(!q.initial||taught.has(q.initial));assert.ok(!q.final||taught.has(q.final));const choices=spellingChoices(q,pool);
+   assert.ok(choices.initial.includes(q.initial));assert.ok(choices.final.includes(q.final));assert.ok(choices.initial.length>=1);assert.ok(choices.final.length>=1);
    for(const k of ['initial','final']){assert.equal(new Set(choices[k]).size,choices[k].length);for(const v of choices[k])assert.ok(!v||taught.has(v));}
   }
  }
@@ -35,6 +35,6 @@ test('new one-unit or compound questions require explicitly taught units; no emp
 test('one-unit tutor plays only symbol and complete sound; neutral dot goes before written syllable',()=>{
  for(const q of catalog){const clips=tutorClips(q);assert.equal(clips.length,q.final?3:2);assert.ok(clips.every(v=>!v.includes('c00')));assert.equal(clips.at(-1),q.audio);}
  const q=catalog.find(q=>q.tone===5&&!q.final),r=new Round([q]);assert.equal(q.displayLabel,'˙'+q.label);assert.equal(r.answer(q.label).correct,true);assert.equal(r.rows[0].target,q.displayLabel);
- const tone={setAttribute(k,v){this[k]=v;}},container={dataset:{},querySelector:()=>tone};showSpellingTone(container,q);assert.equal(tone['aria-label'],'輕聲');assert.equal(container.dataset.neutral,'true');assert.equal(container.dataset.singlePart,'true');
+ const tone={setAttribute(k,v){this[k]=v;}},container={dataset:{},querySelector:()=>tone};showSpellingTone(container,q);assert.equal(tone['aria-label'],'輕聲');assert.equal(container.dataset.neutral,'true');assert.equal(container.dataset.singlePart,'false');
  showSpellingTone(container,catalog[0]);assert.equal(container.dataset.neutral,'false');assert.equal(container.dataset.singlePart,'false');assert.equal(tone.hidden,true);
 });

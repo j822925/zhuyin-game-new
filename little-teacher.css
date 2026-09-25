@@ -10,4 +10,6 @@
 @media(max-height:650px){#tutor-dialog{padding:8px 24px}.tutor-heading{height:64px}.tutor-heading img{height:64px;width:64px}.tutor-part{font-size:36px;min-height:58px}.tutor-answer .spelling-tone{top:83px}.tutor-status{margin:8px 0}}
 .tutor-answer[data-single-part="true"] .spelling-tone{top:50%}
 .tutor-answer[data-neutral="true"]{padding-top:42px}
-.tutor-answer[data-neutral="true"] .spelling-tone{left:53px;top:10px;transform:translateX(-50%)}
+.tutor-answer[data-neutral="true"] .spelling-tone{left:53px;top:calc(10px - 1cm);transform:translateX(-50%)}
+.tutor-answer[data-neutral="true"]{margin-top:1cm}
+.tutor-part.blank-choice .zhuyin-glyph{font-size:22px}

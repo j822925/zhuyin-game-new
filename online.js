@@ -16,7 +16,7 @@ let device;try{device=sessionStorage.getItem('zhuyin.online-device');if(!device)
 const audio=new Audio();audio.preload='auto';
 function message(code,target='message'){$(target).textContent=messages[code]||code;}
 function store(){try{if(session)sessionStorage.setItem(SESSION,JSON.stringify(session));else sessionStorage.removeItem(SESSION);}catch{}}
-async function api(path,data={}){const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);try{const r=await fetch(ENDPOINT+'/online/api/'+path,{method:'POST',headers:{'Content-Type':'application/json',...(session?{Authorization:'Bearer '+session.token}:{})},body:JSON.stringify({...data,catalogVersion:2}),signal:controller.signal});const out=await r.json();if(out.error)throw Error(out.error);return out;}catch(e){if(e.message==='login_required'){session=null;identityReady=false;store();disconnect();showLobby();}throw e;}finally{clearTimeout(timeout);}}
+async function api(path,data={}){const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);try{const r=await fetch(ENDPOINT+'/online/api/'+path,{method:'POST',headers:{'Content-Type':'application/json',...(session?{Authorization:'Bearer '+session.token}:{})},body:JSON.stringify({...data,catalogVersion:3}),signal:controller.signal});const out=await r.json();if(out.error)throw Error(out.error);return out;}catch(e){if(e.message==='login_required'){session=null;identityReady=false;store();disconnect();showLobby();}throw e;}finally{clearTimeout(timeout);}}
 function showLobby(){$('create').disabled=!identityReady;$('join-show').disabled=!identityReady;state=null;roomId='';stopAudio();audioKey='';playedKey='';$('recover-room').hidden=true;$('room').hidden=true;$('lobby').hidden=!session;$('login').hidden=!!session;$('logout').hidden=!session;$('identity').textContent=session?session.seat+' 號・'+(session.name||'正在讀取角色…'):'先選自己的座號';if(session)$('my-character').src=avatar(session.avatar);}
 function disconnect(){stopped=true;socketGeneration++;clearTimeout(reconnectTimer);if(ws){ws.onclose=null;ws.close();ws=null;}}
 async function home(){if(roomId&&state&&!['closed','finished'].includes(state.phase)&&!confirm('離開會結束這一場，要回首頁嗎？'))return;try{if(roomId)await api('leave');disconnect();showLobby();message('');location.href='./';}catch(e){message(e.message);}}
@@ -86,17 +86,17 @@ messages.scope_small='這個關卡至少要有兩種已教聲音，請老師確�
 messages.spelling_unavailable='拼音工坊還沒開放，請先選聽音辨識。';
 let spellingSelection={},spellingKey='';
 function renderSpelling(s,key,mine){
- if(spellingKey!==key){spellingKey=key;spellingSelection=s.question.tiles.final.length===1&&s.question.tiles.final[0]===''?{final:''}:{};}
+ if(spellingKey!==key){spellingKey=key;spellingSelection={};}
  const root=$('choices');root.replaceChildren();root.classList.add('spelling-choices');
  const allowed=s.phase==='answer'&&!s.submitted&&ws?.readyState===1&&mine;
  const slots=document.createElement('div');slots.className='spelling-slots';slots.dataset.neutral=String(s.question.toneMark==='˙');
- for(const kind of ['initial','final'].filter(k=>s.question.tiles[k].some(Boolean))){
-  const b=document.createElement('button');b.textContent=spellingSelection[kind]||(kind==='initial'?'聲符':'韻符');b.disabled=!allowed;b.onclick=()=>{delete spellingSelection[kind];render();};slots.append(b);
+ for(const kind of ['initial','final']){
+  const b=document.createElement('button');b.textContent=spellingSelection[kind]===undefined?(kind==='initial'?'聲符':'韻符'):(spellingSelection[kind]||'空白');b.disabled=!allowed;b.onclick=()=>{delete spellingSelection[kind];render();};slots.append(b);
  }
  const tone=document.createElement('span');tone.textContent=s.question.toneMark||'';tone.className='tone';if(s.question.toneMark==='˙'){tone.style.order='-1';tone.setAttribute('aria-label','輕聲');}slots.append(tone);root.append(slots);
- for(const kind of ['initial','final'].filter(k=>s.question.tiles[k].some(Boolean))){
+ for(const kind of ['initial','final']){
   const row=document.createElement('div');row.className='tile-row';
-  for(const value of s.question.tiles[kind]){const b=document.createElement('button');b.textContent=value;b.dataset.tile=kind;b.setAttribute('aria-label',value);b.classList.toggle('selected',spellingSelection[kind]===value);b.disabled=!allowed;b.onclick=()=>{spellingSelection[kind]=value;render();};row.append(b);}root.append(row);
+  for(const value of s.question.tiles[kind]){const b=document.createElement('button');b.textContent=value||'空白';b.dataset.tile=kind;b.dataset.value=value;b.dataset.blank=String(value==='');b.setAttribute('aria-label',value||'空白：這一格不需要注音');b.classList.toggle('selected',spellingSelection[kind]===value);b.disabled=!allowed;b.onclick=()=>{spellingSelection[kind]=value;render();};row.append(b);}root.append(row);
  }
- const check=document.createElement('button'),value=(spellingSelection.initial||'')+(spellingSelection.final||'');check.className='primary';check.textContent='✓ 拼好了！';check.disabled=!allowed||!spellingSelection.initial||spellingSelection.final===undefined||(s.wrongChoices||[]).includes(value);check.onclick=()=>{disableAnswers();send('answer',value);};root.append(check);
+ const check=document.createElement('button'),value=(spellingSelection.initial||'')+(spellingSelection.final||'');check.className='primary';check.textContent='✓ 拼好了！';check.disabled=!allowed||spellingSelection.initial===undefined||spellingSelection.final===undefined||(s.wrongChoices||[]).includes(value);check.onclick=()=>{disableAnswers();send('answer',value);};root.append(check);
 }

@@ -1,4 +1,9 @@
 /* Portrait zhuyin inside a landscape-friendly activity. No rotated glyphs. */
+/* Blank is a word on a dashed tile, never an X resembling ㄨ. */
+#spelling .blank-choice{border-style:dashed;font-size:22px}
+#spelling .blank-choice .zhuyin-glyph{font-size:22px;white-space:nowrap}
+/* The header already provides the same guarded home action. */
+.child-ui #game #leave,.child-ui #race-game #race-leave{display:none!important}
 .vertical-symbols{display:inline-flex;flex-direction:column;align-items:center;justify-content:center}
 .zhuyin-glyph{display:block;line-height:1.05;writing-mode:horizontal-tb;text-orientation:upright}
 #spelling .slots{position:relative;display:flex;flex-direction:column;gap:10px;align-items:center;margin:0;padding:10px 55px 10px 15px;align-self:center;--initial-height:76px}
@@ -31,6 +36,6 @@
 #spelling .slots[data-single-part="true"][data-initial-length="2"]{--initial-height:130px}
 #spelling .slots[data-single-part="true"][data-initial-length="3"]{--initial-height:184px}
 #spelling .slots[data-single-part="true"] .spelling-tone{top:50%}
-#spelling .slots[data-neutral="true"]{padding-top:45px}
-#spelling .slots[data-neutral="true"] .spelling-tone{left:62px;top:14px;transform:translateX(-50%)}
+#spelling .slots[data-neutral="true"]{padding-top:45px;margin-top:1cm}
+#spelling .slots[data-neutral="true"] .spelling-tone{left:62px;top:calc(14px - 1cm);transform:translateX(-50%)}
 @media(max-width:550px){#spelling .slots[data-neutral="true"] .spelling-tone{left:47px}}
