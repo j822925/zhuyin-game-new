@@ -676,8 +676,8 @@
     3,
     {
       "sourcePage": 21,
-      "reviewRequired": true,
-      "enabled": false
+      "reviewRequired": false,
+      "enabled": true
     }
   ],
   [
@@ -1147,8 +1147,8 @@
     3,
     {
       "sourcePage": 27,
-      "reviewRequired": true,
-      "enabled": false
+      "reviewRequired": false,
+      "enabled": true
     }
   ],
   [
@@ -1168,8 +1168,8 @@
     3,
     {
       "sourcePage": 27,
-      "reviewRequired": true,
-      "enabled": false
+      "reviewRequired": false,
+      "enabled": true
     }
   ],
   [
@@ -1279,8 +1279,8 @@
     3,
     {
       "sourcePage": 29,
-      "reviewRequired": true,
-      "enabled": false
+      "reviewRequired": false,
+      "enabled": true
     }
   ],
   [
@@ -1450,8 +1450,8 @@
     3,
     {
       "sourcePage": 31,
-      "reviewRequired": true,
-      "enabled": false
+      "reviewRequired": false,
+      "enabled": true
     }
   ],
   [
@@ -2352,8 +2352,8 @@
     1,
     {
       "sourcePage": 44,
-      "reviewRequired": true,
-      "enabled": false
+      "reviewRequired": false,
+      "enabled": true
     }
   ],
   [
@@ -2533,7 +2533,8 @@
     3,
     {
       "sourcePage": 46,
-      "reviewRequired": true,
+      "reviewRequired": false,
+      "excludedByTeacher": true,
       "enabled": false
     }
   ],

@@ -1,4 +1,6 @@
 import {audioSource} from './audio-source.js?v=20260925-pitchhalf1';
+import {BASE as SYMBOLS,COMPOUNDS as FINALS,poolFor} from './core.js?v=20260925-blanks1';
+export function gameSamples(rows){return poolFor('spelling',{symbols:SYMBOLS,compounds:FINALS},rows).filter(s=>audioSource(s.audio).startsWith('audio/processed-'));}
 // One native player for the entire catalogue: avoid hundreds of Safari media controls.
 export const PAGE_SIZE=18;
 export function samplePage(rows,initial='',page=0,query=''){
@@ -29,17 +31,15 @@ export function setupTeacherAudio({BASE,COMPOUNDS,createCatalog}){
  player.onerror=()=>{if(player.hasAttribute('src')){label.textContent='音檔讀取失敗，請檢查網路後再試。';selected?.setAttribute('aria-pressed','false');}};
  window.addEventListener('pagehide',release);
  document.addEventListener('visibilitychange',()=>{if(document.hidden)release();});
- function add(container,text,file,original){
+ function add(container,text,file){
   const card=document.createElement('article');card.className='audio-item';card.append(button(text,file));
-  if(original){const details=document.createElement('details'),summary=document.createElement('summary');summary.textContent='比較原版';details.append(summary,button(text+' 原版',original));card.append(details);}
   container.append(card);
  }
  COMPOUNDS.forEach((s,i)=>add($('compounds'),s,'audio/compound/c'+String(i+1).padStart(2,'0')+'.mp3'));
  const baseDetails=$('base').closest('details');
  baseDetails.addEventListener('toggle',()=>{if(baseDetails.open&&!$('base').children.length)BASE.forEach((s,i)=>add($('base'),s,'audio/audio_F'+(i+1)+'.WAV'));});
- return fetch('data/syllables.json?v=20260925-pitchhalf1').then(r=>{if(!r.ok)throw new Error('catalog');return r.json();}).then(rows=>{
-  const all=createCatalog(rows).map((s,index)=>({...s,original:index<44?s.audio.replace('syllable-clear/','syllable/'):null})).filter(s=>audioSource(s.audio).startsWith('audio/processed-'));
-  const preferredLabels=new Set(all.filter(s=>s.preferredAudio).map(s=>s.displayLabel));
+ return fetch('data/syllables.json?v=20260925-familyclean1').then(r=>{if(!r.ok)throw new Error('catalog');return r.json();}).then(rows=>{
+  const all=gameSamples(createCatalog(rows));
   const filter=$('syllable-initial-filter');let page=0;
   const searchLabel=document.createElement('label');searchLabel.className='sample-search';searchLabel.htmlFor='syllable-search';searchLabel.textContent='搜尋注音或例字：';
   const search=document.createElement('input');search.id='syllable-search';search.type='search';search.placeholder='例如 ㄇㄚ、ㄩㄣ、母';search.autocomplete='off';searchLabel.append(search);filter.after(searchLabel);
@@ -48,7 +48,7 @@ export function setupTeacherAudio({BASE,COMPOUNDS,createCatalog}){
   const prev=document.createElement('button'),next=document.createElement('button'),status=document.createElement('span');prev.textContent='← 上一頁';next.textContent='下一頁 →';status.setAttribute('role','status');nav.append(prev,status,next);$('syllables').before(nav);
   function render(){
    release();const slice=samplePage(all,filter.value,page,search.value);page=slice.page;$('syllables').replaceChildren();
-   for(const s of slice.items)add($('syllables'),s.displayLabel+(s.word?' · '+s.word:'')+(preferredLabels.has(s.displayLabel)?(s.preferredAudio?'（遊戲選用版）':'（另一版錄音）'):'')+(s.enabled?'':'（待核對，不出題）'),s.audio,s.original);
+   for(const s of slice.items)add($('syllables'),s.displayLabel+(s.word?' · '+s.word:''),s.audio);
    $('syllable-count').textContent=`共 ${all.length} 個拼音錄音，加上 ${BASE.length} 個注音、${COMPOUNDS.length} 個結合韻，共 ${all.length+BASE.length+COMPOUNDS.length} 個錄音；目前篩選 ${slice.total} 個，每頁最多 ${PAGE_SIZE} 個。`;
    if(!slice.total){const empty=document.createElement('p');empty.textContent='找不到符合的錄音，請更換注音篩選或搜尋內容。';$('syllables').append(empty);}
    status.textContent=`${page+1} / ${slice.pages}`;prev.disabled=page===0;next.disabled=page===slice.pages-1;

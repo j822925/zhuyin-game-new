@@ -8,7 +8,7 @@
 .zhuyin-glyph{display:block;line-height:1.05;writing-mode:horizontal-tb;text-orientation:upright}
 #spelling .slots{position:relative;display:flex;flex-direction:column;gap:10px;align-items:center;margin:0;padding:10px 55px 10px 15px;align-self:center;--initial-height:76px}
 #spelling .slot{width:94px;min-width:94px;height:var(--initial-height);padding:6px;border-radius:18px;font-size:36px;flex-shrink:0}
-#spelling .slot[data-slot=final]{height:calc(54px * var(--final-length,1) + 22px)}
+#spelling .slot[data-slot=final]{box-sizing:border-box;width:94px;min-width:94px;height:130px;min-height:130px;max-height:130px}
 #spelling .slots[data-final-length="2"]{--final-length:2}
 #spelling .slots[data-final-length="3"]{--final-length:3}
 #spelling .slot.filled{font-size:42px}

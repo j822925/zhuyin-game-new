@@ -6,11 +6,11 @@ test('舊題庫預設第一聲，二三四聲顯示調號，答案仍只拼聲�
  for(const [tone,mark] of [[1,''],[2,'ˊ'],[3,'ˇ'],[4,'ˋ']]){const q=createCatalog([['ㄈ','ㄛ','佛',tone]])[0];assert.equal(q.toneMark,mark);assert.equal(q.displayLabel,'ㄈㄛ'+mark);const round=new Round([q]);assert.equal(round.answer('ㄈㄛ').correct,true);assert.equal(round.rows[0].target,'ㄈㄛ'+mark);}
  assert.throws(()=>createCatalog([['ㄈ','ㄛ','佛',9]]));
 });
-test('359 個音檔、352 個可出題，四音範例可用，待核對音不進遊戲',()=>{
- assert.equal(catalog.length,359);assert.equal(catalog.filter(q=>q.enabled).length,352);
+test('已確認錄音開放後，359 舊題中 358 題可出題',()=>{
+ assert.equal(catalog.length,359);assert.equal(catalog.filter(q=>q.enabled).length,358);
  const pool=poolFor('spelling',normalizeConfig({symbols:['ㄈ','ㄌ','ㄧ','ㄨ']}),catalog);assert.deepEqual(pool.map(q=>q.label).sort(),['ㄈㄨ','ㄌㄧ','ㄌㄨ'].sort());
  const fo=poolFor('spelling',normalizeConfig({symbols:['ㄈ','ㄛ']}),catalog);assert.equal(fo[0].tone,2);assert.equal(fo[0].word,'佛');
- assert.equal(poolFor('spelling',normalizeConfig({symbols:['ㄉ','ㄟ']}),catalog).length,0);
+ assert.equal(poolFor('spelling',normalizeConfig({symbols:['ㄉ','ㄟ']}),catalog).length,1);
  assert.equal(catalog.find(q=>q.label==='ㄈㄚ').word,'發');assert.equal(catalog.find(q=>q.label==='ㄙㄜ').word,'色');assert.equal(catalog.find(q=>q.label==='ㄑㄧㄚ').tone,1);
 });
 test('新增音檔都有非靜音 PCM、合理長度及聲調來源',()=>{

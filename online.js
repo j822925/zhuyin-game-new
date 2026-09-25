@@ -91,7 +91,7 @@ function renderSpelling(s,key,mine){
  const allowed=s.phase==='answer'&&!s.submitted&&ws?.readyState===1&&mine;
  const slots=document.createElement('div');slots.className='spelling-slots';slots.dataset.neutral=String(s.question.toneMark==='˙');
  for(const kind of ['initial','final']){
-  const b=document.createElement('button');b.textContent=spellingSelection[kind]===undefined?(kind==='initial'?'聲符':'韻符'):(spellingSelection[kind]||'空白');b.disabled=!allowed;b.onclick=()=>{delete spellingSelection[kind];render();};slots.append(b);
+  const b=document.createElement('button');b.dataset.slot=kind;b.dataset.blank=String(spellingSelection[kind]==='');b.textContent=spellingSelection[kind]===undefined?(kind==='initial'?'聲符':'韻符'):(spellingSelection[kind]||'空白');b.disabled=!allowed;b.onclick=()=>{delete spellingSelection[kind];render();};slots.append(b);
  }
  const tone=document.createElement('span');tone.textContent=s.question.toneMark||'';tone.className='tone';if(s.question.toneMark==='˙'){tone.style.order='-1';tone.setAttribute('aria-label','輕聲');}slots.append(tone);root.append(slots);
  for(const kind of ['initial','final']){

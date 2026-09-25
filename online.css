@@ -8,3 +8,4 @@
 .spelling-slots[data-neutral="true"] .tone{position:absolute;top:calc(0px - 1cm);left:50%;transform:translateX(-50%)}
 [data-blank="true"]{border-style:dashed!important;writing-mode:horizontal-tb!important;font-size:22px!important}
 .spelling-slots[data-neutral="true"]{margin-top:1cm}
+.spelling-slots button[data-slot="final"]{box-sizing:border-box;width:94px;min-width:94px;max-width:94px;height:130px;min-height:130px;max-height:130px;writing-mode:vertical-rl;text-orientation:upright}

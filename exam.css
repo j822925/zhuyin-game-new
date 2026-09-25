@@ -9,3 +9,5 @@
 .choices [data-blank="true"],#initial-choices [data-blank="true"],#final-choices [data-blank="true"]{border-style:dashed;writing-mode:horizontal-tb;font-size:22px;letter-spacing:0}
 .slots[data-neutral="true"]{margin-top:1cm}
 .slots output[data-blank="true"]{writing-mode:horizontal-tb;letter-spacing:0;font-size:22px;display:flex;align-items:center;justify-content:center}
+/* Same answer box for a vowel, compound final, or explicit blank. */
+#final-slot{box-sizing:border-box;width:94px;min-width:94px;height:130px;min-height:130px;max-height:130px}

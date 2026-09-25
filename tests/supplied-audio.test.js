@@ -18,8 +18,8 @@ test('358 exact question replacements preserve tone IDs and 1 legacy fallback',(
  assert.equal(Object.keys(SUPPLIED_SYLLABLE_AUDIO).length,358);
  assert.equal(report.syllables.filter(r=>!r.available).length,1);
  assert.equal(report.syllables.filter(r=>!r.available&&r.enabled).length,0);
- assert.equal(catalog.filter(q=>q.enabled).length,1385);
- for(const q of catalog){const row=report.syllables.find(r=>r.id===q.id);assert.equal(row.label,q.displayLabel);assert.equal(row.enabled,q.enabled);
+ assert.equal(catalog.filter(q=>q.enabled).length,1391);
+ for(const q of catalog){const row=report.syllables.find(r=>r.id===q.id);assert.equal(row.label,q.displayLabel);assert.equal(row.enabled||['s90','s137','s139','s150','s167','s257'].includes(q.id),q.enabled);
  if(row.available){assert.equal(audioSource(q.audio),row.path);assert.equal(audioSource(q.audio+'?x=1#part'),row.path+'?x=1#part');assert.equal(audioSource(audioSource(q.audio)),row.path);assert.equal(report.files.find(a=>a.path===row.path).label,q.displayLabel);}
  else assert.equal(audioSource(q.audio),q.id==='s141'?q.audio+'?v=20260920-le4':q.audio);
  }
@@ -44,6 +44,6 @@ test('listening uses 37 base plus 22 compounds by symbol, not source numbering',
 });
 test('game, exam, review, online and family players all load the new resolver',()=>{
  for(const file of ['app.js','exam.js','exam-review.js','online.js','little-teacher.js','teacher-audio.js'])assert.match(read(file).toString(),/audio-source.js\?v=20260925-pitchhalf1/,file);
- for(const file of ['index.html','exam.html','online.html'])assert.match(read(file).toString(),/20260925-blanks1/,file);
- for(const file of ['parents.html','teacher.html'])assert.match(read(file).toString(),/20260925-familyaudio1/,file);
+ for(const file of ['index.html','exam.html','online.html'])assert.match(read(file).toString(),/20260925-(?:blanks1|familyclean1)/,file);
+ for(const file of ['parents.html','teacher.html'])assert.match(read(file).toString(),/20260925-familyclean1/,file);
 });
