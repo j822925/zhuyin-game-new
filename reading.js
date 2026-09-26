@@ -4,6 +4,7 @@ import {classStorageKey,classUrl} from './class-context.js?v=20260926-classes1';
 import {createApiClient} from './api-client.js?v=20260926-classes1';
 import {createStudentAuth} from './student-auth.js?v=20260926-classes1';
 const $=id=>document.getElementById(id),demo=new URLSearchParams(location.search).get('demo')==='1';
+const localPreview=['localhost','127.0.0.1','[::1]'].includes(location.hostname);
 const client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config,seat='',deck=[],rows=[],started=0,questionStarted=0,locked=false,currentPayload=null,saving=false,starting=false;
 const auth=createStudentAuth({demo,getConfig:()=>config,post:d=>client.post(d)});
@@ -56,7 +57,7 @@ function answer(text){
  $('next').textContent=rows.length===5?'看看我的星星 →':'下一題 →';$('next').hidden=false;
 }
 async function start(){
- if(starting||!supported||!config)return;starting=true;$('start').disabled=true;
+ if(starting||!supported||config?.readingWrites!==true||(demo&&!localPreview))return;starting=true;$('start').disabled=true;
  try{seat=$('seat').value;if(!seat){$('home-message').textContent='請先選擇你的座號。';return;}
  if(!demo){if(!await auth.ensure(seat))return;auth.setPrimary(seat);}
  currentPayload=null;deck=readingDeck();rows=[];started=Date.now();show('play');renderQuestion();
@@ -84,9 +85,10 @@ async function flushPending(){
 }
 async function load(){
  $('reload').hidden=true;$('start').disabled=true;
+ if(demo&&!localPreview){$('home-message').textContent='第四關已準備好，目前尚未開放。請等待老師通知。';return;}
  if(!supported){$('home-message').textContent=globalThis.isSecureContext?'這個瀏覽器不支援語音辨識，請用支援的 Chrome 或 Safari 開啟。':'錄音需要安全連線，請以 HTTPS 遊戲網址開啟。';return;}
  try{config=demo?{seats:['01'],readingWrites:true}:await client.get({api:'config'});
- if(!config.readingWrites){$('home-message').textContent='第四關正在準備中，請老師更新朗讀關卡後台。';$('reload').hidden=false;return;}
+ if(!config.readingWrites){$('home-message').textContent='第四關已準備好，目前尚未開放。請等待老師通知。';return;}
  $('seat').replaceChildren(new Option('選擇座號',''));for(const s of config.seats)$('seat').append(new Option(s+' 號',s));
  $('seat').value=demo?'01':auth.currentSeat();seat=$('seat').value;$('seat-label').hidden=demo;
  $('home-message').textContent=demo?'老師試玩模式：不記錄成績。':'準備好後，按開始進入朗讀。';$('start').disabled=false;
