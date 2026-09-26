@@ -1,3 +1,4 @@
+import {classStorageKey} from './class-context.js?v=20260926-classes1';
 import {createStudentSession} from './student-session.js?v=20260920-login1';
 // PINs never enter storage, URLs or score payloads. Primary sessions survive same-tab navigation.
 export function loginFeedback(code,retryAfter){
@@ -10,7 +11,7 @@ export function loginFeedback(code,retryAfter){
 export function createStudentAuth({demo,getConfig,post}){
  const sessions=new Map();let busy=false,active=null,buffer='',resolvePrompt=null;
  let storage;try{storage=sessionStorage;}catch{}
- const tab=createStudentSession({storage,key:'zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':'+(demo?'demo':'live')});
+ const tab=createStudentSession({storage,key:classStorageKey('zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':'+(demo?'demo':'live'))});
  const restored=tab.read();let primary=restored?.seat||'';if(restored)sessions.set(primary,{token:restored.token,expires:restored.expires});
  // Back/forward cache must not revive a previous student's in-memory login after switching.
  window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});

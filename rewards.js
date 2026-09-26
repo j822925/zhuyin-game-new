@@ -1,3 +1,4 @@
+import {classStorageKey} from './class-context.js?v=20260926-classes1';
 import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20260913-heroes1';
 import {cappedRoundAward,rewardParticipants,taipeiDay} from './learning-rewards.js?v=20260925-fivecorrect1';
 import {startGachaAnimation} from './gacha-animation.js?v=20260913-ipad1';
@@ -5,8 +6,8 @@ import {createStarPrize} from './star-prize.js?v=20260919-egg1';
 import {confirmReward,within} from './reward-request.js?v=20260919-egg1';
 export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onChange}){
  const $=id=>document.getElementById(id),cache=new Map(),refreshVersions=new Map();let category='animal',busy=false,activeSeat='',previewPersistent=true,revealed=false,prize=null;
- function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return fallback;}}
- function store(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch{previewPersistent=false;return false;}}
+ function read(key,fallback){try{return JSON.parse(localStorage.getItem(classStorageKey(key)))??fallback;}catch{return fallback;}}
+ function store(key,value){try{localStorage.setItem(classStorageKey(key),JSON.stringify(value));return true;}catch{previewPersistent=false;return false;}}
  const key=seat=>'zhuyin.demo.wallet.v1.'+seat;
  const pendingKey=seat=>'zhuyin.gacha.pending.'+seat;
  const pending=()=>!demo&&read(pendingKey(activeSeat),null);

@@ -1,17 +1,18 @@
+import {classStorageKey,classUrl} from './class-context.js?v=20260926-classes1';
 import {audioSource} from './audio-source.js?v=20260925-originaler1';
 import {createLittleTeacher} from './little-teacher.js?v=20260925-originaler1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260925-blanks1';
 import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round,spellingChoices,spellingParts} from './core.js?v=20260925-blanks1';
 import {createMultiplayer} from './multiplayer.js?v=20260921-picker1';
-import {createRewards} from './rewards.js?v=20260925-fivecorrect1';
-import {createStudentProfile} from './student-profile.js?v=20260920-sprites1';
+import {createRewards} from './rewards.js?v=20260926-classes1';
+import {createStudentProfile} from './student-profile.js?v=20260926-classes1';
 import {portrait} from './characters.js?v=20260913-heroes1';
 import {setupChildUI} from './child-ui.js?v=20260913-family1';
 import {setupCozyUI} from './cozy-ui.js?v=20260913-heroes1';
-import {createStudentAuth} from './student-auth.js?v=20260920-login1';
+import {createStudentAuth} from './student-auth.js?v=20260926-classes1';
 import {setupStudentLoginGate} from './student-login-gate.js?v=20260920-login1';
-import {createApiClient} from './api-client.js?v=20260913-tutor1';
-import {setupExamEntry} from './exam-entry.js?v=20260921-exam10';
+import {createApiClient} from './api-client.js?v=20260926-classes1';
+import {setupExamEntry} from './exam-entry.js?v=20260926-classes1';
 const API='https://zhuyin-api.j822925.workers.dev/api';
 const demo=new URLSearchParams(location.search).get('demo')==='1';
 const names={single:'聲音森林',spelling:'拼音工坊'};
@@ -22,8 +23,8 @@ const choices=4;
 let config,catalog=[],duo=false,mode='single',rounds=[],active=0,currentPool=[],seats=[],selected={},audioReady=false,session=0,saving=false,latestIds=[];
 let playStyle='solo';
 const memory={};
-function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return memory[key]??fallback;}}
-function write(key,value){memory[key]=value;try{localStorage.setItem(key,JSON.stringify(value));return true;}catch{return false;}}
+function read(key,fallback){try{return JSON.parse(localStorage.getItem(classStorageKey(key)))??fallback;}catch{return memory[key]??fallback;}}
+function write(key,value){memory[key]=value;try{localStorage.setItem(classStorageKey(key),JSON.stringify(value));return true;}catch{return false;}}
 let pending=read('zhuyin.pending.v2',[]);if(!Array.isArray(pending))pending=[];
 $('app').innerHTML=`<header><a class="brand" href="./${demo?'?demo=1':''}"><img class="brand-app-icon" src="assets/icons/apple-touch-icon-v1.png" alt="">注音探險島</a><div class="top-actions"><span id="connection" role="status">讀取老師任務…</span><a href="${demo?'teacher.html':'parents.html'}">${demo?'老師專區':'親子專區'} ↗</a></div></header>
 <main id="home"><section class="hero"><div><p class="eyebrow">每天一點點，聲音變熟悉</p><h1>準備好了嗎？<br>一起去<span>聲音探險！</span></h1><p>仔細聽、動手拼。<br>每一次練習，都是一次新的發現。</p><div id="learned" class="learned"></div></div><div class="island" aria-hidden="true"><div class="cloud"></div><span class="sun">✦</span><div class="mountain back"></div><div class="mountain front"></div><div class="ground"></div><div class="tree t1">♠</div><div class="tree t2">♠</div><div class="mascot"><span>•ᴗ•</span><b>ㄅ</b></div><span class="floating f1">ㄧ</span><span class="floating f2">ㄠ</span></div></section>
@@ -82,7 +83,7 @@ async function start(id){
  if(!demo&&playStyle!=='solo'){
   if(!await auth.ensure($('seat').value))return;
   auth.setPrimary($('seat').value);
-  location.href='online.html?mode='+encodeURIComponent(playStyle)+'&lesson='+encodeURIComponent(id);return;
+  location.href=classUrl('online.html?mode='+encodeURIComponent(playStyle)+'&lesson='+encodeURIComponent(id));return;
  }
  seats=[$('seat').value];if(duo)seats.push($('partner').value);
  if(seats.some(s=>!config.seats.includes(s))||new Set(seats).size!==seats.length){$('home-message').textContent=duo?'請先選好兩位不同的小朋友座號。':'請先選擇你的座號。';$('seat').focus();return;}

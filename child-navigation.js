@@ -1,4 +1,5 @@
 // Presentation only: retain each link destination, click handler, disabled state and login.
+import './class-context.js?v=20260926-classes1';
 const art=new URL('./assets/ui/',import.meta.url);
 export const NAV_TARGETS=[
  ['a[data-child-home],.child-ui a.brand,button#home,button#leave,#race-leave,#back-home,#confirm-leave,#race-exit,[data-child-home-button]','home','回首頁'],

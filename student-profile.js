@@ -1,3 +1,4 @@
+import {classStorageKey} from './class-context.js?v=20260926-classes1';
 import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260913-heroes1';
 import {STAR_CARDS} from './data/star-cards.js?v=20260919-star1';
 import {STAR_SPRITES} from './data/star-sprites.js?v=20260920-sprites1';
@@ -18,7 +19,7 @@ export function createStudentProfile({demo,auth,getSeat,getSeats,getOwned,getAva
   if(demo){let old;try{old=JSON.parse(localStorage.getItem('zhuyin.demo.profile.'+seat)||'null');}catch{}return {seat,name:'',nickname:old?.nickname||'',avatar:old?.avatar||getAvatar(seat).id,owned:getOwned(seat)||STARTERS,revision:old?.revision||0};}
   const p=await auth.request({kind:'profile',seat});if(p.error)throw Error(p.error);
   // Preserve the previous device-only avatar until the first explicit profile save.
-  if(!p.revision){try{const previous=localStorage.getItem('zhuyin.avatar.'+seat),id=previous&&JSON.parse(previous);if(p.owned.includes(id))p.avatar=id;}catch{}}
+  if(!p.revision){try{const previous=localStorage.getItem(classStorageKey('zhuyin.avatar.'+seat)),id=previous&&JSON.parse(previous);if(p.owned.includes(id))p.avatar=id;}catch{}}
   return p;
  }
  async function refresh(){const v=version;await Promise.all(getSeats().filter(s=>s&&auth.verified(s)).map(async seat=>{try{const p=await fetchProfile(seat);if(v===version&&auth.verified(seat))remember(p);}catch{}}));renderHeader();}

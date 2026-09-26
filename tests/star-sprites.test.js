@@ -18,6 +18,6 @@ test('collection and full-score prize still use the original card art',()=>{
  const read=f=>readFileSync(new URL('../'+f,import.meta.url),'utf8');
  assert.match(read('star-prize.js'),/image.src=c.image/);assert.match(read('star-cards-ui.js'),/img.src=c.image/);
  assert.doesNotMatch(read('star-cards-ui.js'),/STAR_SPRITES/);
- assert.match(read('app.js'),/student-profile.js\?v=20260920-sprites1/);
- assert.match(read('exam.js'),/student-profile.js\?v=20260920-sprites1/);
+ assert.match(read('app.js'),/student-profile.js\?v=20260926-classes1/);
+ assert.match(read('exam.js'),/student-profile.js\?v=20260926-classes1/);
 });
