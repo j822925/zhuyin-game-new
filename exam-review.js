@@ -1,4 +1,18 @@
 import {audioSource} from './audio-source.js?v=20260925-originaler1';
+import {BASE} from './core.js?v=20260925-blanks1';
+import {tutorClips} from './little-teacher.js?v=20260925-blanks1';
+// Answers are supplied only after submission. Empty parts have no sound.
+export function reviewClips(value){
+ if(value.mode!=='spelling')return [value.audio];
+ const label=String(value.label||'').replace(/[ˊˇˋ˙\s]/g,'').replaceAll('一','ㄧ');
+ const initial=BASE.slice(0,21).includes(label[0])?label[0]:'';
+ return tutorClips({initial,final:label.slice(initial.length),audio:value.audio});
+}
+function pauseBetween(ms,signal){return new Promise((resolve,reject)=>{
+ const abort=()=>{clearTimeout(timer);reject(Error('cancelled'));};
+ const timer=setTimeout(()=>{signal.removeEventListener('abort',abort);resolve();},ms);
+ signal.addEventListener('abort',abort,{once:true});if(signal.aborted)abort();
+});}
 // Completion means an actual ended event, not merely a resolved play() promise.
 export function playToEnd(audio,{signal,timeoutMs=20000}={}){
  return new Promise((resolve,reject)=>{
@@ -12,17 +26,24 @@ export function playToEnd(audio,{signal,timeoutMs=20000}={}){
   try{audio.currentTime=0;Promise.resolve(audio.play()).catch(failed);}catch{failed();}
  });
 }
-export function createExamReview({audio,button,status,onDone}){
- let controller=null,review=null,count=0,running=false,generation=0;
+export function createExamReview({audio,button,status,onDone,gapMs=450}){
+ let controller=null,review=null,count=0,step=0,clips=[],running=false,generation=0;
  function stop(){generation++;controller?.abort();audio.pause();running=false;review=null;}
  async function play(){
   if(running||!review)return;running=true;button.disabled=true;const v=generation;controller=new AbortController();
   try{
-   while(count<2){status.textContent=`🔊 正在聽第 ${count+1} 遍／共 2 遍`;await playToEnd(audio,{signal:controller.signal});if(v!==generation)return;count++;}
+   while(count<2){
+    while(step<clips.length){
+     status.textContent=`🔊 第 ${count+1} 遍／共 2 遍・${step===clips.length-1?'完整題目':'注音 '+(step+1)}`;
+     audio.src=audioSource(clips[step]);await playToEnd(audio,{signal:controller.signal});if(v!==generation)return;step++;
+     if(step<clips.length&&gapMs)await pauseBetween(gapMs,controller.signal);
+    }
+    count++;step=0;if(count<2&&clips.length>1&&gapMs)await pauseBetween(gapMs,controller.signal);
+   }
    status.textContent='✓ 已完整聽兩遍，正在接續小考…';await onDone(review.index);
   }catch(e){if(v!==generation)return;status.textContent='🔊 聲音沒有播完。請確認音量與連線，再點喇叭繼續。';}
   finally{if(v===generation){running=false;button.disabled=false;button.textContent=count>=2?'✓ 接續小考':`🔊 繼續聽第 ${count+1} 遍`;}}
  }
  button.onclick=play;
- return {stop,show(value){stop();review=value;count=0;audio.src=audioSource(value.audio);button.textContent='🔊 一起再聽兩遍';button.disabled=false;void play();}};
+ return {stop,show(value){stop();review=value;count=0;step=0;clips=reviewClips(value);button.textContent='🔊 一起再聽兩遍';button.disabled=false;void play();}};
 }

@@ -12,7 +12,7 @@ import {setupCozyUI} from './cozy-ui.js?v=20260913-heroes1';
 import {createStudentAuth} from './student-auth.js?v=20260926-classes1';
 import {setupStudentLoginGate} from './student-login-gate.js?v=20260927-hub1';
 import {createApiClient} from './api-client.js?v=20260926-classes1';
-import {setupExamEntry} from './exam-entry.js?v=20260926-classes1';
+import {setupExamEntry} from './exam-entry.js?v=20260927-notebooklive1';
 const API='https://zhuyin-api.j822925.workers.dev/api';
 const demo=new URLSearchParams(location.search).get('demo')==='1';
 const names={single:'聲音森林',spelling:'拼音工坊'};
