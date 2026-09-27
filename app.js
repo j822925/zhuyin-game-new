@@ -1,6 +1,7 @@
+import {playTutorOnce} from './exam-review.js?v=20260928-tones1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260926-classes1';
 import {audioSource} from './audio-source.js?v=20260925-originaler1';
-import {createLittleTeacher} from './little-teacher.js?v=20260925-originaler1';
+import {createLittleTeacher} from './little-teacher.js?v=20260928-tones1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260925-blanks1';
 import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round,spellingChoices,spellingParts} from './core.js?v=20260925-blanks1';
 import {createMultiplayer} from './multiplayer.js?v=20260921-picker1';
@@ -18,6 +19,19 @@ const demo=new URLSearchParams(location.search).get('demo')==='1';
 const names={single:'聲音森林',spelling:'拼音工坊'};
 const $=id=>document.getElementById(id);
 const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const reviewAudio=new Audio();let practiceController=null;
+function stopPracticeReview(){practiceController?.abort();practiceController=null;reviewAudio.pause();}
+async function replayWrongSpelling(){
+ stopPracticeReview();audio.pause();voiceHelp.stop();audioReady=false;setAnswerEnabled(false);tutorButton.disabled=true;
+ const controller=new AbortController(),question=rounds[active].current,currentSession=session;practiceController=controller;
+ $('audio-status').textContent='一起聽：聲符 → 帶聲調的韻母 → 完整題目';
+ try{await playTutorOnce(reviewAudio,question,{signal:controller.signal});
+  if(controller.signal.aborted||session!==currentSession||rounds[active]?.current!==question)return;
+  audioReady=true;setAnswerEnabled(!rounds[active].locked);$('audio-status').textContent='換你再拼一次！';
+ }catch{if(!controller.signal.aborted){audioReady=false;setAnswerEnabled(false);$('audio-status').textContent='聲音暫時沒有播完，請按喇叭再聽一次。';}}
+ finally{if(practiceController===controller)practiceController=null;}
+}
+window.addEventListener('pagehide',stopPracticeReview);
 const audio=new Audio();audio.preload='auto';
 const choices=4;
 let config,catalog=[],duo=false,mode='single',rounds=[],active=0,currentPool=[],seats=[],selected={},audioReady=false,session=0,saving=false,latestIds=[];
@@ -44,10 +58,10 @@ let rewards,profiles,loginGate;
 const teamUI=createMultiplayer({localPicker:demo,getIdentity:seat=>profiles?.identity(seat),getOwned:seat=>rewards?.owned(seat),getSeats:()=>[$('seat').value,$('partner').value],onExit:home,onFinish:(payload,html)=>{screen('result');$('result-details').innerHTML=html;persistResults([payload]);}});
 function renderIdentity(){teamUI.refreshPicker();profiles?.renderHeader();if($('change-student'))$('change-student').hidden=!auth.verified($('seat').value);document.querySelector('.mascot').innerHTML=portrait(auth.verified($('seat').value)?profiles?.identity($('seat').value).character||rewards.avatar($('seat').value):rewards.avatar(''));}
 rewards=createRewards({demo,getConfig:()=>config,getSeat:()=>auth.verified($('seat').value)?$('seat').value:'',getSeats:()=>[$('seat').value,$('partner').value].filter(s=>auth.verified(s)),jsonGet,post:payload=>auth.request(payload),onChange:renderIdentity});
-const voiceHelp=setupChildUI({demo,onPreviewBonus:()=>rewards.previewBonus(),onBeforeVoice:()=>audio.pause()});
+const voiceHelp=setupChildUI({demo,onPreviewBonus:()=>rewards.previewBonus(),onBeforeVoice:()=>{stopPracticeReview();audio.pause();}});
 const tutorButton=document.createElement('button');tutorButton.id='little-teacher';tutorButton.hidden=true;tutorButton.setAttribute('aria-label','小老師：看答案，聽拼音示範');tutorButton.innerHTML='<img src="assets/characters/cozy-v1/owl.png" alt=""><span aria-hidden="true">🎓</span>';$('audio-status').after(tutorButton);
 const tutor=createLittleTeacher({onReturn:()=>{clearSpelling();audio.src=audioSource(rounds[active].current.audio);play();}});
-tutorButton.onclick=()=>{const r=rounds[active];if(mode!=='spelling'||!r?.canUseTutor||tutor.open)return;const result=r.useTutor(currentPool);if(result.ignored)return;voiceHelp.stop();audio.pause();audioReady=false;clearSpelling();setAnswerEnabled(false);$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;$('progress-fill').style.width=`${r.index/r.deck.length*100}%`;tutor.show(r.current);};
+tutorButton.onclick=()=>{stopPracticeReview();const r=rounds[active];if(mode!=='spelling'||!r?.canUseTutor||tutor.open)return;const result=r.useTutor(currentPool);if(result.ignored)return;voiceHelp.stop();audio.pause();audioReady=false;clearSpelling();setAnswerEnabled(false);$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;$('progress-fill').style.width=`${r.index/r.deck.length*100}%`;tutor.show(r.current);};
 function clearSpelling(){selected={};for(const b of document.querySelectorAll('.slot')){b.textContent='';b.classList.remove('filled','blank-choice');b.setAttribute('aria-label',b.dataset.slot==='initial'?'聲符位置':'韻符或結合韻位置');}showSpellingTone(document.querySelector('#spelling .slots'),rounds[active].current);$('check-spelling').disabled=true;}
 setupCozyUI();
 profiles=createStudentProfile({demo,auth,getSeat:()=>$('seat').value,getSeats:()=>[$('seat').value,$('partner').value],getOwned:seat=>rewards.owned(seat),getAvatar:seat=>rewards.avatar(seat),onChange:renderIdentity,isHome:()=>!$('home').hidden});
@@ -102,6 +116,7 @@ async function start(id){
 function setAnswerEnabled(enabled){enabled=enabled&&!tutor.open;document.querySelectorAll('.option,.tile,.slot').forEach(b=>b.disabled=!enabled);$('check-spelling').disabled=!enabled||selected.initial===undefined||selected.final===undefined;tutorButton.disabled=!rounds[active]?.canUseTutor||tutor.open;}
 async function play(){
  if(tutor.open)return;
+ if(practiceController){stopPracticeReview();void replayWrongSpelling();return;}
  voiceHelp.stop();
  const currentSession=session,question=rounds[active]?.current;
  if(!question)return;
@@ -111,6 +126,7 @@ async function play(){
 }
 audio.addEventListener('error',()=>{audioReady=false;setAnswerEnabled(false);$('audio-status').textContent='這段聲音暫時無法播放，請再按一次喇叭。';});
 function renderQuestion(){
+ stopPracticeReview();
  tutor.close();tutorButton.hidden=mode!=='spelling'||(!demo&&!config.tutorWrites);
  const r=rounds[active];r.deck[r.index]=spellingParts(r.current);const q=r.current;document.getElementById('game').classList.toggle('spelling-active',mode==='spelling');r.questionStarted=Date.now();selected={};audio.pause();audio.src=audioSource(q.audio);audioReady=false;
  $('world-title').textContent=names[mode];$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;
@@ -123,13 +139,13 @@ function renderQuestion(){
 function place(kind,value){if(!audioReady||rounds[active].locked)return;if(!['initial','final'].includes(kind)||![...document.querySelectorAll('.tile')].some(b=>b.dataset.kind===kind&&b.dataset.value===value))return;selected[kind]=value;if(kind==='final')document.querySelector('#spelling .slots').dataset.finalLength=String(Math.max(value.length,rounds[active].current.final.length));const b=document.querySelector(`[data-slot="${kind}"]`);setVerticalSymbols(b,value);b.setAttribute('aria-label',(kind==='initial'?'聲符：':'韻符：')+(value||'空白'));b.classList.add('filled');$('check-spelling').disabled=selected.initial===undefined||selected.final===undefined;}
 function answer(value,button){
  if(!audioReady)return;const r=rounds[active],outcome=r.answer(value);if(outcome.ignored)return;
- if(!outcome.correct){if(button){button.classList.add('wrong');button.disabled=true;} $('feedback').textContent='🔁 👂';play();return;}
+ if(!outcome.correct){if(button){button.classList.add('wrong');button.disabled=true;} $('feedback').textContent='🔁 👂';if(mode==='spelling')void replayWrongSpelling();else play();return;}
  if(button)button.classList.add('correct');setAnswerEnabled(false);
  $('feedback').textContent=outcome.firstCorrect?'⭐ ✨':'✅ ⭐';
  $('next').textContent=outcome.finished&&active===rounds.length-1?'🎉 →':duo?`${teamUI.character((active+1)%2)} ▶`:'▶';$('next').hidden=false;$('next').focus();
 }
 function next(){const r=rounds[active];if(!r.locked)return;r.next();if(rounds.every(x=>x.index>=x.deck.length)){finish();return;}active=(active+1)%rounds.length;if(rounds[active].index>=rounds[active].deck.length)active=(active+1)%rounds.length;renderQuestion();}
-function finish(){audio.pause();teamUI.stop();screen('result');let html='';const results=[];
+function finish(){stopPracticeReview();audio.pause();teamUI.stop();screen('result');let html='';const results=[];
  rounds.forEach((r,i)=>{const correct=r.deck.length-r.mistakes;html+=`<h2>${safe(seats[i])} 號${r.mistakes===0?' · 全部答對！':''}</h2><div class="metrics"><div><strong>${correct}<small> / ${r.deck.length}</small></strong><span>第一次就答對</span></div><div><strong>${r.mistakes}</strong><span>需要再練的題目</span></div></div>`;const weak=[...new Set(r.rows.filter(x=>!x.firstCorrect).map(x=>x.target))];if(weak.length)html+='<p class="small">這幾個聲音，再當一次好朋友</p><div class="review-chips">'+weak.map(x=>`<button class="review-chip" data-review="${safe(x)}">${safe(x)} ♪</button>`).join('')+'</div>';const progress=read('zhuyin.progress.v2',{});progress[seats[i]]??={};progress[seats[i]][mode]=Math.max(progress[seats[i]][mode]||0,correct);write('zhuyin.progress.v2',progress);const key=`zhuyin.attempt.${seats[i]}`,attempt=read(key,0)+1;write(key,attempt);results.push({roundId:crypto.randomUUID(),seat:seats[i],attempt,total:r.deck.length,mistakes:r.mistakes,mode,seconds:Math.round((Date.now()-r.started)/1000),results:r.rows});});
  if(duo){const a=-rounds[0].mistakes,b=-rounds[1].mistakes;html+=`<p>${a===b?'兩隊平手，一起完成探險！':`${safe(seats[a>b?0:1])} 號得到較多星星，兩位都完成了探險！`}</p>`;}
  $('result-details').innerHTML=html;document.querySelectorAll('[data-review]').forEach(b=>b.onclick=()=>{const q=currentPool.find(x=>(x.displayLabel||x.label)===b.dataset.review);audio.src=audioSource(q.audio);audio.currentTime=0;audio.play().catch(()=>{$('save-status').textContent='複習聲音無法播放，請確認音量與網路。';});});
@@ -155,7 +171,7 @@ for(const id of ['seat','partner'])$(id).onchange=async()=>{const seat=$(id).val
  if(seat&&!await auth.ensure(seat))$(id).value='';else if(id==='seat')auth.setPrimary(seat);
  await rewards.refresh();await profiles.refresh();if(config)refreshHome();renderIdentity();if(!demo)flushPending();};
 $('listen').onclick=play;$('check-spelling').onclick=()=>answer((selected.initial||'')+(selected.final||''));$('next').onclick=next;$('reload').onclick=load;$('demo-basic').onclick=()=>demoConfig(false);$('demo-expanded').onclick=()=>demoConfig(true);$('again').onclick=()=>start(mode);$('retry-save').onclick=flushPending;
-function home(){session++;tutor.close();audio.pause();teamUI.stop();screen('home');if(config)refreshHome();}
+function home(){stopPracticeReview();session++;tutor.close();audio.pause();teamUI.stop();screen('home');if(config)refreshHome();}
 $('back-home').onclick=home;$('leave').onclick=()=>{$('leave-dialog').showModal();};$('stay').onclick=()=>$('leave-dialog').close();$('confirm-leave').onclick=()=>{$('leave-dialog').close();home();};
 // Home is an in-app action, not a document reload that discards the current round/session.
 document.querySelector('.brand').onclick=e=>{e.preventDefault();if(!$('game').hidden||!$('race-game').hidden)$('leave-dialog').showModal();else home();};

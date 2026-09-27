@@ -2,9 +2,15 @@ import {audioSource} from './audio-source.js?v=20260925-originaler1';
 import {SUPPLIED_TUTOR_AUDIO} from './data/supplied-audio.js?v=20260925-originaler1';
 import {BASE,COMPOUNDS} from './core.js?v=20260925-blanks1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260925-blanks1';
+import {TUTOR_TONES} from './data/tutor-tones.js?v=20260928-1';
 export function tutorClips(q){
  const symbolAudio=s=>SUPPLIED_TUTOR_AUDIO[s]||(BASE.includes(s)?'audio/audio_F'+(BASE.indexOf(s)+1)+'.WAV':'audio/compound/c'+String(COMPOUNDS.indexOf(s)+1).padStart(2,'0')+'.mp3');
- return [[q.initial,q.final].filter(Boolean).map(symbolAudio),q.audio].flat();
+ let {initial='',final='',tone=1}=q;
+ if(!final&&(COMPOUNDS.includes(initial)||BASE.slice(21).includes(initial))){final=initial;initial='';}
+ const tonal=final&&tone>1?TUTOR_TONES[final+tone]:null;
+ // Never silently substitute a first-tone final for a missing toned recording.
+ if(final&&tone>1&&!tonal)throw Error('Missing toned final: '+final+tone);
+ return [...(initial?[symbolAudio(initial)]:[]),...(final?[tonal||symbolAudio(final)]:[]),q.audio];
 }
 export function createLittleTeacher({onReturn}){
  const dialog=document.createElement('dialog');dialog.id='tutor-dialog';dialog.setAttribute('aria-label','小老師拼音示範');
@@ -18,7 +24,7 @@ export function createLittleTeacher({onReturn}){
   voice.src=audioSource(clips[step]);
   const fail=()=>{if(token!==generation)return;stop();status.textContent='🔇 請按 🔊 重試';};
   voice.onerror=fail;
-  voice.onended=()=>{if(token!==generation)return;if(step<clips.length-1){step++;timer=setTimeout(()=>playStep(token),450);}else{stop();status.textContent='🙋 ✨';}};
+  voice.onended=()=>{if(token!==generation)return;if(step<clips.length-1){step++;timer=setTimeout(()=>playStep(token),150);}else{stop();status.textContent='🙋 ✨';}};
   try{await voice.play();}catch{fail();}
  }
  function replay(){stop();step=0;playStep(generation);}

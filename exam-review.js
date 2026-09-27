@@ -1,12 +1,14 @@
 import {audioSource} from './audio-source.js?v=20260925-originaler1';
 import {BASE} from './core.js?v=20260925-blanks1';
-import {tutorClips} from './little-teacher.js?v=20260925-blanks1';
+import {tutorClips} from './little-teacher.js?v=20260928-tones1';
 // Answers are supplied only after submission. Empty parts have no sound.
 export function reviewClips(value){
  if(value.mode!=='spelling')return [value.audio];
  const label=String(value.label||'').replace(/[ˊˇˋ˙\s]/g,'').replaceAll('一','ㄧ');
  const initial=BASE.slice(0,21).includes(label[0])?label[0]:'';
- return tutorClips({initial,final:label.slice(initial.length),audio:value.audio});
+ const mark=String(value.label||'').match(/[ˊˇˋ˙]/)?.[0];
+ const tone=mark?{'ˊ':2,'ˇ':3,'ˋ':4,'˙':5}[mark]:1;
+ return tutorClips({initial,final:label.slice(initial.length),tone,audio:value.audio});
 }
 function pauseBetween(ms,signal){return new Promise((resolve,reject)=>{
  const abort=()=>{clearTimeout(timer);reject(Error('cancelled'));};
@@ -26,7 +28,15 @@ export function playToEnd(audio,{signal,timeoutMs=20000}={}){
   try{audio.currentTime=0;Promise.resolve(audio.play()).catch(failed);}catch{failed();}
  });
 }
-export function createExamReview({audio,button,status,onDone,gapMs=450}){
+export async function playTutorOnce(audio,question,{signal,gapMs=150}={}){
+ const clips=tutorClips(question),cancellation=signal||new AbortController().signal;
+ for(let i=0;i<clips.length;i++){
+  if(cancellation.aborted)throw Error('cancelled');
+  audio.src=audioSource(clips[i]);await playToEnd(audio,{signal:cancellation});
+  if(i<clips.length-1&&gapMs)await pauseBetween(gapMs,cancellation);
+ }
+}
+export function createExamReview({audio,button,status,onDone,gapMs=150}){
  let controller=null,review=null,count=0,step=0,clips=[],running=false,generation=0;
  function stop(){generation++;controller?.abort();audio.pause();running=false;review=null;}
  async function play(){

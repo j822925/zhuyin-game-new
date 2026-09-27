@@ -5,7 +5,7 @@ import {createStudentAuth} from './student-auth.js?v=20260926-classes1';
 import {createStarCollection} from './star-cards-ui.js?v=20260919-egg1';
 import {PROFILE_CHARACTERS} from './student-profile.js?v=20260926-classes1';
 import {portrait} from './characters.js?v=20260913-heroes1';
-import {createExamReview} from './exam-review.js?v=20260927-parts2';
+import {createExamReview} from './exam-review.js?v=20260928-tones1';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config=null,seat='',examId=new URLSearchParams(location.search).get('id')||'',state=null,exams=[],busy=false,heard=false,selection={},offset=0,expiryTried=false,renderVersion=0;
 const pendingMemory=new Map();
