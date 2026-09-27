@@ -3,6 +3,8 @@ import {SUPPLIED_SYLLABLE_AUDIO,SUPPLIED_LISTENING_AUDIO,SUPPLIED_SOURCE_AUDIO} 
 export function audioSource(source){
  if(typeof source!=='string')return source;
  const base=source.split(/[?#]/,1)[0];
+ // Teacher-approved original-pitch whole ㄅㄛˋ; preserve saved question IDs.
+ if(['audio/processed-20260925/m_1_26_40.mp3','audio/supplied-20260923/m_1_26_40.mp3','audio/supplied-20260925/m_1_26_40.mp3'].includes(base))return 'audio/original-bo4-20260928.wav'+source.slice(base.length);
  // Teacher-selected original standalone ㄦ; keep all syllable recordings unchanged.
  if(['audio/audio_F34.WAV','audio/processed-20260925/s_37.mp3','audio/supplied-20260923/s_37.mp3','audio/supplied-20260925/s_37.mp3'].includes(base))return 'audio/original-er-20260925.wav'+source.slice(base.length);
  const own=(map,key)=>Object.prototype.hasOwnProperty.call(map,key);

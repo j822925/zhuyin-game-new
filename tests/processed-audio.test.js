@@ -10,7 +10,7 @@ test('all 1450 files use -0.5 semitone at original tempo; 1322 demonstrations ar
 });
 test('saved original source paths refresh to processed files and query/hash suffixes survive',()=>{
  for(const a of report.files)for(const date of ['20260923','20260925']){
-  const old='audio/supplied-'+date+'/'+a.file,expected=a.file==='s_37.mp3'?'audio/original-er-20260925.wav':a.path;assert.equal(audioSource(old),expected);assert.equal(audioSource(old+'?v=old#sound'),expected+'?v=old#sound');assert.equal(audioSource(a.path),expected);
+  const old='audio/supplied-'+date+'/'+a.file,expected=a.file==='m_1_26_40.mp3'?'audio/original-bo4-20260928.wav':a.file==='s_37.mp3'?'audio/original-er-20260925.wav':a.path;assert.equal(audioSource(old),expected);assert.equal(audioSource(old+'?v=old#sound'),expected+'?v=old#sound');assert.equal(audioSource(a.path),expected);
  }
  for(const path of ['https://other.invalid/audio/supplied-20260925/m_42.mp3','audio/supplied-20260925/m_9999.mp3','__proto__'])assert.equal(audioSource(path),path);
 });

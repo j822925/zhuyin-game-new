@@ -1,6 +1,6 @@
-import {audioSource} from './audio-source.js?v=20260925-originaler1';
+import {audioSource} from './audio-source.js?v=20260928-bo4original1';
 import {BASE as SYMBOLS,COMPOUNDS as FINALS,poolFor} from './core.js?v=20260925-blanks1';
-export function gameSamples(rows){return poolFor('spelling',{symbols:SYMBOLS,compounds:FINALS},rows).filter(s=>audioSource(s.audio).startsWith('audio/processed-'));}
+export function gameSamples(rows){return poolFor('spelling',{symbols:SYMBOLS,compounds:FINALS},rows).filter(s=>(audioSource(s.audio).startsWith('audio/processed-')||audioSource(s.audio)==='audio/original-bo4-20260928.wav'));}
 // One native player for the entire catalogue: avoid hundreds of Safari media controls.
 export const PAGE_SIZE=18;
 export function samplePage(rows,initial='',page=0,query=''){
