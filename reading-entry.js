@@ -10,6 +10,7 @@ function attach(){const worlds=document.querySelector('#home .worlds');if(!world
 async function enableEntry(){
  const local=['localhost','127.0.0.1','[::1]'].includes(location.hostname);
  const demo=new URLSearchParams(location.search).get('demo')==='1';
+ if(demo)return; // Teacher preview now lives in the unified testing hub.
  if(!(local&&demo)){
   try{const config=await createApiClient('https://zhuyin-api.j822925.workers.dev/api').get({api:'config'});if(config.readingWrites!==true)return;}catch{return;}
  }

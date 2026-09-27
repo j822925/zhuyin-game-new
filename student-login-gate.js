@@ -16,6 +16,7 @@ export function setupStudentLoginGate({auth,getSeat,selectSeat,getSeats,onRetry,
  $('login-guide-retry').onclick=async()=>{$('login-guide-retry').disabled=true;try{await onRetry();update();}finally{$('login-guide-retry').disabled=false;}};
  document.addEventListener('click',event=>{
   const target=event.target.closest?.('button,a,select,input');
+  if(new URLSearchParams(location.search).get('demo')==='1'&&target?.closest('#teacher-testing-hub'))return;
   if(!target||target.closest('dialog')||!target.closest('header,#home')||target.id==='seat'||auth.verified(getSeat()))return;
   event.preventDefault();event.stopImmediatePropagation();
   open(target.matches('button,a')?target:null);
