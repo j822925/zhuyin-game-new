@@ -1,6 +1,7 @@
 import {readingDeck,readingStars,matchesReading,READING_WORDS} from './reading-core.js?v=20260926-reading1';
 import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic4';
 import {createMicCheck} from './reading-mic-check.js?v=20260928-mic3';
+import {createMicPreference} from './reading-mic-preference.js?v=20260928-memory1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260926-classes1';
 import {createApiClient} from './api-client.js?v=20260926-classes1';
 import {createStudentAuth} from './student-auth.js?v=20260926-classes1';
@@ -46,7 +47,15 @@ window.addEventListener('pagehide',cancel);
 // Permission prompts may blur the window. Only leaving/hiding the page cancels.
 $('mic-check').hidden=!(demo&&localPreview);
 if(allowMicCheck){
- $('mic-routing-note').textContent=sharedMicrophone?'上方朗讀與下方回放檢查都使用這個選單選擇的麥克風。':'此瀏覽器的朗讀辨識使用預設麥克風，選單只控制回放檢查。iPad 請使用 Safari，並確認 Siri／聽寫可用；電腦請在瀏覽器麥克風設定選用同一裝置。';
+ $('mic-routing-note').textContent=sharedMicrophone?'上方朗讀與下方回放檢查都使用這個選單選擇的麥克風。':'iPad／Safari 朗讀每次都使用系統預設麥克風，不必在這裡重選。此選單只設定回放檢查，無法更改朗讀收音或麥克風權限。iPad 請用 Safari，並保持 Siri／聽寫可用。';
+ const preference=createMicPreference();
+ function showPreference(){
+  const choice=preference.choice,scope=sharedMicrophone?'朗讀與回放':'回放檢查';
+  $('mic-preference-note').textContent=!choice?`選擇後會自動記住這台裝置、這個瀏覽器的${scope}麥克風。`:preference.saved?`已記住${scope}麥克風：${choice.label||'所選麥克風'}。下次進來會自動選回來。`:`這次已選用${scope}麥克風，但瀏覽器無法儲存設定，下次可能需要重新選擇。`;
+ }
+ const remembered=preference.choice;
+ if(remembered?.deviceId){$('mic-device').append(new Option(remembered.label||'已記住的麥克風',remembered.deviceId));$('mic-device').value=remembered.deviceId;}
+ showPreference();
  let deviceRefresh=0;
  async function refreshMicrophones(){
   const request=++deviceRefresh;
@@ -55,9 +64,10 @@ if(allowMicCheck){
    if(request!==deviceRefresh)return;
    const selected=$('mic-device').value,options=[new Option('瀏覽器預設麥克風','')];
    for(const [i,d] of inputs.entries())if(d.deviceId)options.push(new Option(d.label||`麥克風 ${i+1}（允許權限後顯示名稱）`,d.deviceId));
-   if(selected&&!inputs.some(d=>d.deviceId===selected))options.push(new Option('原先選擇的麥克風已中斷，請重新選擇',selected));
+   const missing=selected&&!inputs.some(d=>d.deviceId===selected);
+   if(missing)options.push(new Option(`${preference.choice?.label||'已選擇的麥克風'}（暫時找不到）`,selected));
    $('mic-device').replaceChildren(...options);$('mic-device').value=selected;
-   $('mic-device-note').textContent=inputs.some(d=>d.label)?'筆電請選 Microphone Array／內建麥克風。Steam Streaming 是虛擬裝置。':'若清單沒有裝置名稱，請先按一次測試並允許麥克風，再選擇裝置重錄。';
+   $('mic-device-note').textContent=missing?'暫時找不到已選擇的麥克風。請確認已連接、允許麥克風後更新清單；必要時重新選擇。系統會保留原本的選擇。':inputs.some(d=>d.label)?'筆電請選 Microphone Array／內建麥克風。Steam Streaming 是虛擬裝置。':'若清單沒有裝置名稱，請先按一次測試並允許麥克風，再選擇裝置重錄。';
   }catch{$('mic-device-note').textContent='無法讀取麥克風清單，請檢查這個網站的麥克風權限。';}
  }
  const messages={permission:'請允許麥克風；允許後會錄四秒。',recording:'正在錄四秒：請說「一、二、三，測試」。',ready:'錄好了，請按下方播放。若仍無聲，請確認上方實際收音裝置，再選 Microphone Array 重錄；也請確認播放音量沒有靜音。',idle:'檢查已取消。',denied:'麥克風權限被拒絕，請在網址列的網站權限允許麥克風。',missing:'找不到選擇的麥克風，請更新清單並重新選擇。',error:'無法錄音，請確認麥克風沒有被其他程式獨占。',empty:'錄音沒有收到資料，請檢查電腦選用的輸入裝置。','permission-timeout':'等待麥克風權限逾時，可以再按一次測試。'};
@@ -69,7 +79,7 @@ if(allowMicCheck){
   $('mic-status').textContent=messages[state];
  },onClip(blob){clearClip();clipUrl=URL.createObjectURL(blob);$('mic-playback').src=clipUrl;$('mic-playback').hidden=false;}});
  $('mic-test').onclick=()=>{speech?.cancel();clearClip();$('mic-active-device').textContent='正在開啟選擇的麥克風…';micCheck.start({deviceId:$('mic-device').value});};$('mic-cancel').onclick=()=>micCheck.cancel();
- $('mic-device').onchange=()=>{clearClip();$('mic-active-device').textContent='已選擇新裝置，請按測試重新錄音。';};
+ $('mic-device').onchange=()=>{clearClip();const select=$('mic-device');preference.select(select.value,select.selectedOptions[0]?.textContent||'所選麥克風');showPreference();$('mic-active-device').textContent='已選擇新裝置，請按測試重新錄音。';refreshMicrophones();};
  $('mic-refresh').onclick=refreshMicrophones;
  navigator.mediaDevices?.addEventListener?.('devicechange',refreshMicrophones);
  if(navigator.mediaDevices?.enumerateDevices)refreshMicrophones();
