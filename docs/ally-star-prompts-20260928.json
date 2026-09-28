@@ -1,0 +1,31 @@
+{
+  "tool": "Built-in image_gen",
+  "transparent_background": true,
+  "reference": "assets/monsters/{id}-v1.png",
+  "assets": [
+    {
+      "id": "twilight-count",
+      "prompt": "Use case: identity-preserve. Reference image is the EXACT established game character. Create ONE full body reward pose of this same character with identical proportions, face, species, fur/hair, horns, ears, wings, clothing, colors, metal details and render texture. Warm proud subtle smile, eyes open. Both existing hands/paws clearly cradle ONE golden five pointed star against the middle of chest. Any weapon/staff/mask is stowed out of view so both hands are free. Keep original number of limbs; do not humanize animal faces. Keep the original elegant slightly mischievous personality. Body faces front or slightly LEFT. Full figure including feet, horns, wings, tail and cape visible; centered with large 10% transparent margins all around. No pedestal, ground, cast shadow, text, other stars or particles. TRUE transparent background. A single isolated silhouette; not a sprite sheet. The character has been recruited as the child's ally and is happily receiving a star. No outfit redesign.",
+      "target": "assets/battle-sprites/ally-stars/twilight-count-star-v1.png",
+      "generation_file": "exec-2c310aa3-6e2a-4b52-9ded-0db41e895339.png"
+    },
+    {
+      "id": "frost-fox",
+      "prompt": "Use case: identity-preserve. Reference image is the EXACT established game character. Create ONE full body reward pose of this same character with identical proportions, face, species, fur/hair, horns, ears, wings, clothing, colors, metal details and render texture. Warm proud subtle smile, eyes open. Both existing hands/paws clearly cradle ONE golden five pointed star against the middle of chest. Any weapon/staff/mask is stowed out of view so both hands are free. Keep original number of limbs; do not humanize animal faces. Keep the original elegant slightly mischievous personality. Body faces front or slightly LEFT. Full figure including feet, horns, wings, tail and cape visible; centered with large 10% transparent margins all around. No pedestal, ground, cast shadow, text, other stars or particles. TRUE transparent background. A single isolated silhouette; not a sprite sheet. The character has been recruited as the child's ally and is happily receiving a star. No outfit redesign.",
+      "target": "assets/battle-sprites/ally-stars/frost-fox-star-v1.png",
+      "generation_file": "exec-0bd05fbf-3ef5-45c3-a23e-cf2dd35d0798.png"
+    },
+    {
+      "id": "rose-knight",
+      "prompt": "Use case: identity-preserve. Reference image is the EXACT established game character. Create ONE full body reward pose of this same character with identical proportions, face, species, fur/hair, horns, ears, wings, clothing, colors, metal details and render texture. Warm proud subtle smile, eyes open. Both existing hands/paws clearly cradle ONE golden five pointed star against the middle of chest. Any weapon/staff/mask is stowed out of view so both hands are free. Keep original number of limbs; do not humanize animal faces. Keep the original elegant slightly mischievous personality. Body faces front or slightly LEFT. Full figure including feet, horns, wings, tail and cape visible; centered with large 10% transparent margins all around. No pedestal, ground, cast shadow, text, other stars or particles. TRUE transparent background. A single isolated silhouette; not a sprite sheet. The character has been recruited as the child's ally and is happily receiving a star. No outfit redesign.",
+      "target": "assets/battle-sprites/ally-stars/rose-knight-star-v1.png",
+      "generation_file": "exec-23595dbd-ba60-4d9b-a4cf-9100b26d5508.png"
+    },
+    {
+      "id": "raven-masquerade",
+      "prompt": "Create a transparent PNG game sprite of this SAME full body white-haired elf raven masquerade character in exactly the same costume and proportions. Both gloved hands hold a golden five point reward star at the chest, mask and weapon put away. Friendly slight smile. Pose facing slightly left. Entire character from horn to boots visible, with transparent margin. CRITICAL: isolate the character against TRUE transparent alpha, no backdrop at all, NO dark black gray or colored background, no halo or aura, no shadows or fog. Flat empty transparent surroundings. Single reward pose for a 2D game. Keep identical character design.",
+      "target": "assets/battle-sprites/ally-stars/raven-masquerade-star-v1.png",
+      "generation_file": "exec-e48b9fdb-267a-45b7-932e-1f3a2d99b649.png"
+    }
+  ]
+}

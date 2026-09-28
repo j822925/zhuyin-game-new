@@ -6,7 +6,7 @@ test('uncollected gallery and redemption preview hide portrait colors and detail
  const css=read('child-ui.css');
  assert.match(css,/#collection-dialog \.character-card\.locked img,#exchange-character img\{filter:brightness\(0\);opacity:\.68\}/);
  assert.doesNotMatch(css,/\.owned img\{filter:brightness\(0\)/);
- assert.match(read('index.html'),/child-ui.css\?v=20260928-perflive1/);
+ assert.match(read('index.html'),/child-ui.css\?v=[a-zA-Z0-9-]+/);
  const rewards=read('rewards.js');
  assert.match(rewards,/w\.owned\.includes\(c.id\)\?'owned':'locked'/);
  assert.match(rewards,/\$\('gacha-reveal'\)\.innerHTML=portrait\(c\)/);

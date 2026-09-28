@@ -1,23 +1,25 @@
+import {MONSTERS} from './data/monsters.js?v=20260928-all1';
+import {demoMonsters} from './monster-cards-ui.js?v=20260928-allies1';
 import {classStorageKey} from './class-context.js?v=20260928-all1';
 import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260928-all1';
 import {STAR_CARDS} from './data/star-cards.js?v=20260928-all1';
 import {STAR_SPRITES} from './data/star-sprites.js?v=20260928-all1';
-import {mountCharacter,clearCharacters} from './character-motion.js?v=20260928-size1';
-export const PROFILE_CHARACTERS=[...CHARACTERS,...STAR_CARDS.map(c=>({...c,image:STAR_SPRITES[c.id],emoji:'✨',name:c.symbol+'之星使・'+c.name}))];
+import {mountCharacter,clearCharacters} from './character-motion.js?v=20260928-allies1';
+export const PROFILE_CHARACTERS=[...CHARACTERS,...MONSTERS.map(c=>({...c,category:'ally',emoji:'✨'})),...STAR_CARDS.map(c=>({...c,image:STAR_SPRITES[c.id],emoji:'✨',name:c.symbol+'之星使・'+c.name}))];
 const $=id=>document.getElementById(id);
 export function createStudentProfile({demo,auth,getSeat,getSeats,getOwned,getAvatar,onChange,isHome=()=>true}){
  const cache=new Map();let version=0,openedSeat='',draftAvatar='',busy=false,loaded=false;
  const button=document.createElement('button');button.id='open-profile';button.type='button';button.setAttribute('aria-haspopup','dialog');
  document.querySelector('.top-actions').prepend(button);
  const dialog=document.createElement('dialog');dialog.id='profile-dialog';dialog.setAttribute('aria-labelledby','profile-title');
- dialog.innerHTML='<div class="profile-top"><h2 id="profile-title">我的角色</h2><button id="profile-close" type="button" aria-label="關閉我的角色">✕</button></div><p id="profile-seat"></p><div class="profile-preview" id="profile-preview"></div><p id="profile-character-name"></p><form id="profile-form"><label for="profile-nickname">角色名稱（最多 12 個字）</label><input id="profile-nickname" autocomplete="off" placeholder="幫自己取個冒險名字"><p class="profile-hint">可以用中文、英文、數字；留白就使用原本名字。老師仍看得到你的真實姓名。</p><h3>選擇我的角色</h3><div id="profile-choices"></div><p id="profile-message" role="status" aria-live="polite"></p><button id="profile-save" type="submit">儲存我的角色</button><button id="profile-reload" type="button">重新讀取</button></form>';
+ dialog.innerHTML='<div class="profile-top"><h2 id="profile-title">我的角色</h2><button id="profile-close" type="button" aria-label="關閉我的角色">✕</button></div><p id="profile-seat"></p><div class="profile-preview" id="profile-preview"></div><p id="profile-character-name"></p><form id="profile-form"><label for="profile-nickname">角色名稱（最多 12 個字）</label><input id="profile-nickname" autocomplete="off" placeholder="幫自己取個冒險名字"><p class="profile-hint">可以用中文、英文、數字；留白就使用原本名字。老師仍看得到你的真實姓名。</p><h3>選擇我的角色</h3><p class="profile-hint">收服的可愛反派也會加入這裡，成為陪你作答的夥伴。</p><div id="profile-choices"></div><p id="profile-message" role="status" aria-live="polite"></p><button id="profile-save" type="submit">儲存我的角色</button><button id="profile-reload" type="button">重新讀取</button></form>';
  document.body.append(dialog);
  function character(id){return PROFILE_CHARACTERS.find(c=>c.id===id)||CHARACTERS[0];}
  function identity(seat){const p=auth.verified(seat)?cache.get(seat):null;return {seat,name:p?.nickname||p?.name||seat+' 號',character:p?character(p.avatar):getAvatar(seat)};}
  function renderHeader(){const seat=getSeat(),person=seat&&auth.verified(seat)?identity(seat):null;button.replaceChildren();const face=document.createElement('span');face.className='profile-head';face.innerHTML=portrait(person?.character||CHARACTERS[0],'character-portrait portrait-small');const name=document.createElement('span');name.className='profile-header-name';name.textContent=person?person.name:'我的角色';button.append(face,name);button.setAttribute('aria-label',person?`${seat} 號 ${person.name}，開啟我的角色`:'我的角色，請先選座號登入');button.disabled=!isHome();}
  function remember(p){cache.set(p.seat,p);renderHeader();onChange?.();return p;}
  async function fetchProfile(seat){
-  if(demo){let old;try{old=JSON.parse(localStorage.getItem('zhuyin.demo.profile.'+seat)||'null');}catch{}return {seat,name:'',nickname:old?.nickname||'',avatar:old?.avatar||getAvatar(seat).id,owned:getOwned(seat)||STARTERS,revision:old?.revision||0};}
+  if(demo){let old;try{old=JSON.parse(localStorage.getItem('zhuyin.demo.profile.'+seat)||'null');}catch{}return {seat,name:'',nickname:old?.nickname||'',avatar:old?.avatar||getAvatar(seat).id,owned:[...new Set([...(getOwned(seat)||STARTERS),...demoMonsters(seat).owned.map(c=>c.monster)])],revision:old?.revision||0};}
   const p=await auth.request({kind:'profile',seat});if(p.error)throw Error(p.error);
   // Preserve the previous device-only avatar until the first explicit profile save.
   if(!p.revision){try{const previous=localStorage.getItem(classStorageKey('zhuyin.avatar.'+seat)),id=previous&&JSON.parse(previous);if(p.owned.includes(id))p.avatar=id;}catch{}}

@@ -1,5 +1,5 @@
 // Effects use a separate transparent plane: questions never move or lose focus.
-import {BATTLE_META} from './data/battle-catalog.js?v=20260928-all1';
+import {BATTLE_META} from './data/battle-catalog.js?v=20260928-allies1';
 const palettes={leaf:'#bfe08e',petal:'#ffd0b7',honey:'#ffc562',cloud:'#d7e9ff',ice:'#a4e5ff',sun:'#ffdf7c',star:'#ffe6a0',moon:'#d1b6ff',bubble:'#99e5e8',rainbow:'#dfbbff',berry:'#ff9ac1',slash:'#ffe2a1',electric:'#fff292',dash:'#b6defe',wind:'#c2eee1',arrow:'#d4dc9c',music:'#ffc7ee',rock:'#dcb398',heart:'#ffb7d3'};
 const skillNames={leaf:'綠葉飛旋',petal:'花花飛舞',honey:'甜蜜光波',cloud:'雲朵突擊',ice:'冰晶飛舞',sun:'陽光出擊',star:'星光閃耀',moon:'月光魔法',bubble:'泡泡波浪',rainbow:'彩虹旋舞',berry:'莓果飛舞',slash:'流光斬',electric:'閃電衝擊',dash:'疾速突擊',wind:'旋風出擊',arrow:'追光箭',music:'音符魔法',rock:'大地震波',heart:'愛心光波'};
 function mote(c,kind,x,y,r,a,color,alpha=1){

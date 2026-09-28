@@ -4,14 +4,14 @@ import {CHARACTER_CATALOG} from './data/character-catalog.js';
 import {STAR_SPRITES} from './data/star-sprites.js';
 import {audioSource} from './audio-source.js?v=20260928-all1';
 import {STAR_CARDS} from './data/star-cards.js';
-import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20260928-size1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20260928-size1';
+import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20260928-allies1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20260928-allies1';
 import {MONSTERS} from './data/monsters.js?v=20260928-all1';
-import {showMonsterReward} from './monster-cards-ui.js?v=20260928-all1';
+import {showMonsterReward} from './monster-cards-ui.js?v=20260928-allies1';
 const $=id=>document.getElementById(id),SESSION=classStorageKey('zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':live');
 const ENDPOINT=location.hostname==='127.0.0.1'?location.origin:'https://zhuyin-api.j822925.workers.dev';
 
-const avatars=Object.fromEntries(CHARACTER_CATALOG.map(c=>[c.id,c.image]));Object.assign(avatars,STAR_SPRITES);
+const avatars=Object.fromEntries(CHARACTER_CATALOG.map(c=>[c.id,c.image]));Object.assign(avatars,STAR_SPRITES,Object.fromEntries(MONSTERS.map(c=>[c.id,c.image])));
 const avatar=id=>avatars[id]||CHARACTER_CATALOG.find(c=>c.starter)?.image;
 const messages={client_update_required:'這間房使用新題型，請先重新整理遊戲再加入。',invalid_pin:'密碼不正確，再試一次。',locked:'密碼試了太多次，請等五分鐘。',login_required:'登入到期了，請重新選座號、輸入密碼。',room_missing:'找不到這個房間，請問同學新的四位房號。',room_full:'這個房間已經有兩位同學了。',room_closed:'這個房間已結束，回首頁再開一間吧！',already_in_room:'你已經在另一個房間，先回去或離開那間房。',capacity:'現在房間比較多，等同學玩完再試。',disabled:'連線對戰暫時休息，晚一點再來。',slow_down:'按得太快了，請稍等一下再試。',device_active:'這個座號正在另一台平板玩。確定要換到這台嗎？',wrong_phase:'正在等同學，請稍等畫面更新。',answer_closed:'本題已收到作答或已結束，請等結果。',stale_command:'畫面已更新，請依目前題目繼續。',temporarily_unavailable:'網路還沒回覆，請稍後按重新連線。',ticket_invalid:'連線驗證過期，請按重新連線。',player_left:'同學先離開了，這場不發獎勵。',teacher_closed:'老師結束了這個房間。',room_expired:'等待時間到了，回首頁重新開房間。',disconnect_timeout:'等候連線逾時，這場未完成，可以重新找同學。',too_many_interruptions:'這場連線不穩，先檢查網路再開新房間。',audio_timeout:'聲音還沒播完，確認音量後一起繼續。'};
 let identityReady=false;
@@ -66,7 +66,7 @@ function renderMotion(s){
  if(s.phase==='ready'&&!encounter?.monsterId)$('action').disabled=true;
  const visible=!!p&&!['waiting','ready','closed'].includes(s.phase);onlineOpponent.hidden=onlineHero.hidden=!visible;if(!visible)return;
  const question=s.matchId+':'+s.index,person=j+':'+p.avatar;
- if(person!==motionPerson){motionPerson=person;const c=[...CHARACTER_CATALOG,...STAR_CARDS].find(c=>c.id===p.avatar)||CHARACTER_CATALOG[0];mountCharacter(onlineHero,{...c,image:avatar(p.avatar)});}
+ if(person!==motionPerson){motionPerson=person;const c=[...CHARACTER_CATALOG,...STAR_CARDS,...MONSTERS].find(c=>c.id===p.avatar)||CHARACTER_CATALOG[0];mountCharacter(onlineHero,{...c,image:avatar(p.avatar)});}
  if(question!==motionQuestion){onlineBattle.reset();reactCharacter(onlineHero,'idle');motionQuestion=question;motionEvent='';}
  const completed=s.mode==='turn'?Math.min(10,Math.floor(s.index/2)+(s.index%2>j||s.phase==='result'&&s.activePlayer===j?1:0)):s.scores[j];
  updateOpponent(onlineOpponent,MONSTERS.find(c=>c.id===encounter?.monsterId)||MONSTERS[0],10,completed,{wins:encounter?.monsterWins||0,perfect:s.mode==='turn'?s.scores[j]>=completed:s.scores[j]===s.index});

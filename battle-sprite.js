@@ -1,11 +1,16 @@
 // Battle art and timing are independent of the home/wardrobe skeleton.
-import {drawBlossom} from './battle-effects.js?v=20260928-all1';
-import {BATTLE_ART,BATTLE_META} from './data/battle-catalog.js?v=20260928-all1';
+import {drawBlossom} from './battle-effects.js?v=20260928-allies1';
+import {BATTLE_ART,BATTLE_META} from './data/battle-catalog.js?v=20260928-allies1';
 export {BATTLE_ART};
 export const BATTLE_DURATIONS={attack:1250,hurt:1700,victory:1600,star:1900};
 const pivots={knight:[[253,431],[645,429],[1137,427],[1584,425],[242,852],[706,854],[1115,862],[1543,863]],rabbit:[[230,453],[679,453],[1142,453],[1587,453],[237,872],[663,872],[1090,872],[1544,872]]};
 const clamp=v=>Math.max(0,Math.min(1,v)),smooth=v=>{v=clamp(v);return v*v*(3-2*v);};
 const caches=new Map();
+const starFrames=new Map();
+function loadAllyStar(id){
+ if(starFrames.has(id))return starFrames.get(id);
+ const pending=(async()=>{const image=new Image();image.src='assets/battle-sprites/ally-stars/'+id+'-star-v1.png';await image.decode();const c=document.createElement('canvas');c.width=image.width;c.height=image.height;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(image,0,0);const data=ctx.getImageData(0,0,c.width,c.height).data;let left=c.width,top=c.height,right=0,bottom=0;for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++)if(data[(y*c.width+x)*4+3]>=40){left=Math.min(left,x);top=Math.min(top,y);right=Math.max(right,x);bottom=Math.max(bottom,y);}if(right<=left)throw Error('Empty ally star pose');const frame=document.createElement('canvas');frame.width=right-left+7;frame.height=bottom-top+7;frame.getContext('2d').drawImage(image,left-3,top-3,frame.width,frame.height,0,0,frame.width,frame.height);return {image:frame,pivot:[frame.width/2,frame.height-3],scale:Math.min(350/(frame.height-3),400/frame.width)};})();starFrames.set(id,pending);pending.catch(()=>starFrames.delete(id));return pending;
+}
 
 // Generated silhouettes cross nominal grid lines. Isolate connected silhouettes
 // once on load, retaining edge alpha, instead of chopping weapons at cell edges.
@@ -69,19 +74,21 @@ export function battlePose(kind,action,t,reduced=false){
 }
 
 export class BattleSprite{
- constructor(canvas){this.canvas=canvas;this.ctx=canvas.getContext('2d');canvas.width=canvas.height=480;this.id='knight';this.action='idle';this.started=0;this.last=0;this.token=0;this.reduced=matchMedia('(prefers-reduced-motion: reduce)');this.tick=this.tick.bind(this);this.frame=requestAnimationFrame(this.tick);}
- async character(id){const token=++this.token,frames=await loadAtlas(id);if(this.disposed||token!==this.token)return;this.id=id;this.frames=frames;this.ready=true;this.canvas.dataset.ready=id;this.canvas.dataset.renderer='battle-sprites';}
+ constructor(canvas,{side=null}={}){this.canvas=canvas;this.side=side;this.ctx=canvas.getContext('2d');canvas.width=canvas.height=480;this.id='knight';this.action='idle';this.started=0;this.last=0;this.token=0;this.reduced=matchMedia('(prefers-reduced-motion: reduce)');this.tick=this.tick.bind(this);this.frame=requestAnimationFrame(this.tick);}
+ async character(id){const token=++this.token,frames=await loadAtlas(id),star=this.side==='hero'&&BATTLE_META[id]?.enemy?await loadAllyStar(id).catch(()=>null):null;if(this.disposed||token!==this.token)return;this.id=id;this.frames=frames;this.starFrame=star;this.ready=true;this.canvas.dataset.ready=id;this.canvas.dataset.side=this.side||(BATTLE_META[id]?.enemy?'enemy':'hero');this.canvas.dataset.renderer='battle-sprites';}
  play(action){this.action=action;this.started=performance.now();this.canvas.dataset.action=action;}
  tick(now){if(this.disposed)return;if(this.canvas.isConnected)this.wasConnected=true;else if(this.wasConnected){this.dispose();return;}this.frame=requestAnimationFrame(this.tick);if(document.hidden||now-this.last<1000/30||!this.canvas.getClientRects().length)return;this.last=now;const duration=BATTLE_DURATIONS[this.action],t=duration?clamp((now-this.started)/duration):0;if(duration&&t>=1&&this.action!=='star')this.play('idle');this.draw(t,now/1000);}
  draw(t,clock){if(!this.frames)return;const c=this.ctx,p=battlePose(this.id,this.action,t,this.reduced.matches);c.clearRect(0,0,480,480);this.canvas.dataset.face=String(p.face);this.canvas.dataset.pose=String(p.frame);
-  const spell=this.id==='rabbit',active=this.action==='attack';
-  const drawFrame=(x,alpha=1)=>{const f=this.frames[p.frame],s=f.scale;let anchor=(pivots[this.id]?274:240)+p.x+x;
+  const spell=this.id==='rabbit',active=this.action==='attack',ally=this.side==='hero'&&BATTLE_META[this.id]?.enemy,star=ally&&this.action==='star';
+  c.save();if(ally&&!star){c.translate(480,0);c.scale(-1,1);}this.canvas.dataset.facing=ally?'left':BATTLE_META[this.id]?.enemy?'right':'left';
+  const drawFrame=(x,alpha=1)=>{const f=star?(this.starFrame||this.frames[6]):this.frames[p.frame],s=f.scale;let anchor=(pivots[this.id]?274:240)+p.x+x;
    if(BATTLE_META[this.id]?.enemy){const turn=Math.abs(Math.sin(p.angle*Math.PI/180))*f.image.height*s;anchor=Math.max(8+f.pivot[0]*s+turn,Math.min(472-(f.image.width-f.pivot[0])*s-turn,anchor));}
    c.save();c.globalAlpha=alpha;c.translate(anchor,416+p.y);c.rotate(p.angle*Math.PI/180);c.drawImage(f.image,-f.pivot[0]*s,-f.pivot[1]*s,f.image.width*s,f.image.height*s);c.restore();};
   if(!spell&&['slash','dash','arrow'].includes(BATTLE_META[this.id]?.fx)&&active&&!this.reduced.matches&&t>.26&&t<.58){const d=BATTLE_META[this.id]?.enemy?-1:1;drawFrame(34*d,.09);drawFrame(18*d,.17);}
   // Cotton Rabbit keeps the garden identity: a few soft blossoms, no mage sigil.
   if(spell&&active&&!this.reduced.matches&&t>.2&&t<.7){const q=(t-.2)/.5;for(let i=0;i<3;i++)drawBlossom(c,161-q*30+i*14,266-i*23-q*30,6+i,q*2+i,Math.sin(q*Math.PI)*.65);}
   drawFrame(0);
+  c.restore();
   if(this.action==='star'){c.save();c.globalAlpha=.28+.12*Math.sin(this.reduced.matches?0:clock*2);const y=spell?295:246,glow=c.createRadialGradient(264,y,2,264,y,46);glow.addColorStop(0,'#fff4bb');glow.addColorStop(1,'#ffe78a00');c.fillStyle=glow;c.fillRect(210,y-54,108,108);c.restore();}
  }
  dispose(){this.disposed=true;this.token++;cancelAnimationFrame(this.frame);}

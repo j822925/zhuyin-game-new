@@ -499,4 +499,4 @@ export const BATTLE_META={
   }
 };
 export const BATTLE_ART=Object.freeze(Object.fromEntries(Object.entries(BATTLE_META).map(([id,c])=>[id,c.image])));
-export function battleCharacter(id){const key=id==='star-01-bo'?'knight':id;return Object.hasOwn(BATTLE_META,key)&&!BATTLE_META[key].enemy?key:null;}
+export function battleCharacter(id){const key=id==='star-01-bo'?'knight':id;return Object.hasOwn(BATTLE_META,key)?key:null;}

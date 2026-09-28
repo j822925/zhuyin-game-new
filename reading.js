@@ -1,3 +1,5 @@
+import {createReadingBattle} from './reading-battle.js?v=20260928-allies1';
+import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20260928-allies1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';
 import {readingStars,matchesReading,READING_WORDS} from './reading-core.js?v=20260928-all1';
@@ -13,6 +15,7 @@ const allowMicCheck=!demo||localPreview;
 const client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config,eligibleWords=[],lessonReady=false,seat='',deck=[],rows=[],started=0,questionStarted=0,locked=false,currentPayload=null,saving=false,starting=false,micBusy=false;
 const auth=createStudentAuth({demo,getConfig:()=>config,post:d=>client.post(d)});
+const readingBattle=createReadingBattle({play:$('play'),result:$('result')});let readingRoundId='';
 const Recognition=globalThis.SpeechRecognition||globalThis.webkitSpeechRecognition;
 const supported=!!Recognition&&globalThis.isSecureContext;
 const sharedMicrophone=supportsReadingAudioTrack(navigator)&&!!navigator.mediaDevices?.getUserMedia;
@@ -20,7 +23,7 @@ const storageKey=classStorageKey('zhuyin.reading.pending.v1');
 let pending=[];
 try{const saved=JSON.parse(localStorage.getItem(storageKey)||'[]');if(Array.isArray(saved))pending=saved;}catch{}
 function storePending(){try{localStorage.setItem(storageKey,JSON.stringify(pending));return true;}catch{return false;}}
-function show(id){for(const name of ['intro','play','result'])$(name).hidden=name!==id;window.scrollTo(0,0);}
+function show(id){document.body.classList.toggle('reading-battle-active',id==='play');for(const name of ['intro','play','result'])$(name).hidden=name!==id;window.scrollTo(0,0);}
 for(const link of document.querySelectorAll('a[href]'))link.href=classUrl(demo?'./?demo=1':'./');
 const errors={'not-allowed':'請允許麥克風權限，再點一下開始錄音。','service-not-allowed':'這個瀏覽器的語音服務無法使用，請換支援語音辨識的瀏覽器。','audio-capture':'找不到可用的麥克風，請大人協助檢查。','network':'語音服務連線失敗，這次不計分，請再試一次。','no-speech':'沒有聽到完整詞語，這次不計分，請再讀一次。','language-not-supported':'這個裝置不支援中文語音辨識，請換另一個裝置。','timeout':'等待語音服務逾時，這次不計分，請再試一次。','aborted':'錄音已停止，可以重新錄音。'};
 Object.assign(errors,{
@@ -33,6 +36,7 @@ Object.assign(errors,{
 const speech=supported?createReadingSpeech({Recognition,
 getAudioStream:sharedMicrophone?deviceId=>navigator.mediaDevices.getUserMedia({audio:deviceId?{deviceId:{exact:deviceId}}:true}):undefined,
 onInput(label){$('speech-device').textContent=`朗讀收音：${label}`;},onState(state){
+ if(state==='starting')readingBattle.reset();
  if(state==='starting')$('speech-device').textContent=sharedMicrophone?'正在開啟選擇的麥克風…':'朗讀收音：瀏覽器預設麥克風';
  $('tap-record').dataset.state=state;
  $('tap-record').disabled=locked||micBusy||['starting','processing'].includes(state);
@@ -43,7 +47,7 @@ function press(){if(locked||micBusy||$('play').hidden||!speech)return;speech.sta
 $('tap-record').onclick=()=>{if(locked||micBusy)return;speech?.busy?speech.release():press();};
 let micCheck,clipUrl='';
 function clearClip(){$('mic-playback').pause();$('mic-playback').removeAttribute('src');$('mic-playback').load();$('mic-playback').hidden=true;if(clipUrl)URL.revokeObjectURL(clipUrl);clipUrl='';}
-function cancel(){speech?.cancel();micCheck?.cancel();clearClip();}
+function cancel(){readingBattle.reset();speech?.cancel();micCheck?.cancel();clearClip();}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel();});
 window.addEventListener('pagehide',cancel);
 // Permission prompts may blur the window. Only leaving/hiding the page cancels.
@@ -101,6 +105,7 @@ function answer(text){
  const correct=matchesReading(word,text);rows.push({wordId:word.id,target:word.zhuyin,firstCorrect:correct,seconds:Math.round((Date.now()-questionStarted)/1000)});
  $('tap-record').disabled=true;$('feedback').textContent=correct?'⭐ 讀對了！真棒！':`這次聽到「${text.slice(0,80)}」。題目是「${word.word}」，下次再加油！`;
  $('speech-status').textContent=correct?`你讀的是「${word.word}」`:'這題已記錄，勇敢繼續下一題。';
+ readingBattle.answer(correct,rows.length,rows.every(r=>r.firstCorrect));
  $('next').textContent=rows.length===5?'看看我的星星 →':'下一題 →';$('next').hidden=false;
 }
 async function refreshLesson(){
@@ -116,22 +121,30 @@ async function refreshLesson(){
  return config.readingWrites===true;
 }
 async function start(){
- if(starting||!supported||(demo&&!localPreview))return;starting=true;$('start').disabled=true;$('reload').disabled=true;
+ if(starting||!supported||(demo&&!localPreview))return;starting=true;$('seat').disabled=true;$('start').disabled=true;$('reload').disabled=true;
  try{
   $('home-message').textContent='正在確認老師最新勾選的注音…';
   if(!await refreshLesson()){$('home-message').textContent='第四關目前尚未開放。請等待老師通知。';return;}
   seat=$('seat').value;if(!seat){$('home-message').textContent='請先選擇你的座號。';return;}
   if(!demo){if(!await auth.ensure(seat)){$('home-message').textContent='請先完成登入，再開始朗讀。';return;}auth.setPrimary(seat);}
+  $('home-message').textContent='正在準備朗讀夥伴與反派…';
+  readingRoundId=crypto.randomUUID();
+  const [profile,encounter]=await Promise.all([
+   demo?Promise.resolve({avatar:'rabbit'}):auth.request({kind:'profile',seat}).catch(()=>null),
+   demo?Promise.resolve(startDemoMonster(seat,readingRoundId)):auth.request({kind:'monster-start',seat,encounter:readingRoundId})
+  ]);
+  if(!encounter?.monsterId||encounter.error)throw Error('encounter_unavailable');
+  readingBattle.begin(profile,encounter);
   currentPayload=null;deck=readingLessonDeck(eligibleWords);rows=[];started=Date.now();$('round-scope').textContent=eligibleWords.length>=5?'本回合：老師已勾選的注音範圍。':'符合詞語不足五題，本回合從全部題庫出題。';show('play');renderQuestion();
  }catch{lessonReady=false;$('lesson-status').textContent='尚未取得最新的注音設定。';$('home-message').textContent='還沒連上老師的任務，請確認網路後按「更新注音設定」。';$('reload').hidden=false;}
- finally{starting=false;$('start').disabled=!lessonReady||config?.readingWrites!==true;$('reload').disabled=false;}
+ finally{starting=false;$('seat').disabled=false;$('start').disabled=!lessonReady||config?.readingWrites!==true;$('reload').disabled=false;}
 }
 function finish(){
- cancel();show('result');const correct=rows.filter(r=>r.firstCorrect).length,stars=readingStars(correct);
+ cancel();show('result');readingBattle.result(0);const correct=rows.filter(r=>r.firstCorrect).length,stars=readingStars(correct);
  $('score').textContent=`答對 ${correct} / 5 題`;$('stars').textContent=stars?'⭐'.repeat(stars):'再接再厲';
  $('review').replaceChildren();for(const row of rows){const word=READING_WORDS.find(w=>w.id===row.wordId),p=document.createElement('p');p.textContent=`${row.firstCorrect?'✓':'再練練'}　${word.word}　${word.zhuyin}`;$('review').append(p);}
- if(demo){$('save-status').textContent=`老師試玩：本回合 ${stars} 顆星星，不傳送學生成績。`;$('retry-save').hidden=true;return;}
- currentPayload={kind:'round',mode:'reading',roundId:crypto.randomUUID(),seat,total:5,mistakes:5-correct,seconds:Math.round((Date.now()-started)/1000),results:rows};
+ if(demo){readingBattle.result(stars,creditDemoMonster(seat,readingRoundId,correct===5));$('save-status').textContent=`老師試玩：本回合 ${stars} 顆星星，不傳送學生成績。`;$('retry-save').hidden=true;return;}
+ currentPayload={kind:'round',mode:'reading',roundId:readingRoundId,monsterBattle:1,seat,total:5,mistakes:5-correct,seconds:Math.round((Date.now()-started)/1000),results:rows};
  pending.push(currentPayload);const stored=storePending();$('save-status').textContent=stored?'正在儲存紀錄與星星…':'此裝置無法暫存，請保持頁面開啟，等待儲存完成。';flushPending();
 }
 async function flushPending(){
@@ -140,7 +153,7 @@ async function flushPending(){
  for(const payload of [...pending].filter(p=>p.seat===seat)){
   const out=await auth.request(payload);if(out.saved!==true)throw Error(out.error||'unconfirmed');
   pending=pending.filter(p=>p.roundId!==payload.roundId);storePending();
-  if(payload.roundId===currentPayload?.roundId)$('save-status').textContent=`紀錄已儲存，獲得 ${out.awards[0].stars} 顆星星！`;
+  if(payload.roundId===currentPayload?.roundId){$('save-status').textContent=`紀錄已儲存，獲得 ${out.awards[0].stars} 顆星星！`;readingBattle.result(out.awards[0].stars,out.awards[0]);}
  }
  if(!currentPayload)$('home-message').textContent='之前暫存的朗讀紀錄已儲存。';
  }catch{const stored=storePending();const message=stored?'紀錄已暫存，星星尚未確認入帳。請重新儲存。':'紀錄尚未儲存，請勿關閉此頁，請重新儲存。';if(currentPayload)$('save-status').textContent=message;else $('home-message').textContent=message;}
@@ -162,7 +175,7 @@ async function load(){
  finally{$('reload').disabled=false;}
 }
 function leave(){cancel();$('leave-dialog').showModal();}
-function home(){cancel();show('intro');currentPayload=null;}
+function home(){cancel();readingBattle.clear();show('intro');currentPayload=null;}
 function hasUnsaved(){return pending.some(p=>p.seat===seat);}
 window.addEventListener('beforeunload',e=>{if(!$('play').hidden||hasUnsaved()){e.preventDefault();e.returnValue='';}});
 document.querySelectorAll('a[href]').forEach(a=>a.addEventListener('click',e=>{if(!$('play').hidden){e.preventDefault();leave();}}));
