@@ -1,5 +1,6 @@
+import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';
-import {readingDeck,readingStars,matchesReading,READING_WORDS} from './reading-core.js?v=20260928-all1';
+import {readingStars,matchesReading,READING_WORDS} from './reading-core.js?v=20260928-all1';
 import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-all1';
 import {createMicCheck} from './reading-mic-check.js?v=20260928-all1';
 import {createMicPreference} from './reading-mic-preference.js?v=20260928-all1';
@@ -10,7 +11,7 @@ const $=id=>document.getElementById(id),demo=new URLSearchParams(location.search
 const localPreview=['localhost','127.0.0.1','[::1]'].includes(location.hostname);
 const allowMicCheck=!demo||localPreview;
 const client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
-let config,seat='',deck=[],rows=[],started=0,questionStarted=0,locked=false,currentPayload=null,saving=false,starting=false,micBusy=false;
+let config,eligibleWords=[],lessonReady=false,seat='',deck=[],rows=[],started=0,questionStarted=0,locked=false,currentPayload=null,saving=false,starting=false,micBusy=false;
 const auth=createStudentAuth({demo,getConfig:()=>config,post:d=>client.post(d)});
 const Recognition=globalThis.SpeechRecognition||globalThis.webkitSpeechRecognition;
 const supported=!!Recognition&&globalThis.isSecureContext;
@@ -102,12 +103,28 @@ function answer(text){
  $('speech-status').textContent=correct?`你讀的是「${word.word}」`:'這題已記錄，勇敢繼續下一題。';
  $('next').textContent=rows.length===5?'看看我的星星 →':'下一題 →';$('next').hidden=false;
 }
+async function refreshLesson(){
+ lessonReady=false;
+ const latest=await client.get({api:'config'});
+ if(!Array.isArray(latest.symbols)||!Array.isArray(latest.compounds)||!Array.isArray(latest.seats)||typeof latest.readingWrites!=='boolean')throw Error('invalid_lesson');
+ config=demo?{...latest,seats:['01']}:latest;
+ eligibleWords=readingPool(config);lessonReady=true;
+ const taught=readingTaughtSymbols(config);
+ $('lesson-symbols').textContent=taught.length?'老師已勾選：'+taught.join('、'):'老師目前尚未勾選注音。';
+ $('lesson-status').textContent=eligibleWords.length>=5?`依老師勾選的注音，可出 ${eligibleWords.length} 題。這回合只從符合範圍的詞語抽五題。`:`符合範圍的詞語只有 ${eligibleWords.length} 題，不足五題，這回合改從全部題庫隨機抽五題。`;
+ $('reload').hidden=false;
+ return config.readingWrites===true;
+}
 async function start(){
- if(starting||!supported||config?.readingWrites!==true||(demo&&!localPreview))return;starting=true;$('start').disabled=true;
- try{seat=$('seat').value;if(!seat){$('home-message').textContent='請先選擇你的座號。';return;}
- if(!demo){if(!await auth.ensure(seat))return;auth.setPrimary(seat);}
- currentPayload=null;deck=readingDeck();rows=[];started=Date.now();show('play');renderQuestion();
- }finally{starting=false;$('start').disabled=false;}
+ if(starting||!supported||(demo&&!localPreview))return;starting=true;$('start').disabled=true;$('reload').disabled=true;
+ try{
+  $('home-message').textContent='正在確認老師最新勾選的注音…';
+  if(!await refreshLesson()){$('home-message').textContent='第四關目前尚未開放。請等待老師通知。';return;}
+  seat=$('seat').value;if(!seat){$('home-message').textContent='請先選擇你的座號。';return;}
+  if(!demo){if(!await auth.ensure(seat)){$('home-message').textContent='請先完成登入，再開始朗讀。';return;}auth.setPrimary(seat);}
+  currentPayload=null;deck=readingLessonDeck(eligibleWords);rows=[];started=Date.now();$('round-scope').textContent=eligibleWords.length>=5?'本回合：老師已勾選的注音範圍。':'符合詞語不足五題，本回合從全部題庫出題。';show('play');renderQuestion();
+ }catch{lessonReady=false;$('lesson-status').textContent='尚未取得最新的注音設定。';$('home-message').textContent='還沒連上老師的任務，請確認網路後按「更新注音設定」。';$('reload').hidden=false;}
+ finally{starting=false;$('start').disabled=!lessonReady||config?.readingWrites!==true;$('reload').disabled=false;}
 }
 function finish(){
  cancel();show('result');const correct=rows.filter(r=>r.firstCorrect).length,stars=readingStars(correct);
@@ -131,17 +148,18 @@ async function flushPending(){
 }
 async function load(){
  $('wordbank-count').textContent=`題庫共有 ${READING_WORDS.length.toLocaleString('zh-TW')} 個詞語，每回合隨機抽 5 題。`;
- $('reload').hidden=true;$('start').disabled=true;
+ $('reload').hidden=true;$('reload').disabled=true;$('start').disabled=true;lessonReady=false;
  if(demo&&!localPreview){$('home-message').textContent='第四關已準備好，目前尚未開放。請等待老師通知。';return;}
  if(!supported){$('home-message').textContent=globalThis.isSecureContext?'這個瀏覽器不支援語音辨識，請用支援的 Chrome 或 Safari 開啟。':'錄音需要安全連線，請以 HTTPS 遊戲網址開啟。';return;}
- try{config=demo?{seats:['01'],readingWrites:true}:await client.get({api:'config'});
+ try{await refreshLesson();
  if(!config.readingWrites){$('home-message').textContent='第四關已準備好，目前尚未開放。請等待老師通知。';return;}
  $('mic-check').hidden=false;
  $('seat').replaceChildren(new Option('選擇座號',''));for(const s of config.seats)$('seat').append(new Option(s+' 號',s));
  $('seat').value=demo?'01':auth.currentSeat();seat=$('seat').value;$('seat-label').hidden=demo;
- $('home-message').textContent=demo?'老師試玩模式：不記錄成績。':'準備好後，按開始進入朗讀。';$('start').disabled=false;
+ $('home-message').textContent=demo?'老師試玩模式：沿用本班出題規則，不記錄成績。':'準備好後，按開始進入朗讀。';$('start').disabled=false;
  if(!demo&&seat&&pending.some(p=>p.seat===seat))flushPending();
- }catch{$('home-message').textContent='還沒連上老師的任務，請確認網路後重試。';$('reload').hidden=false;}
+ }catch{lessonReady=false;$('lesson-status').textContent='尚未取得最新的注音設定。';$('home-message').textContent='還沒連上老師的任務，請確認網路後重試。';$('reload').hidden=false;}
+ finally{$('reload').disabled=false;}
 }
 function leave(){cancel();$('leave-dialog').showModal();}
 function home(){cancel();show('intro');currentPayload=null;}
