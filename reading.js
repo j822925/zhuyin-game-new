@@ -1,5 +1,5 @@
 import './asset-cache.js?v=20260928-perflive1';
-import {readingDeck,readingStars,matchesReading,READING_WORDS} from './reading-core.js?v=20260928-perflive1';
+import {readingDeck,readingStars,matchesReading,READING_WORDS} from './reading-core.js?v=20260928-bank1';
 import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-perflive1';
 import {createMicCheck} from './reading-mic-check.js?v=20260928-perflive1';
 import {createMicPreference} from './reading-mic-preference.js?v=20260928-perflive1';
@@ -130,6 +130,7 @@ async function flushPending(){
  finally{saving=false;$('retry-save').disabled=false;$('retry-save').hidden=!pending.some(p=>p.seat===seat);$('recover-pending')?.remove();if(pending.some(p=>p.seat===seat)&&!currentPayload){const b=document.createElement('button');b.id='recover-pending';b.className='secondary';b.textContent='儲存先前的朗讀紀錄';b.onclick=flushPending;$('home-message').after(b);}}
 }
 async function load(){
+ $('wordbank-count').textContent=`題庫共有 ${READING_WORDS.length.toLocaleString('zh-TW')} 個詞語，每回合隨機抽 5 題。`;
  $('reload').hidden=true;$('start').disabled=true;
  if(demo&&!localPreview){$('home-message').textContent='第四關已準備好，目前尚未開放。請等待老師通知。';return;}
  if(!supported){$('home-message').textContent=globalThis.isSecureContext?'這個瀏覽器不支援語音辨識，請用支援的 Chrome 或 Safari 開啟。':'錄音需要安全連線，請以 HTTPS 遊戲網址開啟。';return;}

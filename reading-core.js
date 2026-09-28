@@ -1,5 +1,6 @@
 // Shared word bank and scoring for the fourth level. No fuzzy/substring matching:
 // a longer sentence or a similar-sounding word must not earn a correct answer.
+import {EXTRA_READING_WORDS} from './reading-words.js?v=20260928-bank1';
 export const READING_WORDS = [
  ['apple','蘋果','ㄆㄧㄥˊ ㄍㄨㄛˇ','苹果'],
  ['watermelon','西瓜','ㄒㄧ ㄍㄨㄚ'],
@@ -31,7 +32,12 @@ export const READING_WORDS = [
  ['colorful','五顏六色','ㄨˇ ㄧㄢˊ ㄌㄧㄡˋ ㄙㄜˋ','五颜六色'],
  ['rain','下雨','ㄒㄧㄚˋ ㄩˇ'],
  ['book','書本','ㄕㄨ ㄅㄣˇ','书本'],
-].map(([id,word,zhuyin,...aliases])=>({id,word,zhuyin,aliases}));
+].map(([id,word,zhuyin,...aliases])=>({id,word,zhuyin,aliases})).concat(EXTRA_READING_WORDS);
+// Speech cannot distinguish identical pronunciations (e.g. 姊姊 / 姐姐).
+// Accept only known whole-word spellings with exactly the same tones/syllables.
+const homophones=new Map();
+for(const w of READING_WORDS){if(!homophones.has(w.zhuyin))homophones.set(w.zhuyin,new Set());for(const text of [w.word,...w.aliases])homophones.get(w.zhuyin).add(text);}
+for(const w of READING_WORDS)w.aliases=[...homophones.get(w.zhuyin)].filter(text=>text!==w.word);
 export const READING_TOTAL=5;
 export function normalizeSpeech(text){return String(text??'').normalize('NFKC').replace(/[\s\p{P}]/gu,'');}
 export function matchesReading(word,text){const value=normalizeSpeech(text);return !!value&&[word.word,...word.aliases].some(s=>normalizeSpeech(s)===value);}
@@ -39,7 +45,8 @@ export function readingStars(correct){return correct===5?3:correct>=3&&correct<5
 export function readingDeck(rng=Math.random){
  const shuffled=list=>{const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
  // Every round includes 2-, 3- and 4-character vocabulary, without repeats.
- const groups=[2,3,4].map(n=>shuffled(READING_WORDS.filter(w=>w.word.length===n)));
+ const seen=new Set(),unique=shuffled(READING_WORDS).filter(w=>{if(seen.has(w.zhuyin))return false;seen.add(w.zhuyin);return true;});
+ const groups=[2,3,4].map(n=>unique.filter(w=>w.word.length===n));
  return shuffled([...groups[0].slice(0,2),...groups[1].slice(0,2),groups[2][0]]);
 }
 export function validReadingRound(d){
