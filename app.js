@@ -34,7 +34,8 @@ async function replayWrongSpelling(){
  $('audio-status').textContent='一起聽：聲符 → 帶聲調的韻母 → 完整題目';
  try{await playTutorOnce(reviewAudio,question,{signal:controller.signal});
   if(controller.signal.aborted||session!==currentSession||rounds[active]?.current!==question)return;
-  audioReady=true;setAnswerEnabled(!rounds[active].locked);$('audio-status').textContent='換你再拼一次！';
+  clearWrongSpelling(question);
+  audioReady=true;setAnswerEnabled(!rounds[active].locked);$('audio-status').textContent='錯的格子清空了，換你再拼一次！';
  }catch{if(!controller.signal.aborted){audioReady=false;setAnswerEnabled(false);$('audio-status').textContent='聲音暫時沒有播完，請按喇叭再聽一次。';}}
  finally{if(practiceController===controller)practiceController=null;}
 }
@@ -71,6 +72,17 @@ const tutorButton=document.createElement('button');tutorButton.id='little-teache
 const tutor=createLittleTeacher({onReturn:()=>{clearSpelling();audio.src=audioSource(rounds[active].current.audio);play();}});
 tutorButton.onclick=()=>{stopPracticeReview();const r=rounds[active];if(mode!=='spelling'||!r?.canUseTutor||tutor.open)return;const result=r.useTutor(currentPool);if(result.ignored)return;voiceHelp.stop();audio.pause();audioReady=false;clearSpelling();setAnswerEnabled(false);$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;$('progress-fill').style.width=`${r.index/r.deck.length*100}%`;tutor.show(r.current);};
 function clearSpelling(){selected={};for(const b of document.querySelectorAll('.slot')){b.textContent='';b.classList.remove('filled','blank-choice');b.setAttribute('aria-label',b.dataset.slot==='initial'?'聲符位置':'韻符或結合韻位置');}showSpellingTone(document.querySelector('#spelling .slots'),rounds[active].current);$('check-spelling').disabled=true;}
+function clearWrongSpelling(question){
+ const correct=spellingParts(question);
+ for(const kind of ['initial','final']){
+  if(selected[kind]===correct[kind])continue;
+  delete selected[kind];const slot=document.querySelector(`[data-slot="${kind}"]`);
+  slot.replaceChildren();slot.classList.remove('filled','blank-choice','vertical-symbols');delete slot.dataset.blank;
+  slot.setAttribute('aria-label',kind==='initial'?'聲符位置':'韻符或結合韻位置');
+ }
+ showSpellingTone(document.querySelector('#spelling .slots'),correct);
+ $('check-spelling').disabled=selected.initial===undefined||selected.final===undefined;
+}
 setupCozyUI();
 addPreparationButton(()=>{
  if(!config)return null;
