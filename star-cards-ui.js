@@ -1,13 +1,15 @@
-import {STAR_CARDS} from './data/star-cards.js?v=20260919-star1';
-import {starEgg,createStarPrize} from './star-prize.js?v=20260919-egg1';
-import {within} from './reward-request.js?v=20260919-egg1';
+import {optimizedImage} from './data/portrait-thumbnails.js?v=20260928-perflive1';
+import './asset-cache.js?v=20260928-perflive1';
+import {STAR_CARDS} from './data/star-cards.js?v=20260928-perflive1';
+import {starEgg,createStarPrize} from './star-prize.js?v=20260928-perflive1';
+import {within} from './reward-request.js?v=20260928-perflive1';
 export function createStarCollection({root,request}){
  const send=request;request=payload=>within(Promise.resolve().then(()=>send(payload)),12000);
  let busy=false,version=0,prize=null;
  const el=(tag,text)=>{const n=document.createElement(tag);if(text)n.textContent=text;return n;};
  const title=el('h2','✨ 滿分星使收藏'),notice=el('p','每場小考滿分可抽一張，不扣星星。先抽未擁有的卡片；集滿後保留資格。'),status=el('p'),refresh=el('button','重新讀取收藏／恢復領獎'),tickets=el('div'),reveal=el('div'),grid=el('div');
  status.setAttribute('role','status');grid.className='star-grid';tickets.className='star-ticket-eggs';reveal.className='star-reveal';reveal.hidden=true;refresh.type='button';root.replaceChildren(title,tickets,reveal,notice,status,refresh,grid);
- function imageCard(c){const img=el('img');img.src=c.image;img.alt=c.symbol+'之星使・'+c.name;img.loading='lazy';img.width=1024;img.height=1536;return img;}
+ function imageCard(c){const img=el('img');img.src=optimizedImage(c.image);img.alt=c.symbol+'之星使・'+c.name;img.loading='lazy';img.width=1024;img.height=1536;return img;}
  function render(out){
   grid.replaceChildren();tickets.replaceChildren();status.textContent='已收藏 '+out.owned.length+'／'+out.total+' 張・尚有 '+out.tickets.length+' 次滿分抽卡資格';
   for(const c of STAR_CARDS){const f=el('figure'),owned=out.owned.some(x=>x.character===c.id);if(owned){const a=el('a');a.href=c.image;a.target='_blank';a.rel='noopener';a.append(imageCard(c));f.append(a);}else{const back=el('div','✦');back.className='star-card-back';back.setAttribute('aria-label','尚未獲得的神祕星使');f.append(back);}f.append(el('figcaption',owned?c.symbol+'・'+c.name:'神祕星使'));grid.append(f);}

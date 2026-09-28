@@ -1,6 +1,7 @@
-import {audioSource} from './audio-source.js?v=20260928-bo4original1';
-import {createApiClient} from './api-client.js?v=20260926-classes1';
-import {createStudentAuth} from './student-auth.js?v=20260926-classes1';
+import './asset-cache.js?v=20260928-perflive1';
+import {audioSource} from './audio-source.js?v=20260928-perflive1';
+import {createApiClient} from './api-client.js?v=20260928-perflive1';
+import {createStudentAuth} from './student-auth.js?v=20260928-perflive1';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config=null,seat='',question=null,selection={},heard=false,busy=false,pending=null,after='';
 const auth=createStudentAuth({demo:false,getConfig:()=>config,post:d=>client.post(d)}),audio=new Audio();audio.preload='auto';

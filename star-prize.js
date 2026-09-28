@@ -1,3 +1,4 @@
+import {optimizedImage} from './data/portrait-thumbnails.js?v=20260928-perflive1';
 const el=(tag,text)=>{const n=document.createElement(tag);if(text)n.textContent=text;return n;};
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 export function starEgg(){
@@ -16,7 +17,7 @@ export function createStarPrize({ordinary=false}={}){
  async function reveal(c,{duplicate=false}={}){
   // Only called after the server has saved the one-time prize. No client-side draw.
   const label=ordinary?c.name:c.symbol+'之星使・'+c.name;
-  const image=el('img');image.className='star-prize-card';image.src=c.image;image.alt=label;image.width=1024;image.height=1536;image.loading='eager';
+  const image=el('img');image.className='star-prize-card';image.src=optimizedImage(c.image);image.alt=label;image.width=1024;image.height=1536;image.loading='eager';
   let timer;try{await Promise.race([image.decode(),new Promise(resolve=>timer=setTimeout(resolve,1800))]);}catch{/* Saved prize remains valid even if its image is offline. */}finally{clearTimeout(timer);}
   if(dialog.open&&!reduced()){await wait(Math.max(0,1100-(Date.now()-started)));stage.className='star-prize-stage hatching';await wait(500);}
   stage.className='star-prize-stage revealed';const name=el('h2','✨ '+label),scene=el('div');scene.className='star-prize-scene';

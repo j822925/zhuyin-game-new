@@ -1,9 +1,9 @@
-import {classStorageKey} from './class-context.js?v=20260926-classes1';
-import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20260913-heroes1';
-import {cappedRoundAward,rewardParticipants,taipeiDay} from './learning-rewards.js?v=20260925-fivecorrect1';
-import {startGachaAnimation} from './gacha-animation.js?v=20260913-ipad1';
-import {createStarPrize} from './star-prize.js?v=20260919-egg1';
-import {confirmReward,within} from './reward-request.js?v=20260919-egg1';
+import {classStorageKey} from './class-context.js?v=20260928-perflive1';
+import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20260928-perflive1';
+import {cappedRoundAward,rewardParticipants,taipeiDay} from './learning-rewards.js?v=20260928-perflive1';
+import {startGachaAnimation} from './gacha-animation.js?v=20260928-perflive1';
+import {createStarPrize} from './star-prize.js?v=20260928-perflive1';
+import {confirmReward,within} from './reward-request.js?v=20260928-perflive1';
 export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onChange}){
  const $=id=>document.getElementById(id),cache=new Map(),refreshVersions=new Map();let category='animal',busy=false,activeSeat='',previewPersistent=true,revealed=false,prize=null;
  function read(key,fallback){try{return JSON.parse(localStorage.getItem(classStorageKey(key)))??fallback;}catch{return fallback;}}
@@ -34,7 +34,7 @@ export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onCh
   const available=CHARACTERS.filter(c=>c.category===category&&c.enabled!==false);
   $('draw-character').disabled=busy||(!revealed&&!pending()&&(w.stars<DRAW_COST||!available.length||(!demo&&!getConfig()?.rewardsWrites)));
   $('draw-character').textContent=revealed?'✓ 收好角色':pending()?'↻ 🥚 恢復上次開蛋':'★ '+DRAW_COST+' → 🥚';$('draw-character').setAttribute('aria-label',revealed?'收好角色，回到轉蛋':pending()?'恢復上次開蛋，不會重複扣星星':'花五顆星星抽角色，重複得一顆糖果');
-  $('character-gallery').innerHTML=CHARACTERS.filter(c=>c.category===category&&c.enabled!==false).map(c=>`<button class="character-card ${w.owned.includes(c.id)?'owned':'locked'}" data-character="${c.id}" aria-label="${c.name}${w.owned.includes(c.id)?'，已收集':'，五十顆糖果兌換'}" ${busy||(!w.owned.includes(c.id)&&(w.candies||0)<REDEEM_COST)?'disabled':''}>${portrait(c)}<span>${w.owned.includes(c.id)?'✓':(w.candies||0)>=REDEEM_COST?'🍬 50':'🔒'}</span><small>${c.name}</small></button>`).join('');
+  $('character-gallery').innerHTML=CHARACTERS.filter(c=>c.category===category&&c.enabled!==false).map(c=>`<button class="character-card ${w.owned.includes(c.id)?'owned':'locked'}" data-character="${c.id}" aria-label="${c.name}${w.owned.includes(c.id)?'，已收集':'，五十顆糖果兌換'}" ${busy||(!w.owned.includes(c.id)&&(w.candies||0)<REDEEM_COST)?'disabled':''}>${portrait(c,'character-portrait portrait-small','lazy')}<span>${w.owned.includes(c.id)?'✓':(w.candies||0)>=REDEEM_COST?'🍬 50':'🔒'}</span><small>${c.name}</small></button>`).join('');
   dialog.querySelectorAll('[data-character]').forEach(b=>b.onclick=()=>{const c=CHARACTERS.find(c=>c.id===b.dataset.character);if(!w.owned.includes(c.id)){exchangeId=c.id;$('exchange-character').innerHTML=portrait(c);exchange.showModal();return;}$('gacha-reveal').innerHTML=portrait(c);$('gacha-message').textContent='想使用這個角色？請回首頁點自己的頭貼，在「我的角色」選擇並儲存。';});
  }
  async function refresh(){

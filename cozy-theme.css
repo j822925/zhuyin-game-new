@@ -6,7 +6,7 @@ body.cozy-ui{background:#f7f3e5;isolation:isolate}
 body.cozy-ui::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 4% 15%,#dcebd0 0,transparent 35%),radial-gradient(ellipse at 95% 75%,#e2ebce 0,transparent 36%),#f7f3e5}
 .cozy-ui header{border:0;height:82px}.cozy-ui .brand-icon{background:#67937a;border:3px solid #fffbed;box-shadow:0 3px #c4d1b4;border-radius:50%;width:48px;height:48px}
 .cozy-ui .top-actions a,.cozy-ui .icon-button{background:#fffbed;border:2px solid #ddcfb2;border-radius:50%;box-shadow:0 3px #cfc3a9}
-.cozy-ui .hero{display:block;position:relative;height:245px;margin:3px 0 22px;padding:0;border:6px solid #fffbed;border-radius:38px;background:#c1ddc0 url('assets/ui/meadow-v1.png') center 53%/cover;box-shadow:0 6px #d2d9ba;overflow:hidden}
+.cozy-ui .hero{display:block;position:relative;height:245px;margin:3px 0 22px;padding:0;border:6px solid #fffbed;border-radius:38px;background:#c1ddc0 url('assets/performance-v1/b71b89d75d7d1c37.webp') center 53%/cover;box-shadow:0 6px #d2d9ba;overflow:hidden}
 .cozy-ui .hero .island{position:absolute;inset:0;width:100%;height:100%;background:none;border-radius:0;overflow:visible}
 .cozy-ui .island> :not(.mascot){display:none}.cozy-ui .island .mascot{left:calc(50% - 130px);bottom:10px;width:155px;height:192px;filter:drop-shadow(0 7px 4px #4a65373a)}
 .cozy-friend{position:absolute;left:calc(50% + 10px);bottom:13px;width:146px;height:175px;filter:drop-shadow(0 7px 4px #4a65373a);pointer-events:none}

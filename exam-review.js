@@ -1,6 +1,6 @@
-import {audioSource} from './audio-source.js?v=20260928-bo4original1';
-import {BASE} from './core.js?v=20260925-blanks1';
-import {tutorClips} from './little-teacher.js?v=20260928-bo4original1';
+import {audioSource} from './audio-source.js?v=20260928-perflive1';
+import {BASE} from './core.js?v=20260928-perflive1';
+import {tutorClips} from './little-teacher.js?v=20260928-perflive1';
 // Answers are supplied only after submission. Empty parts have no sound.
 export function reviewClips(value){
  if(value.mode!=='spelling')return [value.audio];

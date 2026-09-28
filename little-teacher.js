@@ -1,8 +1,8 @@
-import {audioSource} from './audio-source.js?v=20260928-bo4original1';
-import {SUPPLIED_TUTOR_AUDIO} from './data/supplied-audio.js?v=20260925-originaler1';
-import {BASE,COMPOUNDS} from './core.js?v=20260925-blanks1';
-import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260925-blanks1';
-import {TUTOR_TONES} from './data/tutor-tones.js?v=20260928-1';
+import {audioSource} from './audio-source.js?v=20260928-perflive1';
+import {SUPPLIED_TUTOR_AUDIO} from './data/supplied-audio.js?v=20260928-perflive1';
+import {BASE,COMPOUNDS} from './core.js?v=20260928-perflive1';
+import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260928-perflive1';
+import {TUTOR_TONES} from './data/tutor-tones.js?v=20260928-perflive1';
 export function tutorClips(q){
  const symbolAudio=s=>SUPPLIED_TUTOR_AUDIO[s]||(BASE.includes(s)?'audio/audio_F'+(BASE.indexOf(s)+1)+'.WAV':'audio/compound/c'+String(COMPOUNDS.indexOf(s)+1).padStart(2,'0')+'.mp3');
  let {initial='',final='',tone=1}=q;
@@ -14,7 +14,7 @@ export function tutorClips(q){
 }
 export function createLittleTeacher({onReturn}){
  const dialog=document.createElement('dialog');dialog.id='tutor-dialog';dialog.setAttribute('aria-label','小老師拼音示範');
- dialog.innerHTML=`<div class="tutor-heading"><img src="assets/characters/cozy-v1/owl.png" alt="小老師"><span aria-hidden="true">🎓</span></div><div class="tutor-answer"><div class="tutor-part" data-part="0"></div><span class="spelling-tone" hidden></span><div class="tutor-part" data-part="1"></div></div><p class="tutor-status" role="status"></p><div class="tutor-actions"><button class="secondary" data-tutor-replay aria-label="再聽小老師示範">🔊 ↻</button><button class="primary" data-tutor-return aria-label="蓋住答案，換我拼">🙋 ▶</button></div>`;
+ dialog.innerHTML=`<div class="tutor-heading"><img src="assets/performance-v1/c04e012d62f20dfd.webp" alt="小老師"><span aria-hidden="true">🎓</span></div><div class="tutor-answer"><div class="tutor-part" data-part="0"></div><span class="spelling-tone" hidden></span><div class="tutor-part" data-part="1"></div></div><p class="tutor-status" role="status"></p><div class="tutor-actions"><button class="secondary" data-tutor-replay aria-label="再聽小老師示範">🔊 ↻</button><button class="primary" data-tutor-return aria-label="蓋住答案，換我拼">🙋 ▶</button></div>`;
  document.body.append(dialog);
  const voice=new Audio(),answer=dialog.querySelector('.tutor-answer'),parts=[...dialog.querySelectorAll('[data-part]')],status=dialog.querySelector('.tutor-status');let clips=[],generation=0,step=0,timer,spokenParts=[];
  function stop(){generation++;clearTimeout(timer);voice.pause();voice.onended=null;voice.onerror=null;parts.forEach(p=>p.classList.remove('speaking'));answer.classList.remove('speaking');}

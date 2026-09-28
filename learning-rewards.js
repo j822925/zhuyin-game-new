@@ -1,4 +1,4 @@
-import {validLearningRound} from './tutor-rules.js?v=20260913-tutor1';
+import {validLearningRound} from './tutor-rules.js?v=20260928-perflive1';
 export const REWARD_RULE='spelling-five-v3';
 export const dailyLimits=mode=>({perfectStars:mode==='spelling'?12:4,perseveranceStars:mode==='spelling'?5:4});
 export const taipeiDay=(date=new Date())=>new Date(new Date(date).getTime()+8*3600000).toISOString().slice(0,10);

@@ -1,19 +1,22 @@
-import {playTutorOnce} from './exam-review.js?v=20260928-bo4original1';
-import {classStorageKey,classUrl} from './class-context.js?v=20260926-classes1';
-import {audioSource} from './audio-source.js?v=20260928-bo4original1';
-import {createLittleTeacher} from './little-teacher.js?v=20260928-bo4original1';
-import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260925-blanks1';
-import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round,spellingChoices,spellingParts} from './core.js?v=20260925-blanks1';
-import {createMultiplayer} from './multiplayer.js?v=20260921-picker1';
-import {createRewards} from './rewards.js?v=20260926-classes1';
-import {createStudentProfile} from './student-profile.js?v=20260926-classes1';
-import {portrait} from './characters.js?v=20260913-heroes1';
-import {setupChildUI} from './child-ui.js?v=20260913-family1';
-import {setupCozyUI} from './cozy-ui.js?v=20260913-heroes1';
-import {createStudentAuth} from './student-auth.js?v=20260926-classes1';
-import {setupStudentLoginGate} from './student-login-gate.js?v=20260927-hub1';
-import {createApiClient} from './api-client.js?v=20260926-classes1';
-import {setupExamEntry} from './exam-entry.js?v=20260927-notebooklive1';
+import {addPreparationButton} from './preparation.js?v=20260928-perflive1';
+import {tutorClips} from './little-teacher.js?v=20260928-perflive1';
+import {warmAudio} from './asset-cache.js?v=20260928-perflive1';
+import {playTutorOnce} from './exam-review.js?v=20260928-perflive1';
+import {classStorageKey,classUrl} from './class-context.js?v=20260928-perflive1';
+import {audioSource} from './audio-source.js?v=20260928-perflive1';
+import {createLittleTeacher} from './little-teacher.js?v=20260928-perflive1';
+import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260928-perflive1';
+import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round,spellingChoices,spellingParts} from './core.js?v=20260928-perflive1';
+import {createMultiplayer} from './multiplayer.js?v=20260928-perflive1';
+import {createRewards} from './rewards.js?v=20260928-perflive1';
+import {createStudentProfile} from './student-profile.js?v=20260928-perflive1';
+import {portrait} from './characters.js?v=20260928-perflive1';
+import {setupChildUI} from './child-ui.js?v=20260928-perflive1';
+import {setupCozyUI} from './cozy-ui.js?v=20260928-perflive1';
+import {createStudentAuth} from './student-auth.js?v=20260928-perflive1';
+import {setupStudentLoginGate} from './student-login-gate.js?v=20260928-perflive1';
+import {createApiClient} from './api-client.js?v=20260928-perflive1';
+import {setupExamEntry} from './exam-entry.js?v=20260928-perflive1';
 const API='https://zhuyin-api.j822925.workers.dev/api';
 const demo=new URLSearchParams(location.search).get('demo')==='1';
 const names={single:'聲音森林',spelling:'拼音工坊'};
@@ -33,6 +36,7 @@ async function replayWrongSpelling(){
 }
 window.addEventListener('pagehide',stopPracticeReview);
 const audio=new Audio();audio.preload='auto';
+audio.addEventListener('ended',()=>{const r=rounds[active];if(r)void warmAudio(r.deck.slice(r.index+1,r.index+3).map(q=>audioSource(q.audio))).catch(()=>{});});
 const choices=4;
 let config,catalog=[],duo=false,mode='single',rounds=[],active=0,currentPool=[],seats=[],selected={},audioReady=false,session=0,saving=false,latestIds=[];
 let playStyle='solo';
@@ -40,7 +44,7 @@ const memory={};
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(classStorageKey(key)))??fallback;}catch{return memory[key]??fallback;}}
 function write(key,value){memory[key]=value;try{localStorage.setItem(classStorageKey(key),JSON.stringify(value));return true;}catch{return false;}}
 let pending=read('zhuyin.pending.v2',[]);if(!Array.isArray(pending))pending=[];
-$('app').innerHTML=`<header><a class="brand" href="./${demo?'?demo=1':''}"><img class="brand-app-icon" src="assets/icons/apple-touch-icon-v1.png" alt="">注音探險島</a><div class="top-actions"><span id="connection" role="status">讀取老師任務…</span><a href="${demo?'teacher.html':'parents.html'}">${demo?'老師專區':'親子專區'} ↗</a></div></header>
+$('app').innerHTML=`<header><a class="brand" href="./${demo?'?demo=1':''}"><img class="brand-app-icon" src="assets/performance-v1/811a6dcf74016aae.webp" alt="">注音探險島</a><div class="top-actions"><span id="connection" role="status">讀取老師任務…</span><a href="${demo?'teacher.html':'parents.html'}">${demo?'老師專區':'親子專區'} ↗</a></div></header>
 <main id="home"><section class="hero"><div><p class="eyebrow">每天一點點，聲音變熟悉</p><h1>準備好了嗎？<br>一起去<span>聲音探險！</span></h1><p>仔細聽、動手拼。<br>每一次練習，都是一次新的發現。</p><div id="learned" class="learned"></div></div><div class="island" aria-hidden="true"><div class="cloud"></div><span class="sun">✦</span><div class="mountain back"></div><div class="mountain front"></div><div class="ground"></div><div class="tree t1">♠</div><div class="tree t2">♠</div><div class="mascot"><span>•ᴗ•</span><b>ㄅ</b></div><span class="floating f1">ㄧ</span><span class="floating f2">ㄠ</span></div></section>
 <aside id="demo-note" class="notice" ${demo?'':'hidden'}>老師試玩：不傳送成績。拼音為待確認的合成示範音。<button id="demo-basic" class="text-button">第一週六音</button><button id="demo-expanded" class="text-button">含結合韻</button></aside>
 <section class="setup"><label>我是 <select id="seat" aria-label="選擇座號"><option value="">選擇座號</option></select></label><div class="segmented" aria-label="遊玩方式"><button id="solo" class="selected" aria-pressed="true">一人闖關</button><button id="duo" aria-pressed="false">兩人輪流</button></div><label id="partner-label" hidden>夥伴 <select id="partner" aria-label="夥伴座號"></select></label><span id="collection" class="small"></span></section>
@@ -59,11 +63,17 @@ const teamUI=createMultiplayer({localPicker:demo,getIdentity:seat=>profiles?.ide
 function renderIdentity(){teamUI.refreshPicker();profiles?.renderHeader();if($('change-student'))$('change-student').hidden=!auth.verified($('seat').value);document.querySelector('.mascot').innerHTML=portrait(auth.verified($('seat').value)?profiles?.identity($('seat').value).character||rewards.avatar($('seat').value):rewards.avatar(''));}
 rewards=createRewards({demo,getConfig:()=>config,getSeat:()=>auth.verified($('seat').value)?$('seat').value:'',getSeats:()=>[$('seat').value,$('partner').value].filter(s=>auth.verified(s)),jsonGet,post:payload=>auth.request(payload),onChange:renderIdentity});
 const voiceHelp=setupChildUI({demo,onPreviewBonus:()=>rewards.previewBonus(),onBeforeVoice:()=>{stopPracticeReview();audio.pause();}});
-const tutorButton=document.createElement('button');tutorButton.id='little-teacher';tutorButton.hidden=true;tutorButton.setAttribute('aria-label','小老師：看答案，聽拼音示範');tutorButton.innerHTML='<img src="assets/characters/cozy-v1/owl.png" alt=""><span aria-hidden="true">🎓</span>';$('audio-status').after(tutorButton);
+const tutorButton=document.createElement('button');tutorButton.id='little-teacher';tutorButton.hidden=true;tutorButton.setAttribute('aria-label','小老師：看答案，聽拼音示範');tutorButton.innerHTML='<img src="assets/performance-v1/c04e012d62f20dfd.webp" alt=""><span aria-hidden="true">🎓</span>';$('audio-status').after(tutorButton);
 const tutor=createLittleTeacher({onReturn:()=>{clearSpelling();audio.src=audioSource(rounds[active].current.audio);play();}});
 tutorButton.onclick=()=>{stopPracticeReview();const r=rounds[active];if(mode!=='spelling'||!r?.canUseTutor||tutor.open)return;const result=r.useTutor(currentPool);if(result.ignored)return;voiceHelp.stop();audio.pause();audioReady=false;clearSpelling();setAnswerEnabled(false);$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;$('progress-fill').style.width=`${r.index/r.deck.length*100}%`;tutor.show(r.current);};
 function clearSpelling(){selected={};for(const b of document.querySelectorAll('.slot')){b.textContent='';b.classList.remove('filled','blank-choice');b.setAttribute('aria-label',b.dataset.slot==='initial'?'聲符位置':'韻符或結合韻位置');}showSpellingTone(document.querySelector('#spelling .slots'),rounds[active].current);$('check-spelling').disabled=true;}
 setupCozyUI();
+addPreparationButton(()=>{
+ if(!config)return null;
+ const paths=poolFor('single',config,catalog).map(q=>audioSource(q.audio));
+ for(const q of poolFor('spelling',config,catalog))paths.push(...tutorClips(spellingParts(q)).map(audioSource));
+ return [...new Set(paths)].slice(0,400);
+});
 profiles=createStudentProfile({demo,auth,getSeat:()=>$('seat').value,getSeats:()=>[$('seat').value,$('partner').value],getOwned:seat=>rewards.owned(seat),getAvatar:seat=>rewards.avatar(seat),onChange:renderIdentity,isHome:()=>!$('home').hidden});
 setupExamEntry({endpoint:API,home:$('home'),demo});
 function screen(id){for(const name of ['home','game','result'])$(name).hidden=name!==id;profiles?.renderHeader();window.scrollTo(0,0);}

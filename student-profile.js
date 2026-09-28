@@ -1,7 +1,7 @@
-import {classStorageKey} from './class-context.js?v=20260926-classes1';
-import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260913-heroes1';
-import {STAR_CARDS} from './data/star-cards.js?v=20260919-star1';
-import {STAR_SPRITES} from './data/star-sprites.js?v=20260920-sprites1';
+import {classStorageKey} from './class-context.js?v=20260928-perflive1';
+import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260928-perflive1';
+import {STAR_CARDS} from './data/star-cards.js?v=20260928-perflive1';
+import {STAR_SPRITES} from './data/star-sprites.js?v=20260928-perflive1';
 export const PROFILE_CHARACTERS=[...CHARACTERS,...STAR_CARDS.map(c=>({...c,image:STAR_SPRITES[c.id],emoji:'✨',name:c.symbol+'之星使・'+c.name}))];
 const $=id=>document.getElementById(id);
 export function createStudentProfile({demo,auth,getSeat,getSeats,getOwned,getAvatar,onChange,isHome=()=>true}){
@@ -13,7 +13,7 @@ export function createStudentProfile({demo,auth,getSeat,getSeats,getOwned,getAva
  document.body.append(dialog);
  function character(id){return PROFILE_CHARACTERS.find(c=>c.id===id)||CHARACTERS[0];}
  function identity(seat){const p=auth.verified(seat)?cache.get(seat):null;return {seat,name:p?.nickname||p?.name||seat+' 號',character:p?character(p.avatar):getAvatar(seat)};}
- function renderHeader(){const seat=getSeat(),person=seat&&auth.verified(seat)?identity(seat):null;button.replaceChildren();const face=document.createElement('span');face.className='profile-head';face.innerHTML=portrait(person?.character||CHARACTERS[0]);const name=document.createElement('span');name.className='profile-header-name';name.textContent=person?person.name:'我的角色';button.append(face,name);button.setAttribute('aria-label',person?`${seat} 號 ${person.name}，開啟我的角色`:'我的角色，請先選座號登入');button.disabled=!isHome();}
+ function renderHeader(){const seat=getSeat(),person=seat&&auth.verified(seat)?identity(seat):null;button.replaceChildren();const face=document.createElement('span');face.className='profile-head';face.innerHTML=portrait(person?.character||CHARACTERS[0],'character-portrait portrait-small');const name=document.createElement('span');name.className='profile-header-name';name.textContent=person?person.name:'我的角色';button.append(face,name);button.setAttribute('aria-label',person?`${seat} 號 ${person.name}，開啟我的角色`:'我的角色，請先選座號登入');button.disabled=!isHome();}
  function remember(p){cache.set(p.seat,p);renderHeader();onChange?.();return p;}
  async function fetchProfile(seat){
   if(demo){let old;try{old=JSON.parse(localStorage.getItem('zhuyin.demo.profile.'+seat)||'null');}catch{}return {seat,name:'',nickname:old?.nickname||'',avatar:old?.avatar||getAvatar(seat).id,owned:getOwned(seat)||STARTERS,revision:old?.revision||0};}
@@ -24,7 +24,7 @@ export function createStudentProfile({demo,auth,getSeat,getSeats,getOwned,getAva
  }
  async function refresh(){const v=version;await Promise.all(getSeats().filter(s=>s&&auth.verified(s)).map(async seat=>{try{const p=await fetchProfile(seat);if(v===version&&auth.verified(seat))remember(p);}catch{}}));renderHeader();}
  function preview(){const c=character(draftAvatar);$('profile-preview').innerHTML=portrait(c);$('profile-character-name').textContent=c.name;for(const b of dialog.querySelectorAll('[data-profile-avatar]'))b.setAttribute('aria-pressed',String(b.dataset.profileAvatar===draftAvatar));}
- function draw(p){$('profile-seat').textContent=`${p.seat} 號${p.name?'・'+p.name:''}`;$('profile-nickname').value=p.nickname;draftAvatar=p.avatar;$('profile-choices').replaceChildren();for(const id of p.owned){const c=PROFILE_CHARACTERS.find(c=>c.id===id);if(!c)continue;const b=document.createElement('button');b.type='button';b.dataset.profileAvatar=id;b.setAttribute('aria-label','選擇'+c.name);b.innerHTML=portrait(c,'character-portrait','lazy');const name=document.createElement('span');name.textContent=c.name;b.append(name);b.onclick=()=>{draftAvatar=id;preview();};$('profile-choices').append(b);}preview();}
+ function draw(p){$('profile-seat').textContent=`${p.seat} 號${p.name?'・'+p.name:''}`;$('profile-nickname').value=p.nickname;draftAvatar=p.avatar;$('profile-choices').replaceChildren();for(const id of p.owned){const c=PROFILE_CHARACTERS.find(c=>c.id===id);if(!c)continue;const b=document.createElement('button');b.type='button';b.dataset.profileAvatar=id;b.setAttribute('aria-label','選擇'+c.name);b.innerHTML=portrait(c,'character-portrait portrait-small','lazy');const name=document.createElement('span');name.textContent=c.name;b.append(name);b.onclick=()=>{draftAvatar=id;preview();};$('profile-choices').append(b);}preview();}
  function lock(on){busy=on;for(const el of dialog.querySelectorAll('button,input'))el.disabled=on;$('profile-save').disabled=on||!loaded;}
  const messages={invalid_profile:'名字最多 12 個字，請使用中文、英文、數字、空格或短橫線。',avatar_not_owned:'這個角色尚未取得，請重新讀取收藏。',stale_profile:'另一台裝置已更換角色，請重新讀取後再選擇。',authentication_required:'登入已過期，請關閉此視窗後重新登入。'};
  async function open(){const seat=getSeat();if(!seat){$('seat')?.focus();$('home-message')&&($('home-message').textContent='請先選擇座號，再點自己的頭貼。');return;}if(!await auth.ensure(seat))return;openedSeat=seat;loaded=false;draftAvatar='';const v=++version;dialog.showModal();dialog.scrollTop=0;$('profile-message').textContent='正在讀取你的角色…';$('profile-preview').replaceChildren();$('profile-character-name').textContent='';$('profile-seat').textContent=seat+' 號';$('profile-choices').replaceChildren();$('profile-nickname').value='';lock(true);try{const p=await fetchProfile(seat);if(v!==version)return;remember(p);draw(p);loaded=true;$('profile-message').textContent='';}catch(e){if(v===version)$('profile-message').textContent=messages[e.message]||'角色讀取失敗，請按重新讀取。';}finally{if(v===version)lock(false);}}

@@ -1,7 +1,8 @@
-import {classStorageKey,classUrl} from './class-context.js?v=20260926-classes1';
+import './asset-cache.js?v=20260928-perflive1';
+import {classStorageKey,classUrl} from './class-context.js?v=20260928-perflive1';
 import {CHARACTER_CATALOG} from './data/character-catalog.js';
 import {STAR_SPRITES} from './data/star-sprites.js';
-import {audioSource} from './audio-source.js?v=20260928-bo4original1';
+import {audioSource} from './audio-source.js?v=20260928-perflive1';
 const $=id=>document.getElementById(id),SESSION=classStorageKey('zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':live');
 const ENDPOINT=location.hostname==='127.0.0.1'?location.origin:'https://zhuyin-api.j822925.workers.dev';
 

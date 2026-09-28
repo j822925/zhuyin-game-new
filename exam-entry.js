@@ -1,4 +1,4 @@
-import {classUrl} from './class-context.js?v=20260926-classes1';
+import {classUrl} from './class-context.js?v=20260928-perflive1';
 // Public schedule only; all attempts/answers still require the student's PIN.
 export function setupExamEntry({endpoint,home,demo}){
  if(demo)return;

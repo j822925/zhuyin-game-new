@@ -1,5 +1,5 @@
 // Google ContentService redirects to a temporary URL. Never reuse a cached redirect.
-import {classUrl} from './class-context.js?v=20260926-classes1';
+import {classUrl} from './class-context.js?v=20260928-perflive1';
 // Credentials remain in POST bodies and are never added to URLs or logs.
 export function createApiClient(endpoint,{fetchImpl=globalThis.fetch,timeoutMs=45000}={}){
  async function request(params={},payload){

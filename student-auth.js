@@ -1,5 +1,5 @@
-import {classStorageKey} from './class-context.js?v=20260926-classes1';
-import {createStudentSession} from './student-session.js?v=20260920-login1';
+import {classStorageKey} from './class-context.js?v=20260928-perflive1';
+import {createStudentSession} from './student-session.js?v=20260928-perflive1';
 // PINs never enter storage, URLs or score payloads. Primary sessions survive same-tab navigation.
 export function loginFeedback(code,retryAfter){
  if(code==='invalid_pin')return {icon:'🔁 🔒',label:'密碼不正確，請再試一次'};

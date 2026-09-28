@@ -3,13 +3,14 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import {validateCatalog,renderCatalog} from '../tools/sync-characters.mjs';
+import {optimizedImage} from '../data/portrait-thumbnails.js';
 import {CHARACTERS,STARTERS,portrait} from '../characters.js';
 test('角色清單是前端與後台的共同來源，保留舊收藏編號',()=>{
  const source=JSON.parse(readFileSync(new URL('../data/characters.json',import.meta.url),'utf8'));
  assert.deepEqual(validateCatalog(source),CHARACTERS);
  assert.deepEqual(STARTERS,['rabbit','fox']);
  assert.deepEqual(CHARACTERS.slice(0,20).map(c=>c.id),['rabbit','fox','panda','cat','bear','koala','frog','penguin','lion','owl','rose','moon','sea','forest','sun','snow','rainbow','berry','star','lavender']);
- for(const c of CHARACTERS)assert.ok(portrait(c).includes(c.image));
+ for(const c of CHARACTERS)assert.ok(portrait(c).includes(optimizedImage(c.image)));
 });
 test('所有角色是真正透明 PNG，而非假棋盤背景',()=>{
  for(const c of CHARACTERS){const png=readFileSync(new URL('../'+c.image,import.meta.url));assert.equal(png.toString('hex',0,8),'89504e470d0a1a0a');assert.equal(png[25],6,c.id+' 必須 RGBA');}

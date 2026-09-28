@@ -1,10 +1,11 @@
-import {readingDeck,readingStars,matchesReading,READING_WORDS} from './reading-core.js?v=20260926-reading1';
-import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic4';
-import {createMicCheck} from './reading-mic-check.js?v=20260928-mic3';
-import {createMicPreference} from './reading-mic-preference.js?v=20260928-memory1';
-import {classStorageKey,classUrl} from './class-context.js?v=20260926-classes1';
-import {createApiClient} from './api-client.js?v=20260926-classes1';
-import {createStudentAuth} from './student-auth.js?v=20260926-classes1';
+import './asset-cache.js?v=20260928-perflive1';
+import {readingDeck,readingStars,matchesReading,READING_WORDS} from './reading-core.js?v=20260928-perflive1';
+import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-perflive1';
+import {createMicCheck} from './reading-mic-check.js?v=20260928-perflive1';
+import {createMicPreference} from './reading-mic-preference.js?v=20260928-perflive1';
+import {classStorageKey,classUrl} from './class-context.js?v=20260928-perflive1';
+import {createApiClient} from './api-client.js?v=20260928-perflive1';
+import {createStudentAuth} from './student-auth.js?v=20260928-perflive1';
 const $=id=>document.getElementById(id),demo=new URLSearchParams(location.search).get('demo')==='1';
 const localPreview=['localhost','127.0.0.1','[::1]'].includes(location.hostname);
 const allowMicCheck=!demo||localPreview;

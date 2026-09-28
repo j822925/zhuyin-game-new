@@ -17,7 +17,7 @@ export function setupStudentLoginGate({auth,getSeat,selectSeat,getSeats,onRetry,
  document.addEventListener('click',event=>{
   const target=event.target.closest?.('button,a,select,input');
   if(new URLSearchParams(location.search).get('demo')==='1'&&target?.closest('#teacher-testing-hub'))return;
-  if(!target||target.closest('dialog')||!target.closest('header,#home')||target.id==='seat'||auth.verified(getSeat()))return;
+  if(!target||target.classList.contains('prepare-launch')||target.closest('dialog')||!target.closest('header,#home')||target.id==='seat'||auth.verified(getSeat()))return;
   event.preventDefault();event.stopImmediatePropagation();
   open(target.matches('button,a')?target:null);
  },true);

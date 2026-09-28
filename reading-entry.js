@@ -1,5 +1,5 @@
-import {classUrl} from './class-context.js?v=20260926-classes1';
-import {createApiClient} from './api-client.js?v=20260926-classes1';
+import {classUrl} from './class-context.js?v=20260928-perflive1';
+import {createApiClient} from './api-client.js?v=20260928-perflive1';
 // Independent entry: does not register as data-mode in the other levels' controller.
 function attach(){const worlds=document.querySelector('#home .worlds');if(!worlds||document.getElementById('reading-entry'))return;
  const a=document.createElement('a');a.id='reading-entry';a.className='world reading-world';a.href=classUrl('reading.html'+(new URLSearchParams(location.search).get('demo')==='1'?'?demo=1':''));
