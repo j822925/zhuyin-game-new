@@ -1,7 +1,7 @@
 import {MONSTERS} from './data/monsters.js?v=20260928-all1';
-import {reactCharacter} from './character-motion.js?v=20260928-all1';
+import {reactCharacter} from './character-motion.js?v=20260928-size1';
 import {startBattleEffects} from './battle-effects.js?v=20260928-all1';
-import {mountMonster,playMonster} from './monster-motion.js?v=20260928-all1';
+import {mountMonster,playMonster} from './monster-motion.js?v=20260928-size1';
 
 export function createOpponent(){
  const el=document.createElement('aside');el.className='practice-opponent';el.setAttribute('aria-label','陪你挑戰的小怪物');

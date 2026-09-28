@@ -36,7 +36,11 @@ async function loadAtlas(id){
   const pivot=pivots[id]?.[index]||[footCount?footX/footCount:(p.l+p.r)/2,p.b];
   fc.putImageData(out,0,0);return {image:frame,pivot:[pivot[0]-l,pivot[1]-t]};
  });
- const scale=pivots[id] ? .78 : Math.min(...frames.map(f=>Math.min(350/f.pivot[1],202/Math.max(1,f.pivot[0]),202/Math.max(1,f.image.width-f.pivot[0]))));
+ // Enemies reserve room for the full weapon span, not twice its distance from
+ // the feet. A long forward thrust must not shrink every standing pose.
+ const scale=BATTLE_META[id]?.enemy
+  ? Math.min(...frames.map(f=>Math.min(350/Math.max(1,f.pivot[1]),440/f.image.width)))
+  : pivots[id] ? .78 : Math.min(...frames.map(f=>Math.min(350/f.pivot[1],202/Math.max(1,f.pivot[0]),202/Math.max(1,f.image.width-f.pivot[0]))));
  frames.forEach(f=>f.scale=scale);return frames;
  })();caches.set(id,pending);while(caches.size>6)caches.delete(caches.keys().next().value);pending.catch(()=>{if(caches.get(id)===pending)caches.delete(id);});return pending;
 }
@@ -71,7 +75,9 @@ export class BattleSprite{
  tick(now){if(this.disposed)return;if(this.canvas.isConnected)this.wasConnected=true;else if(this.wasConnected){this.dispose();return;}this.frame=requestAnimationFrame(this.tick);if(document.hidden||now-this.last<1000/30||!this.canvas.getClientRects().length)return;this.last=now;const duration=BATTLE_DURATIONS[this.action],t=duration?clamp((now-this.started)/duration):0;if(duration&&t>=1&&this.action!=='star')this.play('idle');this.draw(t,now/1000);}
  draw(t,clock){if(!this.frames)return;const c=this.ctx,p=battlePose(this.id,this.action,t,this.reduced.matches);c.clearRect(0,0,480,480);this.canvas.dataset.face=String(p.face);this.canvas.dataset.pose=String(p.frame);
   const spell=this.id==='rabbit',active=this.action==='attack';
-  const drawFrame=(x,alpha=1)=>{const f=this.frames[p.frame],s=f.scale;c.save();c.globalAlpha=alpha;c.translate((pivots[this.id]?274:240)+p.x+x,416+p.y);c.rotate(p.angle*Math.PI/180);c.drawImage(f.image,-f.pivot[0]*s,-f.pivot[1]*s,f.image.width*s,f.image.height*s);c.restore();};
+  const drawFrame=(x,alpha=1)=>{const f=this.frames[p.frame],s=f.scale;let anchor=(pivots[this.id]?274:240)+p.x+x;
+   if(BATTLE_META[this.id]?.enemy){const turn=Math.abs(Math.sin(p.angle*Math.PI/180))*f.image.height*s;anchor=Math.max(8+f.pivot[0]*s+turn,Math.min(472-(f.image.width-f.pivot[0])*s-turn,anchor));}
+   c.save();c.globalAlpha=alpha;c.translate(anchor,416+p.y);c.rotate(p.angle*Math.PI/180);c.drawImage(f.image,-f.pivot[0]*s,-f.pivot[1]*s,f.image.width*s,f.image.height*s);c.restore();};
   if(!spell&&['slash','dash','arrow'].includes(BATTLE_META[this.id]?.fx)&&active&&!this.reduced.matches&&t>.26&&t<.58){const d=BATTLE_META[this.id]?.enemy?-1:1;drawFrame(34*d,.09);drawFrame(18*d,.17);}
   // Cotton Rabbit keeps the garden identity: a few soft blossoms, no mage sigil.
   if(spell&&active&&!this.reduced.matches&&t>.2&&t<.7){const q=(t-.2)/.5;for(let i=0;i<3;i++)drawBlossom(c,161-q*30+i*14,266-i*23-q*30,6+i,q*2+i,Math.sin(q*Math.PI)*.65);}

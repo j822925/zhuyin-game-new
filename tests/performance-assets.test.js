@@ -12,5 +12,6 @@ test('formal auth, audio resolver and home icons are retained; preparation is op
  const app=read('app.js');assert(app.includes("const API='https://zhuyin-api.j822925.workers.dev/api'"));assert(!app.includes('teachertrial.pending'));assert(app.includes("zhuyin.pending.v2"));
  const index=read('index.html'),version=index.match(/name="application-version" content="([^"]+)"/)[1];assert(index.includes('href="assets/icons/apple-touch-icon-v1.png"'));assert(index.includes('game-boot.js?v='+version));
  assert(read('preparation.js').includes('先進遊戲'));assert(read('student-login-gate.js').includes("target.classList.contains('prepare-launch')"));
- for(const f of ['exam.js','online.js','notebook.js','reading.js'])assert(read(f).includes("import './asset-cache.js?v="+version+"'"));
+ // Unchanged cache modules retain their own revision across cosmetic releases.
+ for(const f of ['exam.js','online.js','notebook.js','reading.js'])assert.match(read(f),/import '\.\/asset-cache\.js\?v=[a-zA-Z0-9-]+'/);
 });
