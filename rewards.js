@@ -1,9 +1,9 @@
-import {classStorageKey} from './class-context.js?v=20260928-perflive1';
-import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20260928-perflive1';
-import {cappedRoundAward,rewardParticipants,taipeiDay} from './learning-rewards.js?v=20260928-perflive1';
-import {startGachaAnimation} from './gacha-animation.js?v=20260928-perflive1';
-import {createStarPrize} from './star-prize.js?v=20260928-perflive1';
-import {confirmReward,within} from './reward-request.js?v=20260928-perflive1';
+import {classStorageKey} from './class-context.js?v=20260928-all1';
+import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20260928-all1';
+import {cappedRoundAward,rewardParticipants,taipeiDay} from './learning-rewards.js?v=20260928-all1';
+import {startGachaAnimation} from './gacha-animation.js?v=20260928-all1';
+import {createStarPrize} from './star-prize.js?v=20260928-all1';
+import {confirmReward,within} from './reward-request.js?v=20260928-all1';
 export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onChange}){
  const $=id=>document.getElementById(id),cache=new Map(),refreshVersions=new Map();let category='animal',busy=false,activeSeat='',previewPersistent=true,revealed=false,prize=null;
  function read(key,fallback){try{return JSON.parse(localStorage.getItem(classStorageKey(key)))??fallback;}catch{return fallback;}}

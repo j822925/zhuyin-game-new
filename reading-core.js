@@ -1,6 +1,6 @@
 // Shared word bank and scoring for the fourth level. No fuzzy/substring matching:
 // a longer sentence or a similar-sounding word must not earn a correct answer.
-import {EXTRA_READING_WORDS} from './reading-words.js?v=20260928-bank1';
+import {EXTRA_READING_WORDS} from './reading-words.js?v=20260928-all1';
 export const READING_WORDS = [
  ['apple','蘋果','ㄆㄧㄥˊ ㄍㄨㄛˇ','苹果'],
  ['watermelon','西瓜','ㄒㄧ ㄍㄨㄚ'],

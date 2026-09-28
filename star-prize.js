@@ -1,4 +1,4 @@
-import {optimizedImage} from './data/portrait-thumbnails.js?v=20260928-perflive1';
+import {optimizedImage} from './data/portrait-thumbnails.js?v=20260928-all1';
 const el=(tag,text)=>{const n=document.createElement(tag);if(text)n.textContent=text;return n;};
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 export function starEgg(){

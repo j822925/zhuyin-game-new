@@ -1,7 +1,8 @@
-import {classStorageKey} from './class-context.js?v=20260928-perflive1';
-import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260928-perflive1';
-import {STAR_CARDS} from './data/star-cards.js?v=20260928-perflive1';
-import {STAR_SPRITES} from './data/star-sprites.js?v=20260928-perflive1';
+import {classStorageKey} from './class-context.js?v=20260928-all1';
+import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260928-all1';
+import {STAR_CARDS} from './data/star-cards.js?v=20260928-all1';
+import {STAR_SPRITES} from './data/star-sprites.js?v=20260928-all1';
+import {mountCharacter,clearCharacters} from './character-motion.js?v=20260928-all1';
 export const PROFILE_CHARACTERS=[...CHARACTERS,...STAR_CARDS.map(c=>({...c,image:STAR_SPRITES[c.id],emoji:'✨',name:c.symbol+'之星使・'+c.name}))];
 const $=id=>document.getElementById(id);
 export function createStudentProfile({demo,auth,getSeat,getSeats,getOwned,getAvatar,onChange,isHome=()=>true}){
@@ -33,5 +34,5 @@ export function createStudentProfile({demo,auth,getSeat,getSeats,getOwned,getAva
  $('profile-close').onclick=()=>{if(!busy){version++;dialog.close();}};dialog.addEventListener('cancel',e=>{if(busy)e.preventDefault();else version++;});
  $('profile-form').onsubmit=async e=>{e.preventDefault();if(busy)return;const p=cache.get(openedSeat);if(!p||!auth.verified(openedSeat)){$('profile-message').textContent='請先重新登入並讀取角色。';return;}const nickname=$('profile-nickname').value.normalize('NFKC').trim();if([...nickname].length>12||(nickname&&!/^[\p{L}\p{N} ·\-]+$/u.test(nickname))){$('profile-message').textContent=messages.invalid_profile;return;}lock(true);const v=version;$('profile-message').textContent='儲存中…';try{let out;if(demo){out={...p,nickname,avatar:draftAvatar,revision:p.revision+1};localStorage.setItem('zhuyin.demo.profile.'+openedSeat,JSON.stringify(out));}else{out=await auth.request({kind:'profile-save',seat:openedSeat,nickname,avatar:draftAvatar,revision:p.revision});if(out.error)throw Error(out.error);}if(v!==version)return;remember(out);draw(out);$('profile-message').textContent='已儲存！回到遊戲就會使用這個名字和角色。';}catch(e){if(v===version)$('profile-message').textContent=messages[e.message]||'尚未確認儲存結果，請按重新讀取確認。';}finally{if(v===version)lock(false);}};
  renderHeader();
- return {identity,refresh,renderHeader,clearSeat(seat){version++;cache.delete(seat);if(openedSeat===seat){loaded=false;dialog.close();$('profile-nickname').value='';$('profile-preview').replaceChildren();$('profile-choices').replaceChildren();}renderHeader();},renderPlayer(root,seat){const p=identity(seat);root.replaceChildren();const image=document.createElement('span');image.className='playing-character';image.innerHTML=portrait(p.character);const label=document.createElement('strong');label.textContent=`${seat} 號・${p.name}`;root.classList.add('profile-playing');root.append(image,label);}};
+ return {identity,refresh,renderHeader,clearSeat(seat){version++;cache.delete(seat);if(openedSeat===seat){loaded=false;dialog.close();$('profile-nickname').value='';$('profile-preview').replaceChildren();$('profile-choices').replaceChildren();}renderHeader();},renderPlayer(root,seat){const p=identity(seat);clearCharacters(root);root.replaceChildren();const image=document.createElement('span');image.className='playing-character';const label=document.createElement('strong');label.textContent=`${seat} 號・${p.name}`;root.classList.add('profile-playing');root.append(image,label);mountCharacter(image,p.character);}};
 }

@@ -1,5 +1,5 @@
-import {PORTRAIT_THUMBNAILS,optimizedImage} from './data/portrait-thumbnails.js?v=20260928-perflive1';
-import {CHARACTER_CATALOG} from './data/character-catalog.js?v=20260928-perflive1';
+import {PORTRAIT_THUMBNAILS,optimizedImage} from './data/portrait-thumbnails.js?v=20260928-all1';
+import {CHARACTER_CATALOG} from './data/character-catalog.js?v=20260928-all1';
 export const CHARACTERS=CHARACTER_CATALOG;
 export const STARTERS=CHARACTERS.filter(c=>c.starter).map(c=>c.id);
 export const DRAW_COST=5;

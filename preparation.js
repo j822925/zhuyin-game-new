@@ -1,6 +1,6 @@
-import {prepareMedia,startMediaCache,missingMedia} from './asset-cache.js?v=20260928-perflive1';
-import {LOADING_CARDS,STARTUP_MEDIA} from './data/performance-assets.js?v=20260928-perflive1';
-import {orderedCards} from './cache-policy.js?v=20260928-perflive1';
+import {prepareMedia,startMediaCache,missingMedia} from './asset-cache.js?v=20260928-all1';
+import {LOADING_CARDS,STARTUP_MEDIA} from './data/performance-assets.js?v=20260928-all1';
+import {orderedCards} from './cache-policy.js?v=20260928-all1';
 let active=null;const cards=orderedCards(LOADING_CARDS);
 export async function prepareWithCards(paths,{startup=false}={}){
  if(active)return;await startMediaCache();const missing=await missingMedia(paths);if(startup&&!missing.length)return;

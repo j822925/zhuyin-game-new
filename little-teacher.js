@@ -1,8 +1,8 @@
-import {audioSource} from './audio-source.js?v=20260928-perflive1';
-import {SUPPLIED_TUTOR_AUDIO} from './data/supplied-audio.js?v=20260928-perflive1';
-import {BASE,COMPOUNDS} from './core.js?v=20260928-perflive1';
-import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260928-perflive1';
-import {TUTOR_TONES} from './data/tutor-tones.js?v=20260928-perflive1';
+import {audioSource} from './audio-source.js?v=20260928-all1';
+import {SUPPLIED_TUTOR_AUDIO} from './data/supplied-audio.js?v=20260928-all1';
+import {BASE,COMPOUNDS} from './core.js?v=20260928-all1';
+import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260928-all1';
+import {TUTOR_TONES} from './data/tutor-tones.js?v=20260928-all1';
 export function tutorClips(q){
  const symbolAudio=s=>SUPPLIED_TUTOR_AUDIO[s]||(BASE.includes(s)?'audio/audio_F'+(BASE.indexOf(s)+1)+'.WAV':'audio/compound/c'+String(COMPOUNDS.indexOf(s)+1).padStart(2,'0')+'.mp3');
  let {initial='',final='',tone=1}=q;

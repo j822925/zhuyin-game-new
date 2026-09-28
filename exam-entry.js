@@ -1,6 +1,6 @@
-import {classUrl} from './class-context.js?v=20260928-perflive1';
+import {classUrl} from './class-context.js?v=20260928-all1';
 // Public schedule only; all attempts/answers still require the student's PIN.
-export function setupExamEntry({endpoint,home,demo}){
+export function setupExamEntry({endpoint,home,demo,monsterCollection}){
  if(demo)return;
  const panel=document.createElement('nav');panel.className='special-destinations';panel.setAttribute('aria-label','小考與星使收藏');
  function card({href,theme,icon,title,description}){
@@ -14,6 +14,7 @@ export function setupExamEntry({endpoint,home,demo}){
  }
  const {a:link,detail}=card({href:'exam.html',theme:'destination-exam',icon:'assets/icons/exam-notebook-v1.svg',title:'老師小考',description:'聽音 25 題・拼音 10 題'});
  card({href:'star-cards.html',theme:'destination-stars',icon:'assets/icons/star-collection-v1.svg',title:'滿分星使收藏',description:'領取滿分獎勵・看看我的卡片'});
+ if(monsterCollection){const {a}=card({href:'#',theme:'destination-monsters',icon:'assets/icons/monster-collection.svg',title:'可愛反派收藏',description:'隨機遇見・全對擊敗三次就能收藏'});monsterCollection.button.className='destination-card destination-monsters';monsterCollection.button.replaceChildren(...a.childNodes);a.replaceWith(monsterCollection.button);}
  card({href:'notebook.html',theme:'destination-exam',icon:'assets/icons/mistake-notebook.svg',title:'我的錯題本',description:'再練一次・答對就畢業！'});
  home.prepend(panel);
  async function refresh(){try{const r=await fetch(classUrl(endpoint+'?api=exams'),{cache:'no-store'});if(!r.ok)throw Error('schedule');const out=await r.json();if(!Array.isArray(out.exams)||!Number.isFinite(out.serverNow))throw Error('schedule');const active=out.exams.find(e=>e.starts<=out.serverNow&&e.ends>out.serverNow);link.href=active?'exam.html?id='+encodeURIComponent(active.id):'exam.html';link.classList.toggle('exam-open',!!active);detail.textContent=active?'小考進行中：'+active.title+'（'+(active.questions??25)+' 題）':'聽音 25 題・拼音 10 題';}catch{link.href='exam.html';link.classList.remove('exam-open');detail.textContent='點這裡確認小考時間';}}

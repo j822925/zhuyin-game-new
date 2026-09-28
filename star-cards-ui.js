@@ -1,8 +1,8 @@
-import {optimizedImage} from './data/portrait-thumbnails.js?v=20260928-perflive1';
-import './asset-cache.js?v=20260928-perflive1';
-import {STAR_CARDS} from './data/star-cards.js?v=20260928-perflive1';
-import {starEgg,createStarPrize} from './star-prize.js?v=20260928-perflive1';
-import {within} from './reward-request.js?v=20260928-perflive1';
+import {optimizedImage} from './data/portrait-thumbnails.js?v=20260928-all1';
+import './asset-cache.js?v=20260928-all1';
+import {STAR_CARDS} from './data/star-cards.js?v=20260928-all1';
+import {starEgg,createStarPrize} from './star-prize.js?v=20260928-all1';
+import {within} from './reward-request.js?v=20260928-all1';
 export function createStarCollection({root,request}){
  const send=request;request=payload=>within(Promise.resolve().then(()=>send(payload)),12000);
  let busy=false,version=0,prize=null;

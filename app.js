@@ -1,22 +1,26 @@
-import {addPreparationButton} from './preparation.js?v=20260928-perflive1';
-import {tutorClips} from './little-teacher.js?v=20260928-perflive1';
-import {warmAudio} from './asset-cache.js?v=20260928-perflive1';
-import {playTutorOnce} from './exam-review.js?v=20260928-perflive1';
-import {classStorageKey,classUrl} from './class-context.js?v=20260928-perflive1';
-import {audioSource} from './audio-source.js?v=20260928-perflive1';
-import {createLittleTeacher} from './little-teacher.js?v=20260928-perflive1';
-import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260928-perflive1';
-import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round,spellingChoices,spellingParts} from './core.js?v=20260928-perflive1';
-import {createMultiplayer} from './multiplayer.js?v=20260928-perflive1';
-import {createRewards} from './rewards.js?v=20260928-perflive1';
-import {createStudentProfile} from './student-profile.js?v=20260928-perflive1';
-import {portrait} from './characters.js?v=20260928-perflive1';
-import {setupChildUI} from './child-ui.js?v=20260928-perflive1';
-import {setupCozyUI} from './cozy-ui.js?v=20260928-perflive1';
-import {createStudentAuth} from './student-auth.js?v=20260928-perflive1';
-import {setupStudentLoginGate} from './student-login-gate.js?v=20260928-perflive1';
-import {createApiClient} from './api-client.js?v=20260928-perflive1';
-import {setupExamEntry} from './exam-entry.js?v=20260928-perflive1';
+import {addPreparationButton} from './preparation.js?v=20260928-all1';
+import {tutorClips} from './little-teacher.js?v=20260928-all1';
+import {warmAudio} from './asset-cache.js?v=20260928-all1';
+import {playTutorOnce} from './exam-review.js?v=20260928-all1';
+import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
+import {audioSource} from './audio-source.js?v=20260928-all1';
+import {createLittleTeacher} from './little-teacher.js?v=20260928-all1';
+import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260928-all1';
+import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round,spellingChoices,spellingParts} from './core.js?v=20260928-all1';
+import {createMultiplayer} from './multiplayer.js?v=20260928-all1';
+import {createRewards} from './rewards.js?v=20260928-all1';
+import {createStudentProfile} from './student-profile.js?v=20260928-all1';
+import {portrait} from './characters.js?v=20260928-all1';
+import {setupChildUI} from './child-ui.js?v=20260928-all1';
+import {setupCozyUI} from './cozy-ui.js?v=20260928-all1';
+import {createStudentAuth} from './student-auth.js?v=20260928-all1';
+import {setupStudentLoginGate} from './student-login-gate.js?v=20260928-all1';
+import {createApiClient} from './api-client.js?v=20260928-all1';
+import {setupExamEntry} from './exam-entry.js?v=20260928-all1';
+import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,celebrateCharacter,motionPortrait} from './character-motion.js?v=20260928-all1';
+import {MONSTERS} from './data/monsters.js?v=20260928-all1';
+import {setupMonsterCollection,startDemoMonster,creditDemoMonster,showMonsterReward} from './monster-cards-ui.js?v=20260928-all1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20260928-all1';
 const API='https://zhuyin-api.j822925.workers.dev/api';
 const demo=new URLSearchParams(location.search).get('demo')==='1';
 const names={single:'聲音森林',spelling:'拼音工坊'};
@@ -39,7 +43,7 @@ const audio=new Audio();audio.preload='auto';
 audio.addEventListener('ended',()=>{const r=rounds[active];if(r)void warmAudio(r.deck.slice(r.index+1,r.index+3).map(q=>audioSource(q.audio))).catch(()=>{});});
 const choices=4;
 let config,catalog=[],duo=false,mode='single',rounds=[],active=0,currentPool=[],seats=[],selected={},audioReady=false,session=0,saving=false,latestIds=[];
-let playStyle='solo';
+let playStyle='solo',monsterStartPending=false;
 const memory={};
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(classStorageKey(key)))??fallback;}catch{return memory[key]??fallback;}}
 function write(key,value){memory[key]=value;try{localStorage.setItem(classStorageKey(key),JSON.stringify(value));return true;}catch{return false;}}
@@ -59,7 +63,7 @@ const apiClient=createApiClient(API);
 const postJSON=payload=>apiClient.post(payload);
 const auth=createStudentAuth({demo,getConfig:()=>config,post:postJSON});
 let rewards,profiles,loginGate;
-const teamUI=createMultiplayer({localPicker:demo,getIdentity:seat=>profiles?.identity(seat),getOwned:seat=>rewards?.owned(seat),getSeats:()=>[$('seat').value,$('partner').value],onExit:home,onFinish:(payload,html)=>{screen('result');$('result-details').innerHTML=html;persistResults([payload]);}});
+const teamUI=createMultiplayer({localPicker:demo,getIdentity:seat=>profiles?.identity(seat),getOwned:seat=>rewards?.owned(seat),getSeats:()=>[$('seat').value,$('partner').value],onExit:home,onFinish:(payload,html)=>{screen('result');clearCharacters($('result-details'));$('result-details').innerHTML=html;persistResults([payload]);}});
 function renderIdentity(){teamUI.refreshPicker();profiles?.renderHeader();if($('change-student'))$('change-student').hidden=!auth.verified($('seat').value);document.querySelector('.mascot').innerHTML=portrait(auth.verified($('seat').value)?profiles?.identity($('seat').value).character||rewards.avatar($('seat').value):rewards.avatar(''));}
 rewards=createRewards({demo,getConfig:()=>config,getSeat:()=>auth.verified($('seat').value)?$('seat').value:'',getSeats:()=>[$('seat').value,$('partner').value].filter(s=>auth.verified(s)),jsonGet,post:payload=>auth.request(payload),onChange:renderIdentity});
 const voiceHelp=setupChildUI({demo,onPreviewBonus:()=>rewards.previewBonus(),onBeforeVoice:()=>{stopPracticeReview();audio.pause();}});
@@ -75,7 +79,8 @@ addPreparationButton(()=>{
  return [...new Set(paths)].slice(0,400);
 });
 profiles=createStudentProfile({demo,auth,getSeat:()=>$('seat').value,getSeats:()=>[$('seat').value,$('partner').value],getOwned:seat=>rewards.owned(seat),getAvatar:seat=>rewards.avatar(seat),onChange:renderIdentity,isHome:()=>!$('home').hidden});
-setupExamEntry({endpoint:API,home:$('home'),demo});
+const monsterCollection=setupMonsterCollection({parent:document.querySelector('.home-foot'),getSeat:()=>auth.verified($('seat').value)?$('seat').value:'',request:payload=>auth.request(payload),demo});
+setupExamEntry({endpoint:API,home:$('home'),demo,monsterCollection});
 function screen(id){for(const name of ['home','game','result'])$(name).hidden=name!==id;profiles?.renderHeader();window.scrollTo(0,0);}
 function refreshHome(){
  const previous=$('seat').value,partner=$('partner').value;
@@ -120,7 +125,8 @@ async function start(id){
   if(!demo&&!config.raceWrites){$('home-message').textContent='老師提醒：搶答紀錄需要新版後台，目前可先在老師試玩體驗。';return;}
   audio.pause();session++;latestIds=[];teamUI.start({seats,mode,questionPool:currentPool,questions:config.questions,choices});return;
  }
- session++;active=0;rounds=seats.map(()=>new Round(questionDeck(currentPool,config.questions)));latestIds=[];
+ if(monsterStartPending)return;monsterStartPending=true;const startSession=++session,newRounds=seats.map(()=>Object.assign(new Round(questionDeck(currentPool,config.questions)),{encounterId:crypto.randomUUID()}));
+ try{for(const [i,r] of newRounds.entries()){const encounter=demo?startDemoMonster(seats[i],r.encounterId):await auth.request({kind:'monster-start',seat:seats[i],encounter:r.encounterId});if(encounter.error||!MONSTERS.some(c=>c.id===encounter.monsterId))throw Error('encounter');Object.assign(r,encounter);}if(session!==startSession)return;rounds=newRounds;active=0;latestIds=[];}catch{$('home-message').textContent='怪物挑戰尚未連線，請按關卡再試一次。';return;}finally{monsterStartPending=false;}
  screen('game');renderQuestion();
 }
 function setAnswerEnabled(enabled){enabled=enabled&&!tutor.open;document.querySelectorAll('.option,.tile,.slot').forEach(b=>b.disabled=!enabled);$('check-spelling').disabled=!enabled||selected.initial===undefined||selected.final===undefined;tutorButton.disabled=!rounds[active]?.canUseTutor||tutor.open;}
@@ -135,10 +141,13 @@ async function play(){
  catch{if(session!==currentSession||rounds[active]?.current!==question)return;audioReady=false;setAnswerEnabled(false);$('audio-status').textContent='請按喇叭播放聲音；若仍無聲音，請確認音量與網路。';}
 }
 audio.addEventListener('error',()=>{audioReady=false;setAnswerEnabled(false);$('audio-status').textContent='這段聲音暫時無法播放，請再按一次喇叭。';});
+const opponent=createOpponent();$('game').classList.add('battle-layout');$('game').append(opponent);
+const practiceBattle=createBattle(opponent,()=>$('player-turn'));
 function renderQuestion(){
  stopPracticeReview();
+ practiceBattle.reset();clearCharacters($('player-turn'));
  tutor.close();tutorButton.hidden=mode!=='spelling'||(!demo&&!config.tutorWrites);
- const r=rounds[active];r.deck[r.index]=spellingParts(r.current);const q=r.current;document.getElementById('game').classList.toggle('spelling-active',mode==='spelling');r.questionStarted=Date.now();selected={};audio.pause();audio.src=audioSource(q.audio);audioReady=false;
+ const r=rounds[active];updateOpponent(opponent,MONSTERS.find(c=>c.id===r.monsterId),r.deck.length,r.index,{wins:r.monsterWins,perfect:r.mistakes===0});r.deck[r.index]=spellingParts(r.current);const q=r.current;document.getElementById('game').classList.toggle('spelling-active',mode==='spelling');r.questionStarted=Date.now();selected={};audio.pause();audio.src=audioSource(q.audio);audioReady=false;
  $('world-title').textContent=names[mode];$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;
  $('progress-fill').style.width=`${r.index/r.deck.length*100}%`;$('player-turn').classList.toggle('profile-playing',!duo);if(duo)$('player-turn').replaceChildren();else profiles.renderPlayer($('player-turn'),seats[active]);
  $('instruction').textContent=mode==='spelling'?'聽一聽，用注音積木拼出聲音':'仔細聽，選出正確的注音';$('feedback').textContent='';$('next').hidden=true;$('options').replaceChildren();$('spelling').hidden=mode!=='spelling';
@@ -148,27 +157,28 @@ function renderQuestion(){
 }
 function place(kind,value){if(!audioReady||rounds[active].locked)return;if(!['initial','final'].includes(kind)||![...document.querySelectorAll('.tile')].some(b=>b.dataset.kind===kind&&b.dataset.value===value))return;selected[kind]=value;if(kind==='final')document.querySelector('#spelling .slots').dataset.finalLength=String(Math.max(value.length,rounds[active].current.final.length));const b=document.querySelector(`[data-slot="${kind}"]`);setVerticalSymbols(b,value);b.setAttribute('aria-label',(kind==='initial'?'聲符：':'韻符：')+(value||'空白'));b.classList.add('filled');$('check-spelling').disabled=selected.initial===undefined||selected.final===undefined;}
 function answer(value,button){
- if(!audioReady)return;const r=rounds[active],outcome=r.answer(value);if(outcome.ignored)return;
+ if(!audioReady)return;const r=rounds[active],outcome=r.answer(value);if(outcome.ignored)return;practiceBattle.answer(outcome.correct);updateOpponent(opponent,MONSTERS.find(c=>c.id===r.monsterId),r.deck.length,r.index+(outcome.correct?1:0),{wins:r.monsterWins,perfect:r.mistakes===0});
  if(!outcome.correct){if(button){button.classList.add('wrong');button.disabled=true;} $('feedback').textContent='🔁 👂';if(mode==='spelling')void replayWrongSpelling();else play();return;}
  if(button)button.classList.add('correct');setAnswerEnabled(false);
  $('feedback').textContent=outcome.firstCorrect?'⭐ ✨':'✅ ⭐';
  $('next').textContent=outcome.finished&&active===rounds.length-1?'🎉 →':duo?`${teamUI.character((active+1)%2)} ▶`:'▶';$('next').hidden=false;$('next').focus();
 }
 function next(){const r=rounds[active];if(!r.locked)return;r.next();if(rounds.every(x=>x.index>=x.deck.length)){finish();return;}active=(active+1)%rounds.length;if(rounds[active].index>=rounds[active].deck.length)active=(active+1)%rounds.length;renderQuestion();}
-function finish(){stopPracticeReview();audio.pause();teamUI.stop();screen('result');let html='';const results=[];
- rounds.forEach((r,i)=>{const correct=r.deck.length-r.mistakes;html+=`<h2>${safe(seats[i])} 號${r.mistakes===0?' · 全部答對！':''}</h2><div class="metrics"><div><strong>${correct}<small> / ${r.deck.length}</small></strong><span>第一次就答對</span></div><div><strong>${r.mistakes}</strong><span>需要再練的題目</span></div></div>`;const weak=[...new Set(r.rows.filter(x=>!x.firstCorrect).map(x=>x.target))];if(weak.length)html+='<p class="small">這幾個聲音，再當一次好朋友</p><div class="review-chips">'+weak.map(x=>`<button class="review-chip" data-review="${safe(x)}">${safe(x)} ♪</button>`).join('')+'</div>';const progress=read('zhuyin.progress.v2',{});progress[seats[i]]??={};progress[seats[i]][mode]=Math.max(progress[seats[i]][mode]||0,correct);write('zhuyin.progress.v2',progress);const key=`zhuyin.attempt.${seats[i]}`,attempt=read(key,0)+1;write(key,attempt);results.push({roundId:crypto.randomUUID(),seat:seats[i],attempt,total:r.deck.length,mistakes:r.mistakes,mode,seconds:Math.round((Date.now()-r.started)/1000),results:r.rows});});
+function finish(){stopPracticeReview();practiceBattle.reset();clearCharacters($('player-turn'));audio.pause();teamUI.stop();screen('result');let html='';const results=[];
+ rounds.forEach((r,i)=>{const correct=r.deck.length-r.mistakes;html+=`<h2>${safe(seats[i])} 號${r.mistakes===0?' · 全部答對！':''}</h2><div class="metrics"><div><strong>${correct}<small> / ${r.deck.length}</small></strong><span>第一次就答對</span></div><div><strong>${r.mistakes}</strong><span>需要再練的題目</span></div></div>`;const weak=[...new Set(r.rows.filter(x=>!x.firstCorrect).map(x=>x.target))];if(weak.length)html+='<p class="small">這幾個聲音，再當一次好朋友</p><div class="review-chips">'+weak.map(x=>`<button class="review-chip" data-review="${safe(x)}">${safe(x)} ♪</button>`).join('')+'</div>';const progress=read('zhuyin.progress.v2',{});progress[seats[i]]??={};progress[seats[i]][mode]=Math.max(progress[seats[i]][mode]||0,correct);write('zhuyin.progress.v2',progress);const key=`zhuyin.attempt.${seats[i]}`,attempt=read(key,0)+1;write(key,attempt);results.push({roundId:r.encounterId,monsterBattle:1,seat:seats[i],attempt,total:r.deck.length,mistakes:r.mistakes,mode,seconds:Math.round((Date.now()-r.started)/1000),results:r.rows});});
  if(duo){const a=-rounds[0].mistakes,b=-rounds[1].mistakes;html+=`<p>${a===b?'兩隊平手，一起完成探險！':`${safe(seats[a>b?0:1])} 號得到較多星星，兩位都完成了探險！`}</p>`;}
  $('result-details').innerHTML=html;document.querySelectorAll('[data-review]').forEach(b=>b.onclick=()=>{const q=currentPool.find(x=>(x.displayLabel||x.label)===b.dataset.review);audio.src=audioSource(q.audio);audio.currentTime=0;audio.play().catch(()=>{$('save-status').textContent='複習聲音無法播放，請確認音量與網路。';});});
  if(duo){const competition={kind:'turn',seats:[...seats],rounds:results.map(({total,mistakes,results})=>({total,mistakes,results}))};results.forEach(r=>r.competition=competition);}
  persistResults(results);
 }
 function persistResults(results){
- const awards=rewards.credit(results);
- if(awards?.length){const rewardLine=document.createElement('div');rewardLine.className='round-awards';rewardLine.innerHTML=awards.map(a=>`<p>🔢 ${safe(a.seat)}　⭐ +${a.stars} <span aria-label="${a.threshold} 回合毅力進度">${a.perseveranceStars?'🎁':Array.from({length:a.threshold},(_,i)=>i<a.completedRounds%a.threshold?'●':'○').join(' ')}</span></p>`).join('');$('result-details').append(rewardLine);}
+ const awards=rewards.credit(results);if(demo)for(const result of results){if(result.monsterBattle===1){const award=awards.find(a=>a.seat===result.seat);if(award)Object.assign(award,creditDemoMonster(result.seat,result.roundId,result.mistakes===0));}}
+ if(awards?.length){const rewardLine=document.createElement('div');rewardLine.className='round-awards';rewardLine.innerHTML=awards.map(a=>`<p>🔢 ${safe(a.seat)}　⭐ +${a.stars} <span aria-label="${a.threshold} 回合毅力進度">${a.perseveranceStars?'🎁':Array.from({length:a.threshold},(_,i)=>i<a.completedRounds%a.threshold?'●':'○').join(' ')}</span></p>`).join('');$('result-details').append(rewardLine);for(const a of awards)showAwardActor(rewardLine,a);}
  if(demo){$('save-status').textContent='這是老師試玩，沒有傳送學生成績。';$('retry-save').hidden=true;return;}
  latestIds=results.map(x=>x.roundId);pending.push(...results);const stored=write('zhuyin.pending.v2',pending);$('save-status').textContent=stored?'正在確認老師是否收到紀錄…':'此裝置無法暫存，請保持頁面開啟，等待確認傳送。';flushPending();
 }
-async function send(payload){const status=await auth.request(payload);if(status.saved!==true)throw new Error(status.error||'unconfirmed');if(latestIds.includes(payload.roundId)&&Array.isArray(status.awards)&&!document.getElementById('award-'+payload.roundId)){const line=document.createElement('div');line.id='award-'+payload.roundId;line.className='round-awards';for(const award of status.awards){const p=document.createElement('p');p.textContent=`🔢 ${award.seat}　⭐ +${award.stars}`;line.append(p);}$('result-details').append(line);}}
+function showAwardActor(root,award){const group=document.createElement('div');group.className='round-reward-scene';root.append(group);showMonsterReward(group,award);const character=profiles.identity(award.seat).character;const scene=awardCharacter(group,character,award.stars)||celebrateCharacter(group,character);if(scene){const label=document.createElement('span');label.className='award-seat';label.textContent=award.seat+' 號';scene.prepend(label);}}
+async function send(payload){const status=await auth.request(payload);if(status.saved!==true)throw new Error(status.error||'unconfirmed');if(latestIds.includes(payload.roundId)&&Array.isArray(status.awards)&&!document.getElementById('award-'+payload.roundId)){const line=document.createElement('div');line.id='award-'+payload.roundId;line.className='round-awards';for(const award of status.awards){const p=document.createElement('p');p.textContent=`🔢 ${award.seat}　⭐ +${award.stars}`;line.append(p);showAwardActor(line,award);}$('result-details').append(line);}}
 async function flushPending(){if(saving||demo||!config?.verifiedWrites)return;saving=true;$('retry-save').disabled=true;const attempted=new Set();try{for(const payload of [...pending]){attempted.add(payload.roundId);try{await send(payload);pending=pending.filter(x=>x.roundId!==payload.roundId);write('zhuyin.pending.v2',pending);}catch{/* Keep failed rounds and try the others. */}}}finally{saving=false;$('retry-save').disabled=false;const outstanding=pending.some(x=>latestIds.includes(x.roundId)),stored=write('zhuyin.pending.v2',pending);$('retry-save').hidden=!outstanding;$('save-status').textContent=outstanding?(stored?'紀錄已暫存在這台裝置，尚未確認存入後台。':'此裝置無法暫存，請勿關閉頁面。')+'請保持連線並重新傳送。':'老師已收到這次的完整紀錄！';rewards.refresh();if(pending.some(x=>!attempted.has(x.roundId)))flushPending();}}
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(b.dataset.mode));
 function selectStyle(style){playStyle=style;duo=style!=='solo';for(const id of ['solo','duo','race']){const selected=id===(style==='turn'?'duo':style);$(id).classList.toggle('selected',selected);$(id).setAttribute('aria-pressed',String(selected));}$('partner-label').hidden=!duo||!demo;teamUI.setStyle(style);if(config)refreshHome();if(demo&&style!=='solo'&&$('partner').value&&!auth.verified($('partner').value))$('partner').onchange();}
@@ -181,7 +191,7 @@ for(const id of ['seat','partner'])$(id).onchange=async()=>{const seat=$(id).val
  if(seat&&!await auth.ensure(seat))$(id).value='';else if(id==='seat')auth.setPrimary(seat);
  await rewards.refresh();await profiles.refresh();if(config)refreshHome();renderIdentity();if(!demo)flushPending();};
 $('listen').onclick=play;$('check-spelling').onclick=()=>answer((selected.initial||'')+(selected.final||''));$('next').onclick=next;$('reload').onclick=load;$('demo-basic').onclick=()=>demoConfig(false);$('demo-expanded').onclick=()=>demoConfig(true);$('again').onclick=()=>start(mode);$('retry-save').onclick=flushPending;
-function home(){stopPracticeReview();session++;tutor.close();audio.pause();teamUI.stop();screen('home');if(config)refreshHome();}
+function home(){stopPracticeReview();practiceBattle.reset();clearCharacters($('player-turn'));clearCharacters($('result-details'));session++;tutor.close();audio.pause();teamUI.stop();screen('home');if(config)refreshHome();}
 $('back-home').onclick=home;$('leave').onclick=()=>{$('leave-dialog').showModal();};$('stay').onclick=()=>$('leave-dialog').close();$('confirm-leave').onclick=()=>{$('leave-dialog').close();home();};
 // Home is an in-app action, not a document reload that discards the current round/session.
 document.querySelector('.brand').onclick=e=>{e.preventDefault();if(!$('game').hidden||!$('race-game').hidden)$('leave-dialog').showModal();else home();};

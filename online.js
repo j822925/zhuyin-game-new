@@ -1,8 +1,13 @@
-import './asset-cache.js?v=20260928-perflive1';
-import {classStorageKey,classUrl} from './class-context.js?v=20260928-perflive1';
+import './asset-cache.js?v=20260928-all1';
+import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
 import {CHARACTER_CATALOG} from './data/character-catalog.js';
 import {STAR_SPRITES} from './data/star-sprites.js';
-import {audioSource} from './audio-source.js?v=20260928-perflive1';
+import {audioSource} from './audio-source.js?v=20260928-all1';
+import {STAR_CARDS} from './data/star-cards.js';
+import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20260928-all1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20260928-all1';
+import {MONSTERS} from './data/monsters.js?v=20260928-all1';
+import {showMonsterReward} from './monster-cards-ui.js?v=20260928-all1';
 const $=id=>document.getElementById(id),SESSION=classStorageKey('zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':live');
 const ENDPOINT=location.hostname==='127.0.0.1'?location.origin:'https://zhuyin-api.j822925.workers.dev';
 
@@ -48,11 +53,27 @@ async function connect(takeover=false){if(!roomId||!session||document.hidden)ret
  socket.onclose=()=>{if(gen!==socketGeneration||stopped)return;stopAudio();$('connection').textContent='🟠 連線中斷';disableAnswers();retry();};socket.onerror=()=>{$('connection').textContent='🟠 等待網路';};
  }catch(e){if(gen!==socketGeneration)return;message(messages[e.message]||'網路還沒連上。');if(['room_missing','room_closed'].includes(e.message)){$('reconnect').hidden=false;return;}retry();}}
 function retry(){if(stopped||!roomId||!session)return;$('reconnect').hidden=false;if(++attempts>6||document.hidden)return;clearTimeout(reconnectTimer);reconnectTimer=setTimeout(()=>connect(),Math.min(500*2**(attempts-1),5000));}
-$('reconnect').onclick=()=>{attempts=0;connect();};$('takeover').onclick=()=>connect(true);
+$('reconnect').onclick=()=>{for(const [key,value] of onlineEncounters)if(value.failed)onlineEncounters.delete(key);attempts=0;connect();};$('takeover').onclick=()=>connect(true);
 function send(kind,value){if(!state||ws?.readyState!==1){message('請先按重新連線。');return;}const d={protocolVersion:1,id:crypto.randomUUID(),kind,matchId:state.matchId,version:state.version,questionId:state.question?.id,...(value!==undefined?{value}:{})};ws.send(JSON.stringify(d));return d.id;}
 function disableAnswers(){$('choices').querySelectorAll('button').forEach(b=>b.disabled=true);}
 async function unlock(){stopAudio();try{audio.muted=true;audio.src='audio/audio_F1.WAV';await audio.play();audio.pause();}catch{}finally{audio.muted=false;}}
 function showAction(label,kind,disabled=false){$('action').hidden=false;$('action').textContent=label;$('action').disabled=disabled;$('action').onclick=async()=>{if(['ready','resume','turn_start'].includes(kind))await unlock();$('action').disabled=true;send(kind);};}
+const onlineOpponent=createOpponent(),onlineHero=document.createElement('aside'),battlePanel=document.querySelector('.battle-panel'),battleLayout=document.createElement('div');onlineHero.className='battle-hero';onlineHero.setAttribute('aria-label','作答角色');battleLayout.className='online-battle-layout battle-layout';battlePanel.before(battleLayout);battleLayout.append(onlineOpponent,battlePanel,onlineHero);const onlineBattle=createBattle(onlineOpponent,()=>onlineHero);let motionQuestion='',motionPerson='',motionEvent='';const onlineEncounters=new Map();
+function renderMotion(s){
+ const j=s.me,p=s.players[j];
+ const encounterKey=s.matchId+':'+j;let encounter=onlineEncounters.get(encounterKey);
+ if(p&&!encounter){onlineEncounters.set(encounterKey,{loading:true});fetch(classUrl(ENDPOINT+'/api'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:'monster-start',seat:session.seat,token:session.token,encounter:encounterKey})}).then(r=>r.json()).then(out=>{if(out.error)throw Error(out.error);onlineEncounters.set(encounterKey,out);if(state?.matchId===s.matchId)render();}).catch(()=>{onlineEncounters.set(encounterKey,{failed:true});$('reconnect').hidden=false;message('怪物挑戰連線未完成，請重新連線後再試。');});}
+ if(s.phase==='ready'&&!encounter?.monsterId)$('action').disabled=true;
+ const visible=!!p&&!['waiting','ready','closed'].includes(s.phase);onlineOpponent.hidden=onlineHero.hidden=!visible;if(!visible)return;
+ const question=s.matchId+':'+s.index,person=j+':'+p.avatar;
+ if(person!==motionPerson){motionPerson=person;const c=[...CHARACTER_CATALOG,...STAR_CARDS].find(c=>c.id===p.avatar)||CHARACTER_CATALOG[0];mountCharacter(onlineHero,{...c,image:avatar(p.avatar)});}
+ if(question!==motionQuestion){onlineBattle.reset();reactCharacter(onlineHero,'idle');motionQuestion=question;motionEvent='';}
+ const completed=s.mode==='turn'?Math.min(10,Math.floor(s.index/2)+(s.index%2>j||s.phase==='result'&&s.activePlayer===j?1:0)):s.scores[j];
+ updateOpponent(onlineOpponent,MONSTERS.find(c=>c.id===encounter?.monsterId)||MONSTERS[0],10,completed,{wins:encounter?.monsterWins||0,perfect:s.mode==='turn'?s.scores[j]>=completed:s.scores[j]===s.index});
+ if(s.phase==='answer'&&s.mode==='turn'&&s.activePlayer===j&&s.turnErrors>0){const key=question+':wrong:'+s.turnErrors;if(key!==motionEvent){motionEvent=key;onlineBattle.answer(false);}}
+ if(s.phase==='result'){const a=s.result.attempts[j],key=question+':result';if(a&&motionEvent!==key){motionEvent=key;onlineBattle.answer(a.correct===true);}}
+ if(s.phase==='finished'&&s.settled){const key=s.matchId+':award:'+j;if(motionEvent!==key){motionEvent=key;if(s.awards?.[j]?.stars>0)reactCharacter(onlineHero,'star');}if(s.awards?.[j])showMonsterReward($('summary'),s.awards[j]);}
+}
 function render(){if(!state)return;$('action').removeAttribute('data-child-home-button');$('action').classList.remove('child-nav');const s=state,i=s.me,turn=s.mode==='turn',mine=!turn||i===s.activePlayer,total=s.total||10,active=s.players[s.activePlayer],questionPhase=['turn_ready','audio','countdown','answer'].includes(s.phase);$('room-code').textContent=s.code;$('room-mode').textContent=(s.lesson==='spelling'?'拼音工坊 · ':'聽音辨識 · ')+(turn?'🤝 輪流答題':'⚡ 搶答對戰');$('people').replaceChildren();
  for(let j=0;j<2;j++){const p=s.players[j],box=document.createElement('div');box.className='person'+(turn&&questionPhase&&j===s.activePlayer?' active-turn':'');const img=document.createElement('img');img.src=avatar(p?.avatar);img.alt='';const text=document.createElement('div'),name=document.createElement('h3'),status=document.createElement('p');name.textContent=p?(j===i?'我：':'同學：')+(p.className?p.className+'・':'')+p.seat+' 號・'+p.name:'等同學加入';status.textContent=p?(p.online?(turn&&questionPhase?(j===s.activePlayer?'👉 現在輪到這位':'👀 等一下，幫同學加油'):'🟢 已連線'):'🟠 等待連線'):'';text.append(name,status);const score=document.createElement('strong');score.className='score';score.textContent='★ '+s.scores[j];box.append(img,text,score);$('people').append(box);}
  $('action').hidden=true;$('summary').textContent='';$('result-answer').textContent='';$('question').hidden=!['audio','countdown','answer'].includes(s.phase);$('progress').textContent=s.index<total&&!['waiting','ready'].includes(s.phase)?(turn?'每人第 '+(Math.floor(s.index/2)+1)+' / 10 題':'第 '+(s.index+1)+' / 10 題'):'';
@@ -72,6 +93,7 @@ function render(){if(!state)return;$('action').removeAttribute('data-child-home-
  }
  if(s.phase==='result'){stopAudio();$('result-answer').textContent='正確答案：'+s.result.target;const points=s.result.points;$('phase-detail').textContent=points.every(Boolean)?'🤝 幾乎同時答對，兩人各得 1 分！':points.some(Boolean)?s.players[points.indexOf(1)].name+' 第一次就答對，得 1 分！':turn?'再試後答對了！這題不加分，繼續加油。':'一起記住這個聲音，下題再試！';showAction(s.next[i]?'✅ 等同學':turn?'換下一位 ➜':'下一題 ➜','next',s.next[i]);}
  if(s.phase==='finished'){stopAudio();const mine=s.scores[i],other=s.scores[1-i];$('summary').textContent=(mine===other?'🤝 平手，一起完成！':mine>other?'🏆 你贏得這一場！':'🌟 很棒的練習，下次再挑戰！')+' '+mine+'：'+other+'。'+(s.settled?'已保存，獲得 '+(s.awards?.[i]?.stars??(mine>other?2:1))+' 顆星星。':'正在保存結果，請稍候…');showAction(s.rematch[i]?'✅ 等同學同意再來一場':'再來一場！','rematch',!s.settled||s.rematch[i]);}
+ renderMotion(s);
  if(s.phase==='closed'){stopAudio();stopped=true;$('action').hidden=false;$('action').textContent='回首頁';$('action').setAttribute('data-child-home-button','');$('action').disabled=false;$('action').onclick=home;}
 }
 async function playQuestion(){if(!state?.question||!['audio','countdown','answer'].includes(state.phase)||audioBusy)return;const key=state.matchId+':'+state.version+':'+state.question.id,gen=++audioGeneration;playedKey=key;audioBusy=true;$('listen').disabled=true;audio.src=audioSource(state.question.audio);

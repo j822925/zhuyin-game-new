@@ -1,4 +1,4 @@
-import {cacheName,publicMedia,TTL} from './cache-policy.js?v=20260928-perflive1';
+import {cacheName,publicMedia,TTL} from './cache-policy.js?v=20260928-all1';
 const base=new URL('.',import.meta.url).href;
 let registration;
 export function startMediaCache(){
