@@ -3,8 +3,8 @@ import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=202609
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';
 import {readingStars,matchesReading,READING_WORDS} from './reading-core.js?v=20260928-all1';
-import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-all1';
-import {createMicCheck} from './reading-mic-check.js?v=20260928-all1';
+import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic3';
+import {createMicCheck,clearMicPlayback} from './reading-mic-check.js?v=20260928-mic3';
 import {createMicPreference} from './reading-mic-preference.js?v=20260928-all1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
@@ -24,30 +24,41 @@ let pending=[];
 try{const saved=JSON.parse(localStorage.getItem(storageKey)||'[]');if(Array.isArray(saved))pending=saved;}catch{}
 function storePending(){try{localStorage.setItem(storageKey,JSON.stringify(pending));return true;}catch{return false;}}
 function show(id){document.body.classList.toggle('reading-battle-active',id==='play');for(const name of ['intro','play','result'])$(name).hidden=name!==id;window.scrollTo(0,0);}
-for(const link of document.querySelectorAll('a[href]'))link.href=classUrl(demo?'./?demo=1':'./');
+for(const link of document.querySelectorAll('#home-link,a.home'))link.href=classUrl(demo?'./?demo=1':'./');
+const appleMobile=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const standalone=appleMobile&&(navigator.standalone===true||globalThis.matchMedia?.('(display-mode: standalone)').matches);
+const browserReadingUrl=classUrl('reading.html?v=20260928-mic3');
+for(const link of document.querySelectorAll('[data-reading-browser]'))link.href=browserReadingUrl;
+$('standalone-help').hidden=!standalone;
 const errors={'not-allowed':'請允許麥克風權限，再點一下開始錄音。','service-not-allowed':'這個瀏覽器的語音服務無法使用，請換支援語音辨識的瀏覽器。','audio-capture':'找不到可用的麥克風，請大人協助檢查。','network':'語音服務連線失敗，這次不計分，請再試一次。','no-speech':'沒有聽到完整詞語，這次不計分，請再讀一次。','language-not-supported':'這個裝置不支援中文語音辨識，請換另一個裝置。','timeout':'等待語音服務逾時，這次不計分，請再試一次。','aborted':'錄音已停止，可以重新錄音。'};
 Object.assign(errors,{
+ 'start-aborted':appleMobile?'iPad 的語音辨識未能啟動，這次不計分。請在 Safari 分頁重新開啟朗讀，先直接讀題，不要先播放錄音回放。':'瀏覽器在開始收音前中止了語音辨識，這次不計分。請關閉其他正在錄音的分頁，再重新開啟朗讀頁面。',
  'too-short':'麥克風還沒準備好。請點一下開始錄音，等「正在聽」出現再讀，讀完再點一下送出。',
  'mic-not-ready':'語音服務沒有開始收音。請先用下方「測試麥克風」檢查；若回放有聲音，可用 Chrome 開啟相同網址再試。',
  'no-result':'已偵測到說話，但辨識服務沒有回傳完整文字。這次不計分，請再試；也可以用 Chrome 開啟相同網址比較。',
  'no-speech':'辨識服務沒有回傳可用的詞語，這次不計分。若回放已有聲音，請確認「朗讀收音」裝置；裝置正確仍失敗，可能是辨識服務的問題。',
  'device-missing':'選擇的麥克風已中斷，請更新麥克風清單並重新選擇。',
 });
+if(appleMobile)Object.assign(errors,{
+ 'aborted':'iPad 中止了這次語音辨識，這次不計分。請先停止其他錄音，再重新試讀；若持續中止，請查看下方說明。',
+ 'mic-not-ready':'iPad 的語音辨識尚未開始收音，這次不計分。請在 Safari 分頁重新開啟，確認 Siri／聽寫可用後直接試讀。',
+ 'no-result':'已偵測到說話，但 iPad 沒有回傳辨識文字，這次不計分。請在 Safari 分頁重新開啟後直接試讀。',
+});
 const speech=supported?createReadingSpeech({Recognition,
 getAudioStream:sharedMicrophone?deviceId=>navigator.mediaDevices.getUserMedia({audio:deviceId?{deviceId:{exact:deviceId}}:true}):undefined,
 onInput(label){$('speech-device').textContent=`朗讀收音：${label}`;},onState(state){
- if(state==='starting')readingBattle.reset();
+ if(state==='starting')$('speech-help').hidden=true;
  if(state==='starting')$('speech-device').textContent=sharedMicrophone?'正在開啟選擇的麥克風…':'朗讀收音：瀏覽器預設麥克風';
  $('tap-record').dataset.state=state;
  $('tap-record').disabled=locked||micBusy||['starting','processing'].includes(state);
  $('tap-record').textContent=state==='idle'?'點一下開始錄音':state==='starting'?'準備麥克風…':state==='processing'?'正在辨識…':'我讀完了，點一下送出';
  $('speech-status').textContent=({starting:'請先允許麥克風，等「正在聽」再讀',listening:'正在聽，請讀出上方的詞語',hearing:'有偵測到說話，讀完後再點一下送出',processing:'正在辨識，請稍候…',idle:'點一下開始錄音，讀完再點一下送出'})[state];
-},onResult:answer,onError(code){$('speech-status').textContent=errors[code]||'暫時無法辨識，這次不計分，請再試一次。';}}):null;
+},onResult:answer,onError(code){$('speech-status').textContent=errors[code]||'暫時無法辨識，這次不計分，請再試一次。';$('speech-help').hidden=false;$('speech-diagnostic').textContent=`頁面版本：20260928-mic3；辨識回報：${code}；收音方式：${sharedMicrophone?'所選麥克風':'瀏覽器預設'}。`;}}):null;
 function press(){if(locked||micBusy||$('play').hidden||!speech)return;speech.start({deviceId:allowMicCheck?$('mic-device').value:''});}
 $('tap-record').onclick=()=>{if(locked||micBusy)return;speech?.busy?speech.release():press();};
 let micCheck,clipUrl='';
-function clearClip(){$('mic-playback').pause();$('mic-playback').removeAttribute('src');$('mic-playback').load();$('mic-playback').hidden=true;if(clipUrl)URL.revokeObjectURL(clipUrl);clipUrl='';}
-function cancel(){readingBattle.reset();speech?.cancel();micCheck?.cancel();clearClip();}
+function clearClip(){clearMicPlayback($('mic-playback'),clipUrl);clipUrl='';}
+function cancel(){speech?.cancel();micCheck?.cancel();clearClip();readingBattle.reset();}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel();});
 window.addEventListener('pagehide',cancel);
 // Permission prompts may blur the window. Only leaving/hiding the page cancels.
@@ -92,6 +103,7 @@ if(allowMicCheck){
  if(!navigator.mediaDevices?.getUserMedia||!globalThis.MediaRecorder){$('mic-test').disabled=true;$('mic-status').textContent='這個瀏覽器無法進行麥克風回放檢查，請改用 Chrome。';}
 }
 function renderQuestion(){
+ $('speech-help').hidden=true;
  cancel();locked=false;$('tap-record').disabled=false;$('tap-record').textContent='點一下開始錄音';$('tap-record').dataset.state='idle';
  $('feedback').textContent='';$('next').hidden=true;$('speech-status').textContent='點一下開始錄音，讀完再點一下送出';
  $('progress').textContent=`第 ${rows.length+1} / 5 題`;$('dots').replaceChildren();
@@ -178,7 +190,7 @@ function leave(){cancel();$('leave-dialog').showModal();}
 function home(){cancel();readingBattle.clear();show('intro');currentPayload=null;}
 function hasUnsaved(){return pending.some(p=>p.seat===seat);}
 window.addEventListener('beforeunload',e=>{if(!$('play').hidden||hasUnsaved()){e.preventDefault();e.returnValue='';}});
-document.querySelectorAll('a[href]').forEach(a=>a.addEventListener('click',e=>{if(!$('play').hidden){e.preventDefault();leave();}}));
+document.querySelectorAll('#home-link,a.home').forEach(a=>a.addEventListener('click',e=>{if(!$('play').hidden){e.preventDefault();leave();}}));
 window.addEventListener('online',()=>{if(hasUnsaved())flushPending();});
 window.addEventListener('pageshow',()=>{if(!$('play').hidden&&!locked&&!micBusy&&!speech?.busy)$('tap-record').disabled=!supported;});
  $('seat').onchange=()=>{seat=$('seat').value;if(seat!==auth.currentSeat())auth.forgetAll();if(pending.some(p=>p.seat===seat))flushPending();};

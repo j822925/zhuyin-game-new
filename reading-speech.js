@@ -25,7 +25,7 @@ export function createReadingSpeech({Recognition,onState,onResult,onError,getAud
   recognition.onsoundstart=()=>{capturing();};
   recognition.onspeechstart=()=>{if(!current())return;capturing();run.heard=true;if(!run.released)onState('hearing');};
   recognition.onresult=e=>{if(!current())return;let text='';for(let i=0;i<e.results.length;i++){if(e.results[i][0]?.transcript?.trim())run.heard=true;if(e.results[i].isFinal)text+=e.results[i][0].transcript;}run.transcript=text;};
-  recognition.onerror=e=>fail(e.error==='no-speech'?emptyReason():e.error);
+  recognition.onerror=e=>fail(e.error==='no-speech'?emptyReason():e.error==='aborted'&&!run.capturing?'start-aborted':e.error);
   recognition.onend=()=>{if(!current())return;active=null;clear(run);close(run);onState('idle');if(run.transcript.trim())onResult(run.transcript);else onError(emptyReason());};
   run.fail=fail;
   onState('starting');

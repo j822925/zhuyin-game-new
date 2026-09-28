@@ -1,4 +1,12 @@
 // Local, user-triggered hardware check. No fetch, storage, scoring or transcription.
+// Do not reset an unused media element between questions. On iPad, even media
+// playback/session changes can interfere with native speech recognition.
+export function clearMicPlayback(player,url,revoke=URL.revokeObjectURL){
+ if(!player.paused)player.pause();
+ if(player.hasAttribute('src')){player.removeAttribute('src');player.load();}
+ player.hidden=true;
+ if(url)revoke(url);
+}
 export function createMicCheck({getUserMedia,Recorder,onState,onClip,onStream=()=>{},makeBlob=parts=>new Blob(parts,{type:parts[0]?.type||''}),setTimer=setTimeout,clearTimer=clearTimeout}){
  let active=null;
  const close=run=>{clearTimer(run.timer);run.stream?.getTracks().forEach(track=>track.stop());};
