@@ -3,7 +3,7 @@ import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=202609
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';
 import {readingStars,matchesReading,READING_WORDS} from './reading-core.js?v=20260928-all1';
-import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic3';
+import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic4';
 import {createMicCheck,clearMicPlayback} from './reading-mic-check.js?v=20260928-mic3';
 import {createMicPreference} from './reading-mic-preference.js?v=20260928-all1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
@@ -27,7 +27,7 @@ function show(id){document.body.classList.toggle('reading-battle-active',id==='p
 for(const link of document.querySelectorAll('#home-link,a.home'))link.href=classUrl(demo?'./?demo=1':'./');
 const appleMobile=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const standalone=appleMobile&&(navigator.standalone===true||globalThis.matchMedia?.('(display-mode: standalone)').matches);
-const browserReadingUrl=classUrl('reading.html?v=20260928-mic3');
+const browserReadingUrl=classUrl('reading.html?v=20260928-mic4');
 for(const link of document.querySelectorAll('[data-reading-browser]'))link.href=browserReadingUrl;
 $('standalone-help').hidden=!standalone;
 const errors={'not-allowed':'請允許麥克風權限，再點一下開始錄音。','service-not-allowed':'這個瀏覽器的語音服務無法使用，請換支援語音辨識的瀏覽器。','audio-capture':'找不到可用的麥克風，請大人協助檢查。','network':'語音服務連線失敗，這次不計分，請再試一次。','no-speech':'沒有聽到完整詞語，這次不計分，請再讀一次。','language-not-supported':'這個裝置不支援中文語音辨識，請換另一個裝置。','timeout':'等待語音服務逾時，這次不計分，請再試一次。','aborted':'錄音已停止，可以重新錄音。'};
@@ -42,9 +42,9 @@ Object.assign(errors,{
 if(appleMobile)Object.assign(errors,{
  'aborted':'iPad 中止了這次語音辨識，這次不計分。請先停止其他錄音，再重新試讀；若持續中止，請查看下方說明。',
  'mic-not-ready':'iPad 的語音辨識尚未開始收音，這次不計分。請在 Safari 分頁重新開啟，確認 Siri／聽寫可用後直接試讀。',
- 'no-result':'已偵測到說話，但 iPad 沒有回傳辨識文字，這次不計分。請在 Safari 分頁重新開啟後直接試讀。',
+ 'no-result':'有聽到說話，但 iPad 還沒有完成文字辨識，這次不計分。請留在這題，點錄音再讀一次，讀完整個詞語後再點送出。',
 });
-const speech=supported?createReadingSpeech({Recognition,
+const speech=supported?createReadingSpeech({Recognition,continuous:appleMobile,finalGraceMs:appleMobile?1200:0,stopDelayMs:appleMobile?350:0,
 getAudioStream:sharedMicrophone?deviceId=>navigator.mediaDevices.getUserMedia({audio:deviceId?{deviceId:{exact:deviceId}}:true}):undefined,
 onInput(label){$('speech-device').textContent=`朗讀收音：${label}`;},onState(state){
  if(state==='starting')$('speech-help').hidden=true;
@@ -53,7 +53,7 @@ onInput(label){$('speech-device').textContent=`朗讀收音：${label}`;},onStat
  $('tap-record').disabled=locked||micBusy||['starting','processing'].includes(state);
  $('tap-record').textContent=state==='idle'?'點一下開始錄音':state==='starting'?'準備麥克風…':state==='processing'?'正在辨識…':'我讀完了，點一下送出';
  $('speech-status').textContent=({starting:'請先允許麥克風，等「正在聽」再讀',listening:'正在聽，請讀出上方的詞語',hearing:'有偵測到說話，讀完後再點一下送出',processing:'正在辨識，請稍候…',idle:'點一下開始錄音，讀完再點一下送出'})[state];
-},onResult:answer,onError(code){$('speech-status').textContent=errors[code]||'暫時無法辨識，這次不計分，請再試一次。';$('speech-help').hidden=false;$('speech-diagnostic').textContent=`頁面版本：20260928-mic3；辨識回報：${code}；收音方式：${sharedMicrophone?'所選麥克風':'瀏覽器預設'}。`;}}):null;
+},onResult:answer,onError(code,detail={}){$('speech-status').textContent=errors[code]||'暫時無法辨識，這次不計分，請再試一次。';$('speech-help').hidden=false;$('speech-diagnostic').textContent=`頁面版本：20260928-mic4；辨識回報：${code}；收音方式：${sharedMicrophone?'所選麥克風':'瀏覽器預設'}；文字回傳：${detail.resultEvents||0} 次；暫時文字：${detail.hadInterim?'有':'無'}；已送出：${detail.stopRequested?'是':'否'}。`;}}):null;
 function press(){if(locked||micBusy||$('play').hidden||!speech)return;speech.start({deviceId:allowMicCheck?$('mic-device').value:''});}
 $('tap-record').onclick=()=>{if(locked||micBusy)return;speech?.busy?speech.release():press();};
 let micCheck,clipUrl='';
