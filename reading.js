@@ -19,9 +19,9 @@ try{const saved=JSON.parse(localStorage.getItem(storageKey)||'[]');if(Array.isAr
 function storePending(){try{localStorage.setItem(storageKey,JSON.stringify(pending));return true;}catch{return false;}}
 function show(id){for(const name of ['intro','play','result'])$(name).hidden=name!==id;window.scrollTo(0,0);}
 for(const link of document.querySelectorAll('a[href]'))link.href=classUrl(demo?'./?demo=1':'./');
-const errors={'not-allowed':'請允許麥克風權限，再按住錄音。','service-not-allowed':'這個瀏覽器的語音服務無法使用，請換支援語音辨識的瀏覽器。','audio-capture':'找不到可用的麥克風，請大人協助檢查。','network':'語音服務連線失敗，這次不計分，請再試一次。','no-speech':'沒有聽到完整詞語，這次不計分，請再讀一次。','language-not-supported':'這個裝置不支援中文語音辨識，請換另一個裝置。','timeout':'等待語音服務逾時，這次不計分，請再試一次。','aborted':'錄音已停止，可以重新錄音。'};
+const errors={'not-allowed':'請允許麥克風權限，再點一下開始錄音。','service-not-allowed':'這個瀏覽器的語音服務無法使用，請換支援語音辨識的瀏覽器。','audio-capture':'找不到可用的麥克風，請大人協助檢查。','network':'語音服務連線失敗，這次不計分，請再試一次。','no-speech':'沒有聽到完整詞語，這次不計分，請再讀一次。','language-not-supported':'這個裝置不支援中文語音辨識，請換另一個裝置。','timeout':'等待語音服務逾時，這次不計分，請再試一次。','aborted':'錄音已停止，可以重新錄音。'};
 Object.assign(errors,{
- 'too-short':'放開時麥克風還沒準備好。請改按「點一下開始錄音」，等「正在聽」出現再讀，讀完再按完成。',
+ 'too-short':'麥克風還沒準備好。請點一下開始錄音，等「正在聽」出現再讀，讀完再點一下送出。',
  'mic-not-ready':'語音服務沒有開始收音。請先用下方「測試麥克風」檢查；若回放有聲音，可用 Chrome 開啟相同網址再試。',
  'no-result':'已偵測到說話，但辨識服務沒有回傳完整文字。這次不計分，請再試；也可以用 Chrome 開啟相同網址比較。',
  'no-speech':'辨識服務沒有回傳可用的詞語，這次不計分。若回放已有聲音，請確認「朗讀收音」裝置；裝置正確仍失敗，可能是辨識服務的問題。',
@@ -31,32 +31,16 @@ const speech=supported?createReadingSpeech({Recognition,
 getAudioStream:sharedMicrophone?deviceId=>navigator.mediaDevices.getUserMedia({audio:deviceId?{deviceId:{exact:deviceId}}:true}):undefined,
 onInput(label){$('speech-device').textContent=`朗讀收音：${label}`;},onState(state){
  if(state==='starting')$('speech-device').textContent=sharedMicrophone?'正在開啟選擇的麥克風…':'朗讀收音：瀏覽器預設麥克風';
- $('record').setAttribute('aria-pressed',String(['listening','hearing'].includes(state)));
- $('record').disabled=locked||micBusy||state==='processing';$('tap-record').disabled=locked||micBusy||state==='processing';
- $('tap-record').textContent=state==='idle'?'點一下開始錄音（不用按住）':state==='processing'?'正在辨識…':'我讀完了，點一下送出';
- $('record-label').textContent=({starting:'準備麥克風…',listening:'正在聽，讀完放開',hearing:'有聽到說話',processing:'正在辨識…',idle:'按住錄音'})[state];
- $('speech-status').textContent=({starting:'請先允許麥克風，等「正在聽」再讀',listening:'正在聽，請讀出上方的詞語',hearing:'有偵測到說話，讀完後再放開或按完成',processing:'正在辨識，請稍候…',idle:'按住錄音，或使用下方點按錄音'})[state];
+ $('tap-record').dataset.state=state;
+ $('tap-record').disabled=locked||micBusy||['starting','processing'].includes(state);
+ $('tap-record').textContent=state==='idle'?'點一下開始錄音':state==='starting'?'準備麥克風…':state==='processing'?'正在辨識…':'我讀完了，點一下送出';
+ $('speech-status').textContent=({starting:'請先允許麥克風，等「正在聽」再讀',listening:'正在聽，請讀出上方的詞語',hearing:'有偵測到說話，讀完後再點一下送出',processing:'正在辨識，請稍候…',idle:'點一下開始錄音，讀完再點一下送出'})[state];
 },onResult:answer,onError(code){$('speech-status').textContent=errors[code]||'暫時無法辨識，這次不計分，請再試一次。';}}):null;
 function press(){if(locked||micBusy||$('play').hidden||!speech)return;speech.start({deviceId:allowMicCheck?$('mic-device').value:''});}
-const record=$('record');let pointerId=null;
-record.addEventListener('pointerdown',e=>{if(e.button!==0||pointerId!==null||speech?.busy)return;e.preventDefault();pointerId=e.pointerId;record.setPointerCapture(e.pointerId);press();});
-function release(e){if(e.pointerId!==pointerId)return;pointerId=null;speech?.release();}
-record.addEventListener('pointerup',release);
-record.addEventListener('pointercancel',e=>{if(e.pointerId===pointerId){pointerId=null;speech?.cancel();}});
-record.addEventListener('lostpointercapture',release);
-record.addEventListener('contextmenu',e=>e.preventDefault());
-record.addEventListener('keydown',e=>{if([' ','Enter'].includes(e.key)){e.preventDefault();if(!e.repeat)press();}});
-record.addEventListener('keyup',e=>{if([' ','Enter'].includes(e.key)){e.preventDefault();speech?.release();}});
-let keyboardHeld=false;
-record.addEventListener('keydown',e=>{if([' ','Enter'].includes(e.key))keyboardHeld=true;});
-record.addEventListener('keyup',()=>{keyboardHeld=false;});
-record.addEventListener('blur',()=>{if(keyboardHeld){keyboardHeld=false;speech?.release();}});
-// Assistive technology generates a click without pointer/keyboard events.
-record.addEventListener('click',e=>{if(e.detail===0&&!speech?.busy&&!locked)press();});
 $('tap-record').onclick=()=>{if(locked||micBusy)return;speech?.busy?speech.release():press();};
 let micCheck,clipUrl='';
 function clearClip(){$('mic-playback').pause();$('mic-playback').removeAttribute('src');$('mic-playback').load();$('mic-playback').hidden=true;if(clipUrl)URL.revokeObjectURL(clipUrl);clipUrl='';}
-function cancel(){pointerId=null;keyboardHeld=false;speech?.cancel();micCheck?.cancel();clearClip();}
+function cancel(){speech?.cancel();micCheck?.cancel();clearClip();}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel();});
 window.addEventListener('pagehide',cancel);
 // Permission prompts may blur the window. Only leaving/hiding the page cancels.
@@ -81,7 +65,7 @@ if(allowMicCheck){
   const track=stream.getAudioTracks()[0];$('mic-active-device').textContent=`這次收音裝置：${track?.label||'瀏覽器未提供名稱'}`;refreshMicrophones();
  },onState(state){
   micBusy=['permission','recording'].includes(state);$('mic-test').disabled=micBusy;$('mic-cancel').hidden=!micBusy;$('mic-device').disabled=micBusy;$('mic-refresh').disabled=micBusy;
-  $('record').disabled=locked||micBusy||!supported;$('tap-record').disabled=locked||micBusy||!supported;
+  $('tap-record').disabled=locked||micBusy||!supported;
   $('mic-status').textContent=messages[state];
  },onClip(blob){clearClip();clipUrl=URL.createObjectURL(blob);$('mic-playback').src=clipUrl;$('mic-playback').hidden=false;}});
  $('mic-test').onclick=()=>{speech?.cancel();clearClip();$('mic-active-device').textContent='正在開啟選擇的麥克風…';micCheck.start({deviceId:$('mic-device').value});};$('mic-cancel').onclick=()=>micCheck.cancel();
@@ -92,8 +76,8 @@ if(allowMicCheck){
  if(!navigator.mediaDevices?.getUserMedia||!globalThis.MediaRecorder){$('mic-test').disabled=true;$('mic-status').textContent='這個瀏覽器無法進行麥克風回放檢查，請改用 Chrome。';}
 }
 function renderQuestion(){
- cancel();locked=false;$('record').disabled=false;$('tap-record').disabled=false;$('tap-record').textContent='點一下開始錄音（不用按住）';$('record').setAttribute('aria-pressed','false');$('record-label').textContent='按住錄音';
- $('feedback').textContent='';$('next').hidden=true;$('speech-status').textContent='按住下方按鈕，讀完再放開';
+ cancel();locked=false;$('tap-record').disabled=false;$('tap-record').textContent='點一下開始錄音';$('tap-record').dataset.state='idle';
+ $('feedback').textContent='';$('next').hidden=true;$('speech-status').textContent='點一下開始錄音，讀完再點一下送出';
  $('progress').textContent=`第 ${rows.length+1} / 5 題`;$('dots').replaceChildren();
  for(let i=0;i<5;i++){const dot=document.createElement('span');dot.className='dot '+(i===rows.length?'current':i<rows.length?rows[i].firstCorrect?'correct':'wrong':'');$('dots').append(dot);}
  const word=deck[rows.length];$('word').replaceChildren();
@@ -103,7 +87,7 @@ function renderQuestion(){
 function answer(text){
  if(locked||$('play').hidden)return;const word=deck[rows.length];locked=true;
  const correct=matchesReading(word,text);rows.push({wordId:word.id,target:word.zhuyin,firstCorrect:correct,seconds:Math.round((Date.now()-questionStarted)/1000)});
- $('record').disabled=true;$('tap-record').disabled=true;$('feedback').textContent=correct?'⭐ 讀對了！真棒！':`這次聽到「${text.slice(0,80)}」。題目是「${word.word}」，下次再加油！`;
+ $('tap-record').disabled=true;$('feedback').textContent=correct?'⭐ 讀對了！真棒！':`這次聽到「${text.slice(0,80)}」。題目是「${word.word}」，下次再加油！`;
  $('speech-status').textContent=correct?`你讀的是「${word.word}」`:'這題已記錄，勇敢繼續下一題。';
  $('next').textContent=rows.length===5?'看看我的星星 →':'下一題 →';$('next').hidden=false;
 }
@@ -153,7 +137,7 @@ function hasUnsaved(){return pending.some(p=>p.seat===seat);}
 window.addEventListener('beforeunload',e=>{if(!$('play').hidden||hasUnsaved()){e.preventDefault();e.returnValue='';}});
 document.querySelectorAll('a[href]').forEach(a=>a.addEventListener('click',e=>{if(!$('play').hidden){e.preventDefault();leave();}}));
 window.addEventListener('online',()=>{if(hasUnsaved())flushPending();});
-window.addEventListener('pageshow',()=>{if(!$('play').hidden&&!locked)$('record').disabled=false;});
+window.addEventListener('pageshow',()=>{if(!$('play').hidden&&!locked&&!micBusy&&!speech?.busy)$('tap-record').disabled=!supported;});
  $('seat').onchange=()=>{seat=$('seat').value;if(seat!==auth.currentSeat())auth.forgetAll();if(pending.some(p=>p.seat===seat))flushPending();};
  $('start').onclick=start;$('reload').onclick=load;$('next').onclick=()=>{if(!locked)return;rows.length===5?finish():renderQuestion();};
  $('leave').onclick=leave;$('stay').onclick=()=>$('leave-dialog').close();$('confirm-leave').onclick=()=>{$('leave-dialog').close();home();};
