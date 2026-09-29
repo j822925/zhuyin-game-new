@@ -3,7 +3,10 @@ import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=202609
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';
 import {readingStars,matchesReading,READING_WORDS} from './reading-core.js?v=20260928-all1';
+import {createCloudReadingSpeech} from './reading-cloud-speech.js?v=20260929-cloud1';
+import {getReadingCloudStatus,readingClosedMessage} from './reading-cloud-status.js?v=20260929-cloud1';
 import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic4';
+import {showNativeFallback} from './reading-fallback.js?v=20260929-cloud1';
 import {createMicCheck,clearMicPlayback} from './reading-mic-check.js?v=20260928-mic3';
 import {createMicPreference} from './reading-mic-preference.js?v=20260928-all1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
@@ -14,11 +17,13 @@ const localPreview=['localhost','127.0.0.1','[::1]'].includes(location.hostname)
 const allowMicCheck=!demo||localPreview;
 const client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config,eligibleWords=[],lessonReady=false,seat='',deck=[],rows=[],started=0,questionStarted=0,locked=false,currentPayload=null,saving=false,starting=false,micBusy=false;
+let cloudReady=false;
 const auth=createStudentAuth({demo,getConfig:()=>config,post:d=>client.post(d)});
 const readingBattle=createReadingBattle({play:$('play'),result:$('result')});let readingRoundId='';
+const nativeMode=new URL(location.href).searchParams.get('speech')==='native';
 const Recognition=globalThis.SpeechRecognition||globalThis.webkitSpeechRecognition;
-const supported=!!Recognition&&globalThis.isSecureContext;
-const sharedMicrophone=supportsReadingAudioTrack(navigator)&&!!navigator.mediaDevices?.getUserMedia;
+const supported=globalThis.isSecureContext&&(nativeMode?!!Recognition:!!navigator.mediaDevices?.getUserMedia&&!!globalThis.MediaRecorder&&!!(globalThis.OfflineAudioContext||globalThis.webkitOfflineAudioContext));
+const sharedMicrophone=!nativeMode||supportsReadingAudioTrack(navigator);
 const storageKey=classStorageKey('zhuyin.reading.pending.v1');
 let pending=[];
 try{const saved=JSON.parse(localStorage.getItem(storageKey)||'[]');if(Array.isArray(saved))pending=saved;}catch{}
@@ -30,31 +35,55 @@ const standalone=appleMobile&&(navigator.standalone===true||globalThis.matchMedi
 const browserReadingUrl=classUrl('reading.html?v=20260928-mic4');
 for(const link of document.querySelectorAll('[data-reading-browser]'))link.href=browserReadingUrl;
 $('standalone-help').hidden=!standalone;
-const errors={'not-allowed':'請允許麥克風權限，再點一下開始錄音。','service-not-allowed':'這個瀏覽器的語音服務無法使用，請換支援語音辨識的瀏覽器。','audio-capture':'找不到可用的麥克風，請大人協助檢查。','network':'語音服務連線失敗，這次不計分，請再試一次。','no-speech':'沒有聽到完整詞語，這次不計分，請再讀一次。','language-not-supported':'這個裝置不支援中文語音辨識，請換另一個裝置。','timeout':'等待語音服務逾時，這次不計分，請再試一次。','aborted':'錄音已停止，可以重新錄音。'};
-Object.assign(errors,{
- 'start-aborted':appleMobile?'iPad 的語音辨識未能啟動，這次不計分。請在 Safari 分頁重新開啟朗讀，先直接讀題，不要先播放錄音回放。':'瀏覽器在開始收音前中止了語音辨識，這次不計分。請關閉其他正在錄音的分頁，再重新開啟朗讀頁面。',
- 'too-short':'麥克風還沒準備好。請點一下開始錄音，等「正在聽」出現再讀，讀完再點一下送出。',
- 'mic-not-ready':'語音服務沒有開始收音。請先用下方「測試麥克風」檢查；若回放有聲音，可用 Chrome 開啟相同網址再試。',
- 'no-result':'已偵測到說話，但辨識服務沒有回傳完整文字。這次不計分，請再試；也可以用 Chrome 開啟相同網址比較。',
- 'no-speech':'辨識服務沒有回傳可用的詞語，這次不計分。若回放已有聲音，請確認「朗讀收音」裝置；裝置正確仍失敗，可能是辨識服務的問題。',
- 'device-missing':'選擇的麥克風已中斷，請更新麥克風清單並重新選擇。',
-});
-if(appleMobile)Object.assign(errors,{
- 'aborted':'iPad 中止了這次語音辨識，這次不計分。請先停止其他錄音，再重新試讀；若持續中止，請查看下方說明。',
- 'mic-not-ready':'iPad 的語音辨識尚未開始收音，這次不計分。請在 Safari 分頁重新開啟，確認 Siri／聽寫可用後直接試讀。',
- 'no-result':'有聽到說話，但 iPad 還沒有完成文字辨識，這次不計分。請留在這題，點錄音再讀一次，讀完整個詞語後再點送出。',
-});
-const speech=supported?createReadingSpeech({Recognition,continuous:appleMobile,finalGraceMs:appleMobile?1200:0,stopDelayMs:appleMobile?350:0,
-getAudioStream:sharedMicrophone?deviceId=>navigator.mediaDevices.getUserMedia({audio:deviceId?{deviceId:{exact:deviceId}}:true}):undefined,
-onInput(label){$('speech-device').textContent=`朗讀收音：${label}`;},onState(state){
- if(state==='starting')$('speech-help').hidden=true;
- if(state==='starting')$('speech-device').textContent=sharedMicrophone?'正在開啟選擇的麥克風…':'朗讀收音：瀏覽器預設麥克風';
- $('tap-record').dataset.state=state;
- $('tap-record').disabled=locked||micBusy||['starting','processing'].includes(state);
- $('tap-record').textContent=state==='idle'?'點一下開始錄音':state==='starting'?'準備麥克風…':state==='processing'?'正在辨識…':'我讀完了，點一下送出';
- $('speech-status').textContent=({starting:'請先允許麥克風，等「正在聽」再讀',listening:'正在聽，請讀出上方的詞語',hearing:'有偵測到說話，讀完後再點一下送出',processing:'正在辨識，請稍候…',idle:'點一下開始錄音，讀完再點一下送出'})[state];
-},onResult:answer,onError(code,detail={}){$('speech-status').textContent=errors[code]||'暫時無法辨識，這次不計分，請再試一次。';$('speech-help').hidden=false;$('speech-diagnostic').textContent=`頁面版本：20260928-mic4；辨識回報：${code}；收音方式：${sharedMicrophone?'所選麥克風':'瀏覽器預設'}；文字回傳：${detail.resultEvents||0} 次；暫時文字：${detail.hadInterim?'有':'無'}；已送出：${detail.stopRequested?'是':'否'}。`;}}):null;
-function press(){if(locked||micBusy||$('play').hidden||!speech)return;speech.start({deviceId:allowMicCheck?$('mic-device').value:''});}
+const errors={
+ 'not-allowed':'請允許這個網站使用麥克風與語音辨識，再試一次。',
+ 'no-result':'瀏覽器尚未回傳辨識文字，這次不計分，請再試一次。',
+ 'aborted':'這次辨識被中止，不計分。請停止其他錄音，再重新試讀。',
+ 'permission-denied':'請允許這個網站使用麥克風，再點一下錄音。',
+ 'permission-timeout':'等待麥克風權限逾時，這次不計分，請再試一次。',
+ 'record-error':'麥克風未能錄音，請檢查權限或選擇的麥克風。這次不計分。',
+ 'record-timeout':'錄音沒有完成，這次不計分，請重新錄音。',
+ 'silence':'錄音太小聲或沒有足夠聲音，這次不計分。請靠近麥克風再讀一次。',
+ 'too-short':'錄音太短，這次不計分。請讀完整個詞語後再送出。',
+ 'too-long':'錄音超過時間，這次不計分，請重新讀一次詞語。',
+ 'no-speech':'沒有辨識到完整詞語，這次不計分，請重新讀一次。',
+ 'authentication_required':'登入已到期，這題不計分。請按「先休息」返回，再登入開始。',
+ 'daily-limit':'今天的免費朗讀用量已達上限，這題不計分，請明天再練習。',
+ 'student-limit':'今天已經練習很多次了，這題不計分，請明天再練習。',
+ 'too-many-requests':'錄音送得太快了，這題不計分，請等一分鐘再試。',
+ 'unavailable':'雲端辨識暫時無法使用，這次不計分，請稍後再試。',
+ 'timeout':'辨識等候逾時，這次不計分，請確認網路後再試。',
+ 'network':'網路連線失敗，這次不計分，請確認網路後再試。'
+};
+const speechOptions={
+ Recorder:globalThis.MediaRecorder,
+ getUserMedia:c=>navigator.mediaDevices.getUserMedia(c),
+ decode:async blob=>{const Decoder=globalThis.OfflineAudioContext||globalThis.webkitOfflineAudioContext;return new Decoder(1,1,16000).decodeAudioData(await blob.arrayBuffer());},
+ transcribe:async(audio,signal)=>{
+  if(demo)throw Error('authentication_required');
+  const payload=auth.decorate({seat,audio});
+  let response;try{response=await fetch(classUrl('https://zhuyin-reading.j822925.workers.dev/transcribe'),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),credentials:'omit',cache:'no-store',signal});}catch{throw Error('network');}
+  if(response.status===401){auth.forget(seat);throw Error('authentication_required');}
+  if(!response.ok)throw Error('unavailable');
+  return response.json();
+ },
+ onInput(label){$('speech-device').textContent='朗讀收音：'+label;},
+ onState(state){
+  if(state==='starting'){$('speech-help').hidden=true;$('speech-device').textContent='正在開啟選擇的麥克風…';}
+  $('tap-record').dataset.state=state;
+  $('tap-record').disabled=locked||micBusy||['starting','processing'].includes(state);
+  $('tap-record').textContent=state==='idle'?'點一下開始錄音':state==='starting'?'準備麥克風…':state==='processing'?'正在辨識…':'我讀完了，點一下送出';
+  $('speech-status').textContent=({starting:'請先允許麥克風，等「正在聽」再讀',listening:nativeMode?'正在聽，請讀出上方的詞語':'正在聽，請讀出上方的詞語（最長八秒）',hearing:'有偵測到說話，讀完再點一下送出',processing:'正在辨識，請稍候…',idle:'點一下開始錄音，讀完再點一下送出'})[state];
+ },
+ onResult:answer,
+ onError(code){$('speech-status').textContent=code==='daily-limit'?readingClosedMessage(code):errors[code]||'這次無法完成辨識，不計分，請重新錄音。';if(code==='daily-limit'){cloudReady=false;$('tap-record').disabled=true;}$('speech-help').hidden=false;if(!nativeMode)showNativeFallback($('speech-help'));$('speech-diagnostic').textContent='頁面版本：20260929-cloud1；'+(nativeMode?'瀏覽器原有辨識':'雲端辨識')+'；回報：'+code+'。';}
+};
+const speech=supported?(nativeMode?createReadingSpeech({...speechOptions,Recognition,continuous:appleMobile,finalGraceMs:appleMobile?1200:0,stopDelayMs:appleMobile?350:0,getAudioStream:sharedMicrophone?deviceId=>navigator.mediaDevices.getUserMedia({audio:deviceId?{deviceId:{exact:deviceId}}:true}):undefined}):createCloudReadingSpeech(speechOptions)):null;
+if(nativeMode){
+ document.querySelector('#intro h1').nextElementSibling.textContent='Safari／瀏覽器原有辨識模式';$('standalone-help').hidden=true;
+ const details=document.querySelector('#intro details');details.innerHTML='<summary>給大人的錄音說明</summary><p>現在使用原本的 Safari／瀏覽器語音辨識，不消耗遊戲的雲端朗讀額度。iPad 請在 Safari 開啟，允許麥克風，並保持 Siri／聽寫可用。</p><p>聲音可能交由瀏覽器的語音服務處理；遊戲不保存錄音或辨識文字。這套辨識曾在 Safari 完成關卡，主畫面模式仍需要切換到 Safari。</p>';
+}
+function press(){if(locked||micBusy||!cloudReady||$('play').hidden||!speech)return;clearClip();speech.start({deviceId:allowMicCheck?$('mic-device').value:''});}
 $('tap-record').onclick=()=>{if(locked||micBusy)return;speech?.busy?speech.release():press();};
 let micCheck,clipUrl='';
 function clearClip(){clearMicPlayback($('mic-playback'),clipUrl);clipUrl='';}
@@ -125,18 +154,20 @@ async function refreshLesson(){
  const latest=await client.get({api:'config'});
  if(!Array.isArray(latest.symbols)||!Array.isArray(latest.compounds)||!Array.isArray(latest.seats)||typeof latest.readingWrites!=='boolean')throw Error('invalid_lesson');
  config=demo?{...latest,seats:['01']}:latest;
+ const cloud=nativeMode?{available:true}:await getReadingCloudStatus();cloudReady=cloud.available;
  eligibleWords=readingPool(config);lessonReady=true;
  const taught=readingTaughtSymbols(config);
  $('lesson-symbols').textContent=taught.length?'老師已勾選：'+taught.join('、'):'老師目前尚未勾選注音。';
  $('lesson-status').textContent=eligibleWords.length>=5?`依老師勾選的注音，可出 ${eligibleWords.length} 題。這回合只從符合範圍的詞語抽五題。`:`符合範圍的詞語只有 ${eligibleWords.length} 題，不足五題，這回合改從全部題庫隨機抽五題。`;
  $('reload').hidden=false;
- return config.readingWrites===true;
+ if(!cloudReady){$('home-message').textContent=readingClosedMessage(cloud.reason);showNativeFallback($('intro'));}
+ return config.readingWrites===true&&cloudReady;
 }
 async function start(){
  if(starting||!supported||(demo&&!localPreview))return;starting=true;$('seat').disabled=true;$('start').disabled=true;$('reload').disabled=true;
  try{
   $('home-message').textContent='正在確認老師最新勾選的注音…';
-  if(!await refreshLesson()){$('home-message').textContent='第四關目前尚未開放。請等待老師通知。';return;}
+  if(!await refreshLesson()){if(cloudReady)$('home-message').textContent='第四關目前尚未開放。請等待老師通知。';return;}
   seat=$('seat').value;if(!seat){$('home-message').textContent='請先選擇你的座號。';return;}
   if(!demo){if(!await auth.ensure(seat)){$('home-message').textContent='請先完成登入，再開始朗讀。';return;}auth.setPrimary(seat);}
   $('home-message').textContent='正在準備朗讀夥伴與反派…';
@@ -149,7 +180,7 @@ async function start(){
   readingBattle.begin(profile,encounter);
   currentPayload=null;deck=readingLessonDeck(eligibleWords);rows=[];started=Date.now();$('round-scope').textContent=eligibleWords.length>=5?'本回合：老師已勾選的注音範圍。':'符合詞語不足五題，本回合從全部題庫出題。';show('play');renderQuestion();
  }catch{lessonReady=false;$('lesson-status').textContent='尚未取得最新的注音設定。';$('home-message').textContent='還沒連上老師的任務，請確認網路後按「更新注音設定」。';$('reload').hidden=false;}
- finally{starting=false;$('seat').disabled=false;$('start').disabled=!lessonReady||config?.readingWrites!==true;$('reload').disabled=false;}
+ finally{starting=false;$('seat').disabled=false;$('start').disabled=!lessonReady||!cloudReady||config?.readingWrites!==true;$('reload').disabled=false;}
 }
 function finish(){
  cancel();show('result');readingBattle.result(0);const correct=rows.filter(r=>r.firstCorrect).length,stars=readingStars(correct);
@@ -174,9 +205,10 @@ async function flushPending(){
 async function load(){
  $('wordbank-count').textContent=`題庫共有 ${READING_WORDS.length.toLocaleString('zh-TW')} 個詞語，每回合隨機抽 5 題。`;
  $('reload').hidden=true;$('reload').disabled=true;$('start').disabled=true;lessonReady=false;
- if(demo&&!localPreview){$('home-message').textContent='第四關已準備好，目前尚未開放。請等待老師通知。';return;}
- if(!supported){$('home-message').textContent=globalThis.isSecureContext?'這個瀏覽器不支援語音辨識，請用支援的 Chrome 或 Safari 開啟。':'錄音需要安全連線，請以 HTTPS 遊戲網址開啟。';return;}
+ if(demo){$('home-message').textContent='雲端朗讀需要登入正式遊戲，請從主畫面選座號並登入。';return;}
+ if(!supported){$('home-message').textContent=globalThis.isSecureContext?'這個瀏覽器無法錄音，請更新系統或請老師協助。':'錄音需要安全連線，請以 HTTPS 遊戲網址開啟。';return;}
  try{await refreshLesson();
+ if(!cloudReady)return;
  if(!config.readingWrites){$('home-message').textContent='第四關已準備好，目前尚未開放。請等待老師通知。';return;}
  $('mic-check').hidden=false;
  $('seat').replaceChildren(new Option('選擇座號',''));for(const s of config.seats)$('seat').append(new Option(s+' 號',s));

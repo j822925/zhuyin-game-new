@@ -1,8 +1,9 @@
+// Normal cloud reading stays inside the Home Screen app. Only the explicit
+// no-quota native fallback uses the older Safari handoff.
 import {readingLaunchEnvironment,readingLaunchPlan,mountReadingLaunch} from './reading-launch.js?v=20260928-home-reading1';
+const native=new URL(location.href).searchParams.get('speech')==='native';
 const plan=readingLaunchPlan(location.href,readingLaunchEnvironment());
-if(plan.standalone){
- mountReadingLaunch(plan);
- // No microphone, recognition, login or encounter starts in the unavailable
- // Home Screen context. Safari runs the already validated mic4 game normally.
- await import('./class-context.js?v=20260928-all1');
-}else await import('./reading.js?v=20260928-mic4');
+if(native&&plan.standalone){
+ const url=new URL(plan.browserUrl);url.searchParams.set('speech','native');url.searchParams.set('v','20260929-cloud1');plan.browserUrl=url.href;if(plan.safariUrl)plan.safariUrl=url.href.replace(/^https:/,'x-safari-https:');
+ mountReadingLaunch(plan);await import('./class-context.js?v=20260928-all1');
+}else await import('./reading.js?v=20260929-cloud1');

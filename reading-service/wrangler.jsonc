@@ -1,0 +1,12 @@
+{
+  "name":"zhuyin-reading",
+  "account_id":"ee4539177f48f6681940515eb7ac1059",
+  "main":"worker.js",
+  "compatibility_date":"2026-09-01",
+  "workers_dev":true,
+  "preview_urls":false,
+  "ai":{"binding":"AI"},
+  "d1_databases":[{"binding":"DB","database_name":"zhuyin-db","database_id":"18751cb9-1a8d-484b-9943-a1c683b2860a"}],
+  "vars":{"READING_CLOUD_ENABLED":"true","ALLOWED_ORIGINS":"https://j822925.github.io"},
+  "observability":{"enabled":false}
+}
