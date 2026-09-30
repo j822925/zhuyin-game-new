@@ -37,6 +37,11 @@ export const READING_WORDS = [
 // Speech cannot distinguish identical pronunciations (e.g. 姊姊 / 姐姐).
 // Accept only known whole-word spellings with exactly the same tones/syllables.
 const homophones=new Map();
+// Reviewed ASR spellings with identical syllables AND tones. Keep these tied
+// to the full pronunciation, never to a similar spelling or partial match.
+// 湖泊 / 胡博 = ㄏㄨˊ ㄅㄛˊ (MOE); see READING_SCRIPT_RELEASE.md.
+const reviewedHomophones=new Map([['ㄏㄨˊ ㄅㄛˊ',['胡博','胡泊','湖博']]]);
+for(const w of READING_WORDS)w.aliases=[...w.aliases,...(reviewedHomophones.get(w.zhuyin)||[])];
 for(const w of READING_WORDS)w.aliases=[...new Set([...w.aliases,...[w.word,...w.aliases].flatMap(s=>READING_SCRIPT_FORMS[s]||[])])];
 for(const w of READING_WORDS){if(!homophones.has(w.zhuyin))homophones.set(w.zhuyin,new Set());for(const text of [w.word,...w.aliases])homophones.get(w.zhuyin).add(text);}
 for(const w of READING_WORDS)w.aliases=[...homophones.get(w.zhuyin)].filter(text=>text!==w.word);

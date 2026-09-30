@@ -1,7 +1,7 @@
 import {classUrl} from './class-context.js?v=20260926-classes1';
 import {readingLaunchEnvironment,readingLaunchPlan} from './reading-launch.js?v=20260928-home-reading1';
 export function nativeReadingLink(){
- const plan=readingLaunchPlan(location.href,readingLaunchEnvironment()),url=new URL(plan.browserUrl);url.searchParams.set('speech','native');url.searchParams.set('v','20260930-script1');
+ const plan=readingLaunchPlan(location.href,readingLaunchEnvironment()),url=new URL(plan.browserUrl);url.searchParams.set('speech','native');url.searchParams.set('v','20260930-homophone1');
  return {browserUrl:url.href,url:plan.safariUrl?url.href.replace(/^https:/,'x-safari-https:'):url.href,standalone:plan.standalone};
 }
 export function showNativeFallback(container){
