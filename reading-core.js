@@ -2,6 +2,7 @@
 // a longer sentence or a similar-sounding word must not earn a correct answer.
 import {EXTRA_READING_WORDS} from './reading-words.js?v=20260928-all1';
 import {READING_SCRIPT_FORMS} from './reading-script-forms.js?v=20260930-script1';
+import {pronunciationDecision} from './reading-pronunciation.js?v=20260930-sound1';
 export const READING_WORDS = [
  ['apple','蘋果','ㄆㄧㄥˊ ㄍㄨㄛˇ','苹果'],
  ['watermelon','西瓜','ㄒㄧ ㄍㄨㄚ'],
@@ -47,13 +48,14 @@ for(const w of READING_WORDS){if(!homophones.has(w.zhuyin))homophones.set(w.zhuy
 for(const w of READING_WORDS)w.aliases=[...homophones.get(w.zhuyin)].filter(text=>text!==w.word);
 export const READING_TOTAL=5;
 export function normalizeSpeech(text){return String(text??'').normalize('NFKC').replace(/[\s\p{P}]/gu,'');}
-export function matchesReading(word,text){const value=normalizeSpeech(text);return !!value&&[word.word,...word.aliases].some(s=>normalizeSpeech(s)===value);}
+function matchesSpelling(word,value){return [word.word,...word.aliases].some(s=>normalizeSpeech(s)===value);}
+export function matchesReading(word,text){return readingDecision(word,text)==='correct';}
 // Romanization cannot reliably preserve Mandarin tones. Do not fail or pass
 // the child when the recognizer returns Latin letters, digits or mixed scripts.
 export function readingDecision(word,text){
  const value=normalizeSpeech(text);
  if(!value||!/^[\p{Script=Han}]+$/u.test(value))return 'retry';
- return matchesReading(word,value)?'correct':'incorrect';
+ return matchesSpelling(word,value)?'correct':pronunciationDecision(word,value);
 }
 export function readingStars(correct){return correct===5?3:correct>=3&&correct<5?1:0;}
 export function readingDeck(rng=Math.random){
