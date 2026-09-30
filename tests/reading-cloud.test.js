@@ -28,7 +28,8 @@ test('requires valid class-specific student session; never sends identity or ans
  assert.equal((await h.call({...data,token:'b'.repeat(64)})).status,401);
  assert.equal((await h.call(data,'/transcribe?class=grade2')).status,401);assert.equal(h.calls,0);
  assert.equal((await h.call(data)).data.text,'蘋果');assert.equal(h.calls,1);
- assert.deepEqual(Object.keys(h.input.data).sort(),['audio','condition_on_previous_text','language','task']);
+ assert.deepEqual(Object.keys(h.input.data).sort(),['audio','condition_on_previous_text','initial_prompt','language','task']);
+ assert.equal(h.input.data.initial_prompt,'以下是臺灣國語的詞語，使用繁體中文漢字。');assert.ok(!h.input.data.initial_prompt.includes(data.answer));
  h.sql.exec("UPDATE students SET pin_version='v2'");assert.equal((await h.call(data)).status,401);
 });
 test('silence and malformed payloads do not consume quota or call the model',async t=>{

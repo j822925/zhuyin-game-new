@@ -1,6 +1,7 @@
 // Shared word bank and scoring for the fourth level. No fuzzy/substring matching:
 // a longer sentence or a similar-sounding word must not earn a correct answer.
 import {EXTRA_READING_WORDS} from './reading-words.js?v=20260928-all1';
+import {READING_SCRIPT_FORMS} from './reading-script-forms.js?v=20260930-script1';
 export const READING_WORDS = [
  ['apple','蘋果','ㄆㄧㄥˊ ㄍㄨㄛˇ','苹果'],
  ['watermelon','西瓜','ㄒㄧ ㄍㄨㄚ'],
@@ -36,11 +37,19 @@ export const READING_WORDS = [
 // Speech cannot distinguish identical pronunciations (e.g. 姊姊 / 姐姐).
 // Accept only known whole-word spellings with exactly the same tones/syllables.
 const homophones=new Map();
+for(const w of READING_WORDS)w.aliases=[...new Set([...w.aliases,...[w.word,...w.aliases].flatMap(s=>READING_SCRIPT_FORMS[s]||[])])];
 for(const w of READING_WORDS){if(!homophones.has(w.zhuyin))homophones.set(w.zhuyin,new Set());for(const text of [w.word,...w.aliases])homophones.get(w.zhuyin).add(text);}
 for(const w of READING_WORDS)w.aliases=[...homophones.get(w.zhuyin)].filter(text=>text!==w.word);
 export const READING_TOTAL=5;
 export function normalizeSpeech(text){return String(text??'').normalize('NFKC').replace(/[\s\p{P}]/gu,'');}
 export function matchesReading(word,text){const value=normalizeSpeech(text);return !!value&&[word.word,...word.aliases].some(s=>normalizeSpeech(s)===value);}
+// Romanization cannot reliably preserve Mandarin tones. Do not fail or pass
+// the child when the recognizer returns Latin letters, digits or mixed scripts.
+export function readingDecision(word,text){
+ const value=normalizeSpeech(text);
+ if(!value||!/^[\p{Script=Han}]+$/u.test(value))return 'retry';
+ return matchesReading(word,value)?'correct':'incorrect';
+}
 export function readingStars(correct){return correct===5?3:correct>=3&&correct<5?1:0;}
 export function readingDeck(rng=Math.random){
  const shuffled=list=>{const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
