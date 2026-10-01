@@ -2,11 +2,11 @@ import {createReadingBattle} from './reading-battle.js?v=20260928-allies1';
 import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20260928-allies1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';
-import {readingStars,readingDecision,READING_WORDS} from './reading-core.js?v=20261001-lenient1';
-import {createCloudReadingSpeech} from './reading-cloud-speech.js?v=20261001-lenient1';
-import {getReadingCloudStatus,readingClosedMessage} from './reading-cloud-status.js?v=20261001-lenient1';
+import {readingStars,readingDecision,READING_WORDS} from './reading-core.js?v=20261001-retry1';
+import {createCloudReadingSpeech} from './reading-cloud-speech.js?v=20261001-retry1';
+import {getReadingCloudStatus,readingClosedMessage} from './reading-cloud-status.js?v=20261001-retry1';
 import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic4';
-import {showNativeFallback} from './reading-fallback.js?v=20261001-lenient1';
+import {showNativeFallback} from './reading-fallback.js?v=20261001-retry1';
 import {createMicCheck,clearMicPlayback} from './reading-mic-check.js?v=20260928-mic3';
 import {createMicPreference} from './reading-mic-preference.js?v=20260928-all1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
@@ -76,7 +76,7 @@ const speechOptions={
   $('speech-status').textContent=({starting:'請先允許麥克風，等「正在聽」再讀',listening:nativeMode?'正在聽，請讀出上方的詞語':'正在聽，請讀出上方的詞語（最長八秒）',hearing:'有偵測到說話，讀完再點一下送出',processing:'正在辨識，請稍候…',idle:'點一下開始錄音，讀完再點一下送出'})[state];
  },
  onResult:answer,
- onError(code){$('speech-status').textContent=code==='daily-limit'?readingClosedMessage(code):errors[code]||'這次無法完成辨識，不計分，請重新錄音。';if(code==='daily-limit'){cloudReady=false;$('tap-record').disabled=true;}$('speech-help').hidden=false;if(!nativeMode)showNativeFallback($('speech-help'));$('speech-diagnostic').textContent='頁面版本：20261001-lenient1；'+(nativeMode?'瀏覽器原有辨識':'雲端辨識')+'；回報：'+code+'。';}
+ onError(code){$('speech-status').textContent=code==='daily-limit'?readingClosedMessage(code):errors[code]||'這次無法完成辨識，不計分，請重新錄音。';if(code==='daily-limit'){cloudReady=false;$('tap-record').disabled=true;}$('speech-help').hidden=false;if(!nativeMode)showNativeFallback($('speech-help'));$('speech-diagnostic').textContent='頁面版本：20261001-retry1；'+(nativeMode?'瀏覽器原有辨識':'雲端辨識')+'；回報：'+code+'。';}
 };
 const speech=supported?(nativeMode?createReadingSpeech({...speechOptions,Recognition,continuous:appleMobile,finalGraceMs:appleMobile?1200:0,stopDelayMs:appleMobile?350:0,getAudioStream:sharedMicrophone?deviceId=>navigator.mediaDevices.getUserMedia({audio:deviceId?{deviceId:{exact:deviceId}}:true}):undefined}):createCloudReadingSpeech(speechOptions)):null;
 if(nativeMode){
@@ -143,14 +143,14 @@ function renderQuestion(){
 }
 function answer(text){
  if(locked||$('play').hidden)return;const word=deck[rows.length],decision=readingDecision(word,text);
- if(decision==='retry'){
-  $('feedback').textContent='這次還不能確定辨識文字的讀音，不計分。請再讀一次。';
-  $('speech-status').textContent='不是你答錯了。請靠近麥克風，慢慢讀完整個詞語。';
+ if(decision!=='correct'){
+  $('feedback').textContent='這次辨識還不能確認，不扣分。請再試一次。';
+  $('speech-status').textContent='題目會留在這裡，準備好再按錄音。';
   $('tap-record').disabled=false;$('next').hidden=true;return;
  }
- locked=true;const correct=decision==='correct';rows.push({wordId:word.id,target:word.zhuyin,firstCorrect:correct,seconds:Math.round((Date.now()-questionStarted)/1000)});
- $('tap-record').disabled=true;$('feedback').textContent=correct?'⭐ 讀對了！真棒！':`這次聽到「${text.slice(0,80)}」。題目是「${word.word}」，下次再加油！`;
- $('speech-status').textContent=correct?`你讀的是「${word.word}」`:'這題已記錄，勇敢繼續下一題。';
+ locked=true;const correct=true;rows.push({wordId:word.id,target:word.zhuyin,firstCorrect:correct,seconds:Math.round((Date.now()-questionStarted)/1000)});
+ $('tap-record').disabled=true;$('feedback').textContent='⭐ 讀對了！真棒！';
+ $('speech-status').textContent=`你讀的是「${word.word}」`;
  readingBattle.answer(correct,rows.length,rows.every(r=>r.firstCorrect));
  $('next').textContent=rows.length===5?'看看我的星星 →':'下一題 →';$('next').hidden=false;
 }
@@ -189,7 +189,7 @@ async function start(){
 }
 function finish(){
  cancel();show('result');readingBattle.result(0);const correct=rows.filter(r=>r.firstCorrect).length,stars=readingStars(correct);
- $('score').textContent=`答對 ${correct} / 5 題`;$('stars').textContent=stars?'⭐'.repeat(stars):'再接再厲';
+ $('score').textContent=`通過 ${correct} / 5 題`;$('stars').textContent=stars?'⭐'.repeat(stars):'再接再厲';
  $('review').replaceChildren();for(const row of rows){const word=READING_WORDS.find(w=>w.id===row.wordId),p=document.createElement('p');p.textContent=`${row.firstCorrect?'✓':'再練練'}　${word.word}　${word.zhuyin}`;$('review').append(p);}
  if(demo){readingBattle.result(stars,creditDemoMonster(seat,readingRoundId,correct===5));$('save-status').textContent=`老師試玩：本回合 ${stars} 顆星星，不傳送學生成績。`;$('retry-save').hidden=true;return;}
  currentPayload={kind:'round',mode:'reading',roundId:readingRoundId,monsterBattle:1,seat,total:5,mistakes:5-correct,seconds:Math.round((Date.now()-started)/1000),results:rows};

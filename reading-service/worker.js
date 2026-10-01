@@ -30,7 +30,7 @@ export default {async fetch(request,env){
  if(origin)headers['Access-Control-Allow-Origin']=origin;
  const reply=(data,status=200)=>new Response(JSON.stringify(data),{status,headers});
  if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{...headers,'Access-Control-Allow-Methods':'POST,GET,OPTIONS','Access-Control-Allow-Headers':'Content-Type'}});
- if(request.method==='GET'&&url.pathname==='/health')return reply({ok:true,version:'20260930-script1',enabled:env.READING_CLOUD_ENABLED==='true'});
+ if(request.method==='GET'&&url.pathname==='/health')return reply({ok:true,version:'20261001-retry1',enabled:env.READING_CLOUD_ENABLED==='true'});
  if(request.method==='GET'&&url.pathname==='/status'){try{return reply(await availability(env));}catch{return reply({available:false,reason:'unavailable'});}}
  if(url.pathname!=='/transcribe'||request.method!=='POST')return reply({error:'not-found'},404);
  try{
@@ -52,7 +52,9 @@ export default {async fetch(request,env){
    await env.DB.prepare('INSERT OR IGNORE INTO reading_cloud_usage(bucket,used) VALUES(?,1)').bind('blocked:'+day).run();throw Error('daily-limit');
   }
   let output;
-  try{output=await env.AI.run(MODEL,{audio:d.audio,task:'transcribe',language:'zh',condition_on_previous_text:false,initial_prompt:'以下是臺灣國語的詞語，使用繁體中文漢字。'});}catch(e){
+  // A transcription prompt is audio context, not an instruction. Omit it:
+  // short recordings were reported with invented script/subtitle instructions.
+  try{output=await env.AI.run(MODEL,{audio:d.audio,task:'transcribe',language:'zh',condition_on_previous_text:false});}catch(e){
    if(freeQuotaError(e)){await env.DB.prepare('INSERT OR IGNORE INTO reading_cloud_usage(bucket,used) VALUES(?,1)').bind('blocked:'+day).run();throw Error('daily-limit');}
    throw Error('unavailable');
   }

@@ -4,6 +4,6 @@ import {readingLaunchEnvironment,readingLaunchPlan,mountReadingLaunch} from './r
 const native=new URL(location.href).searchParams.get('speech')==='native';
 const plan=readingLaunchPlan(location.href,readingLaunchEnvironment());
 if(native&&plan.standalone){
- const url=new URL(plan.browserUrl);url.searchParams.set('speech','native');url.searchParams.set('v','20261001-lenient1');plan.browserUrl=url.href;if(plan.safariUrl)plan.safariUrl=url.href.replace(/^https:/,'x-safari-https:');
+ const url=new URL(plan.browserUrl);url.searchParams.set('speech','native');url.searchParams.set('v','20261001-retry1');plan.browserUrl=url.href;if(plan.safariUrl)plan.safariUrl=url.href.replace(/^https:/,'x-safari-https:');
  mountReadingLaunch(plan);await import('./class-context.js?v=20260928-all1');
-}else await import('./reading.js?v=20261001-lenient1');
+}else await import('./reading.js?v=20261001-retry1');
