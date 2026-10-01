@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-import {READING_WORDS,readingDecision,readingStars,validReadingRound} from '../reading-core.js';
+import {READING_WORDS,readingAttemptDecision,readingStars,validReadingRound} from '../reading-core.js';
 
 // Exercise the actual page answer handler with a small DOM and battle spy.
 const source=fs.readFileSync(new URL('../reading.js',import.meta.url),'utf8');
@@ -10,7 +10,7 @@ const handler=source.slice(source.indexOf('function answer(text){'),source.index
 function harness(words){
  const nodes=new Map(),battles=[];
  const $=id=>{if(!nodes.has(id))nodes.set(id,{hidden:id==='next',disabled:false,textContent:''});return nodes.get(id);};
- const context=vm.createContext({$,readingDecision,Date,Math,locked:false,rows:[],deck:words.map(text=>READING_WORDS.find(w=>w.word===text)),questionStarted:Date.now(),readingBattle:{answer(...args){battles.push(args);}}});
+ const context=vm.createContext({$,readingAttemptDecision,Date,Math,locked:false,rows:[],deck:words.map(text=>READING_WORDS.find(w=>w.word===text)),questionStarted:Date.now(),readingBattle:{answer(...args){battles.push(args);}}});
  vm.runInContext(handler,context);
  return {context,$,battles,answer(text){context.answer(text);}};
 }
@@ -37,4 +37,25 @@ test('retries across all five questions preserve one score per question and thre
 });
 test('late results after leaving the play page cannot change scores',()=>{
  const h=harness(['叉子']);h.$('play').hidden=true;h.answer('叉子');assert.equal(h.context.rows.length,0);assert.equal(h.battles.length,0);
+});
+test('clear different vocabulary is scored incorrect once and permits the next question',()=>{
+ for(const [target,heard] of [['早安','晚安'],['晚安','早安'],['蘋果','香蕉'],['學校','图书馆']]){
+  const h=harness([target]);h.answer(heard);
+  assert.equal(h.context.rows.length,1);assert.equal(h.context.rows[0].firstCorrect,false);
+  assert.equal(h.context.locked,true);assert.equal(h.$('next').hidden,false);assert.equal(h.$('tap-record').disabled,true);
+  assert.match(h.$('feedback').textContent,/答錯/);assert.equal(h.battles[0][0],false);
+  h.answer(target);assert.equal(h.context.rows.length,1);assert.equal(h.context.rows[0].firstCorrect,false);
+ }
+});
+test('uncertain retry then a wrong word counts once; mixed rounds keep the original star rules',()=>{
+ for(const correctCount of [2,3,4,5]){
+  const h=harness(['早安','蘋果','叉子','梨子','木馬']);
+  for(let i=0;i<5;i++){
+   h.context.locked=false;h.answer('使用繁體中文字幕');assert.equal(h.context.rows.length,i);
+   h.answer(i<correctCount?h.context.deck[i].word:'晚安');assert.equal(h.context.rows.length,i+1);
+  }
+  const correct=h.context.rows.filter(r=>r.firstCorrect).length;
+  assert.equal(correct,correctCount);assert.equal(readingStars(correct),correctCount===5?3:correctCount>=3?1:0);
+  assert.equal(validReadingRound({mode:'reading',total:5,mistakes:5-correct,results:h.context.rows}),true);
+ }
 });

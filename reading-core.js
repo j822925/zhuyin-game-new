@@ -57,6 +57,15 @@ export function readingDecision(word,text){
  if(!value||!/^[\p{Script=Han}]+$/u.test(value))return 'retry';
  return matchesSpelling(word,value)?'correct':pronunciationDecision(word,value);
 }
+// A known vocabulary word can be a real wrong answer (早安 -> 晚安).
+// Unknown names, fragments and added subtitles still cannot establish an error.
+// Do not include ASR aliases here: they are not necessarily ordinary words.
+const recognizedVocabulary=new Set(READING_WORDS.flatMap(w=>[w.word,...(READING_SCRIPT_FORMS[w.word]||[])].map(normalizeSpeech)));
+export function readingAttemptDecision(word,text){
+ const decision=readingDecision(word,text);
+ if(decision!=='incorrect')return decision;
+ return recognizedVocabulary.has(normalizeSpeech(text))?'incorrect':'retry';
+}
 export function readingStars(correct){return correct===5?3:correct>=3&&correct<5?1:0;}
 export function readingDeck(rng=Math.random){
  const shuffled=list=>{const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
