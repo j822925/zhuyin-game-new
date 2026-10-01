@@ -12,7 +12,15 @@ const homeUrl=()=>classUrl(demo?'./?demo=1':'./');$('back').href=homeUrl();$('cr
 const key=()=>classStorageKey('zhuyin.tone.practice.v1:'+new URL('.',location.href).pathname+':'+(demo?'demo':'live')+':'+seat);
 const toneName=t=>TONES[t-1].name,modeName=()=>({basic:'🌱 無變調',sandhi:'✨ 有變調',all:'🌈 混合挑戰'})[mode];
 function stop(){epoch++;audio.stop();busy=false;}
-function show(name){for(const id of ['entry','intro','play','result','catalog'])$(id).hidden=id!==name;$('entry-back').hidden=name==='entry';$('error').textContent='';window.scrollTo(0,0);}
+function show(name){
+ for(const id of ['entry','intro','play','result','catalog'])$(id).hidden=id!==name;
+ $('entry-back').hidden=name==='entry';$('error').textContent='';
+ const playing=name==='play',info=$('stage-information'),main=info.parentElement;
+ document.body.classList.toggle('is-playing',playing);
+ // Put secondary information after the task in both visual and keyboard order.
+ if(playing)main.append(info);else main.prepend(info);
+ window.scrollTo(0,0);
+}
 function validSeat(){return demo||auth.verified(seat);}
 function save(){try{sessionStorage.setItem(key(),JSON.stringify({version:bank.version,mode,length,deck:deck.map(q=>q.id),index,answers,results,submitted,speed:Number($('speed').value)}));}catch{/* Storage failure never prevents practice. */}}
 function clear(){try{sessionStorage.removeItem(key());}catch{}}
