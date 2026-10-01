@@ -4,7 +4,7 @@
  "short_name":"注音探險島",
  "lang":"zh-Hant-TW",
  "description":"聽聲音、學注音，和森林小夥伴一起探險。",
- "start_url":"./?v=20260913-tutor1&source=homescreen",
+ "start_url":"./?class=main&source=homescreen&v=20261001-class1",
  "scope":"./",
  "display":"standalone",
  "orientation":"landscape",

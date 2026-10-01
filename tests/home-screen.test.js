@@ -12,6 +12,6 @@ test('主畫面圖示 PNG 尺寸真實正確且不透明',()=>{
  }
 });
 test('指南導向正式首頁，保留登入與需要網路的提醒',()=>{
- const guide=fs.readFileSync(new URL('install.html',root),'utf8');assert.match(guide,/href="\.\/\?v=20260913-tutor1"/);assert.match(guide,/打開為網頁 App/);assert.match(guide,/四位數密碼/);assert.match(guide,/需要網路/);assert.match(guide,/尚未用實體 iPad/);assert.match(guide,/不是這一頁教學/);
+ const guide=fs.readFileSync(new URL('install.html',root),'utf8');assert.match(guide,/href="\.\/\?class=main&amp;v=20261001-class1"/);assert.match(guide,/grade2.html\?class=grade2/);assert.match(guide,/打開為網頁 App/);assert.match(guide,/四位數密碼/);assert.match(guide,/需要網路/);assert.match(guide,/尚未用實體 iPad/);assert.match(guide,/不是這一頁教學/);
  assert.ok(!html.includes('user-scalable=no'));assert.match(html,/viewport-fit=cover/);
 });

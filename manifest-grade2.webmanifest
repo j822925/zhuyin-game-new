@@ -3,7 +3,7 @@
  "name":"二年級・注音探險島",
  "short_name":"二年級注音",
  "lang":"zh-Hant-TW",
- "start_url":"./?class=grade2&source=homescreen",
+ "start_url":"./grade2.html?class=grade2&source=homescreen&v=20261001-class1",
  "scope":"./",
  "display":"standalone",
  "orientation":"landscape",
