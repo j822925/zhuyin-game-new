@@ -1,8 +1,8 @@
-// Shared word bank and scoring for the fourth level. No fuzzy/substring matching:
-// a longer sentence or a similar-sounding word must not earn a correct answer.
+// Shared fourth-level bank/scoring. The teacher chose lenient pronunciation:
+// tones and listed near-sounds may pass; no substring, missing or extra syllables.
 import {EXTRA_READING_WORDS} from './reading-words.js?v=20260928-all1';
 import {READING_SCRIPT_FORMS} from './reading-script-forms.js?v=20260930-script1';
-import {pronunciationDecision} from './reading-pronunciation.js?v=20260930-sound1';
+import {pronunciationDecision} from './reading-pronunciation.js?v=20261001-lenient1';
 export const READING_WORDS = [
  ['apple','蘋果','ㄆㄧㄥˊ ㄍㄨㄛˇ','苹果'],
  ['watermelon','西瓜','ㄒㄧ ㄍㄨㄚ'],
@@ -50,8 +50,8 @@ export const READING_TOTAL=5;
 export function normalizeSpeech(text){return String(text??'').normalize('NFKC').replace(/[\s\p{P}]/gu,'');}
 function matchesSpelling(word,value){return [word.word,...word.aliases].some(s=>normalizeSpeech(s)===value);}
 export function matchesReading(word,text){return readingDecision(word,text)==='correct';}
-// Romanization cannot reliably preserve Mandarin tones. Do not fail or pass
-// the child when the recognizer returns Latin letters, digits or mixed scripts.
+// Keep the teacher's Han-only recognition policy: undecodable Latin letters,
+// digits and mixed scripts retry without grading rather than inventing readings.
 export function readingDecision(word,text){
  const value=normalizeSpeech(text);
  if(!value||!/^[\p{Script=Han}]+$/u.test(value))return 'retry';

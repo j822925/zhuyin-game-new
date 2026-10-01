@@ -2,11 +2,11 @@ import {createReadingBattle} from './reading-battle.js?v=20260928-allies1';
 import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20260928-allies1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';
-import {readingStars,readingDecision,READING_WORDS} from './reading-core.js?v=20260930-sound1';
-import {createCloudReadingSpeech} from './reading-cloud-speech.js?v=20260930-sound1';
-import {getReadingCloudStatus,readingClosedMessage} from './reading-cloud-status.js?v=20260930-sound1';
+import {readingStars,readingDecision,READING_WORDS} from './reading-core.js?v=20261001-lenient1';
+import {createCloudReadingSpeech} from './reading-cloud-speech.js?v=20261001-lenient1';
+import {getReadingCloudStatus,readingClosedMessage} from './reading-cloud-status.js?v=20261001-lenient1';
 import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic4';
-import {showNativeFallback} from './reading-fallback.js?v=20260930-sound1';
+import {showNativeFallback} from './reading-fallback.js?v=20261001-lenient1';
 import {createMicCheck,clearMicPlayback} from './reading-mic-check.js?v=20260928-mic3';
 import {createMicPreference} from './reading-mic-preference.js?v=20260928-all1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
@@ -76,7 +76,7 @@ const speechOptions={
   $('speech-status').textContent=({starting:'請先允許麥克風，等「正在聽」再讀',listening:nativeMode?'正在聽，請讀出上方的詞語':'正在聽，請讀出上方的詞語（最長八秒）',hearing:'有偵測到說話，讀完再點一下送出',processing:'正在辨識，請稍候…',idle:'點一下開始錄音，讀完再點一下送出'})[state];
  },
  onResult:answer,
- onError(code){$('speech-status').textContent=code==='daily-limit'?readingClosedMessage(code):errors[code]||'這次無法完成辨識，不計分，請重新錄音。';if(code==='daily-limit'){cloudReady=false;$('tap-record').disabled=true;}$('speech-help').hidden=false;if(!nativeMode)showNativeFallback($('speech-help'));$('speech-diagnostic').textContent='頁面版本：20260930-sound1；'+(nativeMode?'瀏覽器原有辨識':'雲端辨識')+'；回報：'+code+'。';}
+ onError(code){$('speech-status').textContent=code==='daily-limit'?readingClosedMessage(code):errors[code]||'這次無法完成辨識，不計分，請重新錄音。';if(code==='daily-limit'){cloudReady=false;$('tap-record').disabled=true;}$('speech-help').hidden=false;if(!nativeMode)showNativeFallback($('speech-help'));$('speech-diagnostic').textContent='頁面版本：20261001-lenient1；'+(nativeMode?'瀏覽器原有辨識':'雲端辨識')+'；回報：'+code+'。';}
 };
 const speech=supported?(nativeMode?createReadingSpeech({...speechOptions,Recognition,continuous:appleMobile,finalGraceMs:appleMobile?1200:0,stopDelayMs:appleMobile?350:0,getAudioStream:sharedMicrophone?deviceId=>navigator.mediaDevices.getUserMedia({audio:deviceId?{deviceId:{exact:deviceId}}:true}):undefined}):createCloudReadingSpeech(speechOptions)):null;
 if(nativeMode){

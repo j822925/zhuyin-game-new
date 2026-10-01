@@ -14,15 +14,15 @@ test('the reported Múma case and other romanization are ungraded retries, never
  for(const text of ['Múma','Muma','mù mǎ','mu4 ma3','Ｍｕｍａ','木ma','5颜6色','ㄇㄨˋ ㄇㄚˇ','',null])assert.equal(readingDecision(word('木馬'),text),'retry');
  assert.equal(matchesReading(word('木馬'),'Múma'),false);assert.equal(readingDecision(word('木馬'),'木马'),'correct');
 });
-test('different Chinese words, extra speech and wrong tones in Chinese spelling do not gain credit',()=>{
- for(const text of ['木瓜','媽媽','木麻','这是木马','木马木马'])assert.equal(readingDecision(word('木馬'),text),'incorrect');
+test('unrelated Chinese words and extra speech do not gain credit in lenient mode',()=>{
+ for(const text of ['木瓜','媽媽','这是木马','木马木马'])assert.equal(readingDecision(word('木馬'),text),'incorrect');
  assert.equal(readingDecision(word('學校'),'学生'),'incorrect');assert.deepEqual([readingStars(5),readingStars(3),readingStars(2)],[3,1,0]);
 });
 
-test('lake accepts reviewed full homophones but rejects different tones, syllables and extra words',()=>{
+test('lake accepts homophones and tone variants but rejects different syllables and extra words',()=>{
  const lake=word('湖泊');assert.equal(lake.zhuyin,'ㄏㄨˊ ㄅㄛˊ');
- for(const text of ['湖泊','胡博','胡泊','湖博','「胡博」。'])assert.equal(readingDecision(lake,text),'correct',text);
- for(const text of ['胡波','虎博','湖坡','胡伯伯','我念胡博','胡博胡博','胡','博'])assert.equal(readingDecision(lake,text),'incorrect',text);
+ for(const text of ['湖泊','胡博','胡泊','湖博','「胡博」。','胡波','虎博'])assert.equal(readingDecision(lake,text),'correct',text);
+ for(const text of ['湖坡','胡伯伯','我念胡博','胡博胡博','胡','博'])assert.equal(readingDecision(lake,text),'incorrect',text);
  assert.equal(readingDecision(word('木馬'),'胡博'),'incorrect');
  assert.equal(readingDecision(lake,'hu2 bo2'),'retry');assert.equal(lake.word,'湖泊');
 });

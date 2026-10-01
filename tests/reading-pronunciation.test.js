@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {READING_WORDS,readingDecision,matchesReading} from '../reading-core.js';
-import {pronunciationDecision} from '../reading-pronunciation.js';
+import {pronunciationDecision,similarReadingSyllable} from '../reading-pronunciation.js';
 import {PRONUNCIATIONS,PRONUNCIATION_SYLLABLES,PRONUNCIATION_METADATA} from '../reading-pronunciation-data.js';
 const word=text=>{const w=READING_WORDS.find(w=>w.word===text);assert.ok(w,text);return w;};
 
@@ -13,14 +13,21 @@ test('whole syllables and tones accept homophones beyond handwritten exceptions'
  }
 });
 
-test('different syllables and tones do not pass just because characters sound similar',()=>{
- for(const [target,heard] of [['木馬','木麻'],['木馬','母馬'],['湖泊','胡波'],['湖泊','虎博'],['老師','勞師'],['公園','公怨'],['學校','學生']])assert.equal(readingDecision(word(target),heard),'incorrect',target+' / '+heard);
+test('teacher leniency accepts tone and neutral-tone differences including pear/ion',()=>{
+ for(const [target,heard] of [['梨子','離子'],['梨子','离子'],['木馬','木麻'],['木馬','母馬'],['湖泊','胡波'],['湖泊','虎博'],['老師','勞師'],['公園','公怨']])assert.equal(readingDecision(word(target),heard),'correct',target+' / '+heard);
+ assert.equal(readingDecision(word('學校'),'學生'),'incorrect');
+});
+
+test('listed near-sounds apply in either direction while unrelated edits remain rejected',()=>{
+ for(const [a,b] of [['ㄓˇ','ㄗ˙'],['ㄔㄠ','ㄘㄠˊ'],['ㄕㄢ','ㄙㄢˇ'],['ㄋㄧˊ','ㄌㄧˋ'],['ㄐㄧㄣ','ㄐㄧㄥˋ'],['ㄅㄢ','ㄅㄤˊ']]){assert.equal(similarReadingSyllable(a,b),true);assert.equal(similarReadingSyllable(b,a),true);}
+ for(const [a,b] of [['ㄇㄚ','ㄍㄨㄚ'],['ㄒㄧㄠ','ㄒㄩㄝ'],['ㄓㄢ','ㄗㄤ'],['ㄓ','ㄔ'],['ㄈㄢ','ㄏㄢ'],['ㄧ','']])assert.equal(similarReadingSyllable(a,b),false);
+ for(const [target,heard] of [['梨子','泥子'],['獅子','私自'],['金魚','鯨魚']])assert.equal(readingDecision(word(target),heard),'correct',target+' / '+heard);
 });
 
 test('known words constrain polyphonic characters before per-character comparison',()=>{
  assert.equal(pronunciationDecision({zhuyin:'ㄧㄣˊ ㄏㄤˊ'},'銀行'),'correct');
  assert.equal(pronunciationDecision({zhuyin:'ㄧㄣˊ ㄒㄧㄥˊ'},'銀行'),'incorrect');
- assert.equal(pronunciationDecision({zhuyin:'ㄓㄨㄥ ㄒㄧㄣ'},'重心'),'incorrect');
+ assert.equal(pronunciationDecision({zhuyin:'ㄓㄨㄥ ㄒㄧㄣ'},'重心'),'correct');
  assert.equal(pronunciationDecision({zhuyin:'ㄧㄣ ㄌㄜˋ'},'音樂'),'incorrect');
 });
 
@@ -31,9 +38,9 @@ test('unknown characters and unresolved polyphonic spellings retry without inven
  assert.equal(readingDecision(word('木馬'),'mu4 ma3'),'retry');
 });
 
-test('neutral tones and syllable order remain meaningful',()=>{
+test('neutral tone is lenient but syllable count and order stay meaningful',()=>{
  assert.equal(pronunciationDecision({zhuyin:'ㄇㄚ ㄇㄚ˙'},'媽媽'),'correct');
- assert.equal(pronunciationDecision({zhuyin:'ㄇㄚ ㄇㄚ'},'媽媽'),'incorrect');
+ assert.equal(pronunciationDecision({zhuyin:'ㄇㄚ ㄇㄚ'},'媽媽'),'correct');
  assert.equal(pronunciationDecision({zhuyin:'ㄇㄚ ˙ㄇㄚ'},'媽媽'),'correct');
  assert.equal(readingDecision(word('木馬'),'瑪牧'),'incorrect');
  for(const heard of ['牧','牧瑪牧瑪','這是牧瑪'])assert.equal(readingDecision(word('木馬'),heard),'incorrect');
