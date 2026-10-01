@@ -1,16 +1,23 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFile,stat} from 'node:fs/promises';
 import {validateBank,poolFor,makeDeck,grade,summarize} from '../tone-core.js';import {createToneAudio} from '../tone-audio.js';
 const bank=JSON.parse(await readFile(new URL('../tone-questions.json',import.meta.url)));
-test('100 unique enabled words have exact per-character tones, licensed sources and existing compressed audio',async()=>{
- assert.equal(validateBank(bank),bank);assert.equal(poolFor(bank,'all').length,100);assert.equal(new Set(bank.questions.map(q=>q.text)).size,100);assert.ok(!bank.questions.some(q=>q.text==='不客氣'));
+test('100 archived words, 99 enabled, have exact per-character tones, licensed sources and existing compressed audio',async()=>{
+ assert.equal(validateBank(bank),bank);assert.equal(poolFor(bank,'all').length,99);assert.equal(new Set(bank.questions.map(q=>q.text)).size,100);assert.ok(!bank.questions.some(q=>q.text==='不客氣'));
  for(const q of bank.questions){assert.ok(q.creator);assert.ok(q.license);assert.match(q.sourcePage,/^https:\/\/commons.wikimedia.org\//);const file=await stat(new URL('../'+q.audioUrl,import.meta.url));assert.ok(file.size>1000&&file.size<100000);}
  assert.deepEqual(bank.questions.find(q=>q.text==='熱豆漿').surfaceTones,[4,4,1]);
  assert.deepEqual(bank.questions.find(q=>q.text==='綠茶').surfaceTones,[4,2]);
 });
 test('disabled items are excluded in every mode and deck, with no duplicate padding',()=>{
- const b=structuredClone(bank);b.disabledIds=[b.questions[0].id];b.questions[1].enabled=false;assert.equal(poolFor(b,'all').length,98);
+ const b=structuredClone(bank);b.disabledIds.push(b.questions[0].id);b.questions[1].enabled=false;assert.equal(poolFor(b,'all').length,97);
  assert.equal(makeDeck(poolFor(b,'all')).length,10);assert.equal(makeDeck(poolFor(b,'all').slice(0,3)).length,3);
  for(let i=0;i<20;i++){const d=makeDeck(poolFor(b,'all'));assert.equal(new Set(d.map(q=>q.id)).size,d.length);assert.ok(d.every(q=>q.id!==b.questions[0].id&&q.id!==b.questions[1].id));}
+});
+test('withdrawn 巧克力 cannot enter any challenge pool or random deck',()=>{
+ const q=bank.questions.find(q=>q.text==='巧克力');assert.equal(q.enabled,false);assert.ok(bank.disabledIds.includes(q.id));
+ for(const mode of ['basic','sandhi','all'])for(const length of ['short','medium','all']){
+  const pool=poolFor(bank,mode,length);assert.ok(!pool.some(item=>item.id===q.id));
+  for(let i=0;i<25;i++)assert.ok(!makeDeck(pool).some(item=>item.id===q.id));
+ }
 });
 test('sandhi scoring uses surface tones, basic does not rewrite speech to dictionary tones',()=>{
  const nihao=bank.questions.find(q=>q.text==='你好');assert.equal(grade(nihao,[2,3]).wholeCorrect,true);assert.equal(grade(nihao,[3,3]).wholeCorrect,false);

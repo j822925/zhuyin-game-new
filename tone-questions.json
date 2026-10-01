@@ -988,13 +988,13 @@
       ],
       "mode": "basic",
       "audioUrl": "audio/tone-stage-20260930/word-5de7-514b-529b.mp3",
-      "enabled": true,
+      "enabled": false,
       "audioVersion": "20260930-v1",
-      "audioReview": "teacher-review-pending",
+      "audioReview": "withdrawn-teacher-reported-tone-mismatch",
       "sourcePage": "https://commons.wikimedia.org/wiki/File:LL-Q9192_(cmn)-Luilui6666-%E5%B7%A7%E5%85%8B%E5%8A%9B.wav",
       "creator": "Speaker: Luilui6666\nRecorder: Luilui6666",
       "license": "CC BY-SA 4.0",
-      "note": "變調按實際讀法作答；目前為開放練習題，尚待老師逐題驗收。"
+      "note": "2026-10-01 老師反映錄音聽似「巧顆粒」，與三、四、四聲答案不一致，已下架，待更換錄音並確認後才能重新開放。"
     },
     {
       "id": "word-958b-8eca",
@@ -2128,5 +2128,5 @@
       "note": "變調按實際讀法作答；目前為開放練習題，尚待老師逐題驗收。"
     }
   ],
-  "disabledIds": []
+  "disabledIds": ["word-5de7-514b-529b"]
 }
