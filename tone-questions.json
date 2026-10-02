@@ -627,13 +627,13 @@
       ],
       "mode": "basic",
       "audioUrl": "audio/tone-stage-20260930/word-5403-98ef.mp3",
-      "enabled": true,
+      "enabled": false,
       "audioVersion": "20260930-v1",
-      "audioReview": "teacher-review-pending",
+      "audioReview": "withdrawn-teacher-reported-word-mismatch",
       "sourcePage": "https://commons.wikimedia.org/wiki/File:LL-Q9192_(cmn)-Luilui6666-%E5%90%83%E9%A5%AD.wav",
       "creator": "Speaker: Luilui6666\nRecorder: Luilui6666",
       "license": "CC BY-SA 4.0",
-      "note": "答案選每個字原本的聲調；錄音可自然連讀。尚待老師逐題驗收。"
+      "note": "2026-10-02 老師反映畫面為「吃飯」，錄音聽成「午飯」；已停用，待更換清楚且與詞語一致的錄音後再確認。"
     },
     {
       "id": "word-5531-6b4c",
@@ -1861,13 +1861,13 @@
       ],
       "mode": "basic",
       "audioUrl": "audio/tone-stage-20260930/word-7b46-8a18-672c.mp3",
-      "enabled": true,
+      "enabled": false,
       "audioVersion": "20260930-v1",
-      "audioReview": "teacher-review-pending",
+      "audioReview": "withdrawn-teacher-reported-pronunciation",
       "sourcePage": "https://commons.wikimedia.org/wiki/File:LL-Q9192_(cmn)-Luilui6666-%E7%AC%94%E8%AE%B0%E6%9C%AC.wav",
       "creator": "Speaker: Luilui6666\nRecorder: Luilui6666",
       "license": "CC BY-SA 4.0",
-      "note": "答案選每個字原本的聲調；錄音可自然連讀。尚待老師逐題驗收。"
+      "note": "2026-10-02 老師反映「筆記本」錄音聽成「鼻劑本」；已停用，待更換錄音並確認後再開放。"
     },
     {
       "id": "word-7b54-6848",
@@ -2128,5 +2128,5 @@
       "note": "答案選每個字原本的聲調；錄音可自然連讀。尚待老師逐題驗收。"
     }
   ],
-  "disabledIds": ["word-5de7-514b-529b", "word-8759-8760", "word-4e00-676f", "word-4e00-5343"]
+  "disabledIds": ["word-5de7-514b-529b", "word-8759-8760", "word-4e00-676f", "word-4e00-5343", "word-5403-98ef", "word-7b46-8a18-672c"]
 }
