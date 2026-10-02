@@ -11,5 +11,5 @@ test('tone practice puts secondary information below questions and restores it o
   vm.runInContext(`show('${name}')`,context);assert.equal(placement,name==='play'?'bottom':'top');assert.equal(playing,name==='play');assert.equal(elements[name].hidden,false);assert.equal(elements['entry-back'].hidden,name==='entry');
  }
  assert.equal(scrolls,7);
- const html=read('tone.html');assert(html.indexOf('id="round-information"')>html.indexOf('class="companion"'));assert.match(html,/tone.css\?v=20261001-layout1/);assert.match(html,/tone.js\?v=20261001-layout1/);
+ const html=read('tone.html');assert(html.indexOf('id="round-information"')>html.indexOf('class="companion"'));assert.match(html,/tone.css\?v=20261001-layout1/);assert.match(html,/tone.js\?v=20261002-original1/);
 });

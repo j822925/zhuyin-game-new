@@ -1,4 +1,4 @@
-import {TONES,validateBank,poolFor,makeDeck,grade,summarize} from './tone-core.js?v=20260930-v1';
+import {TONES,validateBank,poolFor,makeDeck,grade,summarize} from './tone-core.js?v=20261002-original1';
 import {createToneAudio} from './tone-audio.js?v=20260930-v1';
 import {classUrl,classStorageKey} from './class-context.js?v=20260928-all1';
 import {createStudentAuth} from './student-auth.js?v=20260928-all1';
@@ -42,7 +42,7 @@ function entry(){stop();show('entry');updateChoices();}
 $('entry-back').onclick=entry;$('again').onclick=entry;
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;updateChoices();});
 document.querySelectorAll('[data-length]').forEach(b=>b.onclick=()=>{length=b.dataset.length;updateChoices();});
-async function loadBank(){const response=await fetch('tone-questions.json?v=20260930-v1',{cache:'no-store',signal:AbortSignal.timeout(15000)});if(!response.ok)throw Error('題庫暫時無法載入，請稍後再試。');return validateBank(await response.json());}
+async function loadBank(){const response=await fetch('tone-questions.json?v=20261002-original1',{cache:'no-store',signal:AbortSignal.timeout(15000)});if(!response.ok)throw Error('題庫暫時無法載入，請稍後再試。');return validateBank(await response.json());}
 $('start').onclick=async()=>{
  if(starting)return;if(!validSeat()){location.href=homeUrl();return;}
  starting=true;updateChoices();
@@ -51,7 +51,7 @@ $('start').onclick=async()=>{
  }catch(e){$('error').textContent=e.message;}finally{starting=false;updateChoices();}
 };
 $('resume').onclick=()=>{if(!validSeat()){location.href=homeUrl();return;}const s=saved();if(!s){updateChoices();return;}mode=s.mode;length=s.length;deck=s.deck.map(id=>bank.questions.find(q=>q.id===id));index=s.index;answers=s.answers;results=s.results;submitted=s.submitted;$('speed').value=[.75,.85,1].includes(s.speed)?String(s.speed):'0.75';begin(true);};
-$('intro-listen').onclick=async()=>{const token=epoch,q=bank.questions.find(q=>q.text==='你好'&&q.enabled&&!bank.disabledIds.includes(q.id));if(!q)return;$('intro-listen').disabled=true;try{await audio.play(q.audioUrl,Number($('speed').value));if(token===epoch)$('intro-status').textContent='你：二聲；好：三聲。';}catch(e){if(token===epoch)$('intro-status').textContent=e.message;}finally{$('intro-listen').disabled=false;}};
+$('intro-listen').onclick=async()=>{const token=epoch,q=bank.questions.find(q=>q.text==='你好'&&q.enabled&&!bank.disabledIds.includes(q.id));if(!q)return;$('intro-listen').disabled=true;try{await audio.play(q.audioUrl,Number($('speed').value));if(token===epoch)$('intro-status').textContent='連讀聽起來像二聲、三聲；作答仍選「你：三聲、好：三聲」。';}catch(e){if(token===epoch)$('intro-status').textContent=e.message;}finally{$('intro-listen').disabled=false;}};
 $('intro-go').onclick=()=>begin();
 function begin(restore=false){
  stop();show('play');const q=deck[index];if(!restore){answers=Array(q.text.length).fill(null);submitted=false;}active=Math.max(0,answers.indexOf(null));heard=false;reviewDone=false;
@@ -64,7 +64,7 @@ function render(){
  const q=deck[index];$('characters').style.setProperty('--letters',q.text.length);$('characters').replaceChildren();
  [...q.text].forEach((char,i)=>{const b=document.createElement('button');b.className='char'+(!submitted&&active===i?' active':'');b.disabled=busy||submitted||!heard;b.setAttribute('aria-label',char+'，'+(answers[i]===null?'尚未作答':toneName(answers[i])));
   const w=document.createElement('span');w.className='word';w.textContent=char;const a=document.createElement('span');a.className='answer';a.textContent=answers[i]===null?'?':TONES[answers[i]-1].mark;b.append(w,a);
-  if(submitted)b.classList.add(answers[i]===q.surfaceTones[i]?'correct':'wrong');b.onclick=()=>{active=i;render();};$('characters').append(b);
+  if(submitted)b.classList.add(answers[i]===q.lexicalTones[i]?'correct':'wrong');b.onclick=()=>{active=i;render();};$('characters').append(b);
  });
  $('tones').replaceChildren();for(const t of TONES){const b=document.createElement('button');b.setAttribute('aria-label',t.name);b.setAttribute('aria-pressed',String(answers[active]===t.value));b.disabled=busy||submitted||!heard;
   const mark=document.createElement('span');mark.className='mark';mark.textContent=t.mark;const label=document.createElement('span');label.className='tone-name';label.textContent=t.name;b.append(mark,label);b.onclick=()=>{if(busy||submitted||!heard)return;answers[active]=t.value;const next=answers.findIndex((v,i)=>v===null&&i>active);active=next>=0?next:Math.max(0,answers.indexOf(null));save();render();};$('tones').append(b);
@@ -73,15 +73,15 @@ function render(){
 }
 async function playQuestion(){
  if(busy||submitted)return;const token=epoch;busy=true;$('error').textContent='';$('status').textContent='🔊 聽完整詞語，再選聲調…';render();
- try{await audio.play(deck[index].audioUrl,Number($('speed').value));if(token===epoch){heard=true;$('status').textContent='換你選聲調！需要時可以再聽一次。';}}
+ try{await audio.play(deck[index].audioUrl,Number($('speed').value));if(token===epoch){heard=true;$('status').textContent='選每個字原本的聲調，需要時可以再聽一次。';}}
  catch(e){if(token===epoch){$('error').textContent=e.message;$('status').textContent='還沒有完整聽到題目；可重播，或跳過這題。';}}
  finally{if(token===epoch){busy=false;render();}}
 }
 $('listen').onclick=playQuestion;
 function displayFeedback(){
  const q=deck[index],r=results.at(-1);$('submit').hidden=true;$('tones').hidden=true;$('next').hidden=false;$('review').hidden=false;$('corrections').replaceChildren();$('status').textContent='';
- $('feedback').textContent=r.wholeCorrect?'✓ 每個字都答對了！':'一起再聽，找出聲音的表情！';$('companion-message').textContent=r.wholeCorrect?'聽得真仔細！':'沒關係，我陪你再練習。';
- [...q.text].forEach((char,i)=>{const p=document.createElement('p');p.className='correction';p.textContent=`${char}：${toneName(q.surfaceTones[i])} ${TONES[q.surfaceTones[i]-1].mark}`+(q.surfaceTones[i]!==q.lexicalTones[i]?'（這裡變調了）':'');$('corrections').append(p);});
+ $('feedback').textContent=r.wholeCorrect?'✓ 每個字都答對了！':'一起再聽，記住字原本的聲調！';$('companion-message').textContent=r.wholeCorrect?'原本的聲調選對了！':'沒關係，我陪你再練習。';
+ [...q.text].forEach((char,i)=>{const p=document.createElement('p');p.className='correction';p.textContent=`${char}：${toneName(q.lexicalTones[i])} ${TONES[q.lexicalTones[i]-1].mark}`;$('corrections').append(p);});
  $('next').textContent=index===deck.length-1?'看這次成果 🌟':'下一題 ▶';$('progress').value=index+1;render();
 }
 async function reviewTwice(){
@@ -102,7 +102,7 @@ function renderCatalog(){
  $('catalog-list').replaceChildren();for(const q of poolFor(bank,'all').filter(q=>q.text.includes($('search').value.trim()))){
   const article=document.createElement('article');article.className='word-card';const title=document.createElement('h2');title.textContent=`${bank.questions.indexOf(q)+1}. ${q.text}`;
   const listen=document.createElement('button');listen.textContent='🔊 聽詞語';listen.onclick=async()=>{stop();const token=epoch;try{await audio.play(q.audioUrl,Number($('speed').value));}catch(e){if(token===epoch)$('error').textContent=e.message;}};
-  const detail=document.createElement('details'),summary=document.createElement('summary'),answer=document.createElement('p');summary.textContent='查看聲調答案';answer.textContent=[...q.text].map((c,i)=>c+'：'+toneName(q.surfaceTones[i])).join('／')+(q.mode==='sandhi'?'（有變調）':'');detail.append(summary,answer);
+  const detail=document.createElement('details'),summary=document.createElement('summary'),answer=document.createElement('p');summary.textContent='查看原本聲調答案';answer.textContent=[...q.text].map((c,i)=>c+'：'+toneName(q.lexicalTones[i])).join('／')+(q.mode==='sandhi'?'（連讀可能變調，答案仍選原本聲調）':'');detail.append(summary,answer);
   article.append(title,listen,detail);$('catalog-list').append(article);
  }
 }

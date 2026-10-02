@@ -21,7 +21,8 @@ export function makeDeck(pool,rng=Math.random){
  return deck.slice(0,10);
 }
 export function grade(q,answers){
- if(answers.length!==q.surfaceTones.length||answers.some(t=>!Number.isInteger(t)||t<1||t>5))throw Error('請先選完每個字的聲調');
- const correct=q.surfaceTones.map((t,i)=>t===answers[i]);return {id:q.id,answers:[...answers],correct,wholeCorrect:correct.every(Boolean)};
+ // Every mode assesses written, original tones; surface tones only classify audio.
+ if(answers.length!==q.lexicalTones.length||answers.some(t=>!Number.isInteger(t)||t<1||t>5))throw Error('請先選完每個字的聲調');
+ const correct=q.lexicalTones.map((t,i)=>t===answers[i]);return {id:q.id,answers:[...answers],correct,wholeCorrect:correct.every(Boolean)};
 }
 export function summarize(results){const valid=results.filter(r=>!r.skipped);return {whole:valid.filter(r=>r.wholeCorrect).length,total:valid.length,characters:valid.reduce((n,r)=>n+r.correct.length,0),correct:valid.reduce((n,r)=>n+r.correct.filter(Boolean).length,0),skipped:results.filter(r=>r.skipped).length};}
