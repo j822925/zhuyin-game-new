@@ -359,5 +359,31 @@ export const MONSTER_CONCEPTS=[
     "frame": "crystal",
     "line": "不看牠的時候，牠會換一個帥氣姿勢。",
     "image": "assets/monsters/preview-20261003/crystal-gargoyle-v1.webp"
+  },
+  {
+    "id": "mistblade-wolf",
+    "number": 31,
+    "name": "霧刃銀狼侯",
+    "group": "人形幻魔",
+    "proportion": "tall",
+    "mark": "☽",
+    "color": "#344f59",
+    "accent": "#c8dfdf",
+    "frame": "crest",
+    "line": "銀刃未出鞘，霧已先替他讓路。",
+    "image": "assets/monsters/preview-20261003/mistblade-wolf-v1.webp"
+  },
+  {
+    "id": "crimson-moth-lady",
+    "number": 32,
+    "name": "緋綢夜蛾姬",
+    "group": "人形幻魔",
+    "proportion": "tall",
+    "mark": "❦",
+    "color": "#663d53",
+    "accent": "#e7b7a9",
+    "frame": "theater",
+    "line": "綢袖輕輕一轉，月色也跟著迷了路。",
+    "image": "assets/monsters/preview-20261003/crimson-moth-lady-v1.webp"
   }
 ];
