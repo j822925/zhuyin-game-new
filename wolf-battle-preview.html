@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#11202a"><title>霧刃銀狼侯 · 戰鬥動作試演</title><link rel="stylesheet" href="wolf-battle-preview.css?v=20261003-motion1"></head>
+<body><main>
+<header><a href="monster-preview.html?v=20261003-wolf2&filter=tall">← 返回造型圖鑑</a><span>注音探險島 · 動作試演</span></header>
+<section class="intro"><p class="eyebrow">SILVER WOLF · MOONBLADE</p><h1>霧刃銀狼侯</h1><p>拔刀、揮砍，再從容收勢。先看清楚每一招，再決定他的戰鬥風格。</p></section>
+<section class="arena" aria-label="銀狼侯戰鬥動畫"><div class="arena-top"><span id="side-label">敵方 · 向右出招</span><span>月下試煉</span></div><canvas id="battle" width="960" height="540" aria-label="銀狼侯與爆星騎士的動作預覽"></canvas><div class="arena-bottom"><strong id="phase" role="status">正在準備動作…</strong><span id="rival-label">陪練：爆星騎士</span></div></section>
+<section class="controls" aria-label="動作控制">
+<div class="actions"><button data-action="attack" disabled>拔刀揮砍</button><button data-action="guard" disabled>舉臂防禦</button><button data-action="hurt" disabled>受擊後恢復</button><button data-action="victory" disabled>勝利致意</button><button data-action="star" disabled>雙手捧星星</button><button data-action="defeated" disabled>單膝認輸</button><button data-action="idle" disabled>回到待機</button></div>
+<div class="settings"><label>播放速度<select id="speed"><option value="1">正常速度</option><option value="0.5" selected>慢速 · ½</option><option value="0.25">仔細看 · ¼</option></select></label><label>站在哪一邊<select id="side"><option value="enemy">敵方 · 左側向右攻擊</option><option value="hero">收藏後我方 · 右側向左攻擊</option></select></label><button id="pause" disabled>暫停動作</button><button id="step" disabled>下一個姿勢 →</button></div>
+<label class="timeline" for="progress"><span>拖曳查看動作 <output id="position">0%</output></span><input id="progress" type="range" min="0" max="1000" value="0" disabled></label>
+<p class="note">預設慢速播放，方便觀察手臂、刀刃和表情。這裡是動作預覽，確認後再加入正式練習。</p><p id="error" role="alert" hidden></p>
+</section><footer>每個姿勢都沿用你選定的毛領肩甲、單肩短披風與狼族外貌。</footer>
+</main><script type="module" src="wolf-battle-preview.js?v=20261003-motion1"></script></body></html>
