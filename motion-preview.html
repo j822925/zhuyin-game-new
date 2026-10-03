@@ -8,6 +8,7 @@ import {createOpponent,createBattle,updateOpponent} from './character-battle.js?
 import {monsterCard} from './monster-cards-ui.js?v=20260928-allies1';
 const $=id=>document.getElementById(id),enemy=createOpponent();$('stage').prepend(enemy);const battle=createBattle(enemy,()=>$('hero-art'));let hits=0;
 for(const c of MONSTERS){$('monster').append(new Option(c.name,c.id));$('cards').append(monsterCard(c,{preview:true}));}for(const c of PROFILE_CHARACTERS)$('hero').append(new Option(c.name,c.id));const requestedHero=new URLSearchParams(location.search).get('hero');$('hero').value=PROFILE_CHARACTERS.some(c=>c.id===requestedHero)?requestedHero:'star-01-bo';
+const requestedMonster=new URLSearchParams(location.search).get('monster');if(MONSTERS.some(c=>c.id===requestedMonster))$('monster').value=requestedMonster;
 function refresh(){battle.reset();hits=0;updateOpponent(enemy,MONSTERS.find(c=>c.id===$('monster').value),10,hits);const c=PROFILE_CHARACTERS.find(c=>c.id===$('hero').value);mountCharacter($('hero-art'),c);$('hero-name').textContent=c.name;$('motion-label').textContent=c.id==='star-01-bo'?'爆星流光斬・舉盾抵擋・持劍致意':c.id==='rabbit'?'小跳步花花攻擊・縮身護臉・開心揮手':choreography(c).label;}
 $('hero').onchange=$('monster').onchange=$('reset').onclick=refresh;$('right').onclick=()=>{if(hits===10)hits=0;battle.answer(true);updateOpponent(enemy,MONSTERS.find(c=>c.id===$('monster').value),10,++hits);};$('wrong').onclick=()=>battle.answer(false);$('stars').onclick=()=>{battle.reset();reactCharacter($('hero-art'),'star');};refresh();
 </script></body></html>

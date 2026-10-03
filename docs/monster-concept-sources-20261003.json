@@ -1,0 +1,186 @@
+{
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "assets": [
+    {
+      "id": "eclipse-duke",
+      "original": "assets/monsters/preview-20261003/eclipse-duke-v1.png",
+      "web": "assets/monsters/preview-20261003/eclipse-duke-v1.webp",
+      "generatedFile": "exec-ead79ca1-106a-46ee-8c01-dd0f1b3a5db7.png"
+    },
+    {
+      "id": "ember-witch",
+      "original": "assets/monsters/preview-20261003/ember-witch-v1.png",
+      "web": "assets/monsters/preview-20261003/ember-witch-v1.webp",
+      "generatedFile": "exec-a411df40-7115-47ad-9af7-20ca7ea2cff1.png"
+    },
+    {
+      "id": "mirror-countess",
+      "original": "assets/monsters/preview-20261003/mirror-countess-v1.png",
+      "web": "assets/monsters/preview-20261003/mirror-countess-v1.webp",
+      "generatedFile": "exec-9f1032ea-78eb-418e-948d-14e0ee7f7da2.png"
+    },
+    {
+      "id": "hourglass-wanderer",
+      "original": "assets/monsters/preview-20261003/hourglass-wanderer-v1.png",
+      "web": "assets/monsters/preview-20261003/hourglass-wanderer-v1.webp",
+      "generatedFile": "exec-73737e09-a68e-4107-b816-a4bc723dc244.png"
+    },
+    {
+      "id": "coral-captain",
+      "original": "assets/monsters/preview-20261003/coral-captain-v1.png",
+      "web": "assets/monsters/preview-20261003/coral-captain-v1.webp",
+      "generatedFile": "exec-690f59c3-3c8a-4ea4-bcef-5fc6a07f7681.png"
+    },
+    {
+      "id": "astral-conductor",
+      "original": "assets/monsters/preview-20261003/astral-conductor-v1.png",
+      "web": "assets/monsters/preview-20261003/astral-conductor-v1.webp",
+      "generatedFile": "exec-04178bbe-67bb-4e4e-a0e6-c65d0b431b76.png"
+    },
+    {
+      "id": "thunder-lancer",
+      "original": "assets/monsters/preview-20261003/thunder-lancer-v1.png",
+      "web": "assets/monsters/preview-20261003/thunder-lancer-v1.webp",
+      "generatedFile": "exec-6ee6556d-f096-4322-a47d-2dbc6747fff5.png"
+    },
+    {
+      "id": "spade-prince",
+      "original": "assets/monsters/preview-20261003/spade-prince-v1.png",
+      "web": "assets/monsters/preview-20261003/spade-prince-v1.webp",
+      "generatedFile": "exec-95d3fd6e-13cf-4ae7-8fd0-5134b211542e.png"
+    },
+    {
+      "id": "glass-butterfly",
+      "original": "assets/monsters/preview-20261003/glass-butterfly-v1.png",
+      "web": "assets/monsters/preview-20261003/glass-butterfly-v1.webp",
+      "generatedFile": "exec-dc7851b6-0a9e-4413-b071-4b312a0e50bf.png"
+    },
+    {
+      "id": "moonbell-fox",
+      "original": "assets/monsters/preview-20261003/moonbell-fox-v1.png",
+      "web": "assets/monsters/preview-20261003/moonbell-fox-v1.webp",
+      "generatedFile": "exec-453089bc-ebea-46cf-9b52-15ccca9f60f1.png"
+    },
+    {
+      "id": "lava-drake",
+      "original": "assets/monsters/preview-20261003/lava-drake-v1.png",
+      "web": "assets/monsters/preview-20261003/lava-drake-v1.webp",
+      "generatedFile": "exec-541d9dcc-5f1b-4388-b962-c2fd0668f4f2.png"
+    },
+    {
+      "id": "mist-stag",
+      "original": "assets/monsters/preview-20261003/mist-stag-v1.png",
+      "web": "assets/monsters/preview-20261003/mist-stag-v1.webp",
+      "generatedFile": "exec-69643d36-b96f-4049-a679-64aa905ce62d.png"
+    },
+    {
+      "id": "abyss-angler",
+      "original": "assets/monsters/preview-20261003/abyss-angler-v1.png",
+      "web": "assets/monsters/preview-20261003/abyss-angler-v1.webp",
+      "generatedFile": "exec-4a5436c5-3645-4c58-9fe2-c06b93259873.png"
+    },
+    {
+      "id": "amethyst-spider",
+      "original": "assets/monsters/preview-20261003/amethyst-spider-v1.png",
+      "web": "assets/monsters/preview-20261003/amethyst-spider-v1.webp",
+      "generatedFile": "exec-b8654ab4-2f67-4da9-981f-12b041f8bfdc.png"
+    },
+    {
+      "id": "storm-griffin",
+      "original": "assets/monsters/preview-20261003/storm-griffin-v1.png",
+      "web": "assets/monsters/preview-20261003/storm-griffin-v1.webp",
+      "generatedFile": "exec-3b793153-259e-4c62-a488-8777821fd11e.png"
+    },
+    {
+      "id": "obsidian-kirin",
+      "original": "assets/monsters/preview-20261003/obsidian-kirin-v1.png",
+      "web": "assets/monsters/preview-20261003/obsidian-kirin-v1.webp",
+      "generatedFile": "exec-549bea3c-c989-4a54-8800-2da31ec0aa99.png"
+    },
+    {
+      "id": "frost-leopard",
+      "original": "assets/monsters/preview-20261003/frost-leopard-v1.png",
+      "web": "assets/monsters/preview-20261003/frost-leopard-v1.webp",
+      "generatedFile": "exec-35569d14-cdfc-41cb-9bcd-96866f58644b.png"
+    },
+    {
+      "id": "vine-mantis",
+      "original": "assets/monsters/preview-20261003/vine-mantis-v1.png",
+      "web": "assets/monsters/preview-20261003/vine-mantis-v1.webp",
+      "generatedFile": "exec-aaa4a597-d776-4457-94d0-77c4a5cecb7a.png"
+    },
+    {
+      "id": "sandstone-tortoise",
+      "original": "assets/monsters/preview-20261003/sandstone-tortoise-v1.png",
+      "web": "assets/monsters/preview-20261003/sandstone-tortoise-v1.webp",
+      "generatedFile": "exec-11abb75b-45d5-4737-ac99-fe819b5eb9ac.png"
+    },
+    {
+      "id": "nightmare-unicorn",
+      "original": "assets/monsters/preview-20261003/nightmare-unicorn-v1.png",
+      "web": "assets/monsters/preview-20261003/nightmare-unicorn-v1.webp",
+      "generatedFile": "exec-761499d8-2c74-4e8a-abfe-12a2babefea1.png"
+    },
+    {
+      "id": "pumpkin-lantern",
+      "original": "assets/monsters/preview-20261003/pumpkin-lantern-v1.png",
+      "web": "assets/monsters/preview-20261003/pumpkin-lantern-v1.webp",
+      "generatedFile": "exec-4f4ce026-c5d5-4de0-b4b8-4d2466d7a54a.png"
+    },
+    {
+      "id": "pearl-shell",
+      "original": "assets/monsters/preview-20261003/pearl-shell-v1.png",
+      "web": "assets/monsters/preview-20261003/pearl-shell-v1.webp",
+      "generatedFile": "exec-24ef6ea0-acf4-4a0a-9342-f95d86c7b290.png"
+    },
+    {
+      "id": "clockwork-teapot",
+      "original": "assets/monsters/preview-20261003/clockwork-teapot-v1.png",
+      "web": "assets/monsters/preview-20261003/clockwork-teapot-v1.webp",
+      "generatedFile": "exec-edc8c63d-36fb-4475-bbaa-21f15fb47a11.png"
+    },
+    {
+      "id": "mushroom-monarch",
+      "original": "assets/monsters/preview-20261003/mushroom-monarch-v1.png",
+      "web": "assets/monsters/preview-20261003/mushroom-monarch-v1.webp",
+      "generatedFile": "exec-2fad881d-149a-47b8-9c7d-295ef5507c17.png"
+    },
+    {
+      "id": "haunted-musicbox",
+      "original": "assets/monsters/preview-20261003/haunted-musicbox-v1.png",
+      "web": "assets/monsters/preview-20261003/haunted-musicbox-v1.webp",
+      "generatedFile": "exec-6a49f160-2221-4a87-97a0-8103d04573cc.png"
+    },
+    {
+      "id": "sugar-devil",
+      "original": "assets/monsters/preview-20261003/sugar-devil-v1.png",
+      "web": "assets/monsters/preview-20261003/sugar-devil-v1.webp",
+      "generatedFile": "exec-ebdc9910-55d2-483c-9eda-420af2826e89.png"
+    },
+    {
+      "id": "thunder-cloud",
+      "original": "assets/monsters/preview-20261003/thunder-cloud-v1.png",
+      "web": "assets/monsters/preview-20261003/thunder-cloud-v1.webp",
+      "generatedFile": "exec-1103d8cd-0114-4685-8e4f-b2a922327fea.png"
+    },
+    {
+      "id": "ink-book-spirit",
+      "original": "assets/monsters/preview-20261003/ink-book-spirit-v1.png",
+      "web": "assets/monsters/preview-20261003/ink-book-spirit-v1.webp",
+      "generatedFile": "exec-e48d8cc6-c89f-47ec-b327-1c6ac8b9f0f4.png"
+    },
+    {
+      "id": "coin-mimic",
+      "original": "assets/monsters/preview-20261003/coin-mimic-v1.png",
+      "web": "assets/monsters/preview-20261003/coin-mimic-v1.webp",
+      "generatedFile": "exec-49e3e133-5f76-4dee-a019-70d2e96b95eb.png"
+    },
+    {
+      "id": "crystal-gargoyle",
+      "original": "assets/monsters/preview-20261003/crystal-gargoyle-v1.png",
+      "web": "assets/monsters/preview-20261003/crystal-gargoyle-v1.webp",
+      "generatedFile": "exec-a5682913-7027-4686-8e71-2804d789ed05.png"
+    }
+  ]
+}
