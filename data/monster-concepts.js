@@ -371,7 +371,7 @@ export const MONSTER_CONCEPTS=[
     "accent": "#c8dfdf",
     "frame": "crest",
     "line": "銀刃未出鞘，霧已先替他讓路。",
-    "image": "assets/monsters/preview-20261003/mistblade-wolf-v1.webp"
+    "image": "assets/monsters/preview-20261003/mistblade-wolf-v2.webp"
   },
   {
     "id": "crimson-moth-lady",

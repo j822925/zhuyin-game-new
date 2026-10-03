@@ -1,4 +1,4 @@
-import {MONSTER_CONCEPTS} from './data/monster-concepts.js?v=20261003-tall2';
+import {MONSTER_CONCEPTS} from './data/monster-concepts.js?v=20261003-wolf2';
 const $=id=>document.getElementById(id),key='zhuyin.monster-concept-likes.20261003';let liked=new Set(),filter=new URLSearchParams(location.search).get('filter')==='tall'?'tall':'all',selected=0;
 try{const saved=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(saved))liked=new Set(saved.filter(id=>MONSTER_CONCEPTS.some(c=>c.id===id)));}catch{}
 function toggle(id){liked.has(id)?liked.delete(id):liked.add(id);try{localStorage.setItem(key,JSON.stringify([...liked]));}catch{}render();if($('detail').open)renderDetail();}
