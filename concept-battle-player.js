@@ -1,15 +1,26 @@
 import {readSheet,WOLF_ACTIONS,wolfPose} from './wolf-battle-player.js?v=20261003-all-motion1';
+import {CONCEPT_BODY_RATIOS} from './data/concept-battle-scale.js?v=20261003-scale2';
 export {WOLF_ACTIONS as CONCEPT_ACTIONS};
 const clamp=t=>Math.max(0,Math.min(1,t));
 export class ConceptBattleSprite{
  async load(meta){const [a,r]=await Promise.all([readSheet(meta.attackImage),readSheet(meta.reactionsImage)]);this.meta=meta;const target=meta.proportion==='tall'?390:meta.group==='人形幻魔'?330:meta.group==='幻獸'?285:300;
-  const scale=(frames,stand)=>Math.min(target/Math.max(1,stand.bounds.bottom-stand.bounds.top),...frames.map(f=>Math.min(420/Math.max(1,f.pivot[1]),500/f.image.width)));
-  const sa=scale(a,a[0]),sr=scale(r,r[3]);a.forEach(f=>f.scale=sa);r.forEach(f=>f.scale=sr);this.frames=[...a,...r];return this;
+  this.frames=[...a,...r];const ratios=CONCEPT_BODY_RATIOS[meta.id];
+  if(!ratios||ratios.length!==this.frames.length||ratios.some(v=>!Number.isFinite(v)||v<=0))throw Error('角色比例資料不完整');
+  // One anatomical world size across both sheets. A bowed head, raised weapon
+  // or unfolding cape changes the silhouette, not the character's body size.
+  const base=target/Math.max(1,a[0].bounds.bottom-a[0].bounds.top);
+  this.frames.forEach((f,i)=>{f.bodyRatio=ratios[i];f.scale=base/ratios[i];});
+  const fit=Math.min(1,...this.frames.map(f=>Math.min(420/Math.max(1,f.pivot[1]*f.scale),500/(f.image.width*f.scale))));
+  this.frames.forEach(f=>f.scale*=fit);this.worldScale=base*fit;
+  const left=Math.max(...this.frames.map(f=>f.pivot[0]*f.scale)),right=Math.max(...this.frames.map(f=>(f.image.width-f.pivot[0])*f.scale));
+  // Fix the anchor once for the complete animation, reserving room for rush.
+  // Per-pose clamping makes an opening cape move the whole character sideways.
+  this.enemyX=Math.max(42+left,Math.min(918-right,270));return this;
  }
  draw(ctx,{action='idle',t=0,clock=0,side='enemy',reduced=false}={}){if(!this.frames)return;const p=wolfPose(action,clamp(t)),f=this.frames[p.frame],d=side==='hero'?-1:1,physical=['slash','spear','leaf','frost','jade','stone','coin','crystal'].includes(this.meta.fx);
   const rush=action==='attack'?Math.sin(Math.PI*clamp((t-.27)/.63))*(physical?30:12):0,recoil=action==='hurt'?-12*Math.sin(Math.PI*clamp((t-.17)/.77)):0;
-  const shift=reduced?0:rush+recoil,leftReach=(d>0?f.pivot[0]:f.image.width-f.pivot[0])*f.scale,rightReach=(d>0?f.image.width-f.pivot[0]:f.pivot[0])*f.scale;
-  const x=Math.max(12+leftReach,Math.min(948-rightReach,(side==='hero'?690:270)+d*shift)),y=470+(action==='idle'&&!reduced?Math.sin(clock*1.7)*1.1:0);ctx.save();ctx.translate(x,y);ctx.scale(d,1);
+  const shift=reduced?0:rush+recoil;
+  const x=(side==='hero'?960-this.enemyX:this.enemyX)+d*shift,y=470+(action==='idle'&&!reduced?Math.sin(clock*1.7)*1.1:0);ctx.save();ctx.translate(x,y);ctx.scale(d,1);
   if(action==='attack'&&physical&&!reduced&&t>.40&&t<.60){ctx.save();ctx.globalAlpha=.08;ctx.drawImage(f.image,-f.pivot[0]*f.scale-14,-f.pivot[1]*f.scale,f.image.width*f.scale,f.image.height*f.scale);ctx.restore();}
   ctx.drawImage(f.image,-f.pivot[0]*f.scale,-f.pivot[1]*f.scale,f.image.width*f.scale,f.image.height*f.scale);ctx.restore();
   let label=p.label;if(action==='attack')label=['準備迎戰','蓄力 · 準備出招','招式蓄勢',this.meta.attackLabel,'招式落下','收勢', '回到待機'][p.index];if(action==='guard'&&p.frame===6)label=this.meta.guardLabel;if(action==='victory')label=p.frame===9?this.meta.victoryLabel:'恢復姿態 · 準備慶祝';if(action==='star')label=p.frame===10?'我方領獎 · 捧起星星':'迎接獎勵';if(action==='defeated')label=p.frame===11?'敗北 · 暫時休息':'被擊退';
@@ -29,7 +40,7 @@ function glyph(ctx,kind,x,y,size,angle,color){ctx.save();ctx.translate(x,y);ctx.
  else if(kind==='ink'){ctx.beginPath();ctx.ellipse(0,0,size*.6,size,angle,0,Math.PI*2);ctx.fill();}
  else if(kind==='sugar'){ctx.beginPath();ctx.moveTo(0,size);ctx.bezierCurveTo(-size*1.4,0,-size,-size,0,-size*.25);ctx.bezierCurveTo(size,-size,size*1.4,0,0,size);ctx.fill();}
  else{ctx.beginPath();ctx.arc(0,0,size,0,Math.PI*2);ctx.stroke();}ctx.restore();}
-export function drawConceptEffects(ctx,meta,action,t,side){const d=side==='hero'?-1:1,x=side==='hero'?690:270,color=meta.accent,kind=meta.fx;ctx.save();ctx.translate(x,470);ctx.scale(d,1);
+export function drawConceptEffects(ctx,meta,action,t,side,anchor){const d=side==='hero'?-1:1,x=anchor??(side==='hero'?690:270),color=meta.accent,kind=meta.fx;ctx.save();ctx.translate(x,470);ctx.scale(d,1);
  if(action==='attack'&&t>.43&&t<.78){const q=(t-.43)/.35;ctx.globalAlpha=Math.sin(q*Math.PI)*.8;ctx.shadowColor=color;ctx.shadowBlur=10;
   if(['slash','leaf','frost','crystal'].includes(kind)){ctx.strokeStyle=color;ctx.lineWidth=5*(1-q)+2;ctx.beginPath();ctx.ellipse(100,-170,110,132,-.4,-1.6+q*.2,.65+q*.4);ctx.stroke();}
   else if(kind==='spear'){ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(115,-160);ctx.lineTo(230+q*230,-160);ctx.stroke();}
