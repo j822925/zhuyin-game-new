@@ -1,4 +1,4 @@
-import {BattleSprite,BATTLE_DURATIONS} from './battle-sprite.js?v=20260928-allies1';
+import {BattleSprite,BATTLE_DURATIONS} from './battle-sprite.js?v=20261003-size1';
 const controls=new WeakMap();
 export function mountMonster(el,id){
  let control=controls.get(el);if(control?.id===id&&!control.rig.disposed)return;

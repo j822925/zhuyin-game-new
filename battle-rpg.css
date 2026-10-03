@@ -1,6 +1,8 @@
 .rpg-battle-fx{position:fixed;inset:0;width:100vw;height:100vh;z-index:45;pointer-events:none;contain:strict}
 .opponent-art{position:relative}
 .monster-canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;pointer-events:none}
+/* Tall humanoids keep their proportions and a stable floor while filling more of the stage. */
+.monster-canvas[data-ready="raven-masquerade"],.character-motion .motion-canvas[data-ready="raven-masquerade"]{transform:translateY(10%) scale(1.2);transform-origin:50% 86.6667%}
 .monster-battle-ready .monster-canvas{opacity:1}
 .monster-battle-ready .monster-sprite{visibility:hidden;animation:none!important}
 .monster-battle-ready .opponent-hit{display:none!important}

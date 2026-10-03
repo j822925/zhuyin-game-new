@@ -2,7 +2,7 @@ import {Race} from './race-core.js?v=20260928-all1';
 import {questionDeck,optionsFor} from './core.js?v=20260928-all1';
 import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260928-all1';
 
-import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,motionPortrait} from './character-motion.js?v=20260928-allies1';
+import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,motionPortrait} from './character-motion.js?v=20261003-size1';
 
 const animals=CHARACTERS.map(c=>[c.emoji,c.name]);
 const keys=[['a','s','d','f'],['h','j','k','l']];

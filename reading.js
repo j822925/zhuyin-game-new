@@ -1,4 +1,4 @@
-import {createReadingBattle} from './reading-battle.js?v=20260928-allies1';
+import {createReadingBattle} from './reading-battle.js?v=20261003-size1';
 import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20260928-allies1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';
@@ -32,7 +32,7 @@ function show(id){document.body.classList.toggle('reading-battle-active',id==='p
 for(const link of document.querySelectorAll('#home-link,a.home'))link.href=classUrl(demo?'./?demo=1':'./');
 const appleMobile=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const standalone=appleMobile&&(navigator.standalone===true||globalThis.matchMedia?.('(display-mode: standalone)').matches);
-const browserReadingUrl=classUrl('reading.html?v=20260928-mic4');
+const browserReadingUrl=classUrl('reading.html?v=20261003-size1');
 for(const link of document.querySelectorAll('[data-reading-browser]'))link.href=browserReadingUrl;
 $('standalone-help').hidden=!standalone;
 const errors={

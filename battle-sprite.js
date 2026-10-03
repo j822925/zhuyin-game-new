@@ -43,8 +43,9 @@ async function loadAtlas(id){
  });
  // Enemies reserve room for the full weapon span, not twice its distance from
  // the feet. A long forward thrust must not shrink every standing pose.
+ const tall=id==='raven-masquerade';
  const scale=BATTLE_META[id]?.enemy
-  ? Math.min(...frames.map(f=>Math.min(350/Math.max(1,f.pivot[1]),440/f.image.width)))
+  ? Math.min(...frames.map(f=>Math.min((tall?408:350)/Math.max(1,f.pivot[1]),(tall?464:440)/f.image.width)))
   : pivots[id] ? .78 : Math.min(...frames.map(f=>Math.min(350/f.pivot[1],202/Math.max(1,f.pivot[0]),202/Math.max(1,f.image.width-f.pivot[0]))));
  frames.forEach(f=>f.scale=scale);return frames;
  })();caches.set(id,pending);while(caches.size>6)caches.delete(caches.keys().next().value);pending.catch(()=>{if(caches.get(id)===pending)caches.delete(id);});return pending;
