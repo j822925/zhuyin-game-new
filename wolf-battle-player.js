@@ -13,7 +13,7 @@ export function wolfPose(action,t){const def=WOLF_ACTIONS[action]||WOLF_ACTIONS.
 
 // Use connected silhouettes, not nominal cell edges: a saber may extend into
 // the transparent gutter. Keep each weapon and fur edge with its own pose.
-async function readSheet(url){
+export async function readSheet(url){
  const im=new Image();im.src=url;await im.decode();const canvas=document.createElement('canvas');canvas.width=im.width;canvas.height=im.height;const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(im,0,0);
  const w=im.width,h=im.height,rgba=ctx.getImageData(0,0,w,h).data,labels=new Int32Array(w*h),queue=new Int32Array(w*h),parts=[];let id=0;
  for(let n=0;n<labels.length;n++){
@@ -22,7 +22,7 @@ async function readSheet(url){
   while(head<tail){const p=queue[head++],x=p%w,y=Math.floor(p/w);l=Math.min(l,x);r=Math.max(r,x);top=Math.min(top,y);bottom=Math.max(bottom,y);if(x>0)add(p-1);if(x<w-1)add(p+1);if(y>0)add(p-w);if(y<h-1)add(p+w);}
   if(tail>3000)parts.push({id,l,r,top,bottom,pixels:tail});
  }
- if(parts.length!==6)throw Error('銀狼侯姿勢載入不完整（'+parts.length+' / 6）');
+ if(parts.length!==6)throw Error('角色姿勢載入不完整（'+parts.length+' / 6）');
  parts.sort((a,b)=>Math.floor((a.top+a.bottom)/h)-Math.floor((b.top+b.bottom)/h)||a.l-b.l);
  return parts.map(p=>{
   const l=Math.max(0,p.l-3),top=Math.max(0,p.top-3),r=Math.min(w-1,p.r+3),bottom=Math.min(h-1,p.bottom+3),image=document.createElement('canvas');image.width=r-l+1;image.height=bottom-top+1;const fc=image.getContext('2d'),out=fc.createImageData(image.width,image.height);

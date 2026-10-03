@@ -1,0 +1,405 @@
+{
+  "date": "2026-10-03",
+  "mode": "built-in imagegen, transparent character-reference sheets",
+  "originals": [
+    {
+      "id": "crimson-moth-lady",
+      "sheet": "attack",
+      "source": "exec-2c23a478-a80e-452d-a4d1-e173998638b6.png",
+      "output": "assets/battle-sprites/concepts-20261003/crimson-moth-lady-attack-v1.png"
+    },
+    {
+      "id": "crimson-moth-lady",
+      "sheet": "reactions",
+      "source": "exec-fe23350b-1245-4983-9be2-b3f19ca8f36e.png",
+      "output": "assets/battle-sprites/concepts-20261003/crimson-moth-lady-reactions-v1.png"
+    },
+    {
+      "id": "eclipse-duke",
+      "sheet": "attack",
+      "source": "exec-cae7d1d4-7d2d-4519-9298-4cc3343324ec.png",
+      "output": "assets/battle-sprites/concepts-20261003/eclipse-duke-attack-v1.png"
+    },
+    {
+      "id": "eclipse-duke",
+      "sheet": "reactions",
+      "source": "exec-7b049a36-0111-4de0-9b21-6383af41d3b2.png",
+      "output": "assets/battle-sprites/concepts-20261003/eclipse-duke-reactions-v1.png"
+    },
+    {
+      "id": "ember-witch",
+      "sheet": "attack",
+      "source": "exec-e3309a39-eaed-4bdf-9bc4-2a912326abc3.png",
+      "output": "assets/battle-sprites/concepts-20261003/ember-witch-attack-v1.png"
+    },
+    {
+      "id": "ember-witch",
+      "sheet": "reactions",
+      "source": "exec-f2bfb2df-faca-40e4-bc03-efd15f56eea7.png",
+      "output": "assets/battle-sprites/concepts-20261003/ember-witch-reactions-v1.png"
+    },
+    {
+      "id": "mirror-countess",
+      "sheet": "attack",
+      "source": "exec-6ef9c6fb-f3be-4bfe-8675-61ac2beb5937.png",
+      "output": "assets/battle-sprites/concepts-20261003/mirror-countess-attack-v1.png"
+    },
+    {
+      "id": "mirror-countess",
+      "sheet": "reactions",
+      "source": "exec-de4017d7-c55b-4375-80ad-cf53d963d631.png",
+      "output": "assets/battle-sprites/concepts-20261003/mirror-countess-reactions-v1.png"
+    },
+    {
+      "id": "hourglass-wanderer",
+      "sheet": "attack",
+      "source": "exec-23a92419-bdd5-40fa-b825-1f82010514c4.png",
+      "output": "assets/battle-sprites/concepts-20261003/hourglass-wanderer-attack-v1.png"
+    },
+    {
+      "id": "hourglass-wanderer",
+      "sheet": "reactions",
+      "source": "exec-09928078-f99f-4a97-8ba4-68925f1f8610.png",
+      "output": "assets/battle-sprites/concepts-20261003/hourglass-wanderer-reactions-v1.png"
+    },
+    {
+      "id": "coral-captain",
+      "sheet": "attack",
+      "source": "exec-e2ee00e1-bc64-414d-8050-86c05b933092.png",
+      "output": "assets/battle-sprites/concepts-20261003/coral-captain-attack-v1.png"
+    },
+    {
+      "id": "coral-captain",
+      "sheet": "reactions",
+      "source": "exec-247004a2-fd69-4572-989a-449fc211dd61.png",
+      "output": "assets/battle-sprites/concepts-20261003/coral-captain-reactions-v1.png"
+    },
+    {
+      "id": "astral-conductor",
+      "sheet": "attack",
+      "source": "exec-3e9df3dd-6466-478f-88ac-033dbb4a2bf8.png",
+      "output": "assets/battle-sprites/concepts-20261003/astral-conductor-attack-v1.png"
+    },
+    {
+      "id": "astral-conductor",
+      "sheet": "reactions",
+      "source": "exec-ca38a462-5922-4e00-b357-e55e334f1bb7.png",
+      "output": "assets/battle-sprites/concepts-20261003/astral-conductor-reactions-v1.png"
+    },
+    {
+      "id": "thunder-lancer",
+      "sheet": "attack",
+      "source": "exec-796a5b04-fcb2-435c-bffc-a1285f32dffb.png",
+      "output": "assets/battle-sprites/concepts-20261003/thunder-lancer-attack-v1.png"
+    },
+    {
+      "id": "thunder-lancer",
+      "sheet": "reactions",
+      "source": "exec-54437f3f-a732-46ca-8e77-bfe8f285ca81.png",
+      "output": "assets/battle-sprites/concepts-20261003/thunder-lancer-reactions-v1.png"
+    },
+    {
+      "id": "spade-prince",
+      "sheet": "attack",
+      "source": "exec-74a0252d-8c45-4cc6-8e39-f5614a469c42.png",
+      "output": "assets/battle-sprites/concepts-20261003/spade-prince-attack-v1.png"
+    },
+    {
+      "id": "spade-prince",
+      "sheet": "reactions",
+      "source": "exec-300626f1-b311-44da-adf7-ea34e1d0e93c.png",
+      "output": "assets/battle-sprites/concepts-20261003/spade-prince-reactions-v1.png"
+    },
+    {
+      "id": "glass-butterfly",
+      "sheet": "attack",
+      "source": "exec-0469ce63-ed03-413c-b234-1dd19b5f6f73.png",
+      "output": "assets/battle-sprites/concepts-20261003/glass-butterfly-attack-v1.png"
+    },
+    {
+      "id": "glass-butterfly",
+      "sheet": "reactions",
+      "source": "exec-11bea666-71d7-4fd4-9d6a-4b4fe7c270b4.png",
+      "output": "assets/battle-sprites/concepts-20261003/glass-butterfly-reactions-v1.png"
+    },
+    {
+      "id": "moonbell-fox",
+      "sheet": "attack",
+      "source": "exec-a714ba3d-534a-47eb-acfd-2526dc70d4a0.png",
+      "output": "assets/battle-sprites/concepts-20261003/moonbell-fox-attack-v1.png"
+    },
+    {
+      "id": "moonbell-fox",
+      "sheet": "reactions",
+      "source": "exec-db6ae1e8-d069-4b97-ad6f-ee404eea0082.png",
+      "output": "assets/battle-sprites/concepts-20261003/moonbell-fox-reactions-v1.png"
+    },
+    {
+      "id": "lava-drake",
+      "sheet": "attack",
+      "source": "exec-32a78668-1817-4b30-b2f7-e3fe05665550.png",
+      "output": "assets/battle-sprites/concepts-20261003/lava-drake-attack-v1.png"
+    },
+    {
+      "id": "lava-drake",
+      "sheet": "reactions",
+      "source": "exec-4084fbd5-e9de-45c3-91db-4ec15dd70db7.png",
+      "output": "assets/battle-sprites/concepts-20261003/lava-drake-reactions-v1.png"
+    },
+    {
+      "id": "mist-stag",
+      "sheet": "attack",
+      "source": "exec-53fff492-da49-4fee-8822-c6b05cd278b1.png",
+      "output": "assets/battle-sprites/concepts-20261003/mist-stag-attack-v1.png"
+    },
+    {
+      "id": "mist-stag",
+      "sheet": "reactions",
+      "source": "exec-cfab1a33-bfdf-4561-baba-a40953a0298e.png",
+      "output": "assets/battle-sprites/concepts-20261003/mist-stag-reactions-v1.png"
+    },
+    {
+      "id": "abyss-angler",
+      "sheet": "attack",
+      "source": "exec-7434fa50-9dc4-4a21-bc67-34f764fbaef5.png",
+      "output": "assets/battle-sprites/concepts-20261003/abyss-angler-attack-v1.png"
+    },
+    {
+      "id": "abyss-angler",
+      "sheet": "reactions",
+      "source": "exec-33407d68-ca21-425f-aebc-2b6093c84f49.png",
+      "output": "assets/battle-sprites/concepts-20261003/abyss-angler-reactions-v1.png"
+    },
+    {
+      "id": "amethyst-spider",
+      "sheet": "attack",
+      "source": "exec-c4b005a7-15d3-411c-93ca-56864577b42b.png",
+      "output": "assets/battle-sprites/concepts-20261003/amethyst-spider-attack-v1.png"
+    },
+    {
+      "id": "amethyst-spider",
+      "sheet": "reactions",
+      "source": "exec-0eac23db-e2f3-423e-a974-a38949e96d00.png",
+      "output": "assets/battle-sprites/concepts-20261003/amethyst-spider-reactions-v1.png"
+    },
+    {
+      "id": "storm-griffin",
+      "sheet": "attack",
+      "source": "exec-0e1f5639-3309-4d79-9a8e-8fa828c7a563.png",
+      "output": "assets/battle-sprites/concepts-20261003/storm-griffin-attack-v1.png"
+    },
+    {
+      "id": "storm-griffin",
+      "sheet": "reactions",
+      "source": "exec-2dee1c40-0158-4f6b-ae37-295e1d9e75cf.png",
+      "output": "assets/battle-sprites/concepts-20261003/storm-griffin-reactions-v1.png"
+    },
+    {
+      "id": "obsidian-kirin",
+      "sheet": "attack",
+      "source": "exec-cf1fad0b-fa3c-4d81-918d-bd5130e8b8e7.png",
+      "output": "assets/battle-sprites/concepts-20261003/obsidian-kirin-attack-v1.png"
+    },
+    {
+      "id": "obsidian-kirin",
+      "sheet": "reactions",
+      "source": "exec-abc9f600-081e-44e5-abe5-67735ed84c0c.png",
+      "output": "assets/battle-sprites/concepts-20261003/obsidian-kirin-reactions-v1.png"
+    },
+    {
+      "id": "frost-leopard",
+      "sheet": "attack",
+      "source": "exec-d42b558a-6934-48fa-bb05-2f6438ab0b8f.png",
+      "output": "assets/battle-sprites/concepts-20261003/frost-leopard-attack-v1.png"
+    },
+    {
+      "id": "frost-leopard",
+      "sheet": "reactions",
+      "source": "exec-65d7edf9-c1a5-40b7-b631-6413b245bc24.png",
+      "output": "assets/battle-sprites/concepts-20261003/frost-leopard-reactions-v1.png"
+    },
+    {
+      "id": "vine-mantis",
+      "sheet": "attack",
+      "source": "exec-a7312c7c-a800-42df-bc2c-6bc198dbbcaa.png",
+      "output": "assets/battle-sprites/concepts-20261003/vine-mantis-attack-v1.png"
+    },
+    {
+      "id": "vine-mantis",
+      "sheet": "reactions",
+      "source": "exec-b475ff6d-84a5-413c-b911-0bb82f36ec2d.png",
+      "output": "assets/battle-sprites/concepts-20261003/vine-mantis-reactions-v1.png"
+    },
+    {
+      "id": "sandstone-tortoise",
+      "sheet": "attack",
+      "source": "exec-c4251440-92a3-4e62-a91b-55e1068fb83c.png",
+      "output": "assets/battle-sprites/concepts-20261003/sandstone-tortoise-attack-v1.png"
+    },
+    {
+      "id": "sandstone-tortoise",
+      "sheet": "reactions",
+      "source": "exec-fef8461d-0124-411f-9d59-4c47c322d3d7.png",
+      "output": "assets/battle-sprites/concepts-20261003/sandstone-tortoise-reactions-v1.png"
+    },
+    {
+      "id": "nightmare-unicorn",
+      "sheet": "attack",
+      "source": "exec-830a87df-34a6-4567-a872-7102647e9f7e.png",
+      "output": "assets/battle-sprites/concepts-20261003/nightmare-unicorn-attack-v1.png"
+    },
+    {
+      "id": "nightmare-unicorn",
+      "sheet": "reactions",
+      "source": "exec-1efa78cf-e95c-4c6a-8564-8302f0866c5a.png",
+      "output": "assets/battle-sprites/concepts-20261003/nightmare-unicorn-reactions-v1.png"
+    },
+    {
+      "id": "pumpkin-lantern",
+      "sheet": "attack",
+      "source": "exec-8109d9ab-3713-44eb-9b89-73a25d0940f9.png",
+      "output": "assets/battle-sprites/concepts-20261003/pumpkin-lantern-attack-v1.png"
+    },
+    {
+      "id": "pumpkin-lantern",
+      "sheet": "reactions",
+      "source": "exec-66d937a2-95d2-42aa-8f46-8f697411978e.png",
+      "output": "assets/battle-sprites/concepts-20261003/pumpkin-lantern-reactions-v1.png"
+    },
+    {
+      "id": "pearl-shell",
+      "sheet": "attack",
+      "source": "exec-3839096e-08c1-4ef5-b82f-2729b68a039a.png",
+      "output": "assets/battle-sprites/concepts-20261003/pearl-shell-attack-v1.png"
+    },
+    {
+      "id": "pearl-shell",
+      "sheet": "reactions",
+      "source": "exec-a4d8ac77-7065-4cde-a603-44a61a65ee76.png",
+      "output": "assets/battle-sprites/concepts-20261003/pearl-shell-reactions-v1.png"
+    },
+    {
+      "id": "clockwork-teapot",
+      "sheet": "attack",
+      "source": "exec-4924ac1c-8c53-4ee5-91a6-3e4e795f16f6.png",
+      "output": "assets/battle-sprites/concepts-20261003/clockwork-teapot-attack-v1.png"
+    },
+    {
+      "id": "clockwork-teapot",
+      "sheet": "reactions",
+      "source": "exec-51d7357f-f1a3-4a74-9b5f-c637271be8e3.png",
+      "output": "assets/battle-sprites/concepts-20261003/clockwork-teapot-reactions-v1.png"
+    },
+    {
+      "id": "mushroom-monarch",
+      "sheet": "attack",
+      "source": "exec-2e7647ac-8280-4288-8770-b53bddec4cf5.png",
+      "output": "assets/battle-sprites/concepts-20261003/mushroom-monarch-attack-v1.png"
+    },
+    {
+      "id": "mushroom-monarch",
+      "sheet": "reactions",
+      "source": "exec-22f1a755-49f1-467d-a678-b2775e443a55.png",
+      "output": "assets/battle-sprites/concepts-20261003/mushroom-monarch-reactions-v1.png"
+    },
+    {
+      "id": "haunted-musicbox",
+      "sheet": "attack",
+      "source": "exec-f096ee2d-74b6-448c-8553-aa2ba4831ba6.png",
+      "output": "assets/battle-sprites/concepts-20261003/haunted-musicbox-attack-v1.png"
+    },
+    {
+      "id": "haunted-musicbox",
+      "sheet": "reactions",
+      "source": "exec-4b0ef8de-8362-4e19-949a-9ed569430962.png",
+      "output": "assets/battle-sprites/concepts-20261003/haunted-musicbox-reactions-v1.png"
+    },
+    {
+      "id": "sugar-devil",
+      "sheet": "attack",
+      "source": "exec-b0d9937a-b41f-41dd-a859-700b3d6be9ef.png",
+      "output": "assets/battle-sprites/concepts-20261003/sugar-devil-attack-v1.png"
+    },
+    {
+      "id": "sugar-devil",
+      "sheet": "reactions",
+      "source": "exec-2558782c-4f07-4bac-b931-d256e71c2485.png",
+      "output": "assets/battle-sprites/concepts-20261003/sugar-devil-reactions-v1.png"
+    },
+    {
+      "id": "thunder-cloud",
+      "sheet": "attack",
+      "source": "exec-322b9c37-7e8a-42e3-970b-7b75b00c0cc7.png",
+      "output": "assets/battle-sprites/concepts-20261003/thunder-cloud-attack-v1.png"
+    },
+    {
+      "id": "thunder-cloud",
+      "sheet": "reactions",
+      "source": "exec-3d1041e3-5f3d-4d60-a6df-641a567d6af7.png",
+      "output": "assets/battle-sprites/concepts-20261003/thunder-cloud-reactions-v1.png"
+    },
+    {
+      "id": "ink-book-spirit",
+      "sheet": "attack",
+      "source": "exec-e512fe22-0d73-48d5-8f58-1e2eab10db3d.png",
+      "output": "assets/battle-sprites/concepts-20261003/ink-book-spirit-attack-v1.png"
+    },
+    {
+      "id": "ink-book-spirit",
+      "sheet": "reactions",
+      "source": "exec-eddc34f9-3c91-48fe-aaf5-c61bbd52a3a9.png",
+      "output": "assets/battle-sprites/concepts-20261003/ink-book-spirit-reactions-v1.png"
+    },
+    {
+      "id": "coin-mimic",
+      "sheet": "attack",
+      "source": "exec-7c2bad22-c670-4f59-b722-4c03d9d59846.png",
+      "output": "assets/battle-sprites/concepts-20261003/coin-mimic-attack-v1.png"
+    },
+    {
+      "id": "coin-mimic",
+      "sheet": "reactions",
+      "source": "exec-fb0bc68a-c1c4-4ec7-9897-4a3f30422433.png",
+      "output": "assets/battle-sprites/concepts-20261003/coin-mimic-reactions-v1.png"
+    },
+    {
+      "id": "crystal-gargoyle",
+      "sheet": "attack",
+      "source": "exec-6afcbfe6-90e0-4c02-bd0e-872684725112.png",
+      "output": "assets/battle-sprites/concepts-20261003/crystal-gargoyle-attack-v1.png"
+    },
+    {
+      "id": "crystal-gargoyle",
+      "sheet": "reactions",
+      "source": "exec-56390e65-e5f0-46da-93ef-75d79dee8d51.png",
+      "output": "assets/battle-sprites/concepts-20261003/crystal-gargoyle-reactions-v1.png"
+    }
+  ],
+  "repairs": [
+    {
+      "id": "astral-conductor",
+      "sheet": "reactions",
+      "source": "exec-149e771b-ce85-4afe-a464-9942c21e1320.png",
+      "output": "assets/battle-sprites/concepts-20261003/astral-conductor-reactions-v2.png"
+    },
+    {
+      "id": "lava-drake",
+      "sheet": "attack",
+      "source": "exec-00e508c7-449b-4158-b1d0-00d73d84c0d9.png",
+      "output": "assets/battle-sprites/concepts-20261003/lava-drake-attack-v2.png"
+    },
+    {
+      "id": "abyss-angler",
+      "sheet": "attack",
+      "source": "exec-4d7b4545-dbad-46ac-a50a-8775e792fd95.png",
+      "output": "assets/battle-sprites/concepts-20261003/abyss-angler-attack-v2.png"
+    },
+    {
+      "id": "obsidian-kirin",
+      "sheet": "attack",
+      "source": "exec-ecabfaef-ca35-4361-b63e-c29bdea00ecf.png",
+      "output": "assets/battle-sprites/concepts-20261003/obsidian-kirin-attack-v2.png"
+    }
+  ],
+  "approvedWolfReused": true
+}

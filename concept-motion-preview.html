@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#11202a"><title>32 位反派 · 戰鬥動作試演</title><link rel="stylesheet" href="concept-motion-preview.css?v=20261003-all-motion1"></head>
+<body><main>
+<header><a href="monster-preview.html?v=20261003-all-motion1">← 返回造型圖鑑</a><span>注音探險島 · 動作試演</span></header>
+<section class="intro"><p class="eyebrow">THE LITTLE VILLAINS · BATTLE STUDIES</p><h1 id="character-name">反派的招式試演</h1><p>每位反派都有自己的招式與表情。選一位，看他如何出招、防禦和慶祝。</p><div class="character-picker"><img id="portrait" alt=""><label for="character">選擇角色<select id="character"></select></label><button id="previous-character" aria-label="上一位角色">←</button><button id="next-character" aria-label="下一位角色">→</button></div><p id="character-count" class="eyebrow"></p></section>
+<section class="arena" aria-label="角色戰鬥動畫"><div class="arena-top"><span id="side-label">敵方 · 向右出招</span><span>招式試演</span></div><canvas id="battle" width="960" height="540" aria-label="反派與爆星騎士的動作預覽"></canvas><div class="arena-bottom"><strong id="phase" role="status">正在準備動作…</strong><span id="rival-label">陪練：爆星騎士</span></div></section>
+<section class="controls" aria-label="動作控制">
+<div class="actions"><button data-action="attack" disabled>發動攻擊</button><button data-action="guard" disabled>抵擋來襲</button><button data-action="hurt" disabled>受擊後恢復</button><button data-action="victory" disabled>勝利慶祝</button><button data-action="star" disabled>捧起星星</button><button data-action="defeated" disabled>敗北動作</button><button data-action="idle" disabled>回到待機</button></div>
+<div class="settings"><label>播放速度<select id="speed"><option value="1">正常速度</option><option value="0.5" selected>慢速 · ½</option><option value="0.25">仔細看 · ¼</option></select></label><label>站在哪一邊<select id="side"><option value="enemy">敵方 · 左側向右攻擊</option><option value="hero">收藏後我方 · 右側向左攻擊</option></select></label><button id="pause" disabled>暫停動作</button><button id="step" disabled>下一個姿勢 →</button></div>
+<label class="timeline" for="progress"><span>拖曳查看動作 <output id="position">0%</output></span><input id="progress" type="range" min="0" max="1000" value="0" disabled></label>
+<p class="note">預設慢速播放，可以逐姿勢查看。切換成「收藏後我方」，才可預覽捧星星。</p><p id="error" role="alert" hidden></p>
+</section><footer>這裡先確認動作。正式練習仍會隨機遇到反派，同一位累積全對擊敗 3 次才可收藏。</footer>
+</main><script type="module" src="concept-motion-preview.js?v=20261003-all-motion1"></script></body></html>
