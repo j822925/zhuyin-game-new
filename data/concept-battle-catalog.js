@@ -48,10 +48,11 @@ export const CONCEPT_BATTLES=[
     "line": "她的鏡子，偶爾會多眨一次眼。",
     "image": "assets/monsters/preview-20261003/mirror-countess-v1.webp",
     "fx": "ice",
+    "effectAnchors": {"3":[535,130],"4":[465,137]},
     "attackLabel": "冰鏡反照",
     "guardLabel": "保護自己 · 抵擋來襲",
     "victoryLabel": "優雅屈膝致意",
-    "attackImage": "assets/battle-sprites/concepts-20261003/mirror-countess-attack-v1.webp",
+    "attackImage": "assets/battle-sprites/concepts-20261003/mirror-countess-attack-v2.webp",
     "reactionsImage": "assets/battle-sprites/concepts-20261003/mirror-countess-reactions-v1.webp"
   },
   {
@@ -138,6 +139,7 @@ export const CONCEPT_BATTLES=[
     "line": "他總是笑著，留最後一張牌。",
     "image": "assets/monsters/preview-20261003/spade-prince-v1.webp",
     "fx": "cards",
+    "effectAnchors": {"3":[469,221]},
     "attackLabel": "黑桃飛牌",
     "guardLabel": "保護自己 · 抵擋來襲",
     "victoryLabel": "小王子的俏皮鞠躬",

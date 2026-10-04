@@ -1,5 +1,6 @@
 import {readSheet,WOLF_ACTIONS,wolfPose} from './wolf-battle-player.js?v=20261003-all-motion1';
-import {CONCEPT_BODY_RATIOS} from './data/concept-battle-scale.js?v=20261003-scale2';
+import {CONCEPT_BODY_RATIOS} from './data/concept-battle-scale.js?v=20261004-polish1';
+import {conceptAttackEffect,drawConceptAttackEffect} from './concept-projectiles.js?v=20261004-polish1';
 export {WOLF_ACTIONS as CONCEPT_ACTIONS};
 const clamp=t=>Math.max(0,Math.min(1,t));
 export class ConceptBattleSprite{
@@ -24,7 +25,9 @@ export class ConceptBattleSprite{
   if(action==='attack'&&physical&&!reduced&&t>.40&&t<.60){ctx.save();ctx.globalAlpha=.08;ctx.drawImage(f.image,-f.pivot[0]*f.scale-14,-f.pivot[1]*f.scale,f.image.width*f.scale,f.image.height*f.scale);ctx.restore();}
   ctx.drawImage(f.image,-f.pivot[0]*f.scale,-f.pivot[1]*f.scale,f.image.width*f.scale,f.image.height*f.scale);ctx.restore();
   let label=p.label;if(action==='attack')label=['準備迎戰','蓄力 · 準備出招','招式蓄勢',this.meta.attackLabel,'招式落下','收勢', '回到待機'][p.index];if(action==='guard'&&p.frame===6)label=this.meta.guardLabel;if(action==='victory')label=p.frame===9?this.meta.victoryLabel:'恢復姿態 · 準備慶祝';if(action==='star')label=p.frame===10?'我方領獎 · 捧起星星':'迎接獎勵';if(action==='defeated')label=p.frame===11?'敗北 · 暫時休息':'被擊退';
-  return{...p,label,x,y,bounds:{left:x+(d>0?-f.pivot[0]*f.scale:-(f.image.width-f.pivot[0])*f.scale),right:x+(d>0?(f.image.width-f.pivot[0])*f.scale:f.pivot[0]*f.scale),top:y-f.pivot[1]*f.scale,bottom:y+(f.image.height-f.pivot[1])*f.scale}};
+  let effectOrigin;const launchFrame=this.meta.id==='spade-prince'?3:p.frame,point=this.meta.effectAnchors?.[launchFrame];
+  if(action==='attack'&&point){const source=this.frames[launchFrame],baseX=side==='hero'?960-this.enemyX:this.enemyX;effectOrigin={x:(this.meta.id==='spade-prince'?baseX:x)+d*(point[0]-source.pivot[0])*source.scale,y:470+(point[1]-source.pivot[1])*source.scale};}
+  return{...p,label,x,y,effectOrigin,bounds:{left:x+(d>0?-f.pivot[0]*f.scale:-(f.image.width-f.pivot[0])*f.scale),right:x+(d>0?(f.image.width-f.pivot[0])*f.scale:f.pivot[0]*f.scale),top:y-f.pivot[1]*f.scale,bottom:y+(f.image.height-f.pivot[1])*f.scale}};
  }
 }
 function glyph(ctx,kind,x,y,size,angle,color){ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;
@@ -40,7 +43,7 @@ function glyph(ctx,kind,x,y,size,angle,color){ctx.save();ctx.translate(x,y);ctx.
  else if(kind==='ink'){ctx.beginPath();ctx.ellipse(0,0,size*.6,size,angle,0,Math.PI*2);ctx.fill();}
  else if(kind==='sugar'){ctx.beginPath();ctx.moveTo(0,size);ctx.bezierCurveTo(-size*1.4,0,-size,-size,0,-size*.25);ctx.bezierCurveTo(size,-size,size*1.4,0,0,size);ctx.fill();}
  else{ctx.beginPath();ctx.arc(0,0,size,0,Math.PI*2);ctx.stroke();}ctx.restore();}
-export function drawConceptEffects(ctx,meta,action,t,side,anchor){const d=side==='hero'?-1:1,x=anchor??(side==='hero'?690:270),color=meta.accent,kind=meta.fx;ctx.save();ctx.translate(x,470);ctx.scale(d,1);
+export function drawConceptEffects(ctx,meta,action,t,side,anchor,origin){if(action==='attack'&&['mirror-countess','spade-prince'].includes(meta.id)){drawConceptAttackEffect(ctx,conceptAttackEffect(meta,t,side,origin));return;}const d=side==='hero'?-1:1,x=anchor??(side==='hero'?690:270),color=meta.accent,kind=meta.fx;ctx.save();ctx.translate(x,470);ctx.scale(d,1);
  if(action==='attack'&&t>.43&&t<.78){const q=(t-.43)/.35;ctx.globalAlpha=Math.sin(q*Math.PI)*.8;ctx.shadowColor=color;ctx.shadowBlur=10;
   if(['slash','leaf','frost','crystal'].includes(kind)){ctx.strokeStyle=color;ctx.lineWidth=5*(1-q)+2;ctx.beginPath();ctx.ellipse(100,-170,110,132,-.4,-1.6+q*.2,.65+q*.4);ctx.stroke();}
   else if(kind==='spear'){ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(115,-160);ctx.lineTo(230+q*230,-160);ctx.stroke();}
