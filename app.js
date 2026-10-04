@@ -195,7 +195,14 @@ async function send(payload){const status=await auth.request(payload);if(status.
 async function flushPending(){if(saving||demo||!config?.verifiedWrites)return;saving=true;$('retry-save').disabled=true;const attempted=new Set();try{for(const payload of [...pending]){attempted.add(payload.roundId);try{await send(payload);pending=pending.filter(x=>x.roundId!==payload.roundId);write('zhuyin.pending.v2',pending);}catch{/* Keep failed rounds and try the others. */}}}finally{saving=false;$('retry-save').disabled=false;const outstanding=pending.some(x=>latestIds.includes(x.roundId)),stored=write('zhuyin.pending.v2',pending);$('retry-save').hidden=!outstanding;$('save-status').textContent=outstanding?(stored?'紀錄已暫存在這台裝置，尚未確認存入後台。':'此裝置無法暫存，請勿關閉頁面。')+'請保持連線並重新傳送。':'老師已收到這次的完整紀錄！';rewards.refresh();if(pending.some(x=>!attempted.has(x.roundId)))flushPending();}}
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(b.dataset.mode));
 function selectStyle(style){playStyle=style;duo=style!=='solo';for(const id of ['solo','duo','race']){const selected=id===(style==='turn'?'duo':style);$(id).classList.toggle('selected',selected);$(id).setAttribute('aria-pressed',String(selected));}$('partner-label').hidden=!duo||!demo;teamUI.setStyle(style);if(config)refreshHome();if(demo&&style!=='solo'&&$('partner').value&&!auth.verified($('partner').value))$('partner').onchange();}
-$('solo').onclick=()=>selectStyle('solo');$('duo').onclick=()=>selectStyle('turn');$('race').onclick=()=>selectStyle('race');
+async function enterOnlineBattle(style){
+ if(demo){selectStyle(style);return;}
+ voiceHelp.stop();stopPracticeReview();audio.pause();
+ if(!await auth.ensure($('seat').value))return;
+ auth.setPrimary($('seat').value);
+ location.href=classUrl('online.html?mode='+encodeURIComponent(style));
+}
+$('solo').onclick=()=>selectStyle('solo');$('duo').onclick=()=>enterOnlineBattle('turn');$('race').onclick=()=>enterOnlineBattle('race');
 const selectedIdentities={seat:'',partner:''};
 for(const id of ['seat','partner'])$(id).onchange=async()=>{const seat=$(id).value;
  if(id==='partner'&&seat&&seat===$('seat').value){$('partner').value='';$('home-message').textContent='請選另一位小朋友的座號，不能和自己一樣喔。';return;}
