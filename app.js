@@ -10,7 +10,7 @@ import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,
 import {createMultiplayer} from './multiplayer.js?v=20261004-villains1';
 import {createRewards} from './rewards.js?v=20261004-stars4';
 import {dailyAwardMessage} from './learning-rewards.js?v=20261004-stars4';
-import {createStudentProfile} from './student-profile.js?v=20261004-villains1';
+import {createStudentProfile} from './student-profile.js?v=20261004-levels1';
 import {portrait} from './characters.js?v=20260928-all1';
 import {setupChildUI} from './child-ui.js?v=20260928-all1';
 import {setupCozyUI} from './cozy-ui.js?v=20260928-all1';
@@ -20,8 +20,8 @@ import {createApiClient} from './api-client.js?v=20260928-all1';
 import {setupExamEntry} from './exam-entry.js?v=20260928-all1';
 import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,celebrateCharacter,motionPortrait} from './character-motion.js?v=20261004-villains1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
-import {setupMonsterCollection,startDemoMonster,creditDemoMonster,showMonsterReward} from './monster-cards-ui.js?v=20261004-villains1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261004-villains1';
+import {setupMonsterCollection,startDemoMonster,creditDemoMonster,showMonsterReward} from './monster-cards-ui.js?v=20261004-levels1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261004-levels1';
 const API='https://zhuyin-api.j822925.workers.dev/api';
 const demo=new URLSearchParams(location.search).get('demo')==='1';
 const names={single:'聲音森林',spelling:'拼音工坊'};
@@ -139,7 +139,7 @@ async function start(id){
   audio.pause();session++;latestIds=[];teamUI.start({seats,mode,questionPool:currentPool,questions:config.questions,choices});return;
  }
  if(monsterStartPending)return;monsterStartPending=true;const startSession=++session,newRounds=seats.map(()=>Object.assign(new Round(questionDeck(currentPool,config.questions)),{encounterId:crypto.randomUUID()}));
- try{for(const [i,r] of newRounds.entries()){const encounter=demo?startDemoMonster(seats[i],r.encounterId):await auth.request({kind:'monster-start',monsterCatalog:'20261004-villains1',seat:seats[i],encounter:r.encounterId});if(encounter.error||!MONSTERS.some(c=>c.id===encounter.monsterId))throw Error('encounter');Object.assign(r,encounter);}if(session!==startSession)return;rounds=newRounds;active=0;latestIds=[];}catch{$('home-message').textContent='怪物挑戰尚未連線，請按關卡再試一次。';return;}finally{monsterStartPending=false;}
+ try{for(const [i,r] of newRounds.entries()){const encounter=demo?startDemoMonster(seats[i],r.encounterId,mode):await auth.request({kind:'monster-start',monsterCatalog:'20261004-villains1',mode,seat:seats[i],encounter:r.encounterId});if(encounter.error||!MONSTERS.some(c=>c.id===encounter.monsterId))throw Error('encounter');Object.assign(r,encounter);}if(session!==startSession)return;rounds=newRounds;active=0;latestIds=[];}catch{$('home-message').textContent='怪物挑戰尚未連線，請按關卡再試一次。';return;}finally{monsterStartPending=false;}
  screen('game');renderQuestion();
 }
 function setAnswerEnabled(enabled){enabled=enabled&&!tutor.open;document.querySelectorAll('.option,.tile,.slot').forEach(b=>b.disabled=!enabled);$('check-spelling').disabled=!enabled||selected.initial===undefined||selected.final===undefined;tutorButton.disabled=!rounds[active]?.canUseTutor||tutor.open;}
@@ -160,7 +160,7 @@ function renderQuestion(){
  stopPracticeReview();
  practiceBattle.reset();clearCharacters($('player-turn'));
  tutor.close();tutorButton.hidden=mode!=='spelling'||(!demo&&!config.tutorWrites);
- const r=rounds[active];updateOpponent(opponent,MONSTERS.find(c=>c.id===r.monsterId),r.deck.length,r.index,{wins:r.monsterWins,perfect:r.mistakes===0});r.deck[r.index]=spellingParts(r.current);const q=r.current;document.getElementById('game').classList.toggle('spelling-active',mode==='spelling');r.questionStarted=Date.now();selected={};audio.pause();audio.src=audioSource(q.audio);audioReady=false;
+ const r=rounds[active];updateOpponent(opponent,MONSTERS.find(c=>c.id===r.monsterId),r.deck.length,r.index,{wins:r.monsterWins,levels:r.monsterLevels,requiredLevels:r.monsterRequiredLevels,collected:r.monsterCollected,perfect:r.mistakes===0});r.deck[r.index]=spellingParts(r.current);const q=r.current;document.getElementById('game').classList.toggle('spelling-active',mode==='spelling');r.questionStarted=Date.now();selected={};audio.pause();audio.src=audioSource(q.audio);audioReady=false;
  $('world-title').textContent=names[mode];$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;
  $('progress-fill').style.width=`${r.index/r.deck.length*100}%`;$('player-turn').classList.toggle('profile-playing',!duo);if(duo)$('player-turn').replaceChildren();else profiles.renderPlayer($('player-turn'),seats[active]);
  $('instruction').textContent=mode==='spelling'?'聽一聽，用注音積木拼出聲音':'仔細聽，選出正確的注音';$('feedback').textContent='';$('next').hidden=true;$('options').replaceChildren();$('spelling').hidden=mode!=='spelling';
@@ -170,7 +170,7 @@ function renderQuestion(){
 }
 function place(kind,value){if(!audioReady||rounds[active].locked)return;if(!['initial','final'].includes(kind)||![...document.querySelectorAll('.tile')].some(b=>b.dataset.kind===kind&&b.dataset.value===value))return;selected[kind]=value;if(kind==='final')document.querySelector('#spelling .slots').dataset.finalLength=String(Math.max(value.length,rounds[active].current.final.length));const b=document.querySelector(`[data-slot="${kind}"]`);setVerticalSymbols(b,value);b.setAttribute('aria-label',(kind==='initial'?'聲符：':'韻符：')+(value||'空白'));b.classList.add('filled');$('check-spelling').disabled=selected.initial===undefined||selected.final===undefined;}
 function answer(value,button){
- if(!audioReady)return;const r=rounds[active],outcome=r.answer(value);if(outcome.ignored)return;practiceBattle.answer(outcome.correct);updateOpponent(opponent,MONSTERS.find(c=>c.id===r.monsterId),r.deck.length,r.index+(outcome.correct?1:0),{wins:r.monsterWins,perfect:r.mistakes===0});
+ if(!audioReady)return;const r=rounds[active],outcome=r.answer(value);if(outcome.ignored)return;practiceBattle.answer(outcome.correct);updateOpponent(opponent,MONSTERS.find(c=>c.id===r.monsterId),r.deck.length,r.index+(outcome.correct?1:0),{wins:r.monsterWins,levels:r.monsterLevels,requiredLevels:r.monsterRequiredLevels,collected:r.monsterCollected,perfect:r.mistakes===0});
  if(!outcome.correct){if(button){button.classList.add('wrong');button.disabled=true;} $('feedback').textContent='🔁 👂';if(mode==='spelling')void replayWrongSpelling();else play();return;}
  if(button)button.classList.add('correct');setAnswerEnabled(false);
  $('feedback').textContent=outcome.firstCorrect?'⭐ ✨':'✅ ⭐';
@@ -185,7 +185,7 @@ function finish(){stopPracticeReview();practiceBattle.reset();clearCharacters($(
  persistResults(results);
 }
 function persistResults(results){
- const awards=rewards.credit(results);if(demo)for(const result of results){if(result.monsterBattle===1){const award=awards.find(a=>a.seat===result.seat);if(award)Object.assign(award,creditDemoMonster(result.seat,result.roundId,result.mistakes===0));}}
+ const awards=rewards.credit(results);if(demo)for(const result of results){if(result.monsterBattle===1){const award=awards.find(a=>a.seat===result.seat);if(award)Object.assign(award,creditDemoMonster(result.seat,result.roundId,result.mistakes===0,result.mode));}}
  if(awards?.length){const rewardLine=document.createElement('div');rewardLine.className='round-awards';rewardLine.innerHTML=awards.map(a=>`<p>🔢 ${safe(a.seat)}　⭐ +${a.stars}　${safe(dailyAwardMessage(a))}</p>`).join('');$('result-details').append(rewardLine);for(const a of awards)showAwardActor(rewardLine,a);}
  if(demo){$('save-status').textContent='這是老師試玩，沒有傳送學生成績。';$('retry-save').hidden=true;return;}
  latestIds=results.map(x=>x.roundId);pending.push(...results);const stored=write('zhuyin.pending.v2',pending);$('save-status').textContent=stored?'正在確認老師是否收到紀錄…':'此裝置無法暫存，請保持頁面開啟，等待確認傳送。';flushPending();

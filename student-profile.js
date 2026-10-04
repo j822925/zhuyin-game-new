@@ -1,5 +1,5 @@
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
-import {demoMonsters} from './monster-cards-ui.js?v=20261004-villains1';
+import {demoMonsters} from './monster-cards-ui.js?v=20261004-levels1';
 import {classStorageKey} from './class-context.js?v=20260928-all1';
 import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260928-all1';
 import {STAR_CARDS} from './data/star-cards.js?v=20260928-all1';

@@ -4,13 +4,13 @@ import {audioSource} from './audio-source.js?v=20260928-all1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
 import {createStudentAuth} from './student-auth.js?v=20260928-all1';
 import {createStarCollection} from './star-cards-ui.js?v=20260928-all1';
-import {PROFILE_CHARACTERS} from './student-profile.js?v=20261004-villains1';
+import {PROFILE_CHARACTERS} from './student-profile.js?v=20261004-levels1';
 import {portrait} from './characters.js?v=20260928-all1';
 import {createExamReview} from './exam-review.js?v=20260928-all1';
 import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,motionPortrait} from './character-motion.js?v=20261004-villains1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
-import {showMonsterReward} from './monster-cards-ui.js?v=20261004-villains1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261004-villains1';
+import {showMonsterReward} from './monster-cards-ui.js?v=20261004-levels1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261004-levels1';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config=null,seat='',examId=new URLSearchParams(location.search).get('id')||'',state=null,exams=[],busy=false,heard=false,selection={},offset=0,expiryTried=false,renderVersion=0;
 const pendingMemory=new Map();
@@ -34,7 +34,7 @@ function enable(){const enabled=heard&&!busy&&!readPending()&&state&&!state.fini
 async function listen(){if(!state?.question)return;const version=renderVersion;try{audio.currentTime=0;await audio.play();if(version!==renderVersion)return;heard=true;$('audio-status').textContent='聽清楚再選，還可以再聽一次。';enable();}catch{if(version===renderVersion)$('audio-status').textContent='請按喇叭播放聲音，確認音量與網路。';}}
 function choose(kind,value,button){selection[kind]=value;for(const b of document.querySelectorAll(`[data-choice="${kind}"]`))b.classList.toggle('selected',b===button);if(kind!=='answer'){$(kind+'-slot').textContent=value||'空白';$(kind+'-slot').dataset.blank=String(value==='');}enable();}
 function buttons(id,values,kind){$(id).replaceChildren();for(const value of values){const b=document.createElement('button');b.type='button';b.textContent=value||'空白';b.dataset.choice=kind;b.dataset.value=value;b.dataset.blank=String(value==='');b.setAttribute('aria-label',value||'空白：這一格不需要注音');b.onclick=()=>choose(kind,value,b);$(id).append(b);}}
-function render(out){const total=out.total??out.exam.questions??25;examBattle.reset();updateOpponent(examOpponent,MONSTERS.find(c=>c.id===examMonster?.monsterId)||MONSTERS[0],total,out.correctCount||0,{wins:examMonster?.monsterWins||0,perfect:out.correctCount===out.answered});renderVersion++;reviewPlayer.stop();state=out;offset=out.serverNow-Date.now();expiryTried=false;audio.pause();heard=false;selection={};$('login-area').hidden=true;$('result').hidden=!out.finished;$('question-area').hidden=!!out.finished;$('exam-review').hidden=!out.review;$('question-controls').hidden=!!out.review;
+function render(out){const total=out.total??out.exam.questions??25;examBattle.reset();updateOpponent(examOpponent,MONSTERS.find(c=>c.id===examMonster?.monsterId)||MONSTERS[0],total,out.correctCount||0,{wins:examMonster?.monsterWins||0,levels:examMonster?.monsterLevels,requiredLevels:examMonster?.monsterRequiredLevels,collected:examMonster?.monsterCollected,perfect:out.correctCount===out.answered});renderVersion++;reviewPlayer.stop();state=out;offset=out.serverNow-Date.now();expiryTried=false;audio.pause();heard=false;selection={};$('login-area').hidden=true;$('result').hidden=!out.finished;$('question-area').hidden=!!out.finished;$('exam-review').hidden=!out.review;$('question-controls').hidden=!!out.review;
  if(out.finished){examBattle.reset();showExamAward();clearPending();$('score').textContent=`答對 ${out.correct}／${total} 題，${out.correct*100/total} 分${out.unanswered?`；${out.unanswered} 題未作答`:''}。`;$('stars').textContent=`⭐ 獲得 ${out.stars} 顆星星（本場只發一次，不另加練習獎勵）。${out.starTicket?' 滿分！可以在下方抽一張限定星使卡片。':''}`;$('clock').textContent='已交卷';$('star-collection').hidden=!out.starTicket;if(out.starTicket)starCollection.load();return;}
  $('exam-title').textContent=out.exam.title;
  if(out.review){$('progress').textContent=`第 ${out.review.index+1}／${total} 題・答案已保存，正在複習`;$('review-answer').textContent=out.review.label;enable();reviewPlayer.show({...out.review,mode:out.exam.mode});return;}

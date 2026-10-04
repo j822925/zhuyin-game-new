@@ -6,9 +6,9 @@ import {STAR_SPRITES} from './data/star-sprites.js';
 import {audioSource} from './audio-source.js?v=20260928-all1';
 import {STAR_CARDS} from './data/star-cards.js';
 import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20261004-villains1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261004-villains1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261004-levels1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
-import {showMonsterReward} from './monster-cards-ui.js?v=20261004-villains1';
+import {showMonsterReward} from './monster-cards-ui.js?v=20261004-levels1';
 const $=id=>document.getElementById(id),SESSION=classStorageKey('zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':live');
 const ENDPOINT=location.hostname==='127.0.0.1'?location.origin:'https://zhuyin-api.j822925.workers.dev';
 
@@ -63,14 +63,14 @@ const onlineOpponent=createOpponent(),onlineHero=document.createElement('aside')
 function renderMotion(s){
  const j=s.me,p=s.players[j];
  const encounterKey=s.matchId+':'+j;let encounter=onlineEncounters.get(encounterKey);
- if(p&&!encounter){onlineEncounters.set(encounterKey,{loading:true});fetch(classUrl(ENDPOINT+'/api'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:'monster-start',monsterCatalog:'20261004-villains1',seat:session.seat,token:session.token,encounter:encounterKey})}).then(r=>r.json()).then(out=>{if(out.error)throw Error(out.error);onlineEncounters.set(encounterKey,out);if(state?.matchId===s.matchId)render();}).catch(()=>{onlineEncounters.set(encounterKey,{failed:true});$('reconnect').hidden=false;message('怪物挑戰連線未完成，請重新連線後再試。');});}
+ if(p&&!encounter){onlineEncounters.set(encounterKey,{loading:true});fetch(classUrl(ENDPOINT+'/api'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:'monster-start',monsterCatalog:'20261004-villains1',mode:s.lesson,seat:session.seat,token:session.token,encounter:encounterKey})}).then(r=>r.json()).then(out=>{if(out.error)throw Error(out.error);onlineEncounters.set(encounterKey,out);if(state?.matchId===s.matchId)render();}).catch(()=>{onlineEncounters.set(encounterKey,{failed:true});$('reconnect').hidden=false;message('怪物挑戰連線未完成，請重新連線後再試。');});}
  if(s.phase==='ready'&&!encounter?.monsterId)$('action').disabled=true;
  const visible=!!p&&!['waiting','ready','closed'].includes(s.phase);onlineOpponent.hidden=onlineHero.hidden=!visible;if(!visible)return;
  const question=s.matchId+':'+s.index,person=j+':'+p.avatar;
  if(person!==motionPerson){motionPerson=person;const c=[...CHARACTER_CATALOG,...STAR_CARDS,...MONSTERS].find(c=>c.id===p.avatar)||CHARACTER_CATALOG[0];mountCharacter(onlineHero,{...c,image:avatar(p.avatar)});}
  if(question!==motionQuestion){onlineBattle.reset();reactCharacter(onlineHero,'idle');motionQuestion=question;motionEvent='';}
  const completed=s.mode==='turn'?Math.min(10,Math.floor(s.index/2)+(s.index%2>j||s.phase==='result'&&s.activePlayer===j?1:0)):s.scores[j];
- updateOpponent(onlineOpponent,MONSTERS.find(c=>c.id===encounter?.monsterId)||MONSTERS[0],10,completed,{wins:encounter?.monsterWins||0,perfect:s.mode==='turn'?s.scores[j]>=completed:s.scores[j]===s.index});
+ updateOpponent(onlineOpponent,MONSTERS.find(c=>c.id===encounter?.monsterId)||MONSTERS[0],10,completed,{wins:encounter?.monsterWins||0,levels:encounter?.monsterLevels,requiredLevels:encounter?.monsterRequiredLevels,collected:encounter?.monsterCollected,perfect:s.mode==='turn'?s.scores[j]>=completed:s.scores[j]===s.index});
  if(s.phase==='answer'&&s.mode==='turn'&&s.activePlayer===j&&s.turnErrors>0){const key=question+':wrong:'+s.turnErrors;if(key!==motionEvent){motionEvent=key;onlineBattle.answer(false);}}
  if(s.phase==='result'){const a=s.result.attempts[j],key=question+':result';if(a&&motionEvent!==key){motionEvent=key;onlineBattle.answer(a.correct===true);}}
  if(s.phase==='finished'&&s.settled){const key=s.matchId+':award:'+j;if(motionEvent!==key){motionEvent=key;if(s.awards?.[j]?.stars>0)reactCharacter(onlineHero,'star');}if(s.awards?.[j])showMonsterReward($('summary'),s.awards[j]);}

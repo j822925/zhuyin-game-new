@@ -1,5 +1,5 @@
-import {createReadingBattle} from './reading-battle.js?v=20261004-villains1';
-import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261004-villains1';
+import {createReadingBattle} from './reading-battle.js?v=20261004-levels1';
+import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261004-levels1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';
 import {readingStars,readingAttemptDecision,READING_WORDS} from './reading-core.js?v=20261001-graded1';
@@ -180,7 +180,7 @@ async function start(){
   readingRoundId=crypto.randomUUID();
   const [profile,encounter]=await Promise.all([
    demo?Promise.resolve({avatar:'rabbit'}):auth.request({kind:'profile',seat}).catch(()=>null),
-   demo?Promise.resolve(startDemoMonster(seat,readingRoundId)):auth.request({kind:'monster-start',monsterCatalog:'20261004-villains1',seat,encounter:readingRoundId})
+   demo?Promise.resolve(startDemoMonster(seat,readingRoundId,'reading')):auth.request({kind:'monster-start',monsterCatalog:'20261004-villains1',mode:'reading',seat,encounter:readingRoundId})
   ]);
   if(!encounter?.monsterId||encounter.error)throw Error('encounter_unavailable');
   readingBattle.begin(profile,encounter);
@@ -192,7 +192,7 @@ function finish(){
  cancel();show('result');readingBattle.result(0);const correct=rows.filter(r=>r.firstCorrect).length,stars=readingStars(correct);
  $('score').textContent=`通過 ${correct} / 5 題`;$('stars').textContent=demo?(stars?'⭐'.repeat(stars):'再接再厲'):'星星正在確認…';
  $('review').replaceChildren();for(const row of rows){const word=READING_WORDS.find(w=>w.id===row.wordId),p=document.createElement('p');p.textContent=`${row.firstCorrect?'✓':'再練練'}　${word.word}　${word.zhuyin}`;$('review').append(p);}
- if(demo){readingBattle.result(stars,creditDemoMonster(seat,readingRoundId,correct===5));$('save-status').textContent=`老師試玩：本回合 ${stars} 顆星星，不傳送學生成績。`;$('retry-save').hidden=true;return;}
+ if(demo){readingBattle.result(stars,creditDemoMonster(seat,readingRoundId,correct===5,'reading'));$('save-status').textContent=`老師試玩：本回合 ${stars} 顆星星，不傳送學生成績。`;$('retry-save').hidden=true;return;}
  currentPayload={kind:'round',mode:'reading',roundId:readingRoundId,monsterBattle:1,seat,total:5,mistakes:5-correct,seconds:Math.round((Date.now()-started)/1000),results:rows};
  pending.push(currentPayload);const stored=storePending();$('save-status').textContent=stored?'正在儲存紀錄與星星…':'此裝置無法暫存，請保持頁面開啟，等待儲存完成。';flushPending();
 }
