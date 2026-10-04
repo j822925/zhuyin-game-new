@@ -1,6 +1,6 @@
 import {readSheet,WOLF_ACTIONS,wolfPose} from './wolf-battle-player.js?v=20261003-all-motion1';
-import {CONCEPT_BODY_RATIOS} from './data/concept-battle-scale.js?v=20261004-eight2';
-import {conceptAttackEffect,drawConceptAttackEffect} from './concept-projectiles.js?v=20261004-eight2';
+import {CONCEPT_BODY_RATIOS} from './data/concept-battle-scale.js?v=20261004-villains1';
+import {conceptAttackEffect,drawConceptAttackEffect} from './concept-projectiles.js?v=20261004-villains1';
 export {WOLF_ACTIONS as CONCEPT_ACTIONS};
 const clamp=t=>Math.max(0,Math.min(1,t));
 export class ConceptBattleSprite{
@@ -43,11 +43,11 @@ function glyph(ctx,kind,x,y,size,angle,color){ctx.save();ctx.translate(x,y);ctx.
  else if(kind==='ink'){ctx.beginPath();ctx.ellipse(0,0,size*.6,size,angle,0,Math.PI*2);ctx.fill();}
  else if(kind==='sugar'){ctx.beginPath();ctx.moveTo(0,size);ctx.bezierCurveTo(-size*1.4,0,-size,-size,0,-size*.25);ctx.bezierCurveTo(size,-size,size*1.4,0,0,size);ctx.fill();}
  else{ctx.beginPath();ctx.arc(0,0,size,0,Math.PI*2);ctx.stroke();}ctx.restore();}
-export function drawConceptEffects(ctx,meta,action,t,side,anchor,origin){if(action==='attack'&&['mirror-countess','spade-prince','ink-book-spirit','coin-mimic'].includes(meta.id)){drawConceptAttackEffect(ctx,conceptAttackEffect(meta,t,side,origin));return;}const d=side==='hero'?-1:1,x=anchor??(side==='hero'?690:270),color=meta.accent,kind=meta.fx;ctx.save();ctx.translate(x,470);ctx.scale(d,1);
+export function drawConceptEffects(ctx,meta,action,t,side,anchor,origin,target){if(action==='attack'&&['mirror-countess','spade-prince','ink-book-spirit','coin-mimic'].includes(meta.id)){drawConceptAttackEffect(ctx,conceptAttackEffect(meta,t,side,origin,target));return;}const d=side==='hero'?-1:1,x=anchor??(side==='hero'?690:270),color=meta.accent,kind=meta.fx;ctx.save();ctx.translate(x,470);ctx.scale(d,1);
  if(action==='attack'&&t>.43&&t<.78){const q=(t-.43)/.35;ctx.globalAlpha=Math.sin(q*Math.PI)*.8;ctx.shadowColor=color;ctx.shadowBlur=10;
   if(['slash','leaf','frost','crystal'].includes(kind)){ctx.strokeStyle=color;ctx.lineWidth=5*(1-q)+2;ctx.beginPath();ctx.ellipse(100,-170,110,132,-.4,-1.6+q*.2,.65+q*.4);ctx.stroke();}
   else if(kind==='spear'){ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(115,-160);ctx.lineTo(230+q*230,-160);ctx.stroke();}
-  for(let i=0;i<3;i++){const px=140+q*270+i*24,py=-175+Math.sin(q*4+i)*15;glyph(ctx,kind,px,py,kind==='wind'?17:10+i*2,q*2+i*.4,color);}
+  for(let i=0;i<3;i++){const px=target?140+(d*(target.x-x)-140)*q+i*12:140+q*270+i*24,py=(target?-175+(target.y-295)*q:-175)+Math.sin(q*4+i)*15;glyph(ctx,kind,px,py,kind==='wind'?17:10+i*2,q*2+i*.4,color);}
  }
  if(action==='hurt'&&t>.22&&t<.38){ctx.globalAlpha=(1-(t-.22)/.16)*.8;ctx.strokeStyle='#ffddbe';ctx.lineWidth=3;for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.moveTo(60+Math.cos(a)*10,-200+Math.sin(a)*10);ctx.lineTo(60+Math.cos(a)*25,-200+Math.sin(a)*25);ctx.stroke();}}
  ctx.restore();}

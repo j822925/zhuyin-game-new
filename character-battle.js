@@ -1,7 +1,8 @@
-import {MONSTERS} from './data/monsters.js?v=20260928-all1';
-import {reactCharacter} from './character-motion.js?v=20261003-size1';
-import {startBattleEffects} from './battle-effects.js?v=20260928-allies1';
-import {mountMonster,playMonster} from './monster-motion.js?v=20261003-size1';
+import {BATTLE_META} from './data/battle-catalog.js?v=20261004-villains1';
+import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
+import {reactCharacter} from './character-motion.js?v=20261004-villains1';
+import {startBattleEffects} from './battle-effects.js?v=20261004-villains1';
+import {mountMonster,playMonster} from './monster-motion.js?v=20261004-villains1';
 
 export function createOpponent(){
  const el=document.createElement('aside');el.className='practice-opponent';el.setAttribute('aria-label','陪你挑戰的小怪物');
@@ -20,15 +21,16 @@ export function createBattle(opponent,getHero){
  function reset(){generation++;timers.forEach(clearTimeout);timers=[];effects?.dispose();effects=null;opponent.dataset.action='idle';opponent.dataset.defeated='false';playMonster(opponent,'idle');if(lastHero?.isConnected){lastHero.querySelector('.character-motion')?.classList.remove('character-strike');reactCharacter(lastHero,'idle');}lastHero=null;}
  function answer(correct){
   reset();const gen=generation,hero=getHero(),actor=hero?.querySelector('.character-motion');if(!actor)return;lastHero=hero;
+  const attackingId=correct?actor.dataset.rig:opponent.dataset.monster,timing=BATTLE_META[attackingId]?.concept?{windup:774,flight:612,impact:1386,celebrate:1800,settle:2400}:BATTLE_TIMING;
   const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches,valid=()=>gen===generation&&actor.isConnected;
   const later=(fn,delay)=>timers.push(setTimeout(()=>{if(valid())fn();},delay));
-  opponent.dataset.action=correct?'bracing':'attack';if(correct)reactCharacter(hero,'attack');else playMonster(opponent,'attack');
+  opponent.dataset.action=correct?'bracing':'attack';if(correct){reactCharacter(hero,'attack');if(BATTLE_META[opponent.dataset.monster]?.concept)playMonster(opponent,'guard');}else playMonster(opponent,'attack');
   const impact=()=>{if(!valid())return;opponent.dataset.action=correct?'hit':'idle';if(correct){playMonster(opponent,'hurt');later(()=>{if(opponent.dataset.roundComplete==='true'){opponent.dataset.defeated='true';playMonster(opponent,'defeated');}},reduced?0:320);}else reactCharacter(hero,'defeat');};
-  if(correct)later(()=>reactCharacter(hero,'victory'),BATTLE_TIMING.celebrate);
-  later(()=>{opponent.dataset.action='idle';},BATTLE_TIMING.settle);
+  if(correct)later(()=>reactCharacter(hero,'victory'),timing.celebrate);
+  later(()=>{opponent.dataset.action='idle';},timing.settle);
   if(reduced){impact();return;}
-  effects=startBattleEffects({actor,opponent,correct,timing:BATTLE_TIMING});
-  later(impact,BATTLE_TIMING.impact);
+  effects=startBattleEffects({actor,opponent,correct,timing});
+  later(impact,timing.impact);
  }
  return {answer,reset};
 }

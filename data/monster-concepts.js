@@ -1,4 +1,4 @@
-// Review-only concepts: not part of the live random encounter pool.
+// Approved villain designs shared by the live game and motion preview.
 export const MONSTER_CONCEPTS=[
   {
     "id": "eclipse-duke",

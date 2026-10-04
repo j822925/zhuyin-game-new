@@ -1,8 +1,9 @@
-import {MONSTERS,randomMonster} from './data/monsters.js?v=20260928-all1';
+import {MONSTERS,randomMonster} from './data/monsters.js?v=20261004-villains1';
 import {classStorageKey} from './class-context.js?v=20260928-all1';
 import {within} from './reward-request.js?v=20260928-all1';
 export function monsterCard(c,{locked=false,victories=0,preview=false}={}){
  const card=document.createElement('article');card.className='monster-card monster-'+c.theme+(locked?' locked':'');
+ if(c.theme==='concept'){card.dataset.frame=c.frame;card.style.setProperty('--monster-color',c.color);card.style.setProperty('--monster-accent',c.accent);}
  const badge=document.createElement('span');badge.className='monster-card-mark';badge.textContent=c.mark;
  const type=document.createElement('p');type.className='monster-card-kind';type.textContent=c.kind;
  const stage=document.createElement('div');stage.className='monster-card-stage';const img=document.createElement('img');img.src=c.image;img.alt=c.name;img.loading='lazy';stage.append(img);
@@ -26,4 +27,3 @@ export function setupMonsterCollection({parent,getSeat,request,demo=false}){
  retry.onclick=()=>button.onclick();
  dialog.addEventListener('close',()=>generation++);return {button,dialog};
 }
-

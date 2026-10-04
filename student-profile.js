@@ -1,10 +1,10 @@
-import {MONSTERS} from './data/monsters.js?v=20260928-all1';
-import {demoMonsters} from './monster-cards-ui.js?v=20260928-allies1';
+import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
+import {demoMonsters} from './monster-cards-ui.js?v=20261004-villains1';
 import {classStorageKey} from './class-context.js?v=20260928-all1';
 import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20260928-all1';
 import {STAR_CARDS} from './data/star-cards.js?v=20260928-all1';
 import {STAR_SPRITES} from './data/star-sprites.js?v=20260928-all1';
-import {mountCharacter,clearCharacters} from './character-motion.js?v=20261003-size1';
+import {mountCharacter,clearCharacters} from './character-motion.js?v=20261004-villains1';
 export const PROFILE_CHARACTERS=[...CHARACTERS,...MONSTERS.map(c=>({...c,category:'ally',emoji:'✨'})),...STAR_CARDS.map(c=>({...c,image:STAR_SPRITES[c.id],emoji:'✨',name:c.symbol+'之星使・'+c.name}))];
 const $=id=>document.getElementById(id);
 export function createStudentProfile({demo,auth,getSeat,getSeats,getOwned,getAvatar,onChange,isHome=()=>true}){

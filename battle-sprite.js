@@ -1,7 +1,12 @@
 // Battle art and timing are independent of the home/wardrobe skeleton.
-import {drawBlossom} from './battle-effects.js?v=20260928-allies1';
-import {BATTLE_ART,BATTLE_META} from './data/battle-catalog.js?v=20260928-allies1';
+import {drawBlossom} from './battle-effects.js?v=20261004-villains1';
+import {BATTLE_ART,BATTLE_META} from './data/battle-catalog.js?v=20261004-villains1';
 export {BATTLE_ART};
+const conceptCache=new Map(),instances=new WeakMap();
+export function battleEffectOrigin(canvas){return instances.get(canvas)?.effectOrigin;}
+export function battleDuration(id,action){return BATTLE_META[id]?.concept?({attack:1800,guard:1400,hurt:2000,victory:1700,star:2000,defeated:1800}[action]||0):BATTLE_DURATIONS[action]||0;}
+async function loadConcept(id){if(conceptCache.has(id)){const p=conceptCache.get(id);conceptCache.delete(id);conceptCache.set(id,p);return p;}const p=import('./concept-battle-player.js?v=20261004-villains1').then(async({ConceptBattleSprite})=>new ConceptBattleSprite().load(BATTLE_META[id]));conceptCache.set(id,p);while(conceptCache.size>6)conceptCache.delete(conceptCache.keys().next().value);p.catch(()=>{if(conceptCache.get(id)===p)conceptCache.delete(id);});return p;}
+
 export const BATTLE_DURATIONS={attack:1250,hurt:1700,victory:1600,star:1900};
 const pivots={knight:[[253,431],[645,429],[1137,427],[1584,425],[242,852],[706,854],[1115,862],[1543,863]],rabbit:[[230,453],[679,453],[1142,453],[1587,453],[237,872],[663,872],[1090,872],[1544,872]]};
 const clamp=v=>Math.max(0,Math.min(1,v)),smooth=v=>{v=clamp(v);return v*v*(3-2*v);};
@@ -75,11 +80,11 @@ export function battlePose(kind,action,t,reduced=false){
 }
 
 export class BattleSprite{
- constructor(canvas,{side=null}={}){this.canvas=canvas;this.side=side;this.ctx=canvas.getContext('2d');canvas.width=canvas.height=480;this.id='knight';this.action='idle';this.started=0;this.last=0;this.token=0;this.reduced=matchMedia('(prefers-reduced-motion: reduce)');this.tick=this.tick.bind(this);this.frame=requestAnimationFrame(this.tick);}
- async character(id){const token=++this.token,frames=await loadAtlas(id),star=this.side==='hero'&&BATTLE_META[id]?.enemy?await loadAllyStar(id).catch(()=>null):null;if(this.disposed||token!==this.token)return;this.id=id;this.frames=frames;this.starFrame=star;this.ready=true;this.canvas.dataset.ready=id;this.canvas.dataset.side=this.side||(BATTLE_META[id]?.enemy?'enemy':'hero');this.canvas.dataset.renderer='battle-sprites';}
- play(action){this.action=action;this.started=performance.now();this.canvas.dataset.action=action;}
- tick(now){if(this.disposed)return;if(this.canvas.isConnected)this.wasConnected=true;else if(this.wasConnected){this.dispose();return;}this.frame=requestAnimationFrame(this.tick);if(document.hidden||now-this.last<1000/30||!this.canvas.getClientRects().length)return;this.last=now;const duration=BATTLE_DURATIONS[this.action],t=duration?clamp((now-this.started)/duration):0;if(duration&&t>=1&&this.action!=='star')this.play('idle');this.draw(t,now/1000);}
- draw(t,clock){if(!this.frames)return;const c=this.ctx,p=battlePose(this.id,this.action,t,this.reduced.matches);c.clearRect(0,0,480,480);this.canvas.dataset.face=String(p.face);this.canvas.dataset.pose=String(p.frame);
+ constructor(canvas,{side=null}={}){this.canvas=canvas;instances.set(canvas,this);this.side=side;this.ctx=canvas.getContext('2d');canvas.width=canvas.height=480;this.id='knight';this.action='idle';this.started=0;this.last=0;this.token=0;this.reduced=matchMedia('(prefers-reduced-motion: reduce)');this.tick=this.tick.bind(this);this.frame=requestAnimationFrame(this.tick);}
+ async character(id){if(BATTLE_META[id]?.concept){const token=++this.token,concept=await loadConcept(id);if(this.disposed||token!==this.token)return;this.id=id;this.concept=concept;this.frames=concept.frames;this.ready=true;this.canvas.dataset.ready=id;this.canvas.dataset.side=this.side||'enemy';this.canvas.dataset.renderer='concept-sprites';return;}const token=++this.token,frames=await loadAtlas(id),star=this.side==='hero'&&BATTLE_META[id]?.enemy?await loadAllyStar(id).catch(()=>null):null;if(this.disposed||token!==this.token)return;this.id=id;this.concept=null;this.frames=frames;this.starFrame=star;this.ready=true;this.canvas.dataset.ready=id;this.canvas.dataset.side=this.side||(BATTLE_META[id]?.enemy?'enemy':'hero');this.canvas.dataset.renderer='battle-sprites';}
+ play(action){if(action==='star'&&this.concept&&this.side!=='hero')action='victory';this.action=action;this.started=performance.now();this.canvas.dataset.action=action;}
+ tick(now){if(this.disposed)return;if(this.canvas.isConnected)this.wasConnected=true;else if(this.wasConnected){this.dispose();return;}this.frame=requestAnimationFrame(this.tick);if(document.hidden||now-this.last<1000/30||!this.canvas.getClientRects().length)return;this.last=now;const duration=battleDuration(this.id,this.action),t=duration?clamp((now-this.started)/duration):0;if(duration&&t>=1&&this.action!=='star')this.play('idle');this.draw(t,now/1000);}
+ draw(t,clock){if(!this.frames)return;if(this.concept){this.drawConcept(t,clock);return;}const c=this.ctx,p=battlePose(this.id,this.action,t,this.reduced.matches);c.clearRect(0,0,480,480);this.canvas.dataset.face=String(p.face);this.canvas.dataset.pose=String(p.frame);
   const spell=this.id==='rabbit',active=this.action==='attack',ally=this.side==='hero'&&BATTLE_META[this.id]?.enemy,star=ally&&this.action==='star';
   c.save();if(ally&&!star){c.translate(480,0);c.scale(-1,1);}this.canvas.dataset.facing=ally?'left':BATTLE_META[this.id]?.enemy?'right':'left';
   const drawFrame=(x,alpha=1)=>{const f=star?(this.starFrame||this.frames[6]):this.frames[p.frame],s=f.scale;let anchor=(pivots[this.id]?274:240)+p.x+x;
@@ -92,5 +97,14 @@ export class BattleSprite{
   c.restore();
   if(this.action==='star'){c.save();c.globalAlpha=.28+.12*Math.sin(this.reduced.matches?0:clock*2);const y=spell?295:246,glow=c.createRadialGradient(264,y,2,264,y,46);glow.addColorStop(0,'#fff4bb');glow.addColorStop(1,'#ffe78a00');c.fillStyle=glow;c.fillRect(210,y-54,108,108);c.restore();}
  }
- dispose(){this.disposed=true;this.token++;cancelAnimationFrame(this.frame);}
+ drawConcept(t,clock){
+  const c=this.ctx,sprite=this.concept,hero=this.side==='hero',side=hero?'hero':'enemy',frames=sprite.frames;
+  const left=Math.max(...frames.map(f=>f.pivot[0]*f.scale)),right=Math.max(...frames.map(f=>(f.image.width-f.pivot[0])*f.scale));
+  const scale=Math.min(1,408/Math.max(...frames.map(f=>f.pivot[1]*f.scale)),464/(left+right+60)),anchor=Math.max(8+left*scale,Math.min(472-(right+30)*scale,240)),baseX=hero?960-sprite.enemyX:sprite.enemyX,screenX=hero?480-anchor:anchor;
+  const time=this.reduced.matches?(this.action==='idle'?0:this.action==='star'?.8:.5):t;
+  c.clearRect(0,0,480,480);c.save();c.translate(screenX-baseX*scale,416-470*scale);c.scale(scale,scale);const p=sprite.draw(c,{action:this.action,t:time,clock,side,reduced:this.reduced.matches});c.restore();
+  this.effectOrigin=p.effectOrigin?{x:screenX+(p.effectOrigin.x-baseX)*scale,y:416+(p.effectOrigin.y-470)*scale,scale}:null;
+  this.canvas.dataset.pose=String(p.frame);this.canvas.dataset.face=['hurt','defeated'].includes(this.action)?'1':['victory','star'].includes(this.action)?'2':'3';this.canvas.dataset.facing=hero?'left':'right';this.canvas.dataset.bounds=JSON.stringify({left:screenX+(p.bounds.left-baseX)*scale,right:screenX+(p.bounds.right-baseX)*scale,top:416+(p.bounds.top-470)*scale,bottom:416+(p.bounds.bottom-470)*scale});
+ }
+ dispose(){instances.delete(this.canvas);this.disposed=true;this.token++;cancelAnimationFrame(this.frame);}
 }

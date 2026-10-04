@@ -1,4 +1,4 @@
-import {BattleSprite,BATTLE_DURATIONS} from './battle-sprite.js?v=20261003-size1';
+import {BattleSprite,battleDuration} from './battle-sprite.js?v=20261004-villains1';
 const controls=new WeakMap();
 export function mountMonster(el,id){
  let control=controls.get(el);if(control?.id===id&&!control.rig.disposed)return;
@@ -8,7 +8,7 @@ export function mountMonster(el,id){
  rig.character(id).then(()=>{
   if(controls.get(el)!==control||rig.disposed)return;
   rig.play(control.action);rig.started=control.started;
-  const duration=BATTLE_DURATIONS[control.action];rig.draw(duration?Math.min(1,(performance.now()-control.started)/duration):0,0);
+  const duration=battleDuration(id,control.action);rig.draw(duration?Math.min(1,(performance.now()-control.started)/duration):0,0);
   el.classList.add('monster-battle-ready');el.dataset.rigStatus='ready';
  }).catch(()=>{if(controls.get(el)!==control)return;rig.dispose();el.dataset.rigStatus='fallback';});
 }

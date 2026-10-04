@@ -7,9 +7,9 @@ import {audioSource} from './audio-source.js?v=20260928-all1';
 import {createLittleTeacher} from './little-teacher.js?v=20260928-all1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260928-all1';
 import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round,spellingChoices,spellingParts} from './core.js?v=20260928-all1';
-import {createMultiplayer} from './multiplayer.js?v=20261003-size1';
+import {createMultiplayer} from './multiplayer.js?v=20261004-villains1';
 import {createRewards} from './rewards.js?v=20260928-all1';
-import {createStudentProfile} from './student-profile.js?v=20261003-size1';
+import {createStudentProfile} from './student-profile.js?v=20261004-villains1';
 import {portrait} from './characters.js?v=20260928-all1';
 import {setupChildUI} from './child-ui.js?v=20260928-all1';
 import {setupCozyUI} from './cozy-ui.js?v=20260928-all1';
@@ -17,10 +17,10 @@ import {createStudentAuth} from './student-auth.js?v=20260928-all1';
 import {setupStudentLoginGate} from './student-login-gate.js?v=20260928-all1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
 import {setupExamEntry} from './exam-entry.js?v=20260928-all1';
-import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,celebrateCharacter,motionPortrait} from './character-motion.js?v=20261003-size1';
-import {MONSTERS} from './data/monsters.js?v=20260928-all1';
-import {setupMonsterCollection,startDemoMonster,creditDemoMonster,showMonsterReward} from './monster-cards-ui.js?v=20260928-allies1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261003-size1';
+import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,celebrateCharacter,motionPortrait} from './character-motion.js?v=20261004-villains1';
+import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
+import {setupMonsterCollection,startDemoMonster,creditDemoMonster,showMonsterReward} from './monster-cards-ui.js?v=20261004-villains1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261004-villains1';
 const API='https://zhuyin-api.j822925.workers.dev/api';
 const demo=new URLSearchParams(location.search).get('demo')==='1';
 const names={single:'聲音森林',spelling:'拼音工坊'};
@@ -138,7 +138,7 @@ async function start(id){
   audio.pause();session++;latestIds=[];teamUI.start({seats,mode,questionPool:currentPool,questions:config.questions,choices});return;
  }
  if(monsterStartPending)return;monsterStartPending=true;const startSession=++session,newRounds=seats.map(()=>Object.assign(new Round(questionDeck(currentPool,config.questions)),{encounterId:crypto.randomUUID()}));
- try{for(const [i,r] of newRounds.entries()){const encounter=demo?startDemoMonster(seats[i],r.encounterId):await auth.request({kind:'monster-start',seat:seats[i],encounter:r.encounterId});if(encounter.error||!MONSTERS.some(c=>c.id===encounter.monsterId))throw Error('encounter');Object.assign(r,encounter);}if(session!==startSession)return;rounds=newRounds;active=0;latestIds=[];}catch{$('home-message').textContent='怪物挑戰尚未連線，請按關卡再試一次。';return;}finally{monsterStartPending=false;}
+ try{for(const [i,r] of newRounds.entries()){const encounter=demo?startDemoMonster(seats[i],r.encounterId):await auth.request({kind:'monster-start',monsterCatalog:'20261004-villains1',seat:seats[i],encounter:r.encounterId});if(encounter.error||!MONSTERS.some(c=>c.id===encounter.monsterId))throw Error('encounter');Object.assign(r,encounter);}if(session!==startSession)return;rounds=newRounds;active=0;latestIds=[];}catch{$('home-message').textContent='怪物挑戰尚未連線，請按關卡再試一次。';return;}finally{monsterStartPending=false;}
  screen('game');renderQuestion();
 }
 function setAnswerEnabled(enabled){enabled=enabled&&!tutor.open;document.querySelectorAll('.option,.tile,.slot').forEach(b=>b.disabled=!enabled);$('check-spelling').disabled=!enabled||selected.initial===undefined||selected.final===undefined;tutorButton.disabled=!rounds[active]?.canUseTutor||tutor.open;}

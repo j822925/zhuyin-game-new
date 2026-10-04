@@ -1,10 +1,10 @@
 import {portrait} from './characters.js?v=20260928-all1';
 import {STAR_SPRITES} from './data/star-sprites.js?v=20260928-all1';
-import {battleCharacter as characterRig} from './data/battle-catalog.js?v=20260928-allies1';
-import {BATTLE_DURATIONS as DURATIONS} from './battle-sprite.js?v=20261003-size1';
+import {battleCharacter as characterRig} from './data/battle-catalog.js?v=20261004-villains1';
+import {battleDuration} from './battle-sprite.js?v=20261004-villains1';
 
 const controllers=new WeakMap();
-export const MOTION_MS={idle:0,attack:DURATIONS.attack,victory:1500,defeat:1900,star:2100};
+export const MOTION_MS={idle:0,attack:1250,victory:1500,defeat:1900,star:2100};
 const labels={idle:'準備迎戰',attack:'向小怪物發動攻擊',victory:'答對了！勝利收勢',defeat:'舉起手保護自己，受傷後重新站好',star:'雙手捧起星星'};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // Explicit choreography for every current character; future characters get a
@@ -108,13 +108,13 @@ function prepareArticulated(el){
  let rig=null,timer=0,disposed=false,state='idle',started=performance.now();
  const action=s=>s==='defeat'?'hurt':s;
  function play(next){if(disposed||!Object.hasOwn(MOTION_MS,next))return;clearTimeout(timer);state=next;started=performance.now();el.dataset.motion=next;el.setAttribute('aria-label',el.dataset.name+'，'+labels[next]);rig?.play(action(next));
-  const duration=DURATIONS[action(next)];if(duration&&next!=='star')timer=setTimeout(()=>play('idle'),duration);
+  const duration=battleDuration(family,action(next));if(duration&&next!=='star')timer=setTimeout(()=>play('idle'),duration);
  }
  function dispose(){if(disposed)return;disposed=true;clearTimeout(timer);rig?.dispose();rig=null;el.classList.remove('motion-skeleton-ready','motion-rig-ready','motion-battle-ready');controllers.delete(el);}
  const control={play,reset:()=>play('idle'),dispose};controllers.set(el,control);el.dataset.rigStatus='loading';
- import('./battle-sprite.js?v=20261003-size1').then(async({BattleSprite:CharacterRig})=>{
+ import('./battle-sprite.js?v=20261004-villains1').then(async({BattleSprite:CharacterRig})=>{
   if(disposed)return;rig=new CharacterRig(canvas,{side:'hero'});await rig.character(family,0);if(disposed||!rig.ready)return;
-  rig.play(action(state));rig.started=started;const now=performance.now(),duration=DURATIONS[action(state)],t=duration?Math.min(1,(now-started)/duration):0;rig.draw(rig.reduced.matches?(state==='star'?1:.45):t,now/1000);el.classList.add('motion-skeleton-ready','motion-rig-ready','motion-battle-ready');el.dataset.rigStatus='ready';
+  rig.play(action(state));rig.started=started;const now=performance.now(),duration=battleDuration(family,action(state)),t=duration?Math.min(1,(now-started)/duration):0;rig.draw(rig.reduced.matches?(state==='star'?1:.45):t,now/1000);el.classList.add('motion-skeleton-ready','motion-rig-ready','motion-battle-ready');el.dataset.rigStatus='ready';
  }).catch(()=>{if(disposed)return;rig?.dispose();rig=null;el.dataset.rigStatus='fallback';});
  return control;
 }

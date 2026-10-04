@@ -1,5 +1,5 @@
-import {createReadingBattle} from './reading-battle.js?v=20261003-size1';
-import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20260928-allies1';
+import {createReadingBattle} from './reading-battle.js?v=20261004-villains1';
+import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261004-villains1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';
 import {readingStars,readingAttemptDecision,READING_WORDS} from './reading-core.js?v=20261001-graded1';
@@ -179,7 +179,7 @@ async function start(){
   readingRoundId=crypto.randomUUID();
   const [profile,encounter]=await Promise.all([
    demo?Promise.resolve({avatar:'rabbit'}):auth.request({kind:'profile',seat}).catch(()=>null),
-   demo?Promise.resolve(startDemoMonster(seat,readingRoundId)):auth.request({kind:'monster-start',seat,encounter:readingRoundId})
+   demo?Promise.resolve(startDemoMonster(seat,readingRoundId)):auth.request({kind:'monster-start',monsterCatalog:'20261004-villains1',seat,encounter:readingRoundId})
   ]);
   if(!encounter?.monsterId||encounter.error)throw Error('encounter_unavailable');
   readingBattle.begin(profile,encounter);

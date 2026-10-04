@@ -1,9 +1,9 @@
 const clamp=t=>Math.max(0,Math.min(1,t));
 // Explicit weapon origins prevent magic appearing beside the body or from
 // the embossed back of a mirror. All geometry uses stage coordinates.
-export function conceptAttackEffect(meta,t,side,origin){
+export function conceptAttackEffect(meta,t,side,origin,targetOverride){
  if(!origin)return null;
- const hero=side==='hero',d=hero?-1:1,target={x:hero?260:700,y:310};
+ const hero=side==='hero',d=hero?-1:1,target=targetOverride||{x:hero?260:700,y:310};
  if(meta.id==='mirror-countess'&&t>=.43&&t<.74){
   const q=clamp((t-.43)/.31),reach=Math.min(1,q/.18);
   return{type:'beam',origin,target,end:{x:origin.x+(target.x-origin.x)*reach,y:origin.y+(target.y-origin.y)*reach},alpha:Math.min(1,q/.08,(1-q)/.18),direction:d};

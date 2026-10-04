@@ -4,13 +4,13 @@ import {audioSource} from './audio-source.js?v=20260928-all1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
 import {createStudentAuth} from './student-auth.js?v=20260928-all1';
 import {createStarCollection} from './star-cards-ui.js?v=20260928-all1';
-import {PROFILE_CHARACTERS} from './student-profile.js?v=20261003-size1';
+import {PROFILE_CHARACTERS} from './student-profile.js?v=20261004-villains1';
 import {portrait} from './characters.js?v=20260928-all1';
 import {createExamReview} from './exam-review.js?v=20260928-all1';
-import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,motionPortrait} from './character-motion.js?v=20261003-size1';
-import {MONSTERS} from './data/monsters.js?v=20260928-all1';
-import {showMonsterReward} from './monster-cards-ui.js?v=20260928-allies1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261003-size1';
+import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,motionPortrait} from './character-motion.js?v=20261004-villains1';
+import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
+import {showMonsterReward} from './monster-cards-ui.js?v=20261004-villains1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261004-villains1';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config=null,seat='',examId=new URLSearchParams(location.search).get('id')||'',state=null,exams=[],busy=false,heard=false,selection={},offset=0,expiryTried=false,renderVersion=0;
 const pendingMemory=new Map();
@@ -43,7 +43,7 @@ function render(out){const total=out.total??out.exam.questions??25;examBattle.re
  if(out.exam.mode==='single')buttons('choices',out.question.choices,'answer');else{for(const kind of ['initial','final']){$(kind+'-slot').textContent='';$(kind+'-slot').hidden=false;$(kind+'-choices').hidden=false;buttons(kind+'-choices',out.question.choices[kind],kind);}$('tone').textContent=out.question.toneMark;$('tone').parentElement.dataset.neutral=String(out.question.toneMark==='˙');}
  enable();listen();
 }
-async function resume(){if(!seat||!examId)return;if(!await auth.ensure(seat))return;auth.setPrimary(seat);examMonster=await request({kind:'monster-start',encounter:'exam:'+examId});showExamIdentity();const pending=readPending();if(pending){let out;try{out=await request(pending);}catch(e){if(!['id_conflict','exam_sequence'].includes(e.message))throw e;out=await request({kind:'exam-resume'});if(!out.finished&&out.answered<=pending.index)throw e;}clearPending();render(out);}else render(await request({kind:'exam-start'}));}
+async function resume(){if(!seat||!examId)return;if(!await auth.ensure(seat))return;auth.setPrimary(seat);examMonster=await request({kind:'monster-start',monsterCatalog:'20261004-villains1',encounter:'exam:'+examId});showExamIdentity();const pending=readPending();if(pending){let out;try{out=await request(pending);}catch(e){if(!['id_conflict','exam_sequence'].includes(e.message))throw e;out=await request({kind:'exam-resume'});if(!out.finished&&out.answered<=pending.index)throw e;}clearPending();render(out);}else render(await request({kind:'exam-start'}));}
 $('start').onclick=()=>{seat=$('seat').value;examId=$('exam-select').value;if(!seat||!examId){$('home-message').textContent='請選座號與小考。';return;}history.replaceState(null,'',classUrl('?id='+encodeURIComponent(examId)));run(resume);};
 $('recover').onclick=()=>run(resume);$('listen').onclick=listen;
 $('submit').onclick=()=>{if(!state?.question||state.review)return;run(async()=>{const payload={kind:'exam-answer',seat,examId,reviewEnabled:true,index:state.question.index,answer:state.exam.mode==='single'?selection.answer:selection.initial+selection.final};savePending(payload);const out=await request(payload);clearPending();render(out);if(!out.finished)examBattle.answer(!out.review);});};

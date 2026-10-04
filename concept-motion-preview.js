@@ -1,6 +1,6 @@
-import {ConceptBattleSprite,CONCEPT_ACTIONS,drawConceptEffects} from './concept-battle-player.js?v=20261004-eight2';
-import {CONCEPT_BATTLES} from './data/concept-battle-catalog.js?v=20261004-eight2';
-import {BattleSprite} from './battle-sprite.js?v=20261003-size1';
+import {ConceptBattleSprite,CONCEPT_ACTIONS,drawConceptEffects} from './concept-battle-player.js?v=20261004-villains1';
+import {CONCEPT_BATTLES} from './data/concept-battle-catalog.js?v=20261004-villains1';
+import {BattleSprite} from './battle-sprite.js?v=20261004-villains1';
 const $=id=>document.getElementById(id),canvas=$('battle'),ctx=canvas.getContext('2d'),rivalCanvas=document.createElement('canvas'),rival=new BattleSprite(rivalCanvas),reduced=matchMedia('(prefers-reduced-motion: reduce)'),cache=new Map();
 let sprite,meta,ready=false,action='idle',elapsed=0,playing=false,last=0,frameHandle=0,selectionToken=0;const speed=()=>Number($('speed').value),duration=()=>CONCEPT_ACTIONS[action].duration;
 for(const group of ['人形幻魔','幻獸','小魔物']){const opt=document.createElement('optgroup');opt.label=group;for(const c of CONCEPT_BATTLES.filter(c=>c.group===group))opt.append(new Option(String(c.number).padStart(2,'0')+' · '+c.name,c.id));$('character').append(opt);}

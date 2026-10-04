@@ -1,4 +1,4 @@
-// Review-only battle studies; no live encounter or ownership changes.
+// Approved villain designs shared by the live game and motion preview.
 export const CONCEPT_BATTLES=[
   {
     "id": "eclipse-duke",

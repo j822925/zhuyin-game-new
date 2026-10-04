@@ -1,6 +1,6 @@
 import {bootPreparation} from './preparation.js?v=20260928-all1';
 (async()=>{try{await bootPreparation();}catch{/* Do not block gameplay on storage failure. */}
-await import('./app.js?v=20261003-size1');
+await import('./app.js?v=20261004-villains1');
 await import('./child-navigation.js?v=20260928-all1');
 await import('./reading-entry.js?v=20261003-size1');
 await import('./tone-entry.js?v=20260930-v1');
