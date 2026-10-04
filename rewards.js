@@ -1,6 +1,6 @@
 import {classStorageKey} from './class-context.js?v=20260928-all1';
 import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20260928-all1';
-import {cappedRoundAward,rewardParticipants,taipeiDay} from './learning-rewards.js?v=20260928-all1';
+import {cappedRoundAward,rewardParticipants,taipeiDay,rewardBucket} from './learning-rewards.js?v=20261004-stars4';
 import {startGachaAnimation} from './gacha-animation.js?v=20260928-all1';
 import {createStarPrize} from './star-prize.js?v=20260928-all1';
 import {confirmReward,within} from './reward-request.js?v=20260928-all1';
@@ -77,7 +77,7 @@ export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onCh
   owned:seat=>wallet(seat).owned,
   avatar(seat){return CHARACTERS.find(c=>c.id===read('zhuyin.avatar.'+seat,STARTERS[0])&&wallet(seat).owned.includes(c.id))||CHARACTERS[0];},
   credit(results){if(!demo)return [];const awards=[];for(const result of results){
-    for(const {seat,baseStars} of rewardParticipants(result)){const w=wallet(seat);if(w.credited.includes(result.roundId))continue;const counter=result.mode==='spelling'?'spellingRounds':'practiceRounds',day=taipeiDay();if(w.dailyRewards?.day!==day)w.dailyRewards={day,modes:{}};const usage=w.dailyRewards.modes[result.mode]||{perfectStars:0,perseveranceStars:0};const award=cappedRoundAward(w[counter],baseStars,result.mode,usage,result.kind==='race'||!!result.competition);w.dailyRewards.modes[result.mode]={perfectStars:usage.perfectStars+award.perfectStars,perseveranceStars:usage.perseveranceStars+award.perseveranceStars};w.stars+=award.stars;w[counter]=award.completedRounds;w.credited.push(result.roundId);store(key(seat),w);awards.push({seat,...award});}
+    for(const {seat,baseStars} of rewardParticipants(result)){const w=wallet(seat);if(w.credited.includes(result.roundId))continue;const counter=result.mode==='spelling'?'spellingRounds':'practiceRounds',day=taipeiDay();if(w.dailyRewards?.day!==day)w.dailyRewards={day,modes:{}};const competition=result.kind==='race'||!!result.competition,bucket=rewardBucket(result.mode,competition),old=w.dailyRewards.modes[result.mode]||{};const usage=w.dailyRewards.modes[bucket]||{spent:(old.perfectStars||0)+(old.perseveranceStars||0)};const award=cappedRoundAward(w[counter],baseStars,result.mode,usage,competition);w.dailyRewards.modes[bucket]={spent:award.dailyUsed};w.stars+=award.stars;w[counter]=award.completedRounds;w.credited.push(result.roundId);store(key(seat),w);awards.push({seat,...award});}
    }refresh();return awards;
   }
  };

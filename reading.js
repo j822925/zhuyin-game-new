@@ -3,6 +3,7 @@ import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=202610
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';
 import {readingStars,readingAttemptDecision,READING_WORDS} from './reading-core.js?v=20261001-graded1';
+import {dailyAwardMessage} from './learning-rewards.js?v=20261004-stars4';
 import {createCloudReadingSpeech} from './reading-cloud-speech.js?v=20261001-graded1';
 import {getReadingCloudStatus,readingClosedMessage} from './reading-cloud-status.js?v=20261001-graded1';
 import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic4';
@@ -189,7 +190,7 @@ async function start(){
 }
 function finish(){
  cancel();show('result');readingBattle.result(0);const correct=rows.filter(r=>r.firstCorrect).length,stars=readingStars(correct);
- $('score').textContent=`通過 ${correct} / 5 題`;$('stars').textContent=stars?'⭐'.repeat(stars):'再接再厲';
+ $('score').textContent=`通過 ${correct} / 5 題`;$('stars').textContent=demo?(stars?'⭐'.repeat(stars):'再接再厲'):'星星正在確認…';
  $('review').replaceChildren();for(const row of rows){const word=READING_WORDS.find(w=>w.id===row.wordId),p=document.createElement('p');p.textContent=`${row.firstCorrect?'✓':'再練練'}　${word.word}　${word.zhuyin}`;$('review').append(p);}
  if(demo){readingBattle.result(stars,creditDemoMonster(seat,readingRoundId,correct===5));$('save-status').textContent=`老師試玩：本回合 ${stars} 顆星星，不傳送學生成績。`;$('retry-save').hidden=true;return;}
  currentPayload={kind:'round',mode:'reading',roundId:readingRoundId,monsterBattle:1,seat,total:5,mistakes:5-correct,seconds:Math.round((Date.now()-started)/1000),results:rows};
@@ -201,7 +202,7 @@ async function flushPending(){
  for(const payload of [...pending].filter(p=>p.seat===seat)){
   const out=await auth.request(payload);if(out.saved!==true)throw Error(out.error||'unconfirmed');
   pending=pending.filter(p=>p.roundId!==payload.roundId);storePending();
-  if(payload.roundId===currentPayload?.roundId){$('save-status').textContent=`紀錄已儲存，獲得 ${out.awards[0].stars} 顆星星！`;readingBattle.result(out.awards[0].stars,out.awards[0]);}
+  if(payload.roundId===currentPayload?.roundId){const award=out.awards[0];$('stars').textContent=`⭐ +${award.stars}`;$('save-status').textContent=`紀錄已儲存，獲得 ${award.stars} 顆星星！${dailyAwardMessage(award)}`;readingBattle.result(award.stars,award);}
  }
  if(!currentPayload)$('home-message').textContent='之前暫存的朗讀紀錄已儲存。';
  }catch{const stored=storePending();const message=stored?'紀錄已暫存，星星尚未確認入帳。請重新儲存。':'紀錄尚未儲存，請勿關閉此頁，請重新儲存。';if(currentPayload)$('save-status').textContent=message;else $('home-message').textContent=message;}
