@@ -503,7 +503,8 @@ export const CONCEPT_BATTLES=[
     "attackLabel": "墨頁飛筆",
     "guardLabel": "保護自己 · 抵擋來襲",
     "victoryLabel": "書靈提筆致意",
-    "attackImage": "assets/battle-sprites/concepts-20261003/ink-book-spirit-attack-v1.webp",
+    "attackImage": "assets/battle-sprites/concepts-20261003/ink-book-spirit-attack-v2.webp",
+    "effectAnchors": {"3": [555, 223]},
     "reactionsImage": "assets/battle-sprites/concepts-20261003/ink-book-spirit-reactions-v1.webp"
   },
   {
@@ -522,6 +523,7 @@ export const CONCEPT_BATTLES=[
     "guardLabel": "保護自己 · 抵擋來襲",
     "victoryLabel": "寶箱咧嘴歡笑",
     "attackImage": "assets/battle-sprites/concepts-20261003/coin-mimic-attack-v1.webp",
+    "effectAnchors": {"3": [315, 177]},
     "reactionsImage": "assets/battle-sprites/concepts-20261003/coin-mimic-reactions-v1.webp"
   },
   {
