@@ -2,7 +2,7 @@
 if(new URLSearchParams(location.search).get('demo')==='1'){
  const panel=document.createElement('section');panel.id='teacher-testing-hub';panel.className='teacher-testing-hub';
  panel.innerHTML=`<h2>🧪 教師試玩中心</h2><p>所有試玩集中在這裡。全班問答使用本班帳號，錯題存入教師後台；其他測試仍使用獨立試玩帳號。下方原有遊戲仍可繼續試玩。</p><div class="teacher-test-grid">
- <a href="https://zhuyin-api.j822925.workers.dev/trial/classroom.html?role=teacher&from=admin"><b>🌟 老師主持・全班問答</b><span>老師 Google 登入、選範圍並開房間。孩子從正式首頁登入、直接選活動加入。可比速度、重播、揭曉；最後只公布前五名，錯題存到各班後台。不發星星、不記正式成績。</span></a>
+ <a href="https://zhuyin-api.j822925.workers.dev/trial/classroom.html?role=teacher&from=admin"><b>🌟 老師主持・全班問答</b><span>老師 Google 登入、選範圍並開房間。孩子從正式首頁登入、直接選活動加入。可比速度、重播、揭曉；最後只公布前五名，錯題存到各班後台。完成活動依名次發星星，之後訂正錯題；不計入正式小考成績。</span></a>
  <a href="classroom.html"><b>🎒 全班問答・學生加入</b><span>用平常的座號、密碼登入遊戲，直接選本班活動，不用填房號或再登入一次。先下載本場聲音，再等老師開始。</span></a>
  <a href="https://zhuyin-api.j822925.workers.dev/trial/admin/"><b>👩‍🏫 指定學生重考</b><span>登入測試後台 → 建立小考 → 指定 901 或 902 重考。保留原題，獎勵不重複發放。</span></a>
  <a href="https://zhuyin-api.j822925.workers.dev/trial/"><b>🎮 學生視角・讀取優化</b><span>虛構座號 901／902，測試密碼 2580。玩關卡、參加測試小考；只保存測試紀錄。</span></a>
