@@ -1,4 +1,4 @@
-import {reliableCommands,audioStore} from './classroom-reliable.js?v=20261006-stable1';
+import {reliableCommands,audioStore} from './classroom-reliable.js?v=20261006-stable2';
 import {createCompletion} from './classroom-completion.js?v=20261006-reward2';
 const $=id=>document.getElementById(id),params=new URL(location.href).searchParams,normal=document.documentElement.dataset.student==='authenticated',host=!normal&&params.get('role')==='teacher',base=normal?'https://zhuyin-api.j822925.workers.dev/trial/classroom-api':'/trial/classroom-api';
 let studentSession=null,studentIdentity=null,classId='main',homeUrl='https://j822925.github.io/zhuyin-game-new/';
@@ -11,13 +11,13 @@ if(normal){
  document.querySelector('header a.home').href='/admin/?class='+encodeURIComponent(params.get('class')||'main');document.querySelector('header a.home').textContent='🏡 回教師後台';
  document.querySelector('.notice').textContent='🌟 全班問答試用・孩子正常登入遊戲後，按「加入全班問答」就能加入本班活動。完成活動依名次發星星，不計入正式小考成績。';
 }
-const messages={login_required:'登入已到期，請回首頁重新選座號、輸入密碼。',class_room_mismatch:'這不是本班的活動，請重新讀取活動清單。',admin_required:'請先登入老師 Google 帳號。',teacher_forbidden:'這個 Google 帳號沒有老師權限。',room_missing:'找不到這個活動，請確認老師還開著活動。',seat_taken:'這個座號已有人使用。若不是你，請找老師確認；同一台裝置可恢復原座號。',room_full:'房間已滿，最多 32 位孩子。',already_started:'活動已開始，請等老師開下一場。',scope_small:'範圍不足，至少需要 4 個可出題項目。',invalid_settings:'請檢查名稱、範圍、題數與時間。',not_ready:'還有孩子沒有準備好。',not_heard:'還有孩子沒有聽完題目。',stale_state:'畫面剛有更新，請再按一次。',wrong_phase:'老師已切換階段，請看目前畫面。',invalid_seat:'請輸入正確座號。',capacity:'測試房間已滿，請先關閉不用的房間。',host_room_limit:'每位老師同時最多兩個測試房間，請先結束舊房間。',slow_down:'操作太快了，請稍等再試。',room_closed:'老師已關閉房間。'};
+const messages={classroom_quota_exceeded:'雲端今日的免費連線額度已用完，台灣時間每天早上 8 點重置。暫時無法開始全班問答；一般單人練習仍可使用。',login_required:'登入已到期，請回首頁重新選座號、輸入密碼。',class_room_mismatch:'這不是本班的活動，請重新讀取活動清單。',admin_required:'請先登入老師 Google 帳號。',teacher_forbidden:'這個 Google 帳號沒有老師權限。',room_missing:'找不到這個活動，請確認老師還開著活動。',seat_taken:'這個座號已有人使用。若不是你，請找老師確認；同一台裝置可恢復原座號。',room_full:'房間已滿，最多 32 位孩子。',already_started:'活動已開始，請等老師開下一場。',scope_small:'範圍不足，至少需要 4 個可出題項目。',invalid_settings:'請檢查名稱、範圍、題數與時間。',not_ready:'還有孩子沒有準備好。',not_heard:'還有孩子沒有聽完題目。',stale_state:'畫面剛有更新，請再按一次。',wrong_phase:'老師已切換階段，請看目前畫面。',invalid_seat:'請輸入正確座號。',capacity:'測試房間已滿，請先關閉不用的房間。',host_room_limit:'每位老師同時最多兩個測試房間，請先結束舊房間。',slow_down:'操作太快了，請稍等再試。',room_closed:'老師已關閉房間。'};
 let teacher=null,auth=null,state=null,socket=null,code='',seat='',offset=0,audioKey='',pendingAnswer=null,stopped=false,retry=0,heartbeat=null,lastPong=0,reconnectTimer=null,generation=0,connecting=null,firstStateTimer=null,preparing=false,prepared=0,prepareTotal=0,playGeneration=0,teacherMediaCode='',teacherAudioDone='';
 const audio=new Audio();audio.preload='auto';let armed=false;
 const completion=createCompletion({document,rankTable}),sounds=audioStore();
 const commands=reliableCommands({getState:()=>state,getSocket:()=>socket,onChange:()=>{pendingAnswer=commands.answer()?{key:code+':'+commands.answer().index,value:commands.answer().value}:null;if(state)render();},onError:error,storage:sessionStorage,key:'zhuyin.classroom.pending.'+(host?'teacher':classId+':'+(studentIdentity?.seat||'guest'))});commands.start();
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const terminal=new Set(['login_required','admin_required','teacher_forbidden','forbidden','class_room_mismatch','room_missing','room_closed','seat_taken','not_joined','already_started']);
+const terminal=new Set(['classroom_quota_exceeded','login_required','admin_required','teacher_forbidden','forbidden','class_room_mismatch','room_missing','room_closed','seat_taken','not_joined','already_started']);
 const el=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
 function message(text){$('message').textContent=text||'';}
 function error(e){message(messages[e.message]|| (e.code?.includes('popup')?'登入視窗無法開啟。請用 Safari／Chrome 直接開啟，允許彈出視窗後再試。':'暫時無法完成，請確認網路後再試一次。'));}
