@@ -1,5 +1,6 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {existsSync} from 'node:fs';
-import {MONSTERS} from '../data/monsters.js';import {PACKED_BATTLES} from '../data/packed-battle-frames.js';import {loadPackedBattle} from '../battle-frame-loader.js';
+import test from 'node:test';import assert from 'node:assert/strict';import {existsSync,readFileSync} from 'node:fs';
+import {MONSTERS} from '../data/monsters.js';import {PACKED_BATTLES,PACKED_BATTLE_VERSION} from '../data/packed-battle-frames.js';import {loadPackedBattle} from '../battle-frame-loader.js';
+test('battle pages also refresh the stylesheet importing the enemy presentation',()=>{const read=f=>readFileSync(new URL('../'+f,import.meta.url),'utf8');for(const file of ['index.html','grade2.html','exam.html','online.html','reading.html','motion-preview.html'])assert(read(file).includes('character-motion.css?v='+PACKED_BATTLE_VERSION),file);assert(read('character-motion.css').includes('battle-rpg.css?v='+PACKED_BATTLE_VERSION));});
 test('every encounter has precut poses with the reviewed body scale and complete bounds',()=>{
  assert.equal(Object.keys(PACKED_BATTLES).length,MONSTERS.length);
  for(const monster of MONSTERS){const p=PACKED_BATTLES[monster.id];assert(existsSync(new URL('../'+p.atlas,import.meta.url)));assert.equal(p.frames.length,monster.theme==='concept'?12:8);assert(p.sourceScale>0&&p.sourceScale<=1);for(const f of p.frames){const [x,y,w,h]=f.rect;assert(x>=0&&y>=0&&x+w<=p.width&&y+h<=p.height);assert(f.pivot.every(Number.isFinite)&&f.scale>0&&f.bodyRatio>0);}}

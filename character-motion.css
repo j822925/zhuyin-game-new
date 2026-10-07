@@ -1,4 +1,4 @@
-@import url('./battle-rpg.css?v=20261003-size1');
+@import url('./battle-rpg.css?v=20261007-motion1');
 /* Animation stays inside a fixed stage so feedback never shifts the questions. */
 .character-motion{position:relative;display:block;width:100%;height:100%;isolation:isolate;pointer-events:none;contain:layout style}
 .character-motion .motion-body,.character-motion .motion-art{position:absolute;inset:0;display:block;transform-origin:50% 84%}
