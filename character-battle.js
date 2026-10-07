@@ -1,18 +1,17 @@
 import {monsterRequirements,monsterLevelLabel} from './data/monster-collection-rules.js?v=20261004-levels1';
 import {BATTLE_META} from './data/battle-catalog.js?v=20261004-villains1';
-import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
-import {reactCharacter} from './character-motion.js?v=20261004-villains1';
-import {startBattleEffects} from './battle-effects.js?v=20261004-villains1';
-import {mountMonster,playMonster} from './monster-motion.js?v=20261004-villains1';
+
+import {reactCharacter} from './character-motion.js?v=20261007-motion1';
+import {startBattleEffects} from './battle-effects.js?v=20261007-motion1';
+import {mountMonster,playMonster} from './monster-motion.js?v=20261007-motion1';
 
 export function createOpponent(){
  const el=document.createElement('aside');el.className='practice-opponent';el.setAttribute('aria-label','陪你挑戰的小怪物');
  el.innerHTML='<div class="opponent-art"><img class="monster-sprite" alt=""><canvas class="monster-canvas" aria-hidden="true"></canvas><span class="opponent-hit" aria-hidden="true">✦</span></div><span class="opponent-caption"></span><progress class="opponent-hp" max="10" value="10" aria-label="怪物剩餘挑戰能量"></progress><span class="opponent-remaining"></span>';
- updateOpponent(el,MONSTERS[0],10,0);
  return el;
 }
 
-export function updateOpponent(el,c,total,completed,{wins=0,perfect=true,levels=[],requiredLevels=monsterRequirements(c),collected=false}={}){const img=el.querySelector('.monster-sprite');if(el.dataset.monster!==c.id){el.dataset.monster=c.id;img.src=c.image;img.alt=c.name;}mountMonster(el,c.id);const left=Math.max(0,total-completed);el.querySelector('.opponent-caption').textContent=left?c.name:'成功擊敗 '+c.name;const hp=el.querySelector('progress');hp.max=Math.max(1,total);hp.value=left;hp.setAttribute('aria-valuetext','還有 '+left+' 題');el.querySelector('.opponent-remaining').textContent=(collected?'已收服':requiredLevels.length?'關卡全對 '+requiredLevels.filter(id=>levels.includes(id)).length+'／'+requiredLevels.length+'・待挑戰 '+requiredLevels.filter(id=>!levels.includes(id)).map(monsterLevelLabel).join('、'):'全對收服 '+wins+'／3 次')+(left?'・剩 '+left+' 題':perfect?'・全對！等待保存':'・下次挑戰全對');el.dataset.roundComplete=String(left===0);if(left)el.dataset.defeated='false';}
+export function updateOpponent(el,c,total,completed,{wins=0,perfect=true,levels=[],requiredLevels=monsterRequirements(c),collected=false}={}){const img=el.querySelector('.monster-sprite');if(el.dataset.monster!==c.id){el.dispatchEvent(new Event('monsterchange'));el.dataset.monster=c.id;el.dataset.action='idle';el.dataset.defeated='false';const fresh=img.cloneNode(false);fresh.src=c.image;fresh.alt=c.name;img.replaceWith(fresh);}mountMonster(el,c.id);const left=Math.max(0,total-completed);el.querySelector('.opponent-caption').textContent=left?c.name:'成功擊敗 '+c.name;const hp=el.querySelector('progress');hp.max=Math.max(1,total);hp.value=left;hp.setAttribute('aria-valuetext','還有 '+left+' 題');el.querySelector('.opponent-remaining').textContent=(collected?'已收服':requiredLevels.length?'關卡全對 '+requiredLevels.filter(id=>levels.includes(id)).length+'／'+requiredLevels.length+'・待挑戰 '+requiredLevels.filter(id=>!levels.includes(id)).map(monsterLevelLabel).join('、'):'全對收服 '+wins+'／3 次')+(left?'・剩 '+left+' 題':perfect?'・全對！等待保存':'・下次挑戰全對');el.dataset.roundComplete=String(left===0);if(left)el.dataset.defeated='false';}
 
 // One controller per visible question arena. New answers replace old effects;
 // moving on cancels everything so late effects cannot hit the next player.
@@ -23,7 +22,7 @@ export function createBattle(opponent,getHero){
  function answer(correct){
   reset();const gen=generation,hero=getHero(),actor=hero?.querySelector('.character-motion');if(!actor)return;lastHero=hero;
   const attackingId=correct?actor.dataset.rig:opponent.dataset.monster,timing=BATTLE_META[attackingId]?.concept?{windup:774,flight:612,impact:1386,celebrate:1800,settle:2400}:BATTLE_TIMING;
-  const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches,valid=()=>gen===generation&&actor.isConnected;
+  const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches,monsterId=opponent.dataset.monster,valid=()=>gen===generation&&actor.isConnected&&opponent.dataset.monster===monsterId;
   const later=(fn,delay)=>timers.push(setTimeout(()=>{if(valid())fn();},delay));
   opponent.dataset.action=correct?'bracing':'attack';if(correct){reactCharacter(hero,'attack');if(BATTLE_META[opponent.dataset.monster]?.concept)playMonster(opponent,'guard');}else playMonster(opponent,'attack');
   const impact=()=>{if(!valid())return;opponent.dataset.action=correct?'hit':'idle';if(correct){playMonster(opponent,'hurt');later(()=>{if(opponent.dataset.roundComplete==='true'){opponent.dataset.defeated='true';playMonster(opponent,'defeated');}},reduced?0:320);}else reactCharacter(hero,'defeat');};
@@ -33,5 +32,5 @@ export function createBattle(opponent,getHero){
   effects=startBattleEffects({actor,opponent,correct,timing});
   later(impact,timing.impact);
  }
- return {answer,reset};
+ opponent.addEventListener('monsterchange',reset);return {answer,reset};
 }

@@ -1,6 +1,6 @@
-import {PROFILE_CHARACTERS} from './student-profile.js?v=20261004-levels1';
-import {mountCharacter,clearCharacters,awardCharacter,celebrateCharacter} from './character-motion.js?v=20261004-villains1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261004-levels1';
+import {PROFILE_CHARACTERS} from './student-profile.js?v=20261007-motion1';
+import {mountCharacter,clearCharacters,awardCharacter,celebrateCharacter} from './character-motion.js?v=20261007-motion1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261007-motion1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
 import {showMonsterReward} from './monster-cards-ui.js?v=20261004-levels1';
 

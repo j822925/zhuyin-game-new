@@ -35,3 +35,10 @@
 .preview-stage.rpg-stage #motion-label{grid-column:1/-1;margin:0;color:#bfcee4;min-height:2em;font-size:14px}
 @media(max-width:799px){.preview-stage.rpg-stage{padding:12px 8px;gap:6px}.preview-stage.rpg-stage .opponent-art{height:215px}.preview-stage.rpg-stage .hero-wrap{height:285px}.preview-stage.rpg-stage .hero-art{height:235px}.preview-stage.rpg-stage .controls{grid-template-columns:1fr 1fr;padding-top:14px}.preview-stage.rpg-stage .hero-wrap strong{font-size:15px}.preview-stage.rpg-stage .opponent-caption{font-size:16px}.preview-stage.rpg-stage .opponent-remaining{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.battle-layout .opponent-art .monster-sprite{animation:none!important;transform:none!important}.rpg-battle-fx{display:none}}
+
+/* A portrait and a combat pose have different sizes. Keep one combat scale,
+   and never display a previous portrait while the next enemy is loading. */
+.practice-opponent .monster-sprite{visibility:hidden;animation:none!important}
+.monster-motion-status{position:absolute;left:8%;right:8%;top:42%;max-width:84%;margin:auto;padding:12px 8px;border:1px solid #b9a6ce;border-radius:14px;background:#f4ecff;color:#493d5e;font:inherit;font-size:14px;line-height:1.5;cursor:pointer}
+.monster-motion-status:disabled{cursor:default;opacity:1}
+.monster-motion-status[hidden]{display:none}

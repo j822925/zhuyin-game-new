@@ -1,5 +1,5 @@
 import {WolfBattleSprite,WOLF_ACTIONS,wolfPose} from './wolf-battle-player.js?v=20261003-motion1';
-import {BattleSprite} from './battle-sprite.js?v=20261004-villains1';
+import {BattleSprite} from './battle-sprite.js?v=20261007-motion1';
 const $=id=>document.getElementById(id),canvas=$('battle'),ctx=canvas.getContext('2d'),wolf=new WolfBattleSprite(),rivalCanvas=document.createElement('canvas'),rival=new BattleSprite(rivalCanvas),reduced=matchMedia('(prefers-reduced-motion: reduce)');
 let ready=false,action='idle',elapsed=0,playing=false,last=0,frameHandle=0;const speed=()=>Number($('speed').value),duration=()=>WOLF_ACTIONS[action].duration;
 function play(next){action=next;elapsed=0;playing=next!=='idle'&&!reduced.matches;sync();render(performance.now()/1000);}

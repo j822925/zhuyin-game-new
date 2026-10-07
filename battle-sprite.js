@@ -1,11 +1,12 @@
 // Battle art and timing are independent of the home/wardrobe skeleton.
-import {drawBlossom} from './battle-effects.js?v=20261004-villains1';
+import {drawBlossom} from './battle-effects.js?v=20261007-motion1';
 import {BATTLE_ART,BATTLE_META} from './data/battle-catalog.js?v=20261004-villains1';
+import {loadPackedBattle} from './battle-frame-loader.js?v=20261007-motion1';
 export {BATTLE_ART};
 const conceptCache=new Map(),instances=new WeakMap();
 export function battleEffectOrigin(canvas){return instances.get(canvas)?.effectOrigin;}
 export function battleDuration(id,action){return BATTLE_META[id]?.concept?({attack:1800,guard:1400,hurt:2000,victory:1700,star:2000,defeated:1800}[action]||0):BATTLE_DURATIONS[action]||0;}
-async function loadConcept(id){if(conceptCache.has(id)){const p=conceptCache.get(id);conceptCache.delete(id);conceptCache.set(id,p);return p;}const p=import('./concept-battle-player.js?v=20261004-villains1').then(async({ConceptBattleSprite})=>new ConceptBattleSprite().load(BATTLE_META[id]));conceptCache.set(id,p);while(conceptCache.size>6)conceptCache.delete(conceptCache.keys().next().value);p.catch(()=>{if(conceptCache.get(id)===p)conceptCache.delete(id);});return p;}
+async function loadConcept(id){if(conceptCache.has(id)){const p=conceptCache.get(id);conceptCache.delete(id);conceptCache.set(id,p);return p;}const p=import('./concept-battle-player.js?v=20261007-motion1').then(async({ConceptBattleSprite})=>new ConceptBattleSprite().load(BATTLE_META[id]));conceptCache.set(id,p);while(conceptCache.size>6)conceptCache.delete(conceptCache.keys().next().value);p.catch(()=>{if(conceptCache.get(id)===p)conceptCache.delete(id);});return p;}
 
 export const BATTLE_DURATIONS={attack:1250,hurt:1700,victory:1600,star:1900};
 const pivots={knight:[[253,431],[645,429],[1137,427],[1584,425],[242,852],[706,854],[1115,862],[1543,863]],rabbit:[[230,453],[679,453],[1142,453],[1587,453],[237,872],[663,872],[1090,872],[1544,872]]};
@@ -22,7 +23,7 @@ function loadAllyStar(id){
 async function loadAtlas(id){
  if(caches.has(id)){const cached=caches.get(id);caches.delete(id);caches.set(id,cached);return cached;}
  if(!BATTLE_ART[id])throw Error('Unknown battle character');
- const pending=(async()=>{const image=new Image();image.src=BATTLE_ART[id];await image.decode();
+ const pending=(async()=>{const packed=await loadPackedBattle(id);if(packed)return packed.frames;const image=new Image();image.src=BATTLE_ART[id];await image.decode();
  const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;
  const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(image,0,0);
  const {width:w,height:h}=canvas,source=ctx.getImageData(0,0,w,h),rgba=source.data,labels=new Int32Array(w*h),queue=new Int32Array(w*h),parts=[];let label=0;
@@ -80,8 +81,8 @@ export function battlePose(kind,action,t,reduced=false){
 }
 
 export class BattleSprite{
- constructor(canvas,{side=null}={}){this.canvas=canvas;instances.set(canvas,this);this.side=side;this.ctx=canvas.getContext('2d');canvas.width=canvas.height=480;this.id='knight';this.action='idle';this.started=0;this.last=0;this.token=0;this.reduced=matchMedia('(prefers-reduced-motion: reduce)');this.tick=this.tick.bind(this);this.frame=requestAnimationFrame(this.tick);}
- async character(id){if(BATTLE_META[id]?.concept){const token=++this.token,concept=await loadConcept(id);if(this.disposed||token!==this.token)return;this.id=id;this.concept=concept;this.frames=concept.frames;this.ready=true;this.canvas.dataset.ready=id;this.canvas.dataset.side=this.side||'enemy';this.canvas.dataset.renderer='concept-sprites';return;}const token=++this.token,frames=await loadAtlas(id),star=this.side==='hero'&&BATTLE_META[id]?.enemy?await loadAllyStar(id).catch(()=>null):null;if(this.disposed||token!==this.token)return;this.id=id;this.concept=null;this.frames=frames;this.starFrame=star;this.ready=true;this.canvas.dataset.ready=id;this.canvas.dataset.side=this.side||(BATTLE_META[id]?.enemy?'enemy':'hero');this.canvas.dataset.renderer='battle-sprites';}
+ constructor(canvas,{side=null}={}){instances.get(canvas)?.dispose();this.canvas=canvas;instances.set(canvas,this);this.side=side;this.ctx=canvas.getContext('2d');canvas.width=canvas.height=480;this.id='knight';this.action='idle';this.started=0;this.last=0;this.token=0;this.reduced=matchMedia('(prefers-reduced-motion: reduce)');this.tick=this.tick.bind(this);this.frame=requestAnimationFrame(this.tick);}
+ async character(id){if(this.disposed)return;this.ready=false;this.frames=null;this.concept=null;this.starFrame=null;this.effectOrigin=null;this.ctx.clearRect(0,0,480,480);for(const key of ['ready','side','renderer','pose','face','bounds','facing'])delete this.canvas.dataset[key];if(BATTLE_META[id]?.concept){const token=++this.token,concept=await loadConcept(id);if(this.disposed||token!==this.token)return;this.id=id;this.concept=concept;this.frames=concept.frames;this.ready=true;this.canvas.dataset.ready=id;this.canvas.dataset.side=this.side||'enemy';this.canvas.dataset.renderer='concept-sprites';return;}const token=++this.token,frames=await loadAtlas(id),star=this.side==='hero'&&BATTLE_META[id]?.enemy?await loadAllyStar(id).catch(()=>null):null;if(this.disposed||token!==this.token)return;this.id=id;this.concept=null;this.frames=frames;this.starFrame=star;this.ready=true;this.canvas.dataset.ready=id;this.canvas.dataset.side=this.side||(BATTLE_META[id]?.enemy?'enemy':'hero');this.canvas.dataset.renderer='battle-sprites';}
  play(action){if(action==='star'&&this.concept&&this.side!=='hero')action='victory';this.action=action;this.started=performance.now();this.canvas.dataset.action=action;}
  tick(now){if(this.disposed)return;if(this.canvas.isConnected)this.wasConnected=true;else if(this.wasConnected){this.dispose();return;}this.frame=requestAnimationFrame(this.tick);if(document.hidden||now-this.last<1000/30||!this.canvas.getClientRects().length)return;this.last=now;const duration=battleDuration(this.id,this.action),t=duration?clamp((now-this.started)/duration):0;if(duration&&t>=1&&this.action!=='star')this.play('idle');this.draw(t,now/1000);}
  draw(t,clock){if(!this.frames)return;if(this.concept){this.drawConcept(t,clock);return;}const c=this.ctx,p=battlePose(this.id,this.action,t,this.reduced.matches);c.clearRect(0,0,480,480);this.canvas.dataset.face=String(p.face);this.canvas.dataset.pose=String(p.frame);
@@ -106,5 +107,5 @@ export class BattleSprite{
   this.effectOrigin=p.effectOrigin?{x:screenX+(p.effectOrigin.x-baseX)*scale,y:416+(p.effectOrigin.y-470)*scale,scale}:null;
   this.canvas.dataset.pose=String(p.frame);this.canvas.dataset.face=['hurt','defeated'].includes(this.action)?'1':['victory','star'].includes(this.action)?'2':'3';this.canvas.dataset.facing=hero?'left':'right';this.canvas.dataset.bounds=JSON.stringify({left:screenX+(p.bounds.left-baseX)*scale,right:screenX+(p.bounds.right-baseX)*scale,top:416+(p.bounds.top-470)*scale,bottom:416+(p.bounds.bottom-470)*scale});
  }
- dispose(){instances.delete(this.canvas);this.disposed=true;this.token++;cancelAnimationFrame(this.frame);}
+ dispose(){if(this.disposed)return;if(instances.get(this.canvas)===this)instances.delete(this.canvas);this.disposed=true;this.token++;cancelAnimationFrame(this.frame);}
 }

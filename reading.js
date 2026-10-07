@@ -1,4 +1,4 @@
-import {createReadingBattle} from './reading-battle.js?v=20261004-levels1';
+import {createReadingBattle} from './reading-battle.js?v=20261007-motion1';
 import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261004-levels1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';

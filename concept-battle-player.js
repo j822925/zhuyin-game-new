@@ -1,10 +1,11 @@
 import {readSheet,WOLF_ACTIONS,wolfPose} from './wolf-battle-player.js?v=20261003-all-motion1';
 import {CONCEPT_BODY_RATIOS} from './data/concept-battle-scale.js?v=20261004-villains1';
 import {conceptAttackEffect,drawConceptAttackEffect} from './concept-projectiles.js?v=20261004-villains1';
+import {loadPackedBattle} from './battle-frame-loader.js?v=20261007-motion1';
 export {WOLF_ACTIONS as CONCEPT_ACTIONS};
 const clamp=t=>Math.max(0,Math.min(1,t));
 export class ConceptBattleSprite{
- async load(meta){const [a,r]=await Promise.all([readSheet(meta.attackImage),readSheet(meta.reactionsImage)]);this.meta=meta;const target=meta.proportion==='tall'?390:meta.group==='人形幻魔'?330:meta.group==='幻獸'?285:300;
+ async load(meta){const packed=await loadPackedBattle(meta.id);if(packed){this.meta={...meta,effectAnchors:meta.effectAnchors&&Object.fromEntries(Object.entries(meta.effectAnchors).map(([key,p])=>[key,p.map(v=>v*packed.sourceScale)]))};this.frames=packed.frames;this.enemyX=packed.enemyX;return this;}const [a,r]=await Promise.all([readSheet(meta.attackImage),readSheet(meta.reactionsImage)]);this.meta=meta;const target=meta.proportion==='tall'?390:meta.group==='人形幻魔'?330:meta.group==='幻獸'?285:300;
   this.frames=[...a,...r];const ratios=CONCEPT_BODY_RATIOS[meta.id];
   if(!ratios||ratios.length!==this.frames.length||ratios.some(v=>!Number.isFinite(v)||v<=0))throw Error('角色比例資料不完整');
   // One anatomical world size across both sheets. A bowed head, raised weapon
