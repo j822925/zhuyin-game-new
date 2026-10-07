@@ -21,14 +21,14 @@ export function createCompletion({document,storage=globalThis.sessionStorage,ran
    card.append(el('div',s.rewarding?'⭐'.repeat(stars||1):'🎉'),el('h2',s.rewarding?stars?'獲得 '+stars+' 顆星星！':'本場沒有星星入帳':'挑戰完成！'),el('p',pending?'星星正在存入帳號；網路慢也不用擔心，系統會自動補發。':s.rewarding&&stars?'已經存入帳號，不用再領一次。':'一起把錯題學會吧！'));
    $('feedback').append(card);
    const b=button(review.length?'📖 開始錯題重做':'🌈 看完成畫面',()=>{progress.stage=review.length?'review':'done';persist();rerender();});$('controls').append(b);
-   $('room-note').textContent='先看看你的獎勵，再一起把錯題學會。訂正不會改變比賽分數，也不會重複發星星。';return true;
+   $('room-note').textContent=s.transport==='peer'?'本場是 P2P 試玩，不發星星、不寫正式紀錄；可以在這裡把錯題重做。':'先看看你的獎勵，再一起把錯題學會。訂正不會改變比賽分數，也不會重複發星星。';return true;
   }
   if(progress.stage==='review'&&progress.index>=review.length){progress.stage='done';persist();}
   if(progress.stage==='done'){
    pause();$('phase-title').textContent='🌈 全部訂正完成，真棒！';
    $('feedback').textContent=review.length?'每一題都選對了！':'這次沒有錯題，真棒！';
    $('ranking').append(el('h2','🏆 前五名・掌聲鼓勵！'),rankTable(s.ranking));
-   $('room-note').textContent='原本的作答與錯題紀錄仍保留在教師後台。星星每場只發一次。';return true;
+   $('room-note').textContent=s.transport==='peer'?'P2P 試玩訂正完成！老師可下載本場 CSV，這次沒有更動正式成績或星星。':'原本的作答與錯題紀錄仍保留在教師後台。星星每場只發一次。';return true;
   }
   const q=review[progress.index],qkey=key+':'+progress.index;
   const play=async()=>{audio.src=q.audio;$('audio-status').textContent='🔊 正在播放…';audio.onended=()=>{$('audio-status').textContent='聽完了，可以再聽一次。';};audio.onerror=()=>{$('audio-status').textContent='聲音還沒讀取好，請再按「聽題目」。';};try{await audio.play();}catch{$('audio-status').textContent='請點「聽題目」播放聲音。';}};
