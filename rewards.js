@@ -1,8 +1,8 @@
 import {classStorageKey} from './class-context.js?v=20260928-all1';
-import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20260928-all1';
-import {cappedRoundAward,rewardParticipants,taipeiDay,rewardBucket} from './learning-rewards.js?v=20261004-stars4';
+import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20261007-ipad1';
+import {cappedRoundAward,rewardParticipants,taipeiDay,rewardBucket} from './learning-rewards.js?v=20261007-ipad1';
 import {startGachaAnimation} from './gacha-animation.js?v=20260928-all1';
-import {createStarPrize} from './star-prize.js?v=20260928-all1';
+import {createStarPrize} from './star-prize.js?v=20261007-ipad1';
 import {confirmReward,within} from './reward-request.js?v=20260928-all1';
 export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onChange}){
  const $=id=>document.getElementById(id),cache=new Map(),refreshVersions=new Map();let category='animal',busy=false,activeSeat='',previewPersistent=true,revealed=false,prize=null;

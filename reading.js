@@ -1,13 +1,13 @@
-import {createReadingBattle} from './reading-battle.js?v=20261007-motion1';
-import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261004-levels1';
+import {createReadingBattle} from './reading-battle.js?v=20261007-ipad1';
+import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261007-ipad1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
 import './asset-cache.js?v=20260928-all1';
 import {readingStars,readingAttemptDecision,READING_WORDS} from './reading-core.js?v=20261001-graded1';
-import {dailyAwardMessage} from './learning-rewards.js?v=20261004-stars4';
+import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
 import {createCloudReadingSpeech} from './reading-cloud-speech.js?v=20261001-graded1';
 import {getReadingCloudStatus,readingClosedMessage} from './reading-cloud-status.js?v=20261001-graded1';
 import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic4';
-import {showNativeFallback} from './reading-fallback.js?v=20261001-graded1';
+import {showNativeFallback} from './reading-fallback.js?v=20261007-ipad1';
 import {createMicCheck,clearMicPlayback} from './reading-mic-check.js?v=20260928-mic3';
 import {createMicPreference} from './reading-mic-preference.js?v=20260928-all1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
@@ -33,7 +33,7 @@ function show(id){document.body.classList.toggle('reading-battle-active',id==='p
 for(const link of document.querySelectorAll('#home-link,a.home'))link.href=classUrl(demo?'./?demo=1':'./');
 const appleMobile=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const standalone=appleMobile&&(navigator.standalone===true||globalThis.matchMedia?.('(display-mode: standalone)').matches);
-const browserReadingUrl=classUrl('reading.html?v=20261003-size1');
+const browserReadingUrl=classUrl('reading.html?v=20261007-ipad1');
 for(const link of document.querySelectorAll('[data-reading-browser]'))link.href=browserReadingUrl;
 $('standalone-help').hidden=!standalone;
 const errors={

@@ -1,9 +1,10 @@
+import {optimizedImage} from './data/portrait-thumbnails.js?v=20261007-ipad1';
 import {monsterRequirements,monsterLevelLabel} from './data/monster-collection-rules.js?v=20261004-levels1';
 import {BATTLE_META} from './data/battle-catalog.js?v=20261004-villains1';
 
-import {reactCharacter} from './character-motion.js?v=20261007-motion1';
-import {startBattleEffects} from './battle-effects.js?v=20261007-motion1';
-import {mountMonster,playMonster} from './monster-motion.js?v=20261007-motion1';
+import {reactCharacter} from './character-motion.js?v=20261007-ipad1';
+import {startBattleEffects} from './battle-effects.js?v=20261007-ipad1';
+import {mountMonster,playMonster} from './monster-motion.js?v=20261007-ipad1';
 
 export function createOpponent(){
  const el=document.createElement('aside');el.className='practice-opponent';el.setAttribute('aria-label','陪你挑戰的小怪物');
@@ -11,7 +12,7 @@ export function createOpponent(){
  return el;
 }
 
-export function updateOpponent(el,c,total,completed,{wins=0,perfect=true,levels=[],requiredLevels=monsterRequirements(c),collected=false}={}){const img=el.querySelector('.monster-sprite');if(el.dataset.monster!==c.id){el.dispatchEvent(new Event('monsterchange'));el.dataset.monster=c.id;el.dataset.action='idle';el.dataset.defeated='false';const fresh=img.cloneNode(false);fresh.src=c.image;fresh.alt=c.name;img.replaceWith(fresh);}mountMonster(el,c.id);const left=Math.max(0,total-completed);el.querySelector('.opponent-caption').textContent=left?c.name:'成功擊敗 '+c.name;const hp=el.querySelector('progress');hp.max=Math.max(1,total);hp.value=left;hp.setAttribute('aria-valuetext','還有 '+left+' 題');el.querySelector('.opponent-remaining').textContent=(collected?'已收服':requiredLevels.length?'關卡全對 '+requiredLevels.filter(id=>levels.includes(id)).length+'／'+requiredLevels.length+'・待挑戰 '+requiredLevels.filter(id=>!levels.includes(id)).map(monsterLevelLabel).join('、'):'全對收服 '+wins+'／3 次')+(left?'・剩 '+left+' 題':perfect?'・全對！等待保存':'・下次挑戰全對');el.dataset.roundComplete=String(left===0);if(left)el.dataset.defeated='false';}
+export function updateOpponent(el,c,total,completed,{wins=0,perfect=true,levels=[],requiredLevels=monsterRequirements(c),collected=false}={}){const img=el.querySelector('.monster-sprite');if(el.dataset.monster!==c.id){el.dispatchEvent(new Event('monsterchange'));el.dataset.monster=c.id;el.dataset.action='idle';el.dataset.defeated='false';const fresh=img.cloneNode(false);fresh.src=optimizedImage(c.image);fresh.decoding='async';fresh.alt=c.name;img.replaceWith(fresh);}mountMonster(el,c.id);const left=Math.max(0,total-completed);el.querySelector('.opponent-caption').textContent=left?c.name:'成功擊敗 '+c.name;const hp=el.querySelector('progress');hp.max=Math.max(1,total);hp.value=left;hp.setAttribute('aria-valuetext','還有 '+left+' 題');el.querySelector('.opponent-remaining').textContent=(collected?'已收服':requiredLevels.length?'關卡全對 '+requiredLevels.filter(id=>levels.includes(id)).length+'／'+requiredLevels.length+'・待挑戰 '+requiredLevels.filter(id=>!levels.includes(id)).map(monsterLevelLabel).join('、'):'全對收服 '+wins+'／3 次')+(left?'・剩 '+left+' 題':perfect?'・全對！等待保存':'・下次挑戰全對');el.dataset.roundComplete=String(left===0);if(left)el.dataset.defeated='false';}
 
 // One controller per visible question arena. New answers replace old effects;
 // moving on cancels everything so late effects cannot hit the next player.

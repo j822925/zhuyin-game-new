@@ -1,4 +1,4 @@
-import {BattleSprite} from './battle-sprite.js?v=20261007-motion1';
+import {BattleSprite} from './battle-sprite.js?v=20261007-ipad1';
 const controls=new WeakMap();
 export function mountMonster(el,id){
  const previous=controls.get(el);if(previous?.id===id&&(el.dataset.rigStatus==='retry'||!previous.rig?.disposed))return;

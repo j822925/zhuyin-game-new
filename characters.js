@@ -1,4 +1,4 @@
-import {PORTRAIT_THUMBNAILS,optimizedImage} from './data/portrait-thumbnails.js?v=20260928-all1';
+import {PORTRAIT_THUMBNAILS,optimizedImage} from './data/portrait-thumbnails.js?v=20261007-ipad1';
 import {CHARACTER_CATALOG} from './data/character-catalog.js?v=20260928-all1';
 export const CHARACTERS=CHARACTER_CATALOG;
 export const STARTERS=CHARACTERS.filter(c=>c.starter).map(c=>c.id);
@@ -17,7 +17,7 @@ export function characterSvg(c){
  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 170"><ellipse cx="80" cy="155" rx="51" ry="9" fill="${p}" opacity=".17"/>${art}</svg>`;
 }
 const escapeAttr=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export function portrait(c,className='character-portrait',loading='eager'){return `<img loading="${loading==='lazy'?'lazy':'eager'}" decoding="async" class="${escapeAttr(className)}" src="${escapeAttr((c.image?(className.includes('portrait-small')?(PORTRAIT_THUMBNAILS[c.image]||optimizedImage(c.image)):optimizedImage(c.image))+'?v=cozy-final':'')||'data:image/svg+xml,'+encodeURIComponent(characterSvg(c)))}" alt="${escapeAttr(c.name)}" draggable="false">`;}
+export function portrait(c,className='character-portrait',loading='eager'){return `<img loading="${loading==='lazy'?'lazy':'eager'}" decoding="async" class="${escapeAttr(className)}" src="${escapeAttr((c.image?(className.includes('portrait-small')?optimizedImage(PORTRAIT_THUMBNAILS[c.image]||c.image):optimizedImage(c.image))+'?v=cozy-final':'')||'data:image/svg+xml,'+encodeURIComponent(characterSvg(c)))}" alt="${escapeAttr(c.name)}" draggable="false">`;}
 export function drawCharacter(wallet,category,rng=Math.random){
  const available=CHARACTERS.filter(c=>c.category===category&&c.enabled!==false);
  if(!available.length)return {error:'complete'};

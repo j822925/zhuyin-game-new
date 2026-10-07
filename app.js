@@ -1,27 +1,27 @@
-import {addPreparationButton} from './preparation.js?v=20260928-all1';
-import {tutorClips} from './little-teacher.js?v=20260928-all1';
+import {addPreparationButton} from './preparation.js?v=20261007-ipad1';
+import {tutorClips} from './little-teacher.js?v=20261007-ipad1';
 import {warmAudio} from './asset-cache.js?v=20260928-all1';
-import {playTutorOnce} from './exam-review.js?v=20260928-all1';
+import {playTutorOnce} from './exam-review.js?v=20261007-ipad1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
 import {audioSource} from './audio-source.js?v=20260928-all1';
-import {createLittleTeacher} from './little-teacher.js?v=20260928-all1';
+import {createLittleTeacher} from './little-teacher.js?v=20261007-ipad1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260928-all1';
 import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round,spellingChoices,spellingParts} from './core.js?v=20260928-all1';
-import {createMultiplayer} from './multiplayer.js?v=20261007-motion1';
-import {createRewards} from './rewards.js?v=20261004-stars4';
-import {dailyAwardMessage} from './learning-rewards.js?v=20261004-stars4';
-import {createStudentProfile} from './student-profile.js?v=20261007-motion1';
-import {portrait} from './characters.js?v=20260928-all1';
+import {createMultiplayer} from './multiplayer.js?v=20261007-ipad1';
+import {createRewards} from './rewards.js?v=20261007-ipad1';
+import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
+import {createStudentProfile} from './student-profile.js?v=20261007-ipad1';
+import {portrait} from './characters.js?v=20261007-ipad1';
 import {setupChildUI} from './child-ui.js?v=20260928-all1';
-import {setupCozyUI} from './cozy-ui.js?v=20260928-all1';
+import {setupCozyUI} from './cozy-ui.js?v=20261007-ipad1';
 import {createStudentAuth} from './student-auth.js?v=20260928-all1';
 import {setupStudentLoginGate} from './student-login-gate.js?v=20260928-all1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
-import {setupExamEntry} from './exam-entry.js?v=20260928-all1';
-import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,celebrateCharacter,motionPortrait} from './character-motion.js?v=20261007-motion1';
+import {setupExamEntry} from './exam-entry.js?v=20261007-ipad1';
+import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,celebrateCharacter,motionPortrait} from './character-motion.js?v=20261007-ipad1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
-import {setupMonsterCollection,startDemoMonster,creditDemoMonster,showMonsterReward} from './monster-cards-ui.js?v=20261004-levels1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261007-motion1';
+import {setupMonsterCollection,startDemoMonster,creditDemoMonster,showMonsterReward} from './monster-cards-ui.js?v=20261007-ipad1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261007-ipad1';
 const API='https://zhuyin-api.j822925.workers.dev/api';
 const demo=new URLSearchParams(location.search).get('demo')==='1';
 const names={single:'聲音森林',spelling:'拼音工坊'};
@@ -50,7 +50,7 @@ const memory={};
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(classStorageKey(key)))??fallback;}catch{return memory[key]??fallback;}}
 function write(key,value){memory[key]=value;try{localStorage.setItem(classStorageKey(key),JSON.stringify(value));return true;}catch{return false;}}
 let pending=read('zhuyin.pending.v2',[]);if(!Array.isArray(pending))pending=[];
-$('app').innerHTML=`<header><a class="brand" href="./${demo?'?demo=1':''}"><img class="brand-app-icon" src="assets/performance-v1/811a6dcf74016aae.webp" alt="">注音探險島</a><div class="top-actions"><span id="connection" role="status">讀取老師任務…</span><a href="${demo?'teacher.html':'parents.html'}">${demo?'老師專區':'親子專區'} ↗</a></div></header>
+$('app').innerHTML=`<header><a class="brand" href="./${demo?'?demo=1':''}"><img class="brand-app-icon" src="assets/mobile-v1/d4e5bf4ccca2ec5d28d7.webp" alt="">注音探險島</a><div class="top-actions"><span id="connection" role="status">讀取老師任務…</span><a href="${demo?'teacher.html?v=20261007-ipad1':'parents.html?v=20261007-ipad1'}">${demo?'老師專區':'親子專區'} ↗</a></div></header>
 <main id="home"><section class="hero"><div><p class="eyebrow">每天一點點，聲音變熟悉</p><h1>準備好了嗎？<br>一起去<span>聲音探險！</span></h1><p>仔細聽、動手拼。<br>每一次練習，都是一次新的發現。</p><div id="learned" class="learned"></div></div><div class="island" aria-hidden="true"><div class="cloud"></div><span class="sun">✦</span><div class="mountain back"></div><div class="mountain front"></div><div class="ground"></div><div class="tree t1">♠</div><div class="tree t2">♠</div><div class="mascot"><span>•ᴗ•</span><b>ㄅ</b></div><span class="floating f1">ㄧ</span><span class="floating f2">ㄠ</span></div></section>
 <aside id="demo-note" class="notice" ${demo?'':'hidden'}>老師試玩：不傳送成績。拼音為待確認的合成示範音。<button id="demo-basic" class="text-button">第一週六音</button><button id="demo-expanded" class="text-button">含結合韻</button></aside>
 <section class="setup"><label>我是 <select id="seat" aria-label="選擇座號"><option value="">選擇座號</option></select></label><div class="segmented" aria-label="遊玩方式"><button id="solo" class="selected" aria-pressed="true">一人闖關</button><button id="duo" aria-pressed="false">兩人輪流</button></div><label id="partner-label" hidden>夥伴 <select id="partner" aria-label="夥伴座號"></select></label><span id="collection" class="small"></span></section>

@@ -1,5 +1,5 @@
 import {prepareMedia,startMediaCache,missingMedia} from './asset-cache.js?v=20260928-all1';
-import {LOADING_CARDS,STARTUP_MEDIA} from './data/performance-assets.js?v=20260928-all1';
+import {LOADING_CARDS,STARTUP_MEDIA} from './data/performance-assets.js?v=20261007-ipad1';
 import {orderedCards} from './cache-policy.js?v=20260928-all1';
 let active=null;const cards=orderedCards(LOADING_CARDS);
 export async function prepareWithCards(paths,{startup=false}={}){
@@ -27,7 +27,8 @@ export async function prepareWithCards(paths,{startup=false}={}){
  }finally{clearTimeout(timeout);}
  if(!closed)await new Promise(resolve=>{const check=setInterval(()=>{if(closed){clearInterval(check);resolve();}},80);});
 }
-export async function bootPreparation(){await prepareWithCards(STARTUP_MEDIA,{startup:true});}
+// The first screen never waits for artwork or opens a background download modal.
+export async function bootPreparation(){await startMediaCache();await new Promise(resolve=>typeof requestIdleCallback==='function'?requestIdleCallback(resolve,{timeout:2500}):setTimeout(resolve,500));if(!document.hidden)await prepareMedia(STARTUP_MEDIA);}
 export function addPreparationButton(getPaths){
  const button=document.createElement('button'),notice=document.createElement('p');notice.setAttribute('role','status');notice.hidden=true;
  button.type='button';button.className='secondary prepare-launch';button.textContent='📥 課前準備・星使輪播';button.onclick=async()=>{const paths=getPaths();if(!paths){notice.hidden=false;notice.textContent='還在讀取老師的範圍，請稍候再按；若一直沒出現座號，請先按重新讀取。';return;}notice.hidden=true;button.disabled=true;try{await prepareWithCards(paths);}catch{notice.hidden=false;notice.textContent='暫時無法準備素材，仍可先進遊戲，稍後再試。';}finally{button.disabled=false;}};

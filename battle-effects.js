@@ -1,7 +1,7 @@
 // Effects use a separate transparent plane: questions never move or lose focus.
 import {BATTLE_META} from './data/battle-catalog.js?v=20261004-villains1';
-import {battleEffectOrigin} from './battle-sprite.js?v=20261007-motion1';
-import {drawConceptEffects} from './concept-battle-player.js?v=20261007-motion1';
+import {battleEffectOrigin} from './battle-sprite.js?v=20261007-ipad1';
+import {drawConceptEffects} from './concept-battle-player.js?v=20261007-ipad1';
 const palettes={leaf:'#bfe08e',petal:'#ffd0b7',honey:'#ffc562',cloud:'#d7e9ff',ice:'#a4e5ff',sun:'#ffdf7c',star:'#ffe6a0',moon:'#d1b6ff',bubble:'#99e5e8',rainbow:'#dfbbff',berry:'#ff9ac1',slash:'#ffe2a1',electric:'#fff292',dash:'#b6defe',wind:'#c2eee1',arrow:'#d4dc9c',music:'#ffc7ee',rock:'#dcb398',heart:'#ffb7d3'};
 const skillNames={leaf:'綠葉飛旋',petal:'花花飛舞',honey:'甜蜜光波',cloud:'雲朵突擊',ice:'冰晶飛舞',sun:'陽光出擊',star:'星光閃耀',moon:'月光魔法',bubble:'泡泡波浪',rainbow:'彩虹旋舞',berry:'莓果飛舞',slash:'流光斬',electric:'閃電衝擊',dash:'疾速突擊',wind:'旋風出擊',arrow:'追光箭',music:'音符魔法',rock:'大地震波',heart:'愛心光波'};
 function mote(c,kind,x,y,r,a,color,alpha=1){
@@ -24,11 +24,12 @@ export function drawBlossom(c,x,y,r,rotation=0,alpha=1){
 }
 export function startBattleEffects({actor,opponent,correct,timing}){
  const canvas=document.createElement('canvas');canvas.className='rpg-battle-fx';canvas.setAttribute('aria-hidden','true');document.body.append(canvas);
- const c=canvas.getContext('2d'),start=performance.now(),mage=actor.dataset.rig==='rabbit',meta=BATTLE_META[correct?actor.dataset.rig:opponent.dataset.monster],kind=meta?.fx||'star',color=meta?.accent||palettes[kind]||'#ffe2a1',physical=['slash','dash','arrow'].includes(kind);let raf=0,disposed=false,width=0,height=0;
+ const c=canvas.getContext('2d'),start=performance.now(),mage=actor.dataset.rig==='rabbit',meta=BATTLE_META[correct?actor.dataset.rig:opponent.dataset.monster],kind=meta?.fx||'star',color=meta?.accent||palettes[kind]||'#ffe2a1',physical=['slash','dash','arrow'].includes(kind);let raf=0,disposed=false,width=0,height=0,lastPaint=0;
  const point=(el)=>{const r=el.getBoundingClientRect();return {x:r.left+r.width*.5,y:r.top+r.height*.61,top:r.top+18,size:Math.min(r.width,r.height)};};
  const line=(x,y,r,angle,alpha=1)=>{c.save();c.globalAlpha=alpha;c.translate(x,y);c.rotate(angle);c.strokeStyle=color;c.lineWidth=3;c.beginPath();c.moveTo(-r,0);c.lineTo(r,0);c.stroke();c.restore();};
  const ring=(x,y,r,alpha=1)=>{c.save();c.globalAlpha=alpha;c.strokeStyle=color;c.lineWidth=2;c.beginPath();c.ellipse(x,y,r*.48,r,0,0,Math.PI*2);c.stroke();c.restore();};
  function frame(now){if(disposed)return;if(!actor.isConnected||!opponent.isConnected||document.hidden){dispose();return;}
+  if(now-lastPaint<1000/30){raf=requestAnimationFrame(frame);return;}lastPaint=now-(now-lastPaint)%(1000/30);
   if(width!==innerWidth||height!==innerHeight){width=innerWidth;height=innerHeight;const dpr=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);c.setTransform(dpr,0,0,dpr,0,0);}
   c.clearRect(0,0,width,height);const ms=now-start,a=point(actor),b=point(opponent.querySelector('.opponent-art')),source=correct?a:b,target=correct?b:a,launch=timing.windup,impact=timing.impact;
   if(meta?.concept){

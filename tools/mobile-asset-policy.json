@@ -1,0 +1,16 @@
+{
+  "version": "20261007-ipad1",
+  "deliveryFormat": "webp",
+  "preserveAlphaExactly": true,
+  "allowUpscaling": false,
+  "battle": {"poseMaxDimension": 512, "quality": 84, "encoderMethod": 6, "padding": 4, "encodeFrom": "originalAuthoredArt", "scalePivotsAndAnchorsPerFrame": true},
+  "portrait": {"maxDimension": 768, "quality": 84},
+  "thumbnail": {"maxDimension": 224, "quality": 84},
+  "card": {"maxDimension": 1080, "quality": 90},
+  "background": {"maxDimension": 1440, "quality": 84},
+  "staticPath": "contentHash",
+  "onlyReplaceIfSmaller": true,
+  "originalArt": "retainForBuildAndExplicitFullSizeLinks",
+  "sound": "retainReviewedPronunciation",
+  "animation": {"activeFramesPerSecond": 30, "idleFramesPerSecond": 12, "pauseOutsideViewport": true, "pauseInBackground": true}
+}

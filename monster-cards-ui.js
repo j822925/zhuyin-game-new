@@ -1,3 +1,4 @@
+import {optimizedImage} from './data/portrait-thumbnails.js?v=20261007-ipad1';
 import {monsterProgress,monsterLevel,monsterLevelLabel,MONSTER_LEVELS,monsterRequirements} from './data/monster-collection-rules.js?v=20261004-levels1';
 import {MONSTERS,randomMonster} from './data/monsters.js?v=20261004-villains1';
 import {classStorageKey} from './class-context.js?v=20260928-all1';
@@ -7,7 +8,7 @@ export function monsterCard(c,{locked=false,victories=0,preview=false,levels=[],
  if(c.theme==='concept'){card.dataset.frame=c.frame;card.style.setProperty('--monster-color',c.color);card.style.setProperty('--monster-accent',c.accent);}
  const badge=document.createElement('span');badge.className='monster-card-mark';badge.textContent=c.mark;
  const type=document.createElement('p');type.className='monster-card-kind';type.textContent=c.kind;
- const stage=document.createElement('div');stage.className='monster-card-stage';const img=document.createElement('img');img.src=c.image;img.alt=c.name;img.loading='lazy';stage.append(img);
+ const stage=document.createElement('div');stage.className='monster-card-stage';const img=document.createElement('img');img.src=optimizedImage(c.image);img.decoding='async';img.alt=c.name;img.loading='lazy';stage.append(img);
  const title=document.createElement('h3');title.textContent=c.name;
  const line=document.createElement('p');line.className='monster-card-lore';line.textContent=c.line;
  const state=document.createElement('p');state.className='monster-card-state';const count=requiredLevels.length?requiredLevels.filter(id=>levels.includes(id)).length:Math.min(3,victories),needed=requiredLevels.length||3;state.textContent=preview?(requiredLevels.length?'每個關卡整回合全對，才能收藏':'整回合全對 3 次後可收藏'):locked?(requiredLevels.length?'不同關卡全對 ':'全對擊敗 ')+count+'／'+needed+(requiredLevels.length?' 關':' 次')+'・尚未收服':'已收服・可在「我的角色」選用';

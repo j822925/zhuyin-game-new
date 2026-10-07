@@ -7,8 +7,8 @@ test('public family and installation pages never link to teacher preview or back
   const links=[...read(file).matchAll(/href="([^"]+)"/g)].map(m=>m[1]);
   for(const link of links)assert.doesNotMatch(link,/teacher\.html|demo=|script\.google|docs\.google/);
  }
- assert.match(read('install.html'),/href="parents.html"/);
- assert.match(read('app.js'),/demo\?'teacher.html':'parents.html'/);
+ assert.match(read('install.html'),/href="parents.html(?:\?v=[^"]+)?"/);
+ assert.match(read('app.js'),/demo\?'teacher.html(?:\?v=[^']+)?':'parents.html(?:\?v=[^']+)?'/);
  assert.match(read('child-ui.js'),/demo\?'老師專區':'親子專區'/);
 });
 test('family audio uses the complete shared catalogue without score or login code',()=>{
@@ -18,5 +18,5 @@ test('family audio uses the complete shared catalogue without score or login cod
  assert.doesNotMatch(script,/api\.js|rewards|authenticate|submit|saveScore/);
  assert.match(read('teacher.html'),/demo=1/);
  const index=read('index.html'),version=index.match(/name="application-version" content="([^"]+)"/)?.[1];
- assert.ok(version);assert.ok(index.includes('app.js?v='+version));
+ assert.ok(version);assert.ok(index.includes('game-boot.js?v='+version));assert.ok(read('game-boot.js').includes('app.js?v='+version));
 });

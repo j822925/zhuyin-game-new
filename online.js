@@ -1,19 +1,20 @@
+import {optimizedImage} from './data/portrait-thumbnails.js?v=20261007-ipad1';
 import './asset-cache.js?v=20260928-all1';
-import {dailyAwardMessage} from './learning-rewards.js?v=20261004-stars4';
+import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
 import {CHARACTER_CATALOG} from './data/character-catalog.js';
 import {STAR_SPRITES} from './data/star-sprites.js';
 import {audioSource} from './audio-source.js?v=20260928-all1';
 import {STAR_CARDS} from './data/star-cards.js';
-import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20261007-motion1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261007-motion1';
+import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20261007-ipad1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261007-ipad1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
-import {showMonsterReward} from './monster-cards-ui.js?v=20261004-levels1';
+import {showMonsterReward} from './monster-cards-ui.js?v=20261007-ipad1';
 const $=id=>document.getElementById(id),SESSION=classStorageKey('zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':live');
 const ENDPOINT=location.hostname==='127.0.0.1'?location.origin:'https://zhuyin-api.j822925.workers.dev';
 
 const avatars=Object.fromEntries(CHARACTER_CATALOG.map(c=>[c.id,c.image]));Object.assign(avatars,STAR_SPRITES,Object.fromEntries(MONSTERS.map(c=>[c.id,c.image])));
-const avatar=id=>avatars[id]||CHARACTER_CATALOG.find(c=>c.starter)?.image;
+const avatar=id=>optimizedImage(avatars[id]||CHARACTER_CATALOG.find(c=>c.starter)?.image);
 const messages={client_update_required:'這間房使用新題型，請先重新整理遊戲再加入。',invalid_pin:'密碼不正確，再試一次。',locked:'密碼試了太多次，請等五分鐘。',login_required:'登入到期了，請重新選座號、輸入密碼。',room_missing:'找不到這個房間，請問同學新的四位房號。',room_full:'這個房間已經有兩位同學了。',room_closed:'這個房間已結束，回首頁再開一間吧！',already_in_room:'你已經在另一個房間，先回去或離開那間房。',capacity:'現在房間比較多，等同學玩完再試。',disabled:'連線對戰暫時休息，晚一點再來。',slow_down:'按得太快了，請稍等一下再試。',device_active:'這個座號正在另一台平板玩。確定要換到這台嗎？',wrong_phase:'正在等同學，請稍等畫面更新。',answer_closed:'本題已收到作答或已結束，請等結果。',stale_command:'畫面已更新，請依目前題目繼續。',temporarily_unavailable:'網路還沒回覆，請稍後按重新連線。',ticket_invalid:'連線驗證過期，請按重新連線。',player_left:'同學先離開了，這場不發獎勵。',teacher_closed:'老師結束了這個房間。',room_expired:'等待時間到了，回首頁重新開房間。',disconnect_timeout:'等候連線逾時，這場未完成，可以重新找同學。',too_many_interruptions:'這場連線不穩，先檢查網路再開新房間。',audio_timeout:'聲音還沒播完，確認音量後一起繼續。'};
 let identityReady=false;
 let session=null,people=[],state=null,roomId='',ws=null,socketGeneration=0,reconnectTimer=null,attempts=0,stopped=false,offset=0,working=false,pinSeat='',pin='',pinBusy=false,audioKey='',playedKey='',lastPong=0,slowPings=0,audioBusy=false,audioGeneration=0;

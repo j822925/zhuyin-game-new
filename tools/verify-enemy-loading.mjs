@@ -5,16 +5,16 @@ const browser=await chromium.launch({executablePath:process.env.BROWSER_EXECUTAB
 try{
  const page=await browser.newPage({viewport:{width:768,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  const fixture=new URL('__battle-loading.html',base).href;
- await page.route('**/__battle-loading.html',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><link rel="stylesheet" href="battle-rpg.css?v=20261007-motion1"><style>.opponent-art{width:480px;height:480px}.practice-opponent{width:480px}</style><body>'}));
+ await page.route('**/__battle-loading.html',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><link rel="stylesheet" href="battle-rpg.css?v=20261007-ipad1"><style>.opponent-art{width:480px;height:480px}.practice-opponent{width:480px}</style><body>'}));
  const counts=new Map();let manualFailure=true;
- await page.route('**/assets/battle-ready-v1/**',async r=>{
+ await page.route('**/assets/battle-ipad-v1/**',async r=>{
   const url=new URL(r.request().url()),id=url.pathname.split('/').pop().replace('.webp',''),n=(counts.get(id)||0)+1;counts.set(id,n);
   if(id==='ember-witch'||id==='eclipse-duke')await new Promise(resolve=>setTimeout(resolve,id==='ember-witch'?650:1200));
   if((id==='coin-mimic'&&n===1)||(id==='sugar-devil'&&n<=2)||(id==='storm-griffin'&&manualFailure))return r.fulfill({contentType:'image/webp',body:'corrupt cached image'});
   await r.continue();
  });
  await page.goto(fixture);await page.evaluate(async()=>{
-  const {createOpponent,updateOpponent}=await import('./character-battle.js?v=20261007-motion1'),{MONSTERS}=await import('./data/monsters.js?v=20261004-villains1'),{playMonster}=await import('./monster-motion.js?v=20261007-motion1');
+  const {createOpponent,updateOpponent}=await import('./character-battle.js?v=20261007-ipad1'),{MONSTERS}=await import('./data/monsters.js?v=20261004-villains1'),{playMonster}=await import('./monster-motion.js?v=20261007-ipad1');
   window.enemy=createOpponent();document.body.append(enemy);window.changeEnemy=id=>updateOpponent(enemy,MONSTERS.find(m=>m.id===id),10,0);window.enemyAction=action=>playMonster(enemy,action);
  });
  const ready=id=>page.waitForFunction(id=>enemy.dataset.rigStatus==='ready'&&enemy.querySelector('canvas').dataset.ready===id,id);
@@ -31,7 +31,7 @@ try{
  // Reusing a detached arena must restart its disposed renderer.
  await page.evaluate(()=>enemy.remove());await page.waitForTimeout(100);await page.evaluate(()=>{document.body.append(enemy);changeEnemy('storm-griffin');});await ready('storm-griffin');
  // A second character() call on the same canvas must not keep old frames.
- await page.evaluate(async()=>{const {BattleSprite}=await import('./battle-sprite.js?v=20261007-motion1');const canvas=document.createElement('canvas'),rig=new BattleSprite(canvas);await rig.character('coin-mimic');rig.draw(0,0);const slow=rig.character('mistblade-wolf');if(canvas.dataset.ready||rig.frames)throw Error('Old actor retained while loading');const newer=rig.character('ink-book-spirit');await Promise.all([slow,newer]);if(canvas.dataset.ready!=='ink-book-spirit'||rig.id!=='ink-book-spirit')throw Error('A late actor replaced the current actor');rig.dispose();});
+ await page.evaluate(async()=>{const {BattleSprite}=await import('./battle-sprite.js?v=20261007-ipad1');const canvas=document.createElement('canvas'),rig=new BattleSprite(canvas);await rig.character('coin-mimic');rig.draw(0,0);const slow=rig.character('mistblade-wolf');if(canvas.dataset.ready||rig.frames)throw Error('Old actor retained while loading');const newer=rig.character('ink-book-spirit');await Promise.all([slow,newer]);if(canvas.dataset.ready!=='ink-book-spirit'||rig.id!=='ink-book-spirit')throw Error('A late actor replaced the current actor');rig.dispose();});
  // Loading transitions never shrink a portrait into a differently scaled pose.
  for(const width of [390,768,1280]){await page.setViewportSize({width,height:1000});await page.evaluate(()=>{enemyAction('attack');});await page.waitForTimeout(550);assert.equal(await page.locator('.monster-canvas').getAttribute('data-ready'),'storm-griffin');assert.equal(await page.locator('.monster-canvas').getAttribute('data-facing'),'right');}
  assert.deepEqual(errors,[]);const report={base,oldEnemyCleared:true,lateLoadCannotReplaceEnemy:true,oldTallScaleCleared:true,pendingAnswerReplayed:true,corruptCacheRecovered:true,automaticRetry:true,manualRetry:true,sameCanvasRaceSafe:true,errors};console.log(JSON.stringify(report));if(process.env.TEST_REPORT)fs.writeFileSync(process.env.TEST_REPORT,JSON.stringify(report,null,2));
