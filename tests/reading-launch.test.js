@@ -6,7 +6,7 @@ const ipad={userAgent:'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit
 const base='https://j822925.github.io/zhuyin-game-new/';
 test('iPad desktop-style UA launches the same reading page through Safari from Home Screen',()=>{
  const p=readingLaunchPlan(base+'?source=homescreen',ipad);
- assert.equal(p.standalone,true);assert.equal(p.major,26);assert.equal(p.safariUrl,'x-safari-https://j822925.github.io/zhuyin-game-new/reading.html?v=20261008-safari1&speech=native&source=homescreen-reading');
+ assert.equal(p.standalone,true);assert.equal(p.major,26);assert.equal(p.safariUrl,'x-safari-https://j822925.github.io/zhuyin-game-new/reading.html?v=20261008-safari2&speech=native&source=homescreen-reading');
  assert.equal(p.homeUrl,base);
 });
 test('both classroom routes are explicit and no credentials, seat, hash or redirect cross the handoff',()=>{
@@ -26,7 +26,7 @@ test('Safari tabs, desktop browsers and Android keep ordinary HTTPS navigation',
 });
 test('old/unknown iPads get a shortcut fallback; modern mobile UA and display-mode also work',()=>{
  for(const userAgent of ['iPad CPU OS 16_7 Version/16.7 Safari/605.1','iPad']){
-  const p=readingLaunchPlan(base,{userAgent,standalone:true});assert.equal(p.standalone,true);assert.equal(p.safariUrl,null);assert.equal(p.shortcutUrl,base+'reading-shortcut.html?v=20261008-safari1');
+  const p=readingLaunchPlan(base,{userAgent,standalone:true});assert.equal(p.standalone,true);assert.equal(p.safariUrl,null);assert.equal(p.shortcutUrl,base+'reading-shortcut.html?v=20261008-safari2');
  }
  const modern=readingLaunchPlan(base,{userAgent:'iPad CPU OS 17_0 Version/17.0 Safari/605.1',displayStandalone:true});assert.match(modern.safariUrl,/^x-safari-https:/);
 });

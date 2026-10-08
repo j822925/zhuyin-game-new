@@ -14,12 +14,12 @@ function harness(words){
  vm.runInContext(handler,context);
  return {context,$,battles,answer(text){context.answer(text);}};
 }
-test('reported ASR substitutions and invented subtitle text leave the original question ungraded',()=>{
- for(const [word,text] of [['栗子','律子'],['蠟燭','拉茲'],['企鵝','雞雞'],['叉子','叉子，使用繁體中文字幕。'],['叉子','使用繁體中文字幕。'],['木馬','Múma']]){
+test('empty, non-Han and unknown readings leave the original question ungraded',()=>{
+ for(const [word,text] of [['栗子',''],['蠟燭','𰻞𰻞'],['企鵝','雞𰻞'],['叉子','使用𰻞'],['木馬','Múma']]){
   const h=harness([word]);h.answer(text);h.answer(text);
   assert.equal(h.context.rows.length,0);assert.equal(h.context.locked,false);assert.equal(h.battles.length,0);
   assert.equal(h.context.deck[0].word,word);assert.equal(h.$('next').hidden,true);assert.equal(h.$('tap-record').disabled,false);
-  assert.match(h.$('feedback').textContent,/不扣分/);assert.ok(!h.$('feedback').textContent.includes(text));
+  assert.match(h.$('feedback').textContent,/不扣分/);if(text)assert.ok(!h.$('feedback').textContent.includes(text));
   h.answer(word);assert.equal(h.context.rows.length,1);assert.equal(h.context.rows[0].firstCorrect,true);assert.equal(h.battles.length,1);
   h.answer(word);assert.equal(h.context.rows.length,1,'duplicate result must not score twice');
  }
@@ -28,7 +28,7 @@ test('retries across all five questions preserve one score per question and thre
  const h=harness(['蠟燭','叉子','企鵝','梨子','木馬']);
  for(const heard of ['蠟燭','叉子','企鵝','離子','木麻']){
   h.context.locked=false;h.$('next').hidden=true;
-  const count=h.context.rows.length;h.answer('這是一段額外的字幕內容');assert.equal(h.context.rows.length,count);
+  const count=h.context.rows.length;h.answer('Múma');assert.equal(h.context.rows.length,count);
   h.answer(heard);assert.equal(h.context.rows.length,count+1);
  }
  assert.equal(h.battles.length,5);assert.equal(readingStars(h.context.rows.filter(r=>r.firstCorrect).length),3);
@@ -51,11 +51,19 @@ test('uncertain retry then a wrong word counts once; mixed rounds keep the origi
  for(const correctCount of [2,3,4,5]){
   const h=harness(['早安','蘋果','叉子','梨子','木馬']);
   for(let i=0;i<5;i++){
-   h.context.locked=false;h.answer('使用繁體中文字幕');assert.equal(h.context.rows.length,i);
+   h.context.locked=false;h.answer('');assert.equal(h.context.rows.length,i);
    h.answer(i<correctCount?h.context.deck[i].word:'晚安');assert.equal(h.context.rows.length,i+1);
   }
   const correct=h.context.rows.filter(r=>r.firstCorrect).length;
   assert.equal(correct,correctCount);assert.equal(readingStars(correct),correctCount===5?3:correctCount>=3?1:0);
   assert.equal(validReadingRound({mode:'reading',total:5,mistakes:5-correct,results:h.context.rows}),true);
+ }
+});
+test('decodable far readings outside the question bank now count as wrong, not unlimited retries',()=>{
+ for(const [target,heard] of [['早安','量子力學'],['企鵝','雞雞'],['蠟燭','拉茲'],['叉子','叉子使用繁體中文字幕']]){
+  assert.ok(!READING_WORDS.some(w=>w.word===heard),'regression case must be outside question bank');
+  const h=harness([target]);h.answer(heard);assert.equal(h.context.rows.length,1,target+' / '+heard);
+  assert.equal(h.context.rows[0].firstCorrect,false);assert.match(h.$('feedback').textContent,/答錯/);
+  assert.equal(h.$('next').hidden,false);h.answer(target);assert.equal(h.context.rows.length,1);
  }
 });

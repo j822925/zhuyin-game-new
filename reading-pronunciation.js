@@ -21,11 +21,10 @@ const fits=(code,wanted)=>{const sounds=decode(code);return sounds.length===want
 // character readings so 銀行 cannot borrow 行's ㄒㄧㄥˊ reading from another word.
 export function pronunciationDecision(word,text){
  const chars=Array.from(text),wanted=word.zhuyin.trim().split(/\s+/u);
- if(chars.length!==wanted.length)return 'incorrect';
  if(wanted.some(s=>!/^[ㄅ-ㄩ]{1,3}$/.test(baseSound(s))))return 'retry';
  const whole=lookup(text);
  if(whole)return whole.some(code=>fits(code,wanted))?'correct':'incorrect';
- let ambiguous=false;
+ let ambiguous=false,mismatch=chars.length!==wanted.length;
  for(let offset=0;offset<chars.length;){
   let segment=null,length=0;
   // Longest available term supplies context before falling back to one letter.
@@ -35,12 +34,14 @@ export function pronunciationDecision(word,text){
   }
   if(!segment)return 'retry'; // Unknown text is not evidence of a wrong reading.
   const matches=segment.map(code=>fits(code,wanted.slice(offset,offset+length)));
-  if(!matches.some(Boolean))return 'incorrect';
+  // Keep scanning: an unknown later character must not be graded merely
+  // because an earlier known segment differed from the expected reading.
+  if(!matches.some(Boolean))mismatch=true;
   // Tone-only alternatives no longer make an otherwise matching segment ambiguous.
   if(!matches.every(Boolean))ambiguous=true;
   offset+=length;
  }
  // An unfamiliar spelling with unresolved polyphony must not be made correct
 // by choosing whichever pronunciation happens to agree with the answer.
- return ambiguous?'retry':'correct';
+ return mismatch?'incorrect':ambiguous?'retry':'correct';
 }

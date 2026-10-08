@@ -2,7 +2,7 @@
 // tones and listed near-sounds may pass; no substring, missing or extra syllables.
 import {EXTRA_READING_WORDS} from './reading-words.js?v=20260928-all1';
 import {READING_SCRIPT_FORMS} from './reading-script-forms.js?v=20260930-script1';
-import {pronunciationDecision} from './reading-pronunciation.js?v=20261001-lenient1';
+import {pronunciationDecision} from './reading-pronunciation.js?v=20261008-safari2';
 export const READING_WORDS = [
  ['apple','蘋果','ㄆㄧㄥˊ ㄍㄨㄛˇ','苹果'],
  ['watermelon','西瓜','ㄒㄧ ㄍㄨㄚ'],
@@ -57,14 +57,10 @@ export function readingDecision(word,text){
  if(!value||!/^[\p{Script=Han}]+$/u.test(value))return 'retry';
  return matchesSpelling(word,value)?'correct':pronunciationDecision(word,value);
 }
-// A known vocabulary word can be a real wrong answer (早安 -> 晚安).
-// Unknown names, fragments and added subtitles still cannot establish an error.
-// Do not include ASR aliases here: they are not necessarily ordinary words.
-const recognizedVocabulary=new Set(READING_WORDS.flatMap(w=>[w.word,...(READING_SCRIPT_FORMS[w.word]||[])].map(normalizeSpeech)));
+// Safari practice grades all decodable different readings, including words
+// outside our question bank. Unknown/ambiguous pronunciations still retry.
 export function readingAttemptDecision(word,text){
- const decision=readingDecision(word,text);
- if(decision!=='incorrect')return decision;
- return recognizedVocabulary.has(normalizeSpeech(text))?'incorrect':'retry';
+ return readingDecision(word,text);
 }
 export function readingStars(correct){return correct===5?3:correct>=3&&correct<5?1:0;}
 export function readingDeck(rng=Math.random){
