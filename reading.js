@@ -4,10 +4,7 @@ import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-less
 import './asset-cache.js?v=20260928-all1';
 import {readingStars,readingAttemptDecision,READING_WORDS} from './reading-core.js?v=20261001-graded1';
 import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
-import {createCloudReadingSpeech} from './reading-cloud-speech.js?v=20261001-graded1';
-import {getReadingCloudStatus,readingClosedMessage} from './reading-cloud-status.js?v=20261001-graded1';
 import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic4';
-import {showNativeFallback} from './reading-fallback.js?v=20261007-ipad1';
 import {createMicCheck,clearMicPlayback} from './reading-mic-check.js?v=20260928-mic3';
 import {createMicPreference} from './reading-mic-preference.js?v=20260928-all1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
@@ -18,24 +15,23 @@ const localPreview=['localhost','127.0.0.1','[::1]'].includes(location.hostname)
 const allowMicCheck=!demo||localPreview;
 const client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config,eligibleWords=[],lessonReady=false,seat='',deck=[],rows=[],started=0,questionStarted=0,locked=false,currentPayload=null,saving=false,starting=false,micBusy=false;
-let cloudReady=false;
 const auth=createStudentAuth({demo,getConfig:()=>config,post:d=>client.post(d)});
 const readingBattle=createReadingBattle({play:$('play'),result:$('result')});let readingRoundId='';
-const nativeMode=new URL(location.href).searchParams.get('speech')==='native';
 const Recognition=globalThis.SpeechRecognition||globalThis.webkitSpeechRecognition;
-const supported=globalThis.isSecureContext&&(nativeMode?!!Recognition:!!navigator.mediaDevices?.getUserMedia&&!!globalThis.MediaRecorder&&!!(globalThis.OfflineAudioContext||globalThis.webkitOfflineAudioContext));
-const sharedMicrophone=!nativeMode||supportsReadingAudioTrack(navigator);
+const supported=globalThis.isSecureContext&&!!Recognition;
+const sharedMicrophone=supportsReadingAudioTrack(navigator);
 const storageKey=classStorageKey('zhuyin.reading.pending.v1');
 let pending=[];
 try{const saved=JSON.parse(localStorage.getItem(storageKey)||'[]');if(Array.isArray(saved))pending=saved;}catch{}
 function storePending(){try{localStorage.setItem(storageKey,JSON.stringify(pending));return true;}catch{return false;}}
-function show(id){document.body.classList.toggle('reading-battle-active',id==='play');for(const name of ['intro','play','result'])$(name).hidden=name!==id;window.scrollTo(0,0);}
+function show(id){$('home-link').hidden=appleMobile&&id==='result';$('return-guide').hidden=true;document.body.classList.toggle('reading-battle-active',id==='play');for(const name of ['intro','play','result'])$(name).hidden=name!==id;window.scrollTo(0,0);}
 for(const link of document.querySelectorAll('#home-link,a.home'))link.href=classUrl(demo?'./?demo=1':'./');
 const appleMobile=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const standalone=appleMobile&&(navigator.standalone===true||globalThis.matchMedia?.('(display-mode: standalone)').matches);
-const browserReadingUrl=classUrl('reading.html?v=20261007-ipad1');
+const browserReadingUrl=classUrl('reading.html?v=20261008-safari1&speech=native');
 for(const link of document.querySelectorAll('[data-reading-browser]'))link.href=browserReadingUrl;
-$('standalone-help').hidden=!standalone;
+$('standalone-help').hidden=true;
+$('desktop-return').hidden=appleMobile;
 const errors={
  'not-allowed':'請允許這個網站使用麥克風與語音辨識，再試一次。',
  'no-result':'瀏覽器尚未回傳辨識文字，這次不計分，請再試一次。',
@@ -49,42 +45,23 @@ const errors={
  'too-long':'錄音超過時間，這次不計分，請重新讀一次詞語。',
  'no-speech':'沒有辨識到完整詞語，這次不計分，請重新讀一次。',
  'authentication_required':'登入已到期，這題不計分。請按「先休息」返回，再登入開始。',
- 'daily-limit':'今天的免費朗讀用量已達上限，這題不計分，請明天再練習。',
- 'student-limit':'今天已經練習很多次了，這題不計分，請明天再練習。',
- 'too-many-requests':'錄音送得太快了，這題不計分，請等一分鐘再試。',
- 'unavailable':'雲端辨識暫時無法使用，這次不計分，請稍後再試。',
  'timeout':'辨識等候逾時，這次不計分，請確認網路後再試。',
  'network':'網路連線失敗，這次不計分，請確認網路後再試。'
 };
 const speechOptions={
- Recorder:globalThis.MediaRecorder,
- getUserMedia:c=>navigator.mediaDevices.getUserMedia(c),
- decode:async blob=>{const Decoder=globalThis.OfflineAudioContext||globalThis.webkitOfflineAudioContext;return new Decoder(1,1,16000).decodeAudioData(await blob.arrayBuffer());},
- transcribe:async(audio,signal)=>{
-  if(demo)throw Error('authentication_required');
-  const payload=auth.decorate({seat,audio});
-  let response;try{response=await fetch(classUrl('https://zhuyin-reading.j822925.workers.dev/transcribe'),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),credentials:'omit',cache:'no-store',signal});}catch{throw Error('network');}
-  if(response.status===401){auth.forget(seat);throw Error('authentication_required');}
-  if(!response.ok)throw Error('unavailable');
-  return response.json();
- },
  onInput(label){$('speech-device').textContent='朗讀收音：'+label;},
  onState(state){
   if(state==='starting'){$('speech-help').hidden=true;$('speech-device').textContent='正在開啟選擇的麥克風…';}
   $('tap-record').dataset.state=state;
   $('tap-record').disabled=locked||micBusy||['starting','processing'].includes(state);
-  $('tap-record').textContent=state==='idle'?'點一下開始錄音':state==='starting'?'準備麥克風…':state==='processing'?'正在辨識…':'我讀完了，點一下送出';
-  $('speech-status').textContent=({starting:'請先允許麥克風，等「正在聽」再讀',listening:nativeMode?'正在聽，請讀出上方的詞語':'正在聽，請讀出上方的詞語（最長八秒）',hearing:'有偵測到說話，讀完再點一下送出',processing:'正在辨識，請稍候…',idle:'點一下開始錄音，讀完再點一下送出'})[state];
+  $('tap-record').textContent=state==='idle'?'🎙️ 開始錄音':state==='starting'?'準備麥克風…':state==='processing'?'正在辨識…':'✅ 我讀完了';
+  $('speech-status').textContent=({starting:'🎙️ 準備中…',listening:'👂 正在聽',hearing:'👂 正在聽',processing:'⏳ 等一下',idle:'點一下，開始讀'})[state];
  },
  onResult:answer,
- onError(code){$('speech-status').textContent=code==='daily-limit'?readingClosedMessage(code):errors[code]||'這次無法完成辨識，不計分，請重新錄音。';if(code==='daily-limit'){cloudReady=false;$('tap-record').disabled=true;}$('speech-help').hidden=false;if(!nativeMode)showNativeFallback($('speech-help'));$('speech-diagnostic').textContent='頁面版本：20261001-graded1；'+(nativeMode?'瀏覽器原有辨識':'雲端辨識')+'；回報：'+code+'。';}
+ onError(code){$('speech-status').textContent=errors[code]||'這次無法完成辨識，不計分，請重新錄音。';$('speech-help').hidden=false;$('speech-diagnostic').textContent='頁面版本：20261008-safari1；Safari／瀏覽器辨識；回報：'+code+'。';}
 };
-const speech=supported?(nativeMode?createReadingSpeech({...speechOptions,Recognition,continuous:appleMobile,finalGraceMs:appleMobile?1200:0,stopDelayMs:appleMobile?350:0,getAudioStream:sharedMicrophone?deviceId=>navigator.mediaDevices.getUserMedia({audio:deviceId?{deviceId:{exact:deviceId}}:true}):undefined}):createCloudReadingSpeech(speechOptions)):null;
-if(nativeMode){
- document.querySelector('#intro h1').nextElementSibling.textContent='Safari／瀏覽器原有辨識模式';$('standalone-help').hidden=true;
- const details=document.querySelector('#intro details');details.innerHTML='<summary>給大人的錄音說明</summary><p>現在使用原本的 Safari／瀏覽器語音辨識，不消耗遊戲的雲端朗讀額度。iPad 請在 Safari 開啟，允許麥克風，並保持 Siri／聽寫可用。</p><p>聲音可能交由瀏覽器的語音服務處理；遊戲不保存錄音或辨識文字。這套辨識曾在 Safari 完成關卡，主畫面模式仍需要切換到 Safari。</p>';
-}
-function press(){if(locked||micBusy||!cloudReady||$('play').hidden||!speech)return;clearClip();speech.start({deviceId:allowMicCheck?$('mic-device').value:''});}
+const speech=supported?createReadingSpeech({...speechOptions,Recognition,continuous:appleMobile,finalGraceMs:appleMobile?1200:0,stopDelayMs:appleMobile?350:0,getAudioStream:sharedMicrophone?deviceId=>navigator.mediaDevices.getUserMedia({audio:deviceId?{deviceId:{exact:deviceId}}:true}):undefined}):null;
+function press(){if(locked||micBusy||$('play').hidden||!speech)return;clearClip();speech.start({deviceId:allowMicCheck?$('mic-device').value:''});}
 $('tap-record').onclick=()=>{if(locked||micBusy)return;speech?.busy?speech.release():press();};
 let micCheck,clipUrl='';
 function clearClip(){clearMicPlayback($('mic-playback'),clipUrl);clipUrl='';}
@@ -134,8 +111,8 @@ if(allowMicCheck){
 }
 function renderQuestion(){
  $('speech-help').hidden=true;
- cancel();locked=false;$('tap-record').disabled=false;$('tap-record').textContent='點一下開始錄音';$('tap-record').dataset.state='idle';
- $('feedback').textContent='';$('next').hidden=true;$('speech-status').textContent='點一下開始錄音，讀完再點一下送出';
+ cancel();locked=false;$('tap-record').disabled=false;$('tap-record').textContent='🎙️ 開始錄音';$('tap-record').dataset.state='idle';
+ $('feedback').textContent='';$('next').hidden=true;$('speech-status').textContent='點一下，開始讀';
  $('progress').textContent=`第 ${rows.length+1} / 5 題`;$('dots').replaceChildren();
  for(let i=0;i<5;i++){const dot=document.createElement('span');dot.className='dot '+(i===rows.length?'current':i<rows.length?rows[i].firstCorrect?'correct':'wrong':'');$('dots').append(dot);}
  const word=deck[rows.length];$('word').replaceChildren();
@@ -146,7 +123,7 @@ function answer(text){
  if(locked||$('play').hidden)return;const word=deck[rows.length],decision=readingAttemptDecision(word,text);
  if(decision==='retry'){
   $('feedback').textContent='這次辨識還不能確認，不扣分。請再試一次。';
-  $('speech-status').textContent='題目會留在這裡，準備好再按錄音。';
+  $('speech-status').textContent='🎙️ 再試一次';
   $('tap-record').disabled=false;$('next').hidden=true;return;
  }
  locked=true;const correct=decision==='correct';rows.push({wordId:word.id,target:word.zhuyin,firstCorrect:correct,seconds:Math.round((Date.now()-questionStarted)/1000)});
@@ -160,20 +137,18 @@ async function refreshLesson(){
  const latest=await client.get({api:'config'});
  if(!Array.isArray(latest.symbols)||!Array.isArray(latest.compounds)||!Array.isArray(latest.seats)||typeof latest.readingWrites!=='boolean')throw Error('invalid_lesson');
  config=demo?{...latest,seats:['01']}:latest;
- const cloud=nativeMode?{available:true}:await getReadingCloudStatus();cloudReady=cloud.available;
  eligibleWords=readingPool(config);lessonReady=true;
  const taught=readingTaughtSymbols(config);
  $('lesson-symbols').textContent=taught.length?'老師已勾選：'+taught.join('、'):'老師目前尚未勾選注音。';
  $('lesson-status').textContent=eligibleWords.length>=5?`依老師勾選的注音，可出 ${eligibleWords.length} 題。這回合只從符合範圍的詞語抽五題。`:`符合範圍的詞語只有 ${eligibleWords.length} 題，不足五題，這回合改從全部題庫隨機抽五題。`;
- $('reload').hidden=false;
- if(!cloudReady){$('home-message').textContent=readingClosedMessage(cloud.reason);showNativeFallback($('intro'));}
- return config.readingWrites===true&&cloudReady;
+ $('reload').hidden=true;
+ return config.readingWrites===true;
 }
 async function start(){
  if(starting||!supported||(demo&&!localPreview))return;starting=true;$('seat').disabled=true;$('start').disabled=true;$('reload').disabled=true;
  try{
   $('home-message').textContent='正在確認老師最新勾選的注音…';
-  if(!await refreshLesson()){if(cloudReady)$('home-message').textContent='第四關目前尚未開放。請等待老師通知。';return;}
+  if(!await refreshLesson()){$('home-message').textContent='第四關目前尚未開放。請等待老師通知。';return;}
   seat=$('seat').value;if(!seat){$('home-message').textContent='請先選擇你的座號。';return;}
   if(!demo){if(!await auth.ensure(seat)){$('home-message').textContent='請先完成登入，再開始朗讀。';return;}auth.setPrimary(seat);}
   $('home-message').textContent='正在準備朗讀夥伴與反派…';
@@ -185,14 +160,14 @@ async function start(){
   if(!encounter?.monsterId||encounter.error)throw Error('encounter_unavailable');
   readingBattle.begin(profile,encounter);
   currentPayload=null;deck=readingLessonDeck(eligibleWords);rows=[];started=Date.now();$('round-scope').textContent=eligibleWords.length>=5?'本回合：老師已勾選的注音範圍。':'符合詞語不足五題，本回合從全部題庫出題。';show('play');renderQuestion();
- }catch{lessonReady=false;$('lesson-status').textContent='尚未取得最新的注音設定。';$('home-message').textContent='還沒連上老師的任務，請確認網路後按「更新注音設定」。';$('reload').hidden=false;}
- finally{starting=false;$('seat').disabled=false;$('start').disabled=!lessonReady||!cloudReady||config?.readingWrites!==true;$('reload').disabled=false;}
+ }catch{lessonReady=false;$('lesson-status').textContent='尚未取得最新的注音設定。';$('home-message').textContent='還沒連上老師的任務，請確認網路後按「再試一次」。';$('reload').hidden=false;}
+ finally{starting=false;$('seat').disabled=false;$('start').disabled=!lessonReady||config?.readingWrites!==true;$('reload').disabled=false;}
 }
 function finish(){
  cancel();show('result');readingBattle.result(0);const correct=rows.filter(r=>r.firstCorrect).length,stars=readingStars(correct);
  $('score').textContent=`通過 ${correct} / 5 題`;$('stars').textContent=demo?(stars?'⭐'.repeat(stars):'再接再厲'):'星星正在確認…';
  $('review').replaceChildren();for(const row of rows){const word=READING_WORDS.find(w=>w.id===row.wordId),p=document.createElement('p');p.textContent=`${row.firstCorrect?'✓':'再練練'}　${word.word}　${word.zhuyin}`;$('review').append(p);}
- if(demo){readingBattle.result(stars,creditDemoMonster(seat,readingRoundId,correct===5,'reading'));$('save-status').textContent=`老師試玩：本回合 ${stars} 顆星星，不傳送學生成績。`;$('retry-save').hidden=true;return;}
+ if(demo){$('return-guide').hidden=!appleMobile;readingBattle.result(stars,creditDemoMonster(seat,readingRoundId,correct===5,'reading'));$('save-status').textContent=`老師試玩：本回合 ${stars} 顆星星，不傳送學生成績。`;$('retry-save').hidden=true;return;}
  currentPayload={kind:'round',mode:'reading',roundId:readingRoundId,monsterBattle:1,seat,total:5,mistakes:5-correct,seconds:Math.round((Date.now()-started)/1000),results:rows};
  pending.push(currentPayload);const stored=storePending();$('save-status').textContent=stored?'正在儲存紀錄與星星…':'此裝置無法暫存，請保持頁面開啟，等待儲存完成。';flushPending();
 }
@@ -202,7 +177,7 @@ async function flushPending(){
  for(const payload of [...pending].filter(p=>p.seat===seat)){
   const out=await auth.request(payload);if(out.saved!==true)throw Error(out.error||'unconfirmed');
   pending=pending.filter(p=>p.roundId!==payload.roundId);storePending();
-  if(payload.roundId===currentPayload?.roundId){const award=out.awards[0];$('stars').textContent=`⭐ +${award.stars}`;$('save-status').textContent=`紀錄已儲存，獲得 ${award.stars} 顆星星！${dailyAwardMessage(award)}`;readingBattle.result(award.stars,award);}
+  if(payload.roundId===currentPayload?.roundId){$('return-guide').hidden=!appleMobile;const award=out.awards[0];$('stars').textContent=`⭐ +${award.stars}`;$('save-status').textContent=`紀錄已儲存，獲得 ${award.stars} 顆星星！${dailyAwardMessage(award)}`;readingBattle.result(award.stars,award);}
  }
  if(!currentPayload)$('home-message').textContent='之前暫存的朗讀紀錄已儲存。';
  }catch{const stored=storePending();const message=stored?'紀錄已暫存，星星尚未確認入帳。請重新儲存。':'紀錄尚未儲存，請勿關閉此頁，請重新儲存。';if(currentPayload)$('save-status').textContent=message;else $('home-message').textContent=message;}
@@ -211,15 +186,14 @@ async function flushPending(){
 async function load(){
  $('wordbank-count').textContent=`題庫共有 ${READING_WORDS.length.toLocaleString('zh-TW')} 個詞語，每回合隨機抽 5 題。`;
  $('reload').hidden=true;$('reload').disabled=true;$('start').disabled=true;lessonReady=false;
- if(demo){$('home-message').textContent='雲端朗讀需要登入正式遊戲，請從主畫面選座號並登入。';return;}
- if(!supported){$('home-message').textContent=globalThis.isSecureContext?'這個瀏覽器無法錄音，請更新系統或請老師協助。':'錄音需要安全連線，請以 HTTPS 遊戲網址開啟。';return;}
+ if(demo){$('home-message').textContent='請從正式遊戲選座號並登入，再開始朗讀。';return;}
+ if(!supported){$('home-message').textContent=globalThis.isSecureContext?'這個瀏覽器不支援語音辨識。iPad 請用 Safari，電腦請用 Chrome 或 Edge，並允許麥克風。':'錄音需要安全連線，請以 HTTPS 遊戲網址開啟。';return;}
  try{await refreshLesson();
- if(!cloudReady)return;
  if(!config.readingWrites){$('home-message').textContent='第四關已準備好，目前尚未開放。請等待老師通知。';return;}
  $('mic-check').hidden=false;
  $('seat').replaceChildren(new Option('選擇座號',''));for(const s of config.seats)$('seat').append(new Option(s+' 號',s));
  $('seat').value=demo?'01':auth.currentSeat();seat=$('seat').value;$('seat-label').hidden=demo;
- $('home-message').textContent=demo?'老師試玩模式：沿用本班出題規則，不記錄成績。':'準備好後，按開始進入朗讀。';$('start').disabled=false;
+ $('home-message').textContent=demo?'老師試玩，不記錄成績。':'';$('start').disabled=false;
  if(!demo&&seat&&pending.some(p=>p.seat===seat))flushPending();
  }catch{lessonReady=false;$('lesson-status').textContent='尚未取得最新的注音設定。';$('home-message').textContent='還沒連上老師的任務，請確認網路後重試。';$('reload').hidden=false;}
  finally{$('reload').disabled=false;}

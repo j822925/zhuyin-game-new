@@ -2,7 +2,7 @@ import {bootPreparation} from './preparation.js?v=20261007-ipad1';
 (async()=>{void bootPreparation().catch(()=>{});
 await import('./app.js?v=20261007-ipad1');
 await import('./child-navigation.js?v=20260928-all1');
-await import('./reading-entry.js?v=20261007-ipad1');
+await import('./reading-entry.js?v=20261008-safari1');
 await import('./tone-entry.js?v=20260930-v1');
 await import('./teacher-hub.js?v=20261006-stable2');
 await import('./classroom-entry.js?v=20261004-quiz2');
