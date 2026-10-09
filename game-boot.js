@@ -6,4 +6,5 @@ await import('./reading-entry.js?v=20261008-safari2');
 await import('./tone-entry.js?v=20260930-v1');
 await import('./teacher-hub.js?v=20261006-stable2');
 await import('./classroom-entry.js?v=20261004-quiz2');
+await import('./island-names.js?v=20261009-names1').catch(()=>{});
 })().catch(()=>{document.getElementById('app').innerHTML='<p>連線暫時不穩，請重新整理再試一次。</p><button onclick="location.reload()">重新讀取 ↻</button>';});
