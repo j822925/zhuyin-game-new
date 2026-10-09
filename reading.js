@@ -1,6 +1,6 @@
 import {createReadingBattle} from './reading-battle.js?v=20261007-ipad1';
 import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261007-ipad1';
-import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20260928-filter1';
+import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20261009-accounts1';
 import './asset-cache.js?v=20260928-all1';
 import {readingStars,readingAttemptDecision,READING_WORDS} from './reading-core.js?v=20261008-safari2';
 import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
@@ -9,7 +9,7 @@ import {createMicCheck,clearMicPlayback} from './reading-mic-check.js?v=20260928
 import {createMicPreference} from './reading-mic-preference.js?v=20260928-all1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
-import {createStudentAuth} from './student-auth.js?v=20260928-all1';
+import {createStudentAuth} from './student-auth.js?v=20261009-accounts1';
 const $=id=>document.getElementById(id),demo=new URLSearchParams(location.search).get('demo')==='1';
 const localPreview=['localhost','127.0.0.1','[::1]'].includes(location.hostname);
 const allowMicCheck=!demo||localPreview;

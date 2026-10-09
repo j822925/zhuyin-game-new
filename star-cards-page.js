@@ -1,5 +1,5 @@
 import {createApiClient} from './api-client.js?v=20260928-all1';
-import {createStudentAuth} from './student-auth.js?v=20260928-all1';
+import {createStudentAuth} from './student-auth.js?v=20261009-accounts1';
 import {createStarCollection} from './star-cards-ui.js?v=20261007-ipad1';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config,seat='',busy=false;

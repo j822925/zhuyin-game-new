@@ -1,5 +1,5 @@
 import {Race} from './race-core.js?v=20260928-all1';
-import {questionDeck,optionsFor} from './core.js?v=20260928-all1';
+import {questionDeck,optionsFor} from './core.js?v=20261009-accounts1';
 import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20261007-ipad1';
 
 import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,motionPortrait} from './character-motion.js?v=20261007-ipad1';

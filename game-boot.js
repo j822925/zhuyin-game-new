@@ -1,6 +1,6 @@
 import {bootPreparation} from './preparation.js?v=20261007-ipad1';
 (async()=>{void bootPreparation().catch(()=>{});
-await import('./app.js?v=20261007-ipad1');
+await import('./app.js?v=20261009-accounts1');
 await import('./child-navigation.js?v=20260928-all1');
 await import('./reading-entry.js?v=20261008-safari2');
 await import('./tone-entry.js?v=20260930-v1');

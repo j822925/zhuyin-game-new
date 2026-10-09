@@ -1,4 +1,4 @@
-import {addPlayer,advance,hostCommand,playerCommand,roomView,pause} from './classroom-peer-engine.js?v=20261007-peer1';
+import {addPlayer,advance,hostCommand,playerCommand,roomView,pause} from './classroom-peer-engine.js?v=20261009-accounts1';
 export const DIRECT_ICE={iceServers:[{urls:'stun:stun.cloudflare.com:3478'}],iceTransportPolicy:'all'};
 // No TURN credentials, media tracks, frame streaming, or automatic cloud relay.
 export class LocalCoordinator{

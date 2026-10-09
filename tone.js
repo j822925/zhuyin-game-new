@@ -2,7 +2,7 @@ import {createToneRecorder} from './tone-record-client.js?v=20261009-backend2';
 import {TONES,validateBank,poolFor,makeDeck,grade,summarize} from './tone-core.js?v=20261002-original1';
 import {createToneAudio} from './tone-audio.js?v=20260930-v1';
 import {classUrl,classStorageKey} from './class-context.js?v=20260928-all1';
-import {createStudentAuth} from './student-auth.js?v=20260928-all1';
+import {createStudentAuth} from './student-auth.js?v=20261009-accounts1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
 import {warmAudio} from './asset-cache.js?v=20260928-all1';
 const $=id=>document.getElementById(id),demo=new URLSearchParams(location.search).get('demo')==='1';
