@@ -1,3 +1,4 @@
+import {createToneRecorder} from './tone-record-client.js?v=20261009-backend2';
 import {TONES,validateBank,poolFor,makeDeck,grade,summarize} from './tone-core.js?v=20261002-original1';
 import {createToneAudio} from './tone-audio.js?v=20260930-v1';
 import {classUrl,classStorageKey} from './class-context.js?v=20260928-all1';
@@ -6,8 +7,11 @@ import {createApiClient} from './api-client.js?v=20260928-all1';
 import {warmAudio} from './asset-cache.js?v=20260928-all1';
 const $=id=>document.getElementById(id),demo=new URLSearchParams(location.search).get('demo')==='1';
 const client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
+let roundId='',startedAt=0;
 let config,bank,seat='',mode='basic',length='all',deck=[],index=0,answers=[],results=[],active=0,busy=false,heard=false,submitted=false,reviewDone=false,epoch=0,starting=false;
 const auth=createStudentAuth({demo,getConfig:()=>config,post:p=>client.post(p)}),audio=createToneAudio();
+const recorder=createToneRecorder({demo,storage:sessionStorage,key:()=>classStorageKey('zhuyin.tone.pending.v1:'+new URL('.',location.href).pathname+':'+seat),send:p=>auth.request({...p,seat}),status:(message,retry)=>{$('save-status').textContent=message;$('save-retry').hidden=!retry;}});
+$('save-retry').onclick=()=>recorder.flush();
 const homeUrl=()=>classUrl(demo?'./?demo=1':'./');$('back').href=homeUrl();$('credits').href=classUrl('tone-credits.html');
 const key=()=>classStorageKey('zhuyin.tone.practice.v1:'+new URL('.',location.href).pathname+':'+(demo?'demo':'live')+':'+seat);
 const toneName=t=>TONES[t-1].name,modeName=()=>({basic:'🌱 無變調',sandhi:'✨ 有變調',all:'🌈 混合挑戰'})[mode];
@@ -22,7 +26,7 @@ function show(name){
  window.scrollTo(0,0);
 }
 function validSeat(){return demo||auth.verified(seat);}
-function save(){try{sessionStorage.setItem(key(),JSON.stringify({version:bank.version,mode,length,deck:deck.map(q=>q.id),index,answers,results,submitted,speed:Number($('speed').value)}));}catch{/* Storage failure never prevents practice. */}}
+function save(){try{sessionStorage.setItem(key(),JSON.stringify({roundId,startedAt,version:bank.version,mode,length,deck:deck.map(q=>q.id),index,answers,results,submitted,speed:Number($('speed').value)}));}catch{/* Storage failure never prevents practice. */}}
 function clear(){try{sessionStorage.removeItem(key());}catch{}}
 function saved(){try{
  const s=JSON.parse(sessionStorage.getItem(key())||'null'),pool=bank.questions.filter(q=>q.enabled&&!bank.disabledIds.includes(q.id));
@@ -46,11 +50,11 @@ async function loadBank(){const response=await fetch('tone-questions.json?v=2026
 $('start').onclick=async()=>{
  if(starting)return;if(!validSeat()){location.href=homeUrl();return;}
  starting=true;updateChoices();
- try{bank=await loadBank();deck=makeDeck(poolFor(bank,mode,length));if(!deck.length)throw Error('這個範圍暫時沒有題目，請換一種挑戰。');stop();index=0;results=[];answers=Array(deck[0].text.length).fill(null);submitted=false;save();
+ try{bank=await loadBank();deck=makeDeck(poolFor(bank,mode,length));if(!deck.length)throw Error('這個範圍暫時沒有題目，請換一種挑戰。');stop();roundId=crypto.randomUUID();startedAt=Date.now();index=0;results=[];answers=Array(deck[0].text.length).fill(null);submitted=false;save();
   if(mode!=='basic'){show('intro');$('intro-status').textContent='';}else begin();
  }catch(e){$('error').textContent=e.message;}finally{starting=false;updateChoices();}
 };
-$('resume').onclick=()=>{if(!validSeat()){location.href=homeUrl();return;}const s=saved();if(!s){updateChoices();return;}mode=s.mode;length=s.length;deck=s.deck.map(id=>bank.questions.find(q=>q.id===id));index=s.index;answers=s.answers;results=s.results;submitted=s.submitted;$('speed').value=[.75,.85,1].includes(s.speed)?String(s.speed):'0.75';begin(true);};
+$('resume').onclick=()=>{if(!validSeat()){location.href=homeUrl();return;}const s=saved();if(!s){updateChoices();return;}roundId=s.roundId||crypto.randomUUID();startedAt=s.startedAt||Date.now();mode=s.mode;length=s.length;deck=s.deck.map(id=>bank.questions.find(q=>q.id===id));index=s.index;answers=s.answers;results=s.results;submitted=s.submitted;$('speed').value=[.75,.85,1].includes(s.speed)?String(s.speed):'0.75';begin(true);};
 $('intro-listen').onclick=async()=>{const token=epoch,q=bank.questions.find(q=>q.text==='你好'&&q.enabled&&!bank.disabledIds.includes(q.id));if(!q)return;$('intro-listen').disabled=true;try{await audio.play(q.audioUrl,Number($('speed').value));if(token===epoch)$('intro-status').textContent='連讀聽起來像二聲、三聲；作答仍選「你：三聲、好：三聲」。';}catch(e){if(token===epoch)$('intro-status').textContent=e.message;}finally{$('intro-listen').disabled=false;}};
 $('intro-go').onclick=()=>begin();
 function begin(restore=false){
@@ -93,7 +97,7 @@ async function reviewTwice(){
 }
 $('retry').onclick=reviewTwice;
 $('submit').onclick=()=>{if(busy||submitted||!heard||answers.some(v=>v===null))return;results.push(grade(deck[index],answers));submitted=true;save();displayFeedback();if(results.at(-1).wholeCorrect){reviewDone=true;$('review-status').textContent='準備好就往下一題！';render();}else reviewTwice();};
-function advance(){if(index+1<deck.length){index++;begin();return;}stop();clear();show('result');const s=summarize(results);$('whole-score').textContent=`整題全對 ${s.whole} / ${s.total} 題`;$('character-score').textContent=`字的聲調答對 ${s.correct} / ${s.characters} 字`;$('skipped-score').textContent=s.skipped?`跳過 ${s.skipped} 題，不計入對錯。`:'';}
+function advance(){if(index+1<deck.length){index++;begin();return;}stop();show('result');recorder.enqueue({kind:'tone-record',roundId,bankVersion:bank.version,drillMode:mode,length,seconds:Math.max(0,Math.round((Date.now()-startedAt)/1000)),results:results.map(r=>r.skipped?{id:r.id,skipped:true}:{id:r.id,answers:r.answers})});clear();const s=summarize(results);$('whole-score').textContent=`整題全對 ${s.whole} / ${s.total} 題`;$('character-score').textContent=`字的聲調答對 ${s.correct} / ${s.characters} 字`;$('skipped-score').textContent=s.skipped?`跳過 ${s.skipped} 題，不計入對錯。`:'';}
 $('next').onclick=()=>{if(!busy&&reviewDone)advance();};
 $('skip').onclick=()=>{stop();const skipped={id:deck[index].id,skipped:true};if(submitted)results[results.length-1]=skipped;else results.push(skipped);advance();};
 $('browse').onclick=()=>{stop();show('catalog');renderCatalog();};
@@ -106,13 +110,14 @@ function renderCatalog(){
   article.append(title,listen,detail);$('catalog-list').append(article);
  }
 }
-$('login-button').onclick=async()=>{seat=$('seat').value;if(await auth.ensure(seat)){auth.setPrimary(seat);$('identity').textContent=seat+' 號・聲調小劇場';$('login').hidden=true;entry();}};
+$('login-button').onclick=async()=>{seat=$('seat').value;if(await auth.ensure(seat)){auth.setPrimary(seat);$('identity').textContent=seat+' 號・聲調小劇場';$('login').hidden=true;entry();void recorder.flush();}};
 async function initialize(){try{
  bank=await loadBank();$('load-status').textContent=`已準備 ${poolFor(bank,'all').length} 個真人詞語錄音。`;
  if(demo){seat='teacher-preview';$('identity').textContent='教師試玩・不記正式成績';entry();return;}
- seat=auth.currentSeat();if(seat){$('identity').textContent=seat+' 號・聲調小劇場';entry();return;}
+ seat=auth.currentSeat();if(seat){$('identity').textContent=seat+' 號・聲調小劇場';entry();void recorder.flush();return;}
  config=await client.get({api:'config'});if(!Array.isArray(config.seats))throw Error('暫時讀不到座號，請回首頁重新登入。');$('seat').replaceChildren(...config.seats.map(s=>new Option(s+' 號',s)));$('login').hidden=false;
  }catch(e){$('error').textContent=e.message+' 可重新整理再試。';$('load-status').textContent='';}}
+window.addEventListener('online',()=>{if(seat&&auth.verified(seat))void recorder.flush();});
 window.addEventListener('pagehide',stop);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)return;stop();if(!$('play').hidden){if(submitted&&!reviewDone){$('retry').hidden=false;$('review-status').textContent='播放已暫停，請重新聽兩遍。';}render();}});
 void initialize();
