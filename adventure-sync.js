@@ -1,4 +1,5 @@
 export const forestSaveKey=(classId,seat)=>'zhuyin.forest.student.v1:'+classId+':'+seat;
+export const FOREST_SYNC_INTERVAL=60000;
 const copy=s=>JSON.parse(JSON.stringify(s));
 // One immutable operation is kept until the server acknowledges it. No tokens in storage.
 export async function openForestSync({send,storage,key,fresh,onStatus=()=>{},onBalance=()=>{}}){
@@ -10,7 +11,10 @@ export async function openForestSync({send,storage,key,fresh,onStatus=()=>{},onB
  let current=remote.state||fresh(),revision=remote.revision,baseStars=remote.stars,pending=null,timer=null,running=null;
  current={...current,stars:baseStars};
  if(journal?.dirty){if(journal.revision!==revision)throw Error('forest_conflict');current=journal.state;current.stars=baseStars+(journal.state.stars-journal.baseStars);if(current.stars<0)throw Error('insufficient_stars');}
+ else journal=null;
  const persist=()=>storage.setItem(key,JSON.stringify({revision,baseStars,state:current,dirty:true,...(pending?{operation:pending}:{})}));
+ // Start once at the first change, not after the last click: continuous play still saves.
+ const schedule=()=>{if(!timer)timer=setTimeout(()=>void flush(),FOREST_SYNC_INTERVAL);};
  async function flush(){
   clearTimeout(timer);timer=null;if(running)return running;
   if(!journal&&!pending)return true;
@@ -23,13 +27,14 @@ export async function openForestSync({send,storage,key,fresh,onStatus=()=>{},onB
    }catch(e){onStatus('error',e.message);return false;}finally{running=null;}
   })();return running;
  }
+ if(journal?.dirty)schedule();
  return {state:copy(current),cards:remote.cards||['rabbit'],key,flush,
-  save(next){if(pending||running){onStatus('error','pending_save');return false;}const before=current;current=copy(next);journal=true;
-   try{persist();}catch{current=before;onStatus('error','storage_unavailable');return false;}
-   const active=next.expedition?.runs?.[next.expedition.active]?.battle;
-   // Currency commits immediately; ordinary battle answers stay on device until the round ends.
-   clearTimeout(timer);timer=null;
-   if(next.stars!==baseStars||!active){if(next.stars!==baseStars)void flush();else timer=setTimeout(()=>void flush(),1800);}
+  save(next){if(pending||running){onStatus('error','pending_save');return false;}
+   if(JSON.stringify(next)===JSON.stringify(current))return true;
+   const before=current,oldJournal=journal;current=copy(next);journal=true;
+   try{persist();}catch{current=before;journal=oldJournal;onStatus('error','storage_unavailable');return false;}
+   // Currency commits immediately; other changes share one minute's local batch.
+   if(next.stars!==baseStars)void flush();else schedule();
    return true;
   },get busy(){return !!pending||!!running;}
  };

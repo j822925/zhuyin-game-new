@@ -113,7 +113,7 @@ function walkTo(target,onArrival=null){
   if(!path)return false;
   keys.clear();joystick.reset();route=path;arrival=onArrival;scene.marker={...target,at:performance.now()};return true;
 }
-function exitsBlocked(){return !scene||switching||scene.editing||!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy);}
+function exitsBlocked(){return !scene||switching||scene.editing||!!round||(scene.area==='farm'&&!!arrival)||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy);}
 function enterExit(id){
  if(exitsBlocked())return;
  const e=AREA_EXITS[scene.area]?.find(e=>e.id===id);if(!e)return;

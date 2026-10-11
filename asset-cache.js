@@ -16,14 +16,24 @@ export async function missingMedia(paths){
  const urls=[...new Set(paths.filter(p=>publicMedia(p,base)).map(p=>new URL(p,base).href))];
  try{const cache=await caches.open(cacheName(base));const missing=[];for(const url of urls){const r=await cache.match(url);if(!r||Date.now()-Number(r.headers.get('x-media-saved'))>TTL)missing.push(url);}return missing;}catch{return urls;}
 }
-export async function prepareMedia(paths,{signal,onProgress=()=>{},timeoutMs=8000}={}){
- const missing=await missingMedia(paths);let next=0,completed=0,failed=0;
- onProgress({completed,total:missing.length,failed});
- await Promise.all(Array.from({length:Math.min(2,missing.length)},async()=>{while(next<missing.length&&!signal?.aborted){
-  const url=missing[next++],controller=new AbortController(),abort=()=>controller.abort(),timer=setTimeout(abort,timeoutMs);signal?.addEventListener('abort',abort,{once:true});
-  try{if(signal?.aborted)throw Error('cancelled');const response=await fetch(url,{credentials:'omit',headers:{'X-Zhuyin-Prepare':'1'},signal:controller.signal});if(!response.ok)throw Error('unavailable');await response.arrayBuffer();completed++;}catch{if(!signal?.aborted)failed++;}finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);}
-  onProgress({completed,total:missing.length,failed});
- }}));return {completed,total:missing.length,failed,cancelled:!!signal?.aborted};
+export async function prepareMedia(paths,{signal,onProgress=()=>{},timeoutMs=8000,concurrency=2,retries=0,retryDelayMs=500}={}){
+ const missing=await missingMedia(paths),failedUrls=[];let next=0,completed=0,retrying=0;
+ const workers=Math.max(1,Math.min(8,Math.floor(Number(concurrency)||2))),attempts=Math.max(0,Math.min(2,Math.floor(Number(retries)||0)));
+ const progress=()=>onProgress({completed,total:missing.length,failed:failedUrls.length,retrying});
+ const waitRetry=ms=>new Promise(resolve=>{let timer;const done=()=>{clearTimeout(timer);signal?.removeEventListener('abort',done);resolve();};timer=setTimeout(done,ms);signal?.addEventListener('abort',done,{once:true});if(signal?.aborted)done();});
+ progress();
+ await Promise.all(Array.from({length:Math.min(workers,missing.length)},async()=>{while(next<missing.length&&!signal?.aborted){
+  const url=missing[next++];let ok=false;
+  for(let attempt=0;attempt<=attempts&&!signal?.aborted;attempt++){
+   if(attempt){retrying++;progress();await waitRetry(retryDelayMs*attempt);retrying--;if(signal?.aborted)break;}
+   const controller=new AbortController(),abort=()=>controller.abort(),timer=setTimeout(abort,timeoutMs);signal?.addEventListener('abort',abort,{once:true});let retryable=true;
+   try{if(signal?.aborted)break;const response=await fetch(url,{credentials:'omit',headers:{'X-Zhuyin-Prepare':'1'},signal:controller.signal});if(!response.ok){retryable=response.status>=500||[408,429].includes(response.status);throw Error('unavailable');}await response.arrayBuffer();ok=true;completed++;break;}catch{if(!retryable)break;}finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);}
+  }
+  if(!ok&&!signal?.aborted)failedUrls.push(url);progress();
+ }}));
+ // A timed-out client request may nevertheless have completed in the media worker.
+ if(failedUrls.length&&!signal?.aborted){const remaining=await missingMedia(failedUrls);completed+=failedUrls.length-remaining.length;failedUrls.splice(0,failedUrls.length,...remaining);progress();}
+ return {completed,total:missing.length,failed:failedUrls.length,cancelled:!!signal?.aborted};
 }
 let warming=false;
 export async function warmAudio(paths){

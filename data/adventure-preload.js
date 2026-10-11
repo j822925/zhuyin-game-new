@@ -1,7 +1,11 @@
 // Approved, published adventure media only. No student data, APIs or answers.
-export const ADVENTURE_PRELOAD_VERSION='20261011-ipad2';
-export const ADVENTURE_PRELOAD_BYTES=84944787;
+export const ADVENTURE_PRELOAD_VERSION='20261011-fastprep1';
+export const ADVENTURE_PRELOAD_BYTES=85494375;
 export const ADVENTURE_PRELOAD=[
+  "assets/exploration/grove-v1.webp",
+  "assets/exploration/acorn-v1.webp",
+  "assets/exploration/cloud-v1.webp",
+  "assets/exploration/seeds-v1.webp",
   "assets/door-signs/kitchen-v1.webp",
   "assets/door-signs/bedroom-v1.webp",
   "assets/door-signs/bathroom-v1.webp",
