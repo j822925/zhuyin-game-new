@@ -23,3 +23,6 @@
 .reading-question #next{min-height:60px;margin:8px auto}
 @media(min-width:700px) and (max-width:1050px){.reading-arena{grid-template-columns:minmax(110px,1fr) minmax(0,3fr) minmax(110px,1fr);gap:8px}.reading-question{grid-column:2;grid-row:3}.reading-arena>.practice-opponent{grid-column:1;grid-row:3}.reading-hero{grid-column:3;grid-row:3}.reading-battle-active main{max-width:1380px}.reading-question .syllable{font-size:clamp(32px,4.8vw,48px)}}
 @media(max-width:699px){.reading-question{grid-column:1/-1;grid-row:3}.reading-arena>.practice-opponent,.reading-hero{grid-row:4}.reading-question #next{position:sticky;bottom:10px;z-index:3;box-shadow:0 0 0 6px #fffdf6}}
+.reading-question .question-report{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;margin-top:12px;font-size:14px}
+.reading-question #question-report{padding:8px 14px;min-height:44px;border:2px solid #d8cda9;border-radius:16px;background:#fffbed;color:#30574e;font-size:16px}
+.reading-question #question-report-status:empty{display:none}

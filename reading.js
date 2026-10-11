@@ -1,3 +1,4 @@
+import {createQuestionReport} from './question-report.js?v=20261011-reports2';
 import {createReadingBattle} from './reading-battle.js?v=20261007-ipad1';
 import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261007-ipad1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20261009-accounts1';
@@ -16,6 +17,7 @@ const allowMicCheck=!demo||localPreview;
 const client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config,eligibleWords=[],lessonReady=false,seat='',deck=[],rows=[],started=0,questionStarted=0,locked=false,currentPayload=null,saving=false,starting=false,micBusy=false;
 const auth=createStudentAuth({demo,getConfig:()=>config,post:d=>client.post(d)});
+const questionReport=createQuestionReport({parent:document.querySelector('.reading-question'),demo,request:p=>auth.request(p),getQuestion:()=>{const q=deck[locked?rows.length-1:rows.length];return q?{seat,mode:'reading',questionId:q.id}:null;}});
 const readingBattle=createReadingBattle({play:$('play'),result:$('result')});let readingRoundId='';
 const Recognition=globalThis.SpeechRecognition||globalThis.webkitSpeechRecognition;
 const supported=globalThis.isSecureContext&&!!Recognition;
@@ -112,7 +114,7 @@ if(allowMicCheck){
 function renderQuestion(){
  $('speech-help').hidden=true;
  cancel();locked=false;$('tap-record').hidden=false;$('tap-record').disabled=false;$('tap-record').textContent='🎙️ 開始錄音';$('tap-record').dataset.state='idle';
- $('feedback').textContent='';$('next').hidden=true;$('speech-status').textContent='點一下，開始讀';
+ questionReport.refresh();$('feedback').textContent='';$('next').hidden=true;$('speech-status').textContent='點一下，開始讀';
  $('progress').textContent=`第 ${rows.length+1} / 5 題`;$('dots').replaceChildren();
  for(let i=0;i<5;i++){const dot=document.createElement('span');dot.className='dot '+(i===rows.length?'current':i<rows.length?rows[i].firstCorrect?'correct':'wrong':'');$('dots').append(dot);}
  const word=deck[rows.length];$('word').replaceChildren();

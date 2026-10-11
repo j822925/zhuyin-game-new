@@ -7,7 +7,7 @@ import {createApiClient} from './api-client.js?v=20260928-all1';
 import {warmAudio} from './asset-cache.js?v=20260928-all1';
 const $=id=>document.getElementById(id),demo=new URLSearchParams(location.search).get('demo')==='1';
 const client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
-const REWARD_RULE='tone-stars-20261011-v1',reported=new Set(),reporting=new Set();
+const REWARD_RULE='tone-stars-20261011-v2',reported=new Set(),reporting=new Set();
 let roundId='',startedAt=0,catalogPage=0;
 let config,bank,seat='',mode='basic',length='all',deck=[],index=0,answers=[],results=[],active=0,busy=false,heard=false,submitted=false,reviewDone=false,epoch=0,starting=false;
 const auth=createStudentAuth({demo,getConfig:()=>config,post:p=>client.post(p)}),audio=createToneAudio();

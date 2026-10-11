@@ -10,7 +10,7 @@ export function createQuestionReport({parent,getQuestion,request,demo=false}){
   const q=getQuestion(),id=key(q);if(!q||pending.has(id)||sent.has(id))return;
   if(demo){status.textContent='試玩不送出回報';return;}
   pending.add(id);button.disabled=true;button.textContent='回報中…';const revision=generation;
-  try{const out=await request({kind:'question-report',...q,bankVersion:q.mode==='single'?'listening-v1':'spelling-v1'});if(out.reported!==true)throw Error('unconfirmed');sent.add(id);}
+  try{const out=await request({kind:'question-report',...q,bankVersion:({single:'listening-v1',spelling:'spelling-v1',reading:'reading-v1'})[q.mode]});if(out.reported!==true)throw Error('unconfirmed');sent.add(id);}
   catch{if(revision===generation&&current===id)status.textContent='回報失敗，請再按一次';}
   finally{pending.delete(id);if(current===id){button.disabled=sent.has(id);button.textContent=sent.has(id)?'✓ 已回報':'🙋 題目回報';}}
  };
