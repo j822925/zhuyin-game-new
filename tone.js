@@ -1,4 +1,4 @@
-import {createToneRecorder} from './tone-record-client.js?v=20261009-backend2';
+import {createToneRecorder} from './tone-record-client.js?v=20261011-stars1';
 import {TONES,validateBank,poolFor,makeDeck,grade,summarize} from './tone-core.js?v=20261011-teacher1';
 import {createToneAudio} from './tone-audio.js?v=20261011-teacher1';
 import {classUrl,classStorageKey} from './class-context.js?v=20260928-all1';
@@ -7,10 +7,11 @@ import {createApiClient} from './api-client.js?v=20260928-all1';
 import {warmAudio} from './asset-cache.js?v=20260928-all1';
 const $=id=>document.getElementById(id),demo=new URLSearchParams(location.search).get('demo')==='1';
 const client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
+const REWARD_RULE='tone-stars-20261011-v1',reported=new Set(),reporting=new Set();
 let roundId='',startedAt=0,catalogPage=0;
 let config,bank,seat='',mode='basic',length='all',deck=[],index=0,answers=[],results=[],active=0,busy=false,heard=false,submitted=false,reviewDone=false,epoch=0,starting=false;
 const auth=createStudentAuth({demo,getConfig:()=>config,post:p=>client.post(p)}),audio=createToneAudio();
-const recorder=createToneRecorder({demo,storage:sessionStorage,key:()=>classStorageKey('zhuyin.tone.pending.v1:'+new URL('.',location.href).pathname+':'+seat),send:p=>auth.request({...p,seat}),status:(message,retry)=>{$('save-status').textContent=message;$('save-retry').hidden=!retry;}});
+const recorder=createToneRecorder({demo,storage:sessionStorage,key:()=>classStorageKey('zhuyin.tone.pending.v1:'+new URL('.',location.href).pathname+':'+seat),send:p=>auth.request({...p,seat}),status:(message,retry)=>{$('save-status').textContent=message;$('save-retry').hidden=!retry;},onSaved:(payload,out)=>{if(payload.roundId===roundId)$('award').textContent=out.stars>0?'⭐ 獲得 '+out.stars+' 顆星星！':'再接再厲！';}});
 $('save-retry').onclick=()=>recorder.flush();
 const homeUrl=()=>classUrl(demo?'./?demo=1':'./');$('back').href=homeUrl();$('credits').href=classUrl('tone-credits.html');
 const key=()=>classStorageKey('zhuyin.tone.practice.v1:'+new URL('.',location.href).pathname+':'+(demo?'demo':'live')+':'+seat);
@@ -31,9 +32,9 @@ function clear(){try{sessionStorage.removeItem(key());}catch{}}
 function saved(){try{
  const s=JSON.parse(sessionStorage.getItem(key())||'null'),pool=bank.questions.filter(q=>q.enabled&&!bank.disabledIds.includes(q.id));
  if(!s||s.version!==bank.version||!['basic','sandhi','all'].includes(s.mode)||!['short','medium','all'].includes(s.length)||!Array.isArray(s.deck)||!s.deck.length||s.deck.length>10||new Set(s.deck).size!==s.deck.length||s.deck.some(id=>!pool.some(q=>q.id===id))||!Number.isInteger(s.index)||s.index<0||s.index>=s.deck.length||!Array.isArray(s.answers)||s.answers.length!==pool.find(q=>q.id===s.deck[s.index]).text.length||s.answers.some(t=>t!==null&&!TONES.some(x=>x.value===t))||typeof s.submitted!=='boolean'||!Array.isArray(s.results)||s.results.length!==s.index+(s.submitted?1:0))return null;
- // Recalculate local feedback, never trust stored scores; no server rewards are sent.
+ // Recalculate local feedback; the server independently grades and awards stars.
  s.results=s.results.map((r,i)=>{const q=pool.find(q=>q.id===s.deck[i]);if(r.id!==q.id)throw Error();return r.skipped?{id:q.id,skipped:true}:grade(q,r.answers);});
- if(s.submitted&&s.results.at(-1).skipped)return null;
+ if(s.results.some(r=>r.skipped))return null;
  return s;
  }catch{return null;}}
 function updateChoices(){
@@ -61,7 +62,7 @@ function begin(restore=false){
  stop();show('play');const q=deck[index];if(!restore){answers=Array(q.text.length).fill(null);submitted=false;}active=Math.max(0,answers.indexOf(null));heard=false;reviewDone=false;
  $('mode-label').textContent=modeName();$('progress-label').textContent=`第 ${index+1} / ${deck.length} 題`;$('progress').max=deck.length;$('progress').value=index;
  $('review').hidden=true;$('retry').hidden=true;$('next').hidden=true;$('submit').hidden=false;$('tones').hidden=false;$('status').textContent='';$('companion-message').textContent='我陪你慢慢聽！';$('question-id').textContent=`題目：${q.text} · 編號 ${q.id}`;
- save();render();void warmAudio(deck.slice(index,index+2).map(x=>x.audioUrl));
+ $('report-status').textContent='';updateReport();save();render();void warmAudio(deck.slice(index,index+2).map(x=>x.audioUrl));
  if(submitted){displayFeedback();if(results.at(-1).wholeCorrect){heard=true;reviewDone=true;render();}else reviewTwice();}else playQuestion();
 }
 function render(){
@@ -77,8 +78,8 @@ function render(){
 }
 async function playQuestion(){
  if(busy||submitted)return;const token=epoch;busy=true;$('error').textContent='';$('status').textContent='🔊 聽完整詞語，再選聲調…';render();
- try{await audio.play(deck[index].audioUrl,Number($('speed').value));if(token===epoch){heard=true;$('status').textContent='選每個字原本的聲調，需要時可以再聽一次。';}}
- catch(e){if(token===epoch){$('error').textContent=e.message;$('status').textContent='還沒有完整聽到題目；可重播，或跳過這題。';}}
+ try{await audio.play(deck[index].audioUrl,Number($('speed').value));if(token===epoch){heard=true;$('status').textContent='';}}
+ catch(e){if(token===epoch){$('error').textContent=e.message;$('status').textContent='還沒聽完，請按「再聽一次」。';}}
  finally{if(token===epoch){busy=false;render();}}
 }
 $('listen').onclick=playQuestion;
@@ -91,15 +92,23 @@ function displayFeedback(){
 async function reviewTwice(){
  if(busy)return;const token=epoch;busy=true;reviewDone=false;$('retry').hidden=true;$('error').textContent='';render();
  try{for(let n=1;n<=2;n++){if(token!==epoch)return;$('review-status').textContent=`看答案，再聽第 ${n} / 2 遍…`;await audio.play(deck[index].audioUrl,Number($('speed').value));}
-  if(token===epoch){reviewDone=true;$('review-status').textContent='兩遍都聽完了，準備好就往下一題！';}
+  if(token===epoch){reviewDone=true;$('review-status').textContent='';}
  }catch(e){if(token===epoch){$('error').textContent=e.message;$('retry').hidden=false;$('review-status').textContent='聲音尚未播放完成，請再聽兩遍。';}}
  finally{if(token===epoch){busy=false;render();}}
 }
 $('retry').onclick=reviewTwice;
-$('submit').onclick=()=>{if(busy||submitted||!heard||answers.some(v=>v===null))return;results.push(grade(deck[index],answers));submitted=true;save();displayFeedback();if(results.at(-1).wholeCorrect){reviewDone=true;$('review-status').textContent='準備好就往下一題！';render();}else reviewTwice();};
-function advance(){if(index+1<deck.length){index++;begin();return;}stop();show('result');recorder.enqueue({kind:'tone-record',roundId,bankVersion:bank.version,drillMode:mode,length,seconds:Math.max(0,Math.round((Date.now()-startedAt)/1000)),results:results.map(r=>r.skipped?{id:r.id,skipped:true}:{id:r.id,answers:r.answers})});clear();const s=summarize(results);$('whole-score').textContent=`整題全對 ${s.whole} / ${s.total} 題`;$('character-score').textContent=`字的聲調答對 ${s.correct} / ${s.characters} 字`;$('skipped-score').textContent=s.skipped?`跳過 ${s.skipped} 題，不計入對錯。`:'';}
+$('submit').onclick=()=>{if(busy||submitted||!heard||answers.some(v=>v===null))return;results.push(grade(deck[index],answers));submitted=true;save();displayFeedback();if(results.at(-1).wholeCorrect){reviewDone=true;$('review-status').textContent='';render();}else reviewTwice();};
+function advance(){if(index+1<deck.length){index++;begin();return;}stop();show('result');const s=summarize(results);$('whole-score').textContent=`整題全對 ${s.whole} / ${s.total} 題`;$('character-score').textContent=`字的聲調答對 ${s.correct} / ${s.characters} 字`;$('award').textContent=demo?'教師試玩，不發正式星星。':'星星結算中…';recorder.enqueue({kind:'tone-record',rewardRule:REWARD_RULE,roundId,bankVersion:bank.version,drillMode:mode,length,seconds:Math.max(0,Math.round((Date.now()-startedAt)/1000)),results:results.map(r=>({id:r.id,answers:r.answers}))});clear();}
 $('next').onclick=()=>{if(!busy&&reviewDone)advance();};
-$('skip').onclick=()=>{stop();const skipped={id:deck[index].id,skipped:true};if(submitted)results[results.length-1]=skipped;else results.push(skipped);advance();};
+function updateReport(){const id=deck[index]?.id;$('report').disabled=reported.has(id)||reporting.has(id);$('report').textContent=reported.has(id)?'✓ 已回報':reporting.has(id)?'回報中…':'🙋 錯題回報';}
+$('report').onclick=async()=>{
+ const q=deck[index],id=q.id;if(reported.has(id)||reporting.has(id))return;
+ if(demo){$('report-status').textContent='教師試玩，不送出正式回報。';return;}
+ reporting.add(id);updateReport();const token=epoch;
+ try{const out=await auth.request({kind:'tone-report',seat,bankVersion:bank.version,questionId:id});if(!out.reported)throw Error();reported.add(id);if(token===epoch)$('report-status').textContent='已回報老師，請繼續作答。';}
+ catch{if(token===epoch)$('report-status').textContent='尚未回報成功，請再按一次。';}
+ finally{reporting.delete(id);updateReport();}
+};
 $('browse').onclick=()=>{stop();catalogPage=0;show('catalog');renderCatalog();};
 $('search').oninput=()=>{catalogPage=0;renderCatalog();};
 $('catalog-prev').onclick=()=>{stop();catalogPage--;renderCatalog();};
@@ -116,7 +125,7 @@ function renderCatalog(){
 }
 $('login-button').onclick=async()=>{seat=$('seat').value;if(await auth.ensure(seat)){auth.setPrimary(seat);$('identity').textContent=seat+' 號・聲調小劇場';$('login').hidden=true;entry();void recorder.flush();}};
 async function initialize(){try{
- bank=await loadBank();$('load-status').textContent=`已準備 ${poolFor(bank,'all').length} 個老師詞語與短句錄音。`;
+ bank=await loadBank();$('load-status').textContent='';
  if(demo){seat='teacher-preview';$('identity').textContent='教師試玩・不記正式成績';entry();return;}
  seat=auth.currentSeat();if(seat){$('identity').textContent=seat+' 號・聲調小劇場';entry();void recorder.flush();return;}
  config=await client.get({api:'config'});if(!Array.isArray(config.seats))throw Error('暫時讀不到座號，請回首頁重新登入。');$('seat').replaceChildren(...config.seats.map(s=>new Option(s+' 號',s)));$('login').hidden=false;

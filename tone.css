@@ -2,6 +2,22 @@
 .char:disabled{opacity:1;cursor:default}progress{appearance:none;border:0;border-radius:20px;overflow:hidden;background:#e4dec7}progress::-webkit-progress-bar{background:#e4dec7}progress::-webkit-progress-value{background:#88a764}progress::-moz-progress-bar{background:#88a764}
 #error:empty{display:none}
 .characters .char.active{outline:4px solid #d52b35;outline-offset:2px;border-color:#d52b35}
+#load-status:empty,#save-status:empty,#status:empty,#review-status:empty,#report-status:empty{display:none}
+#entry .heading h1{margin:10px 0;font-size:30px}
+#entry fieldset{margin:12px 0}
+#entry legend{margin-bottom:8px;font-size:20px}
+#entry .modes button{padding:10px 8px;gap:2px;min-height:100px}
+#entry .modes span{font-size:32px;line-height:1.2}
+#entry .modes strong{font-size:24px}
+#entry .modes small{font-size:14px}
+#entry .choices{gap:10px}
+#entry .entry-actions{position:sticky;bottom:0;z-index:2;background:#f7f3e5ee;padding:10px;margin:8px 0;box-shadow:0 -6px 14px #f7f3e5}
+#entry .speed{font-size:16px;gap:8px}
+#entry .speed select{min-height:44px;padding:6px 12px}
+#report{margin-top:12px;box-shadow:none}
+#award{font-size:30px;font-weight:bold;color:#8e6016}
+@media(max-height:650px) and (min-width:601px){main{padding:12px 22px}header .button,header button{padding:8px 16px;min-height:48px}#entry .modes button{min-height:80px}#entry .modes small{display:none}#entry fieldset{margin:8px 0}}
+@media(max-width:600px){#entry .modes strong{font-size:20px}#entry .modes small{display:none}#entry .heading h1{font-size:26px}#entry .choices button{padding:8px 10px}#entry .entry-actions{bottom:env(safe-area-inset-bottom,0px)}}
 @media(max-width:600px){.characters.long-word{grid-template-columns:repeat(3,minmax(0,1fr))}}
 /* Keep the question and next action above secondary information on tablets. */
 .is-playing .question{padding:20px}
