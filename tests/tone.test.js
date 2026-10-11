@@ -1,53 +1,47 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFile,stat} from 'node:fs/promises';
 import {validateBank,poolFor,makeDeck,grade,summarize} from '../tone-core.js';import {createToneAudio} from '../tone-audio.js';
 const bank=JSON.parse(await readFile(new URL('../tone-questions.json',import.meta.url)));
-test('100 archived words, 94 enabled, have exact per-character tones, licensed sources and existing compressed audio',async()=>{
- assert.equal(validateBank(bank),bank);assert.equal(poolFor(bank,'all').length,94);assert.equal(new Set(bank.questions.map(q=>q.text)).size,100);assert.ok(!bank.questions.some(q=>q.text==='不客氣'));
- for(const q of bank.questions){assert.ok(q.creator);assert.ok(q.license);assert.match(q.sourcePage,/^https:\/\/commons.wikimedia.org\//);const file=await stat(new URL('../'+q.audioUrl,import.meta.url));assert.ok(file.size>1000&&file.size<100000);}
- assert.deepEqual(bank.questions.find(q=>q.text==='熱豆漿').surfaceTones,[4,4,1]);
- assert.deepEqual(bank.questions.find(q=>q.text==='綠茶').surfaceTones,[4,2]);
+test('998 teacher recordings preserve stable IDs and exclude both pizza questions',async()=>{
+ assert.equal(validateBank(bank),bank);assert.equal(poolFor(bank,'all').length,998);
+ assert.equal(new Set(bank.questions.map(q=>q.id)).size,998);
+ assert.deepEqual(bank.disabledIds,['T0171','T0908']);
+ for(const q of bank.questions){assert.ok(!q.text.includes('披薩'));assert.ok(q.creator);assert.match(q.audioUrl,new RegExp('/'+q.id+'\\.mp3$'));const f=await stat(new URL('../'+q.audioUrl,import.meta.url));assert.ok(f.size>1000&&f.size<150000);}
+ for(const id of ['T0288','T0291','T0579','T0843'])assert.ok(poolFor(bank,'all').some(q=>q.id===id));
 });
-test('disabled items are excluded in every mode and deck, with no duplicate padding',()=>{
- const b=structuredClone(bank);b.disabledIds.push(b.questions[0].id);b.questions[1].enabled=false;assert.equal(poolFor(b,'all').length,92);
- assert.equal(makeDeck(poolFor(b,'all')).length,10);assert.equal(makeDeck(poolFor(b,'all').slice(0,3)).length,3);
- for(let i=0;i<20;i++){const d=makeDeck(poolFor(b,'all'));assert.equal(new Set(d.map(q=>q.id)).size,d.length);assert.ok(d.every(q=>q.id!==b.questions[0].id&&q.id!==b.questions[1].id));}
+test('all classifications depend only on adjacent written third tones, not 一 or 不',()=>{
+ assert.equal(poolFor(bank,'sandhi').length,142);assert.equal(poolFor(bank,'basic').length,856);
+ for(const q of bank.questions){const third=q.lexicalTones.some((v,i)=>v===3&&q.lexicalTones[i+1]===3);assert.equal(q.mode,third?'sandhi':'basic');assert.equal(grade(q,q.lexicalTones).wholeCorrect,true);}
+ for(const [text,tones] of [['一杯',[4,1]],['一千',[4,1]],['不是',[2,4]],['一共',[2,4]]]){const q=bank.questions.find(q=>q.text===text);assert.deepEqual(q.lexicalTones,tones);assert.equal(q.mode,'basic');}
+ const q=bank.questions.find(q=>q.text==='你好');assert.deepEqual(q.lexicalTones,[3,3]);assert.equal(grade(q,[2,3]).wholeCorrect,false);
 });
-test('withdrawn 巧克力、蝙蝠、一杯、一千、吃飯、筆記本 cannot enter any challenge pool or random deck',()=>{
- for(const text of ['巧克力','蝙蝠','一杯','一千','吃飯','筆記本']){
- const q=bank.questions.find(q=>q.text===text);assert.equal(q.enabled,false);assert.ok(bank.disabledIds.includes(q.id));
- for(const mode of ['basic','sandhi','all'])for(const length of ['short','medium','all']){
-  const pool=poolFor(bank,mode,length);assert.ok(!pool.some(item=>item.id===q.id));
-  for(let i=0;i<25;i++)assert.ok(!makeDeck(pool).some(item=>item.id===q.id));
- }
- }
+test('latest four teacher corrections and newly recorded former withdrawn words are available',()=>{
+ for(const [id,tones] of [['T0035',[3,5]],['T0057',[3,5]],['T0059',[3,5]],['T0718',[3,4]]])assert.deepEqual(bank.questions.find(q=>q.id===id).lexicalTones,tones);
+ for(const text of ['筆記本','一杯','一千'])assert.ok(poolFor(bank,'all').some(q=>q.text===text));
 });
-test('every mode grades original tones, including third-tone sequences and 一、不',()=>{
- for(const q of bank.questions){assert.equal(grade(q,q.lexicalTones).wholeCorrect,true);if(q.mode==='sandhi')assert.equal(grade(q,q.surfaceTones).wholeCorrect,false);}
- for(const text of ['你好','手指','可以','很好'])assert.equal(grade(bank.questions.find(q=>q.text===text),[3,3]).wholeCorrect,true);
- assert.equal(grade(bank.questions.find(q=>q.text==='一些'),[1,1]).wholeCorrect,true);
- assert.equal(grade(bank.questions.find(q=>q.text==='不是'),[4,4]).wholeCorrect,true);
- assert.equal(grade(bank.questions.find(q=>q.text==='一共'),[1,4]).wholeCorrect,true);
- assert.ok(poolFor(bank,'basic').every(q=>q.lexicalTones.every((t,i)=>t===q.surfaceTones[i])));assert.equal(poolFor(bank,'sandhi').length,8);
- assert.ok(poolFor(bank,'basic','short').every(q=>q.text.length===2));assert.equal(poolFor(bank,'oops').length,0);
+test('decks never pad duplicates or use disabled questions; lengths support up to six characters',()=>{
+ const b=structuredClone(bank);b.disabledIds.push(b.questions[0].id);b.questions[1].enabled=false;assert.equal(poolFor(b,'all').length,996);
+ for(const mode of ['basic','sandhi','all'])for(const length of ['short','medium','all'])for(let i=0;i<20;i++){
+ const pool=poolFor(b,mode,length),d=makeDeck(pool);assert.equal(d.length,10);assert.equal(new Set(d.map(q=>q.id)).size,10);assert.ok(d.every(q=>q.id!==b.questions[0].id&&q.id!==b.questions[1].id));}
+ assert.equal(makeDeck(bank.questions.slice(0,3)).length,3);assert.ok(poolFor(bank,'all','short').every(q=>q.text.length===2));assert.ok(poolFor(bank,'all','medium').some(q=>q.text.length===6));assert.equal(poolFor(bank,'oops').length,0);
 });
-test('instructions, feedback and catalogue all use original tones; old round version is invalidated',async()=>{
+test('invalid answers and bank data fail closed; skipped items are not wrong',()=>{
+ const q=bank.questions[0];assert.throws(()=>grade(q,[null]));const b=structuredClone(bank);b.questions[0].surfaceTones=[6,1];assert.throws(()=>validateBank(b));
+ const answers=[...q.lexicalTones],r=grade(q,answers);answers[0]=0;assert.notEqual(r.answers[0],0);
+ assert.deepEqual(summarize([r,{id:'skip',skipped:true}]),{whole:1,total:1,characters:q.text.length,correct:q.text.length,skipped:1});
+});
+test('UI uses stable teacher IDs, bounded catalogue and new version; no old recordings',async()=>{
  const js=await readFile(new URL('../tone.js',import.meta.url),'utf8'),html=await readFile(new URL('../tone.html',import.meta.url),'utf8');
- assert.doesNotMatch(js,/q\.surfaceTones\[i\]/);assert.match(js,/q\.lexicalTones\[i\]/);assert.match(js,/s\.version!==bank\.version/);assert.equal(bank.version,'20261002-original1');
- assert.match(html,/你 ˇ　好 ˇ/);assert.doesNotMatch(html,/聽到幾聲，就選幾聲|按照錄音中聽到的聲調作答/);assert.match(html,/原本的一聲與四聲/);
-});
-test('invalid answer/bank data fail closed and skipped questions do not penalize results',()=>{
- assert.throws(()=>grade(bank.questions[0],[null,3]));const b=structuredClone(bank);b.questions[0].surfaceTones=[6,1];assert.throws(()=>validateBank(b));
- const answers=[1,3],r=grade(bank.questions[0],answers);answers[0]=4;assert.equal(r.answers[0],1);
- assert.deepEqual(summarize([r,{id:'skip',skipped:true}]),{whole:1,total:1,characters:2,correct:2,skipped:1});
+ assert.match(js,/s\.version!==bank\.version/);assert.equal(bank.version,'20261011-teacher1');assert.match(js,/items\.slice\(catalogPage\*30/);assert.doesNotMatch(js,/bank.questions.(findIndex|indexOf)/);
+ assert.match(html,/老師原速（預設）/);assert.match(html,/一杯.*四聲、一聲/);assert.match(html,/3～6/);assert.doesNotMatch(JSON.stringify(bank),/tone-stage-20260930|wikimedia/);
 });
 class FakeAudio extends EventTarget{pause(){}play(){return Promise.resolve();}}
-test('audio is pitch-preserving, supports replay, rejects failure, cancellation and stale completion',async()=>{
- const element=new FakeAudio(),a=createToneAudio({element,timeoutMs:100});const first=a.play('a.mp3',.75);assert.equal(element.preservesPitch,true);assert.equal(element.playbackRate,1);element.dispatchEvent(new Event('ended'));await first;
- const second=a.play('b.mp3');const rejected=assert.rejects(second,/已停止/);a.stop();await rejected;
+test('audio preserves pitch at selected rate, defaults to teacher original, supports replay',async()=>{
+ const element=new FakeAudio(),a=createToneAudio({element,timeoutMs:100});const first=a.play('a.mp3',.75);assert.equal(element.preservesPitch,true);assert.equal(element.playbackRate,.75);element.dispatchEvent(new Event('ended'));await first;
+ const second=a.play('b.mp3');assert.equal(element.playbackRate,1);const rejected=assert.rejects(second,/已停止/);a.stop();await rejected;
  const third=a.play('c.mp3');element.dispatchEvent(new Event('error'));await assert.rejects(third,/尚未載入/);
  const fourth=a.play('d.mp3');element.dispatchEvent(new Event('ended'));await fourth;
 });
-test('play rejection and timeout are not mistaken for a finished recording',async()=>{
+test('play rejection and timeout never mark a recording complete',async()=>{
  const element=new FakeAudio();element.play=()=>Promise.reject(Error());const a=createToneAudio({element});await assert.rejects(a.play('a'),/再聽一次/);
  const b=createToneAudio({element:new FakeAudio(),timeoutMs:10});await assert.rejects(b.play('b'),/逾時/);
 });

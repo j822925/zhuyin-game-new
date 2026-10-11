@@ -1,20 +1,20 @@
 import {createToneRecorder} from './tone-record-client.js?v=20261009-backend2';
-import {TONES,validateBank,poolFor,makeDeck,grade,summarize} from './tone-core.js?v=20261002-original1';
-import {createToneAudio} from './tone-audio.js?v=20260930-v1';
+import {TONES,validateBank,poolFor,makeDeck,grade,summarize} from './tone-core.js?v=20261011-teacher1';
+import {createToneAudio} from './tone-audio.js?v=20261011-teacher1';
 import {classUrl,classStorageKey} from './class-context.js?v=20260928-all1';
 import {createStudentAuth} from './student-auth.js?v=20261009-accounts1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
 import {warmAudio} from './asset-cache.js?v=20260928-all1';
 const $=id=>document.getElementById(id),demo=new URLSearchParams(location.search).get('demo')==='1';
 const client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
-let roundId='',startedAt=0;
+let roundId='',startedAt=0,catalogPage=0;
 let config,bank,seat='',mode='basic',length='all',deck=[],index=0,answers=[],results=[],active=0,busy=false,heard=false,submitted=false,reviewDone=false,epoch=0,starting=false;
 const auth=createStudentAuth({demo,getConfig:()=>config,post:p=>client.post(p)}),audio=createToneAudio();
 const recorder=createToneRecorder({demo,storage:sessionStorage,key:()=>classStorageKey('zhuyin.tone.pending.v1:'+new URL('.',location.href).pathname+':'+seat),send:p=>auth.request({...p,seat}),status:(message,retry)=>{$('save-status').textContent=message;$('save-retry').hidden=!retry;}});
 $('save-retry').onclick=()=>recorder.flush();
 const homeUrl=()=>classUrl(demo?'./?demo=1':'./');$('back').href=homeUrl();$('credits').href=classUrl('tone-credits.html');
 const key=()=>classStorageKey('zhuyin.tone.practice.v1:'+new URL('.',location.href).pathname+':'+(demo?'demo':'live')+':'+seat);
-const toneName=t=>TONES[t-1].name,modeName=()=>({basic:'🌱 無變調',sandhi:'✨ 有變調',all:'🌈 混合挑戰'})[mode];
+const toneName=t=>TONES[t-1].name,modeName=()=>({basic:'🌱 無變音',sandhi:'✨ 有變音',all:'🌈 混合挑戰'})[mode];
 function stop(){epoch++;audio.stop();busy=false;}
 function show(name){
  for(const id of ['entry','intro','play','result','catalog'])$(id).hidden=id!==name;
@@ -46,7 +46,7 @@ function entry(){stop();show('entry');updateChoices();}
 $('entry-back').onclick=entry;$('again').onclick=entry;
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;updateChoices();});
 document.querySelectorAll('[data-length]').forEach(b=>b.onclick=()=>{length=b.dataset.length;updateChoices();});
-async function loadBank(){const response=await fetch('tone-questions.json?v=20261002-original1',{cache:'no-store',signal:AbortSignal.timeout(15000)});if(!response.ok)throw Error('題庫暫時無法載入，請稍後再試。');return validateBank(await response.json());}
+async function loadBank(){const response=await fetch('tone-questions.json?v=20261011-teacher1',{cache:'no-store',signal:AbortSignal.timeout(15000)});if(!response.ok)throw Error('題庫暫時無法載入，請稍後再試。');return validateBank(await response.json());}
 $('start').onclick=async()=>{
  if(starting)return;if(!validSeat()){location.href=homeUrl();return;}
  starting=true;updateChoices();
@@ -54,18 +54,18 @@ $('start').onclick=async()=>{
   if(mode!=='basic'){show('intro');$('intro-status').textContent='';}else begin();
  }catch(e){$('error').textContent=e.message;}finally{starting=false;updateChoices();}
 };
-$('resume').onclick=()=>{if(!validSeat()){location.href=homeUrl();return;}const s=saved();if(!s){updateChoices();return;}roundId=s.roundId||crypto.randomUUID();startedAt=s.startedAt||Date.now();mode=s.mode;length=s.length;deck=s.deck.map(id=>bank.questions.find(q=>q.id===id));index=s.index;answers=s.answers;results=s.results;submitted=s.submitted;$('speed').value=[.75,.85,1].includes(s.speed)?String(s.speed):'0.75';begin(true);};
+$('resume').onclick=()=>{if(!validSeat()){location.href=homeUrl();return;}const s=saved();if(!s){updateChoices();return;}roundId=s.roundId||crypto.randomUUID();startedAt=s.startedAt||Date.now();mode=s.mode;length=s.length;deck=s.deck.map(id=>bank.questions.find(q=>q.id===id));index=s.index;answers=s.answers;results=s.results;submitted=s.submitted;$('speed').value=[.75,.85,1].includes(s.speed)?String(s.speed):'1';begin(true);};
 $('intro-listen').onclick=async()=>{const token=epoch,q=bank.questions.find(q=>q.text==='你好'&&q.enabled&&!bank.disabledIds.includes(q.id));if(!q)return;$('intro-listen').disabled=true;try{await audio.play(q.audioUrl,Number($('speed').value));if(token===epoch)$('intro-status').textContent='連讀聽起來像二聲、三聲；作答仍選「你：三聲、好：三聲」。';}catch(e){if(token===epoch)$('intro-status').textContent=e.message;}finally{$('intro-listen').disabled=false;}};
 $('intro-go').onclick=()=>begin();
 function begin(restore=false){
  stop();show('play');const q=deck[index];if(!restore){answers=Array(q.text.length).fill(null);submitted=false;}active=Math.max(0,answers.indexOf(null));heard=false;reviewDone=false;
  $('mode-label').textContent=modeName();$('progress-label').textContent=`第 ${index+1} / ${deck.length} 題`;$('progress').max=deck.length;$('progress').value=index;
- $('review').hidden=true;$('retry').hidden=true;$('next').hidden=true;$('submit').hidden=false;$('tones').hidden=false;$('status').textContent='';$('companion-message').textContent='我陪你慢慢聽！';$('question-id').textContent=`題目：${q.text} · 編號 ${bank.questions.findIndex(x=>x.id===q.id)+1}`;
+ $('review').hidden=true;$('retry').hidden=true;$('next').hidden=true;$('submit').hidden=false;$('tones').hidden=false;$('status').textContent='';$('companion-message').textContent='我陪你慢慢聽！';$('question-id').textContent=`題目：${q.text} · 編號 ${q.id}`;
  save();render();void warmAudio(deck.slice(index,index+2).map(x=>x.audioUrl));
  if(submitted){displayFeedback();if(results.at(-1).wholeCorrect){heard=true;reviewDone=true;render();}else reviewTwice();}else playQuestion();
 }
 function render(){
- const q=deck[index];$('characters').style.setProperty('--letters',q.text.length);$('characters').replaceChildren();
+ const q=deck[index];$('characters').style.setProperty('--letters',q.text.length);$('characters').classList.toggle('long-word',q.text.length>4);$('characters').replaceChildren();
  [...q.text].forEach((char,i)=>{const b=document.createElement('button');b.className='char'+(!submitted&&active===i?' active':'');b.disabled=busy||submitted||!heard;b.setAttribute('aria-label',char+'，'+(answers[i]===null?'尚未作答':toneName(answers[i])));
   const w=document.createElement('span');w.className='word';w.textContent=char;const a=document.createElement('span');a.className='answer';a.textContent=answers[i]===null?'?':TONES[answers[i]-1].mark;b.append(w,a);
   if(submitted)b.classList.add(answers[i]===q.lexicalTones[i]?'correct':'wrong');b.onclick=()=>{active=i;render();};$('characters').append(b);
@@ -100,11 +100,15 @@ $('submit').onclick=()=>{if(busy||submitted||!heard||answers.some(v=>v===null))r
 function advance(){if(index+1<deck.length){index++;begin();return;}stop();show('result');recorder.enqueue({kind:'tone-record',roundId,bankVersion:bank.version,drillMode:mode,length,seconds:Math.max(0,Math.round((Date.now()-startedAt)/1000)),results:results.map(r=>r.skipped?{id:r.id,skipped:true}:{id:r.id,answers:r.answers})});clear();const s=summarize(results);$('whole-score').textContent=`整題全對 ${s.whole} / ${s.total} 題`;$('character-score').textContent=`字的聲調答對 ${s.correct} / ${s.characters} 字`;$('skipped-score').textContent=s.skipped?`跳過 ${s.skipped} 題，不計入對錯。`:'';}
 $('next').onclick=()=>{if(!busy&&reviewDone)advance();};
 $('skip').onclick=()=>{stop();const skipped={id:deck[index].id,skipped:true};if(submitted)results[results.length-1]=skipped;else results.push(skipped);advance();};
-$('browse').onclick=()=>{stop();show('catalog');renderCatalog();};
-$('search').oninput=renderCatalog;
+$('browse').onclick=()=>{stop();catalogPage=0;show('catalog');renderCatalog();};
+$('search').oninput=()=>{catalogPage=0;renderCatalog();};
+$('catalog-prev').onclick=()=>{stop();catalogPage--;renderCatalog();};
+$('catalog-next').onclick=()=>{stop();catalogPage++;renderCatalog();};
 function renderCatalog(){
- $('catalog-list').replaceChildren();for(const q of poolFor(bank,'all').filter(q=>q.text.includes($('search').value.trim()))){
-  const article=document.createElement('article');article.className='word-card';const title=document.createElement('h2');title.textContent=`${bank.questions.indexOf(q)+1}. ${q.text}`;
+ const query=$('search').value.trim(),items=poolFor(bank,'all').filter(q=>q.text.includes(query)||q.id.toLowerCase().includes(query.toLowerCase())),pages=Math.max(1,Math.ceil(items.length/30));
+ catalogPage=Math.max(0,Math.min(catalogPage,pages-1));$('catalog-page').textContent=`第 ${catalogPage+1} / ${pages} 頁 · 共 ${items.length} 題`;$('catalog-prev').disabled=catalogPage===0;$('catalog-next').disabled=catalogPage===pages-1;
+ $('catalog-list').replaceChildren();for(const q of items.slice(catalogPage*30,(catalogPage+1)*30)){
+  const article=document.createElement('article');article.className='word-card';const title=document.createElement('h2');title.textContent=`${q.id} · ${q.text}`;
   const listen=document.createElement('button');listen.textContent='🔊 聽詞語';listen.onclick=async()=>{stop();const token=epoch;try{await audio.play(q.audioUrl,Number($('speed').value));}catch(e){if(token===epoch)$('error').textContent=e.message;}};
   const detail=document.createElement('details'),summary=document.createElement('summary'),answer=document.createElement('p');summary.textContent='查看原本聲調答案';answer.textContent=[...q.text].map((c,i)=>c+'：'+toneName(q.lexicalTones[i])).join('／')+(q.mode==='sandhi'?'（連讀可能變調，答案仍選原本聲調）':'');detail.append(summary,answer);
   article.append(title,listen,detail);$('catalog-list').append(article);
@@ -112,7 +116,7 @@ function renderCatalog(){
 }
 $('login-button').onclick=async()=>{seat=$('seat').value;if(await auth.ensure(seat)){auth.setPrimary(seat);$('identity').textContent=seat+' 號・聲調小劇場';$('login').hidden=true;entry();void recorder.flush();}};
 async function initialize(){try{
- bank=await loadBank();$('load-status').textContent=`已準備 ${poolFor(bank,'all').length} 個真人詞語錄音。`;
+ bank=await loadBank();$('load-status').textContent=`已準備 ${poolFor(bank,'all').length} 個老師詞語與短句錄音。`;
  if(demo){seat='teacher-preview';$('identity').textContent='教師試玩・不記正式成績';entry();return;}
  seat=auth.currentSeat();if(seat){$('identity').textContent=seat+' 號・聲調小劇場';entry();void recorder.flush();return;}
  config=await client.get({api:'config'});if(!Array.isArray(config.seats))throw Error('暫時讀不到座號，請回首頁重新登入。');$('seat').replaceChildren(...config.seats.map(s=>new Option(s+' 號',s)));$('login').hidden=false;

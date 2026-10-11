@@ -3,11 +3,11 @@ export function validateBank(bank){
  if(!bank||typeof bank.version!=='string'||!Array.isArray(bank.questions)||!Array.isArray(bank.disabledIds))throw Error('題庫格式有誤');
  const ids=new Set();
  for(const q of bank.questions){
-  if(!/^word-[a-f0-9-]+$/.test(q.id)||ids.has(q.id)||typeof q.text!=='string'||q.text.length<2||q.text.length>6)throw Error('題目資料有誤');
+  if(!/^T\d{4}$/.test(q.id)||ids.has(q.id)||typeof q.text!=='string'||q.text.length<2||q.text.length>6)throw Error('題目資料有誤');
   ids.add(q.id);
   for(const name of ['lexicalTones','surfaceTones'])if(!Array.isArray(q[name])||q[name].length!==[...q.text].length||q[name].some(t=>!Number.isInteger(t)||t<1||t>5))throw Error('聲調答案有誤');
-  const changed=q.lexicalTones.some((t,i)=>t!==q.surfaceTones[i]);
-  if(q.mode!==(changed?'sandhi':'basic')||!/^audio\/tone-stage-[0-9]+\/word-[a-f0-9-]+\.mp3$/.test(q.audioUrl)||typeof q.enabled!=='boolean')throw Error('題目音檔或分類有誤');
+  const thirdPair=q.lexicalTones.some((t,i)=>t===3&&q.lexicalTones[i+1]===3);
+  if(q.mode!==(thirdPair?'sandhi':'basic')||q.audioUrl!==`audio/tone-teacher-20261011/${q.id}.mp3`||typeof q.enabled!=='boolean'||q.text.includes('披薩'))throw Error('題目音檔或分類有誤');
  }
  return bank;
 }
@@ -21,7 +21,7 @@ export function makeDeck(pool,rng=Math.random){
  return deck.slice(0,10);
 }
 export function grade(q,answers){
- // Every mode assesses written, original tones; surface tones only classify audio.
+ // Grade the teacher's written answers. Only adjacent third tones classify sandhi.
  if(answers.length!==q.lexicalTones.length||answers.some(t=>!Number.isInteger(t)||t<1||t>5))throw Error('請先選完每個字的聲調');
  const correct=q.lexicalTones.map((t,i)=>t===answers[i]);return {id:q.id,answers:[...answers],correct,wholeCorrect:correct.every(Boolean)};
 }
