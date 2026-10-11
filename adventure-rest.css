@@ -1,0 +1,11 @@
+#home-actions{position:absolute;inset:0;pointer-events:none;z-index:3}
+#home-actions .home-action{position:absolute;transform:translate(-50%,-100%);pointer-events:auto;padding:0;border:0;background:transparent;box-shadow:none;border-radius:22px;min-width:48px}
+#home-actions .home-action[hidden]{display:none!important}
+.home-action span{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);border-radius:20px;background:#fff8e3cc;padding:2px 8px;font-size:15px}
+.home-action:focus-visible{outline:3px solid #d5b468}
+#room-bathroom{transform:translate(-50%,-100%);background:transparent;border:0;box-shadow:none;padding:0;min-width:60px;--door-sign:url('assets/door-signs/bathroom-v1.webp')}
+#room-bathroom span{display:none!important}
+#room-bathroom::after{content:'';position:absolute;left:calc(50% + var(--door-sign-inset,0px));top:var(--door-sign-top,43px);transform:translate(-50%,-50%) matrix(.55,var(--door-sign-shear,-1.318),0,1.4,0,0);width:var(--door-sign-width,72px);height:var(--door-sign-height,56px);background:var(--door-sign) center/contain no-repeat}
+#room-bathroom:focus-visible{outline:3px solid #dab25a}
+#decor-styles{flex-wrap:wrap}
+#decor-styles button{flex:1 0 28%;min-width:52px}

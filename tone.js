@@ -11,7 +11,7 @@ const REWARD_RULE='tone-stars-20261011-v2',reported=new Set(),reporting=new Set(
 let roundId='',startedAt=0,catalogPage=0;
 let config,bank,seat='',mode='basic',length='all',deck=[],index=0,answers=[],results=[],active=0,busy=false,heard=false,submitted=false,reviewDone=false,epoch=0,starting=false;
 const auth=createStudentAuth({demo,getConfig:()=>config,post:p=>client.post(p)}),audio=createToneAudio();
-const recorder=createToneRecorder({demo,storage:sessionStorage,key:()=>classStorageKey('zhuyin.tone.pending.v1:'+new URL('.',location.href).pathname+':'+seat),send:p=>auth.request({...p,seat}),status:(message,retry)=>{$('save-status').textContent=message;$('save-retry').hidden=!retry;},onSaved:(payload,out)=>{if(payload.roundId===roundId)$('award').textContent=out.stars>0?'⭐ 獲得 '+out.stars+' 顆星星！':'再接再厲！';}});
+const recorder=createToneRecorder({demo,storage:sessionStorage,key:()=>classStorageKey('zhuyin.tone.pending.v1:'+new URL('.',location.href).pathname+':'+seat),send:p=>auth.request({...p,seat}),status:(message,retry)=>{$('save-status').textContent=message;$('save-retry').hidden=!retry;},onSaved:(payload,out)=>{const farm=toneFarmResult(payload,bank,seat);if(farm)completeIslandFarmRound(farm,{confirmed:true});if(payload.roundId===roundId)$('award').textContent=out.stars>0?'⭐ 獲得 '+out.stars+' 顆星星！':'再接再厲！';}});
 $('save-retry').onclick=()=>recorder.flush();
 const homeUrl=()=>classUrl(demo?'./?demo=1':'./');$('back').href=homeUrl();$('credits').href=classUrl('tone-credits.html');
 const key=()=>classStorageKey('zhuyin.tone.practice.v1:'+new URL('.',location.href).pathname+':'+(demo?'demo':'live')+':'+seat);
@@ -51,7 +51,7 @@ async function loadBank(){const response=await fetch('tone-questions.json?v=2026
 $('start').onclick=async()=>{
  if(starting)return;if(!validSeat()){location.href=homeUrl();return;}
  starting=true;updateChoices();
- try{bank=await loadBank();deck=makeDeck(poolFor(bank,mode,length));if(!deck.length)throw Error('這個範圍暫時沒有題目，請換一種挑戰。');stop();roundId=crypto.randomUUID();startedAt=Date.now();index=0;results=[];answers=Array(deck[0].text.length).fill(null);submitted=false;save();
+ try{bank=await loadBank();deck=makeDeck(poolFor(bank,mode,length));if(!deck.length)throw Error('這個範圍暫時沒有題目，請換一種挑戰。');stop();roundId=crypto.randomUUID();startedAt=Date.now();beginIslandFarmRound({roundId,mode:'tone',seat},{demo,verified:!demo&&validSeat()});index=0;results=[];answers=Array(deck[0].text.length).fill(null);submitted=false;save();
   if(mode!=='basic'){show('intro');$('intro-status').textContent='';}else begin();
  }catch(e){$('error').textContent=e.message;}finally{starting=false;updateChoices();}
 };
@@ -133,4 +133,6 @@ async function initialize(){try{
 window.addEventListener('online',()=>{if(seat&&auth.verified(seat))void recorder.flush();});
 window.addEventListener('pagehide',stop);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)return;stop();if(!$('play').hidden){if(submitted&&!reviewDone){$('retry').hidden=false;$('review-status').textContent='播放已暫停，請重新聽兩遍。';}render();}});
-void initialize();
+mountFarmReturn();void initialize();
+import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn} from './farm-learning.bundle.js?v=20261011-wallet1';
+import {toneFarmResult} from './adventure-tone-farm.js';

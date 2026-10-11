@@ -1,0 +1,27 @@
+/* Large pictorial controls; keep the original accessible labels and numerals. */
+body.picture-first [data-child-icon]{font-size:0!important;min-width:48px;min-height:48px;line-height:1.2!important;gap:5px;padding:8px 12px;}
+body.picture-first [data-child-icon]>span,body.picture-first [data-child-icon]>strong,body.picture-first [data-child-icon]>small{display:none!important}
+body.picture-first [data-child-icon]::before{content:attr(data-child-icon);display:inline-block;font-size:28px;line-height:1.15;vertical-align:middle}
+body.picture-first [data-child-icon][data-child-badge]:not([data-child-badge=""])::after{content:attr(data-child-badge);display:inline-block;font-size:17px;vertical-align:middle;margin-left:8px;font-weight:700}
+body.picture-first [data-child-icon]:focus-visible{outline:3px solid #c19347;outline-offset:3px}
+body.picture-first .child-nav .child-nav-label{display:none!important}
+html body.picture-first .child-nav{min-width:62px!important;min-height:58px!important;padding:6px!important;gap:0!important}
+body.picture-first .food-footnote,body.picture-first .recipe-list .food-card>p:not(.recipe-ingredients),body.picture-first #decor-style-note,body.picture-first .brand p,body.picture-first .map-note,body.picture-first .weather,body.picture-first .joystick-hint,body.picture-first #energy-hint,body.picture-first .trail-footnote,body.picture-first .trail-place>p,body.picture-first .trail-tag{display:none!important}
+body.picture-first .brand h1{font-size:15px}.picture-first .energy-hud{min-height:44px;padding:7px 11px}.picture-first .food-card h3{font-size:13px}
+body.picture-first #decor-hint{font-size:11px;min-height:0;line-height:1.5}.picture-first #decor-categories button{min-height:40px}.picture-first #decor-styles button{min-height:38px;padding:5px}
+body.picture-first #decor-styles button::before{font-size:25px}.picture-first #decor-panel .eyebrow{display:none}.picture-first #decor-title{font-size:14px}
+body.picture-first #furniture-palette canvas{height:80px;width:95px}.picture-first #furniture-palette button{min-height:116px}.picture-first #furniture-palette button>span{font-size:10px}
+body.picture-first #life-message[data-picture]{font-size:0!important;min-height:0}
+body.picture-first #life-message[data-picture]::before{content:attr(data-picture);font-size:24px;line-height:1.5}
+body.picture-first #life-choices>button small{display:none}.picture-first #life-choices>button span{font-size:31px!important}.picture-first #life-choices>button{font-size:10px!important}
+.picture-details{margin:10px 0;color:#667858;font-size:12px}.picture-details summary{font-size:24px;cursor:pointer;padding:8px;list-style:none}
+.picture-first #food-dialog .eyebrow{display:none}.picture-first .recipe-ingredients{font-size:20px!important;line-height:1.6}
+.picture-first #speech-status[data-picture-status]{font-size:0!important}.picture-first #speech-status[data-picture-status]::before{content:attr(data-picture-status);font-size:30px}
+.picture-first #play .reading-question>.eyebrow,.picture-first #play .reading-question>.note:not([id]),.picture-first #round-scope{display:none}
+.picture-first #tap-record::before{font-size:52px}.picture-first #tap-record{min-width:110px;min-height:90px}
+.picture-first #speech-help>p{font-size:13px}.picture-first .online-hint{font-size:12px}
+.picture-first #login-guide-title,.picture-first #student-login-guide>p{display:none}.picture-first .pin-input-label{font-size:0}.picture-first .pin-input-label::before{content:'🔒 • • • •';font-size:24px}
+#picture-help{position:fixed;right:15px;top:110px;z-index:15;border:2px solid #ced9b7;background:#fffbed;border-radius:50%;font-size:26px;width:48px;height:48px;padding:5px;box-shadow:0 3px 0 #b2be9d}
+#picture-help-dialog{width:min(560px,calc(100% - 26px));padding:24px;border:2px solid #cbd5b8;border-radius:22px;text-align:center;background:#fffbed;color:#446047}
+.picture-help-close{display:block;margin-left:auto;font-size:22px;min-width:44px;min-height:44px}.picture-help-steps{font-size:38px;line-height:1.8;padding:20px 0}#picture-help-dialog p{font-size:14px}
+@media(max-width:600px){body.picture-first .topbar{gap:6px}body.picture-first .topbar [data-child-icon]{min-width:43px;padding:6px 8px}.picture-first .topbar [data-child-icon]::before{font-size:25px}body.picture-first #furniture-palette canvas{height:57px;width:65px}body.picture-first #furniture-palette button{min-height:93px}body.picture-first .decor-actions [data-child-icon]{min-height:39px;padding:5px}body.picture-first #decor-categories button{min-height:34px;padding:3px}body.picture-first #decor-styles button{min-height:32px;padding:2px}#picture-help{top:114px;right:13px}.picture-help-steps{font-size:27px}}

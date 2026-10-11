@@ -1,0 +1,34 @@
+.energy-hud{position:absolute;z-index:7;left:30px;top:151px;width:180px;display:grid;gap:5px;text-align:left;padding:10px 14px;background:#fffbeceF;border:1px solid #e2dac0;border-radius:17px;color:#49624b;box-shadow:0 4px 12px #394a2820}.energy-hud>span{display:flex;justify-content:space-between;font-size:12px}.energy-hud small{font-size:10px;font-weight:400}.energy-hud meter{width:100%;height:12px;appearance:none;border-radius:10px;background:#e3e4ce}.energy-hud meter::-webkit-meter-bar{background:#e3e4ce;border:0}.energy-hud meter::-webkit-meter-optimum-value{background:#7e9f63}.energy-hud meter::-webkit-meter-suboptimum-value{background:#d2a465}.energy-hud[data-low=true]{border-color:#d4a56b}.in-battle .energy-hud{pointer-events:none}
+#food-dialog{width:min(860px,calc(100% - 24px));max-height:90dvh;background:#fff9e9}#food-dialog .wardrobe-header{position:sticky;top:0;background:#fff9e9;z-index:1;padding:18px 24px}#food-title{font-size:23px;color:#655a3f}.food-content{padding:0 24px 22px}#food-energy{font-size:15px;color:#436347;margin:15px 0}.food-tabs{display:flex;gap:10px}.food-tabs button{flex:1}.food-tabs [aria-pressed=true]{background:#365c48;color:#fffdf0}#food-message{font-size:14px;line-height:1.7;min-height:48px;color:#677a51;margin:15px 0}.food-grid,.recipe-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.recipe-list{grid-template-columns:repeat(2,minmax(0,1fr))}.food-card{display:flex;align-items:center;flex-direction:column;text-align:center;padding:14px;background:#f2eedc;border:1px solid #e6dec6;border-radius:19px}.food-card canvas{width:150px;height:115px;max-width:100%;object-fit:contain}.food-card h3{font-size:16px;margin:7px 0}.food-card p{font-size:12px;line-height:1.7;color:#697858;margin:6px 0}.food-card small{color:#9b7642;font-size:12px}.food-card button{width:100%;margin-top:10px;min-height:44px}.food-card .recipe-ingredients{margin-top:12px;color:#536f4c;font-weight:600}.ingredient-note{grid-column:1/-1;font-size:12px;line-height:1.8;color:#697858}.food-footnote{font-size:11px;line-height:1.8;color:#8d876c;margin:20px 0 0}#food-rest button{width:100%;margin-top:18px}#life-choices{flex-wrap:wrap}#life-choices>button{flex:1 1 27%}#life-note .farm-steps{display:block}.farm-steps{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin:6px 0 12px}.farm-steps span{font-size:11px;padding:5px 9px;border-radius:12px;background:#ede8d4;color:#8b856c}.farm-steps [aria-current=step]{background:#dce8bf;color:#3e6645;font-weight:bold}.harvest-glow{animation:harvest-arrive .65s ease-out}.plot-hotspot[data-ready=true]{background:#fff0ac;border-color:#d1ad55;box-shadow:0 0 18px #fff3b373}#life-actions{flex-wrap:wrap}#life-actions button{min-width:130px}.ready-banner{color:#3e6945!important;font-weight:600}@keyframes harvest-arrive{from{transform:scale(.90);opacity:.5}to{transform:scale(1);opacity:1}}
+@media(max-width:600px){.energy-hud{left:13px;top:112px;width:142px;padding:8px 11px;gap:4px}.energy-hud>span{font-size:11px}.energy-hud small{font-size:9px}.food-content{padding:0 14px 18px}#food-dialog .wardrobe-header{padding:15px}.food-grid,.recipe-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.food-card{padding:10px 7px}.food-card h3{font-size:14px}.food-card p{font-size:11px}.food-card canvas{width:120px;height:93px}.food-card button{padding:8px 4px;font-size:12px}.food-tabs button{font-size:13px}#food-message{font-size:13px}}
+@media(max-height:540px){.energy-hud{top:110px;width:153px;padding:8px 11px}.energy-hud small{display:none}}
+@media(prefers-reduced-motion:reduce){.harvest-glow{animation:none}}
+body[data-exhausted=true] #portrait{filter:saturate(.6) brightness(.94);transform:rotate(-3deg)}
+
+[data-energy-locked="true"]{opacity:.55;filter:grayscale(.65)}
+body.dining :is(.world-actions,.joystick,.home-hotspot,.stove-hotspot,#picture-help){visibility:hidden}
+body.dining .topbar,body.dining #energy-open{pointer-events:none}
+#food-table-action{display:block;margin:12px auto;padding:12px 20px;background:#e5edd8}
+#food-table-action[hidden]{display:none}
+.energy-hud .combat-stats{display:flex!important;justify-content:space-between;border-top:1px solid #dedfc9;padding-top:5px;gap:12px;font-size:13px}.combat-stats b{font-weight:600}
+#food-dialog.food-tray{position:fixed;z-index:90;inset:auto 12px 12px;margin:0 auto;width:min(900px,calc(100% - 24px));max-height:min(370px,43dvh);padding:0;border-radius:22px;box-shadow:0 6px 25px #38492f30;overflow:auto}
+#food-dialog.food-tray::backdrop{background:none;backdrop-filter:none}
+#food-dialog.food-tray .wardrobe-header{padding:9px 16px;gap:10px;min-height:44px}
+#food-dialog.food-tray .wardrobe-header .eyebrow,#food-dialog.food-tray .food-footnote{display:none}
+#food-dialog.food-tray #food-title{font-size:18px;margin:0}
+#food-dialog.food-tray .food-content{padding:0 12px 10px}
+#food-dialog.food-tray #food-energy{font-size:12px;margin:4px 0}
+#food-dialog.food-tray .food-tabs{position:absolute;right:65px;top:5px;z-index:3;max-width:35%}
+#food-dialog.food-tray .food-tabs button{padding:5px 12px;min-height:40px}
+#food-dialog.food-tray #food-message{min-height:0;margin:5px 0;font-size:12px}
+#food-dialog.food-tray :is(.food-grid,.recipe-list){display:flex;gap:8px;overflow-x:auto;align-items:stretch;padding-bottom:6px;scroll-snap-type:x proximity}
+#food-dialog.food-tray .food-card{flex:0 0 150px;padding:7px;scroll-snap-align:start}
+#food-dialog.food-tray .food-card canvas{width:80px;height:60px}
+#food-dialog.food-tray .food-card h3{font-size:13px;margin:3px 0}
+#food-dialog.food-tray .food-card p{margin:2px 0;font-size:11px}
+#food-dialog.food-tray .food-card button{margin-top:4px;min-height:44px;padding:6px}
+#food-dialog.food-tray .food-card small{font-size:11px}
+#food-dialog.food-tray .ingredient-note{flex:0 0 135px;font-size:11px}
+@media(max-height:600px){#food-dialog.food-tray{max-height:47dvh}#food-dialog.food-tray .food-card canvas{height:44px}#food-dialog.food-tray .food-card{flex-basis:140px}}
+#food-dialog.food-tray .recipe-list .food-card>p:not(.recipe-ingredients){display:none}
+#food-dialog.food-tray .recipe-ingredients{font-size:14px!important;line-height:1.4;white-space:nowrap}#food-dialog.food-tray .food-card{align-self:start}#food-dialog.food-tray .food-card canvas{height:50px}#food-dialog.food-tray .food-tabs [data-child-icon]{min-height:40px!important}

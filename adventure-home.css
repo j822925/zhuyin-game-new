@@ -1,0 +1,51 @@
+#room-kitchen,#room-bedroom{transform:translate(-50%,-100%);background:transparent;border:0;box-shadow:none;padding:0;border-radius:45% 45% 6px 6px;min-width:60px}
+#room-kitchen span,#room-bedroom span{display:none!important}
+/* Painted wall signs above the doorway; the whole door stays clickable. */
+body.picture-first #room-kitchen::before,body.picture-first #room-exit.wall-return::before{display:none!important}
+#room-kitchen{--door-sign:url('assets/door-signs/kitchen-v1.webp')}
+#room-bedroom{--door-sign:url('assets/door-signs/bedroom-v1.webp')}
+#room-kitchen::after,#room-bedroom::after,#room-exit.wall-return::after{content:'';position:absolute;left:calc(50% + var(--door-sign-inset,0px));top:var(--door-sign-top,43px);transform:translate(-50%,-50%) matrix(.55,var(--door-sign-shear,1.318),0,1.4,0,0);display:block;width:var(--door-sign-width,72px);height:var(--door-sign-height,56px);background:var(--door-sign) center/contain no-repeat;pointer-events:auto}
+#room-exit.wall-return::after{content:'↩';display:grid;place-items:center;width:36px;height:28px;border:2px solid #b89566;border-radius:45%;background:#f1dfb7;color:#73583d;font-size:21px;line-height:1;box-shadow:inset 0 0 0 2px #fff2cf}
+#room-kitchen:focus-visible,#room-bedroom:focus-visible,.stove-hotspot:focus-visible{outline:3px solid #dab25a;outline-offset:5px}
+#room-exit.wall-return{transform:translate(-50%,-100%);background:transparent!important;border:0;box-shadow:none;padding:0;border-radius:12px}
+#room-exit.wall-return:not(:disabled):active{transform:translate(-50%,-100%)}
+.stove-hotspot{position:absolute;z-index:4;transform:translate(-50%,-100%);border:0;background:transparent!important;box-shadow:none!important;padding:0;border-radius:18px;min-width:64px;touch-action:manipulation}
+.stove-hotspot span{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#fff9e8;padding:5px 12px;border-radius:16px;font-size:12px;color:#42614a;opacity:0;pointer-events:none}
+.stove-hotspot:hover span,.stove-hotspot:focus-visible span{opacity:1}
+.stove-hotspot span{opacity:1;font-size:19px;bottom:-15px;padding:4px 9px;box-shadow:0 2px 4px #5a472c25}
+.decor-panel{max-height:calc(100dvh - 170px);display:flex;flex-direction:column}
+.decor-panel[hidden]{display:none}
+.decor-panel header{margin-bottom:8px;flex-shrink:0}
+#decor-wallet{font-size:13px;color:#8c733e;display:block;margin-top:3px}
+#decor-styles{display:flex;gap:5px;flex-shrink:0}
+#decor-categories{display:flex;gap:8px;margin-bottom:9px;flex-shrink:0}
+#decor-categories button{flex:1;min-height:34px;padding:6px 10px;font-size:12px;background:#f7f0df}
+#decor-categories button[aria-pressed=true]{background:#e3ecd7;border-color:#88a176}
+#decor-categories[hidden],#decor-styles[hidden]{display:none}
+#decor-styles button{flex:1;padding:8px 4px;font-size:11px;min-height:36px;background:#f5f0de;border-color:#ddd6bc;white-space:nowrap}
+#decor-styles button[aria-pressed=true]{background:#3c604c;color:#fffcef;border-color:#3c604c}
+#decor-styles button[hidden]{display:none}
+#decor-style-note{font-size:10px;color:#7e856b;margin:7px 0 10px;line-height:1.5}
+.furniture-palette{overflow-y:auto;overscroll-behavior:contain;min-height:95px;max-height:310px;flex:1;align-content:start;padding:2px 3px 7px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.furniture-palette canvas{width:80px;height:67px;max-width:100%}
+.furniture-palette button{min-height:106px;line-height:1.35}
+.furniture-palette small{font-size:10px;display:block}
+.furniture-palette[aria-busy=true]{opacity:.7}
+#decor-hint{flex-shrink:0;min-height:35px;font-size:11px;margin-top:9px}
+#decor-buy{margin-top:8px;font-size:12px;min-height:39px;padding:8px 12px;flex-shrink:0}
+.decor-actions{flex-shrink:0}
+@media(max-width:600px){
+ .decor-panel{max-height:47dvh;padding:11px}
+ .decor-panel h2{font-size:12px}.decor-panel header{margin-bottom:5px}
+ #decor-wallet{position:absolute;right:52px;top:15px;font-size:11px;margin:0}
+ #decor-style-note{display:none}#decor-styles{margin-bottom:6px}
+ #decor-styles button{font-size:10px;min-height:30px;padding:5px}
+ .furniture-palette{grid-template-columns:repeat(3,minmax(0,1fr));max-height:153px;min-height:88px;gap:5px}
+ .furniture-palette button{font-size:10px;min-height:92px}.furniture-palette canvas{width:65px;height:54px}.furniture-palette small{display:block;font-size:9px}
+ #decor-hint{font-size:10px;min-height:0;line-height:1.45;margin-top:5px}#decor-buy{min-height:33px;font-size:11px;margin-top:5px}
+ .decor-actions button{min-height:33px;font-size:10px;padding:6px}
+}
+@media(max-height:540px){.decor-panel{max-height:calc(100dvh - 85px)}.furniture-palette{min-height:90px}}
+
+/* Categorized owned items, including regional toys. */
+#decor-categories{flex-wrap:wrap}#decor-categories button{flex:1 0 28%;white-space:nowrap}.furniture-palette .inventory-symbol{font-size:46px!important;line-height:1.5}.home-action:not(:disabled):active{transform:translate(-50%,-100%)}

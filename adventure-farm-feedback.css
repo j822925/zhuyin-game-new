@@ -1,0 +1,36 @@
+/* Keep the painted field visible while choosing seeds or going to a lesson. */
+#life-dialog.farm-panel{position:fixed;inset:auto 14px 16px auto;margin:0;width:min(440px,calc(100% - 28px));max-height:min(420px,calc(100dvh - 170px));overflow:hidden;z-index:22;border-radius:19px;box-shadow:0 8px 26px #394c3428}
+#life-dialog.farm-panel[open]{display:flex;flex-direction:column}
+#life-dialog.farm-panel .wardrobe-header{flex:none;padding:10px 14px;border-bottom:0}
+#life-dialog.farm-panel .eyebrow{display:none}
+#life-dialog.farm-panel h2{font-size:16px}
+#life-dialog.farm-panel .close{min-height:30px;padding:4px 9px}
+#life-dialog.farm-panel #life-body{display:flex;flex-direction:column;min-height:0;overflow:hidden;padding:0 14px 12px}
+#life-dialog.farm-panel #life-picture,#life-dialog.farm-panel .farm-steps{display:none}
+#life-dialog.farm-panel #life-message{flex:none;padding:0;font-size:12px;min-height:0;line-height:1.65;text-align:left}
+#life-dialog.farm-panel #life-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));min-height:0;overflow-y:auto;overscroll-behavior:contain;gap:5px;margin-top:8px}
+#life-dialog.farm-panel #life-choices:empty{display:none}
+#life-dialog.farm-panel #life-choices>button{min-width:0;font-size:11px;padding:7px 3px}
+#life-dialog.farm-panel #life-choices>button span{font-size:20px;margin:0 0 3px}
+#life-dialog.farm-panel #life-choices>button small{font-size:9px;line-height:1.5}
+#life-dialog.farm-panel #life-actions{flex:none;margin-top:9px;background:#fff9e9}
+#life-dialog.farm-panel #life-actions button{min-height:40px;padding:8px}
+.plot-hotspot{min-width:44px;min-height:44px;padding:5px 8px;border-width:1px;font-size:11px;background:#fff9e4c9;box-shadow:0 2px 5px #49392220}
+.plot-hotspot[data-ready=true]{background:#eaf0d6e8;border-color:#a1b87e}
+@media(max-width:600px){#life-dialog.farm-panel{left:10px;right:10px;bottom:12px;width:auto;max-height:min(400px,calc(100dvh - 170px))}.plot-hotspot{font-size:10px;min-width:42px;min-height:42px}}
+@media(max-height:540px){#life-dialog.farm-panel{max-height:calc(100dvh - 100px);width:min(340px,calc(100% - 28px))}}
+
+body.picture-first #life-dialog.farm-panel #life-plant::after{content:"播種";display:inline-block;font-size:15px;margin-left:9px;vertical-align:middle}
+
+/* Fishing stays on the painted pond with one small, non-modal action strip. */
+#life-dialog.fishing-panel{position:fixed;inset:auto auto 18px 50%;transform:translateX(-50%);margin:0;width:min(330px,calc(100% - 28px));max-height:calc(100dvh - 160px);overflow-y:auto;border-radius:20px;z-index:22;box-shadow:0 6px 24px #394c3428}
+#life-dialog.fishing-panel .wardrobe-header{padding:5px 10px;border:0;gap:6px}
+#life-dialog.fishing-panel .eyebrow,#life-dialog.fishing-panel #life-picture,#life-dialog.fishing-panel #life-note,#life-dialog.fishing-panel #life-choices{display:none}
+#life-dialog.fishing-panel h2{font-size:14px}
+#life-dialog.fishing-panel .close{min-height:44px;padding:4px 8px}
+#life-dialog.fishing-panel #life-body{padding:0 10px 10px;display:flex;gap:10px;align-items:center}
+#life-dialog.fishing-panel #life-message{flex:1;min-height:0;margin:0;padding:0;font-size:13px;line-height:1.4;text-align:center}
+#life-dialog.fishing-panel #life-actions{flex:none;margin:0;gap:7px;flex-wrap:nowrap}
+#life-dialog.fishing-panel #life-actions button{min-width:52px;min-height:48px;padding:7px;font-size:24px}
+@media(max-width:600px){#life-dialog.fishing-panel{bottom:14px}}
+body:has(#life-dialog.fishing-panel[open]) :is(.world-actions,.joystick,#monster-button,#trail-sign,#house-button,#home-label){visibility:hidden}

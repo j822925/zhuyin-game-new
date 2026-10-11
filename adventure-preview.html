@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f5ec"><title>森林世界 · 注音探險島</title><link rel="stylesheet" href="adventure-preview.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-world.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-food.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-home.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-farm-feedback.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-companions.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-exploration.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-expedition.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-cart.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-rest.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-action-feedback.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-shop-room.css?v=20261011-forest-wallet1">
+<link rel="stylesheet" href="adventure-expedition-motion.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-tone-question.css?v=20261011-forest-wallet1"></head>
+<body class="immersive">
+<main class="app-shell">
+  <header class="topbar">
+    <div class="brand-mark" aria-hidden="true">✿</div>
+    <div class="brand"><p>注音探險島</p><h1>森林世界</h1></div>
+    <div class="wallet" aria-label="我的星星"><span aria-hidden="true">⭐</span><strong id="balance">—</strong><small>星星／星幣</small></div>
+    <a href="index.html" id="forest-home" class="hud-button child-nav">🏡 回學習廣場</a>
+    <button id="wardrobe-open" class="primary wardrobe-trigger"><span aria-hidden="true">♧</span> 我的衣櫃</button>
+    <button id="decor-open" class="hud-button" hidden>物品清單</button>
+    <a href="#companions" class="hud-button" style="text-decoration:none;color:inherit;display:flex;align-items:center">選夥伴</a>
+    <button id="fullscreen" class="hud-button" aria-pressed="false" aria-label="進入全螢幕">⛶ <span>全螢幕</span></button>
+  </header>
+  <section class="world-card" aria-label="森林冒險">
+    <div class="world-top"><div><span class="sun" aria-hidden="true">☀</span><strong id="location-name">暖陽村</strong><span class="weather" id="location-weather">家門口，就有小小冒險</span></div></div>
+    <div class="map-stage" id="map-stage">
+      <canvas id="world" tabindex="0" aria-label="森林地圖。點地板或使用方向鍵走路；怪物需要點選才會開始戰鬥。"></canvas>
+      <div class="map-loading" id="map-loading"><span>✿</span><strong>正在打開森林的小門…</strong><p>棉花兔就快準備好了</p><button id="load-retry" hidden>再試一次</button></div>
+      <div class="location-label home-label" id="home-label">我的小屋</div>
+      <button class="map-hotspot" id="monster-button" aria-label="挑戰蘑菇怪"><span class="monster-bubble">點我挑戰 <b>!</b></span></button>
+      <button class="home-hotspot" id="house-button" aria-label="進入我的小屋"><span>進屋 ⌂</span></button>
+      <button class="home-hotspot" id="room-wardrobe" aria-label="打開屋內衣櫃" hidden><span>衣櫃</span></button>
+      <button class="home-hotspot" id="room-kitchen" aria-label="走進廚房" hidden><span>廚房 →</span></button>
+      <button class="home-hotspot" id="room-bedroom" aria-label="走進臥室" hidden><span>🛏️</span></button>
+      <div id="kitchen-stations"></div><div id="home-actions"></div><button class="home-hotspot" id="room-bathroom" aria-label="走進衛浴" hidden><span>🛁</span></button>
+      <button class="exit-hotspot" id="room-exit" aria-label="走出小屋" hidden>出門 ↓</button>
+      <button id="trail-sign" class="trail-sign" hidden><span aria-hidden="true">✿</span><strong>森林小路</strong><small>往星光林地 →</small></button>
+      <button id="pond-sign" class="life-sign" hidden>🎣 微光池塘</button>
+      <button id="farm-sign" class="life-sign" hidden>🌻 農場小路 ↓</button>
+      <button id="farm-exit" class="life-sign" hidden>回暖陽村 ↓</button>
+      <div class="map-note" id="map-note"><span>☞</span> 點草地走走，點怪物才開戰</div>
+      <button class="joystick" id="joystick" aria-label="移動搖桿：按住拖曳移動，放開停止；也可使用方向鍵" data-active="false"><span class="joystick-ring" aria-hidden="true"></span><span class="joystick-thumb" aria-hidden="true">✿</span><span class="joystick-hint" aria-hidden="true">按住拖曳</span></button>
+      <div class="map-toast" id="map-toast" role="status" aria-live="polite" hidden></div>
+      <div class="scene-fade" id="scene-fade" aria-hidden="true"></div>
+    </div>
+    <section class="decor-panel" id="decor-panel" aria-labelledby="decor-title" hidden>
+      <header><div><p class="eyebrow">一件一件，慢慢布置自己的家</p><h2 id="decor-title">我的物品清單</h2><strong id="decor-wallet"></strong></div><button id="decor-close" class="close" aria-label="結束布置">✕</button></header>
+      <nav id="decor-categories" aria-label="布置種類"><button data-decor-category="furniture" aria-pressed="true">家具</button><button data-decor-category="wallpaper" aria-pressed="false">整套室內風格</button></nav>
+      <nav id="decor-styles" aria-label="家具風格"></nav><p id="decor-style-note"></p>
+      <div class="furniture-palette" id="furniture-palette"></div>
+      <p id="decor-hint" role="status" aria-live="polite">選一件家具，再點地板選位置。</p>
+      <button id="decor-buy" class="primary" hidden></button>
+      <div class="decor-actions"><button id="decor-store" class="quiet" disabled>先收起來</button><button id="decor-cancel" class="quiet" disabled>取消移動</button><button id="decor-place" class="primary" disabled>放好了 ✓</button></div>
+    </section>
+    <section class="battle-panel" id="battle-panel" aria-labelledby="battle-title" hidden>
+      <div class="battle-heading"><div><p class="eyebrow" id="battle-kicker">森林小挑戰</p><h2 id="battle-title">和蘑菇怪切磋一下</h2></div><div id="monster-health" aria-label="蘑菇怪剩餘 3 點體力">♥ ♥ ♥</div><button id="battle-leave" class="quiet">先休息</button></div>
+      <div class="question-row" id="question-row"><button id="listen" class="listen"><span aria-hidden="true">♫</span> 聽一聽</button><div id="challenge-prompt" aria-live="polite"></div><div id="answer-choices" class="answer-choices" aria-label="選出聽到的注音"></div><span id="question-count" class="question-count">1 / 3</span></div>
+      <p id="battle-message" class="battle-message" role="status" aria-live="polite">聽一聽，選出正確的注音。</p>
+      <div id="reward-actions" hidden><button id="reward-wardrobe" class="primary">🏡 回家</button><button id="reward-continue" class="quiet">繼續散步 →</button></div>
+    </section>
+    <div class="world-bottom"><div class="companion"><canvas id="portrait" width="80" height="90" role="img" aria-label="棉花兔"></canvas><div><strong>棉花兔</strong><span id="wearing-name">雛菊日常服</span></div></div><p id="walk-hint">今天，先從一小步開始。</p><div class="world-actions"><button id="trail-open" class="quiet">森林小路 ✿</button><button id="find-monster" class="quiet">去小草地 <span>↗</span></button><button id="go-home" class="quiet">回家 <span>⌂</span></button></div></div>
+  </section>
+  <section class="journal" aria-label="今日小冒險"><div class="journal-title"><span>✎</span><div><p class="eyebrow">今天的小日記</p><h2>慢慢來，也很棒。</h2></div></div><div class="journal-step" id="mission-dress"><b>01</b><div><strong>試試新衣服</strong><span>打開衣櫃，挑一套喜歡的穿搭</span></div><i aria-hidden="true">○</i></div><div class="journal-step" id="mission-walk"><b>02</b><div><strong>到森林走一走</strong><span>點一下草地，兔子就會走過去</span></div><i aria-hidden="true">○</i></div><div class="journal-step" id="mission-battle"><b>03</b><div><strong>認識蘑菇怪</strong><span>打倒小怪，獲得經驗與試玩星幣</span></div><i aria-hidden="true">○</i></div></section>
+  <footer><span id="save-note">正在讀取我的森林</span><span>⭐ 星星與星幣是同一個錢包，進度按學號保存</span></footer>
+</main>
+<dialog id="trail-dialog" aria-labelledby="trail-title">
+ <div class="wardrobe-header"><div><p class="eyebrow">從家門口的一小步開始</p><h2 id="trail-title">森林小路，慢慢打開</h2></div><button id="trail-close" class="close" aria-label="收起森林小路">✕</button></div>
+ <div class="trail-pages"><section class="trail-place"><canvas id="village-postcard" width="360" height="240" aria-label="原本的森林小屋" role="img"></canvas><span class="trail-tag">一開始就能玩</span><h3>暖陽村</h3><p>自己的小屋、門前的草地，<br>還有等你一起玩的小蘑菇怪。</p><button id="trail-village" class="quiet">回暖陽村</button></section>
+ <section class="trail-place"><canvas id="grove-postcard" width="360" height="240" aria-label="樹林裡的小蘑菇怪" role="img"></canvas><span class="trail-tag" id="grove-tag">還沒開放的小路</span><h3>星光林地</h3><p>跟著發光的小花走，<br>找蘑菇怪一起玩吧。</p><button id="grove-unlock" class="primary">去星光林地</button></section>
+ <section class="trail-place"><canvas id="pond-postcard" width="360" height="240" aria-label="池塘釣魚棧台" role="img"></canvas><span class="trail-tag">直接前往</span><h3>微光池塘</h3><p>拋下釣竿，等浮標動一動，<br>收集三種可愛的小魚。</p><button id="trail-pond" class="primary">直接前往</button></section>
+ <section class="trail-place"><canvas id="farm-postcard" width="360" height="240" aria-label="農場的小木屋" role="img"></canvas><span class="trail-tag">直接前往</span><h3>向日葵農場</h3><p>沿著村口的小路往下走，<br>播種、澆水，把收穫帶回家。</p><button id="trail-farm" class="primary">直接前往</button></section></div>
+ <p id="trail-message" class="trail-message" role="status" aria-live="polite"></p><div class="trail-basket-row"><button id="trail-island" class="primary" hidden>🗺️ 探險島地圖</button><button id="trail-basket" class="quiet">我的小竹籃 · 魚圖鑑與收穫</button></div><p class="trail-footnote">池塘、農場與星光林地各 10 星幣永久開放一次。家具行與服飾店各 20 星幣開放一次；種子店直接營業。此處使用小屋的試玩星幣；作物進度保存在目前瀏覽器。</p>
+</dialog>
+<dialog id="life-dialog" aria-labelledby="life-title"><div class="wardrobe-header"><div><p id="life-kicker" class="eyebrow"></p><h2 id="life-title"></h2></div><button id="life-close" class="close" aria-label="回到森林">✕</button></div><div id="life-body"></div></dialog>
+<dialog id="wardrobe" aria-labelledby="wardrobe-title">
+  <div class="wardrobe-header"><div><p class="eyebrow">一件衣服，一種心情</p><h2 id="wardrobe-title">棉花兔的衣櫃</h2></div><div class="wardrobe-balance">✦ <strong id="wardrobe-balance">12</strong></div><button id="wardrobe-close" class="close" aria-label="關閉衣櫃">✕</button></div>
+  <div class="wardrobe-layout">
+    <section class="doll-panel" aria-label="大人物試穿"><span class="preview-tag" id="preview-tag">目前穿搭</span><canvas id="doll" width="640" height="720" role="img" aria-label="棉花兔全身換裝預覽"></canvas><h3 id="preview-name">雛菊日常服</h3><div class="turn-buttons"><button id="turn-left" aria-label="向左轉身">↶</button><span id="direction-label">正面</span><button id="turn-right" aria-label="向右轉身">↷</button><button id="preview-walk" aria-pressed="false">走幾步</button></div><p id="walk-preview-note" style="font-size:11px;color:#6c805c;margin:10px 0 0">步行驗證：按「走幾步」，再轉身看看。</p><div class="small-preview"><canvas id="mini-doll" width="90" height="110" aria-label="地圖角色預覽" role="img"></canvas><span>出門時的我<br><small>穿搭會一起更新</small></span></div></section>
+    <section class="closet-panel" aria-label="服裝與道具"><div class="closet-intro"><h3>今天想穿哪一套？</h3><p>衣櫃裡都是你的衣服。新衣服到探險島地圖的服飾店買。</p></div><div class="outfit-list" id="outfit-list"></div><div class="tools-heading"><h3>手上的小道具</h3><span>試玩贈送</span></div><div class="tool-options"><button data-tool="wand" aria-pressed="true"><span>✧</span><div><strong>星星魔法杖</strong><small>帶著星光去冒險</small></div><b>✓</b></button><button data-tool="none" aria-pressed="false"><span>♡</span><div><strong>空著手</strong><small>輕輕鬆鬆地散步</small></div><b>✓</b></button></div><p id="wardrobe-status" class="wardrobe-status" role="status" aria-live="polite">換上已買好的衣服，再出門冒險。</p></section>
+  </div>
+</dialog>
+<script>
+// A classic script also runs when this page is opened directly from a folder.
+// Modules cannot load over file://, so provide the working preview entrance.
+if(location.protocol==='file:'){
+  const loading=document.getElementById('map-loading');
+  loading.querySelector('strong').textContent='請從試玩網址進入森林';
+  loading.querySelector('p').textContent='直接開啟這個檔案無法啟動遊戲，請點下面的按鈕。';
+  const entrance=document.createElement('a');
+  entrance.href='http://127.0.0.1:8093/adventure-preview.html';
+  entrance.textContent='開啟森林試玩版 →';
+  entrance.style.cssText='display:inline-block;padding:14px 22px;margin-top:12px;border-radius:14px;background:#3b5d49;color:#fff;text-decoration:none;font-weight:700';
+  loading.append(entrance);
+}
+</script>
+<script type="module" src="adventure-entry.bundle.js?v=20261011-forest-wallet1"></script>
+</body></html>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,20 @@
+.exploration-pin{position:absolute;z-index:5;transform:translate(-50%,-100%);min-width:52px;min-height:44px;padding:5px 10px;border:1px solid #b8b38d;border-radius:16px;background:#fff8e6ed;color:#3d604d;font-size:23px;box-shadow:0 2px 0 #7c765c33;touch-action:manipulation}
+.exploration-pin small{display:block;font-size:12px;white-space:nowrap}.exploration-pin[data-offscreen=true]{border-style:dashed}.exploration-pin[data-locked=true]{background:#f7e8c8}
+/* Keep map anchors fixed while pressing; the global button active translation
+   otherwise moves the target away before pointerup and cancels the click. */
+.exploration-pin:not(:disabled):active{transform:translate(-50%,-100%)}
+.exploration-pin{transition:background .18s}
+#island-shop{width:min(760px,94vw);max-height:86dvh;padding:20px;background:#fff9e9;border:2px solid #c9b78d;border-radius:25px;color:#405d49}
+#island-shop::backdrop,#island-harbor::backdrop{background:#29483770;backdrop-filter:blur(3px)}
+#island-shop header{display:flex;align-items:center;gap:16px;position:sticky;top:-20px;background:#fff9e9;z-index:2;padding:10px 0}#island-shop header h2{margin:0 auto 0 0;font-size:23px}#island-shop nav{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+#island-shop nav button[aria-pressed=true]{background:#dfe9cf;border-color:#7f9c6c}
+.shop-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:8px 0}.shop-grid button{display:flex;flex-direction:column;align-items:center;padding:10px;border-radius:18px;gap:5px;min-height:160px;background:#fffcf3}.shop-grid canvas{width:100%;max-width:170px;height:auto;aspect-ratio:200/170}.shop-grid small{font-size:12px}.shop-grid .seed-icon{font-size:64px}.shop-confirm{position:sticky;bottom:-20px;background:#f6eedb;border-radius:14px;padding:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;min-height:60px}.shop-confirm small{flex-basis:100%;font-size:12px}.shop-welcome{text-align:center;padding:25px}.shop-welcome>span{font-size:85px;display:block}.shop-welcome button{display:block;margin:20px auto}
+#island-harbor{width:min(440px,90vw);background:#fff9e9;border:2px solid #c9b78d;border-radius:24px;padding:28px;text-align:center}#island-harbor .close{float:right}.harbor-boat{font-size:85px}.muted{font-size:14px;color:#778774}
+#challenge-prompt{font-size:28px;font-weight:bold;color:#4d6c56;margin:0 10px;text-align:center}.answer-choices button{min-width:55px}.battle-panel #question-row{flex-wrap:wrap}
+@media(max-width:600px){.shop-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#island-shop{padding:12px}.shop-confirm{bottom:-12px}#island-shop header{top:-12px}.shop-grid button{min-height:120px}.exploration-pin{font-size:20px;padding:4px 7px}.exploration-pin small{font-size:11px}}
+#island-shop .shop-confirm{display:flex!important}
+#island-invitation{position:absolute;right:22px;top:168px;width:270px;max-width:calc(100% - 34px);z-index:8;padding:18px;border:2px solid #dfc897;border-radius:22px 18px 24px 18px;background:#fff9e9f5;color:#3d5b46;box-shadow:0 4px 12px #294b3026;pointer-events:auto;animation:island-invite-in .22s ease-out}
+#island-invitation strong{display:block;padding-right:27px;font-size:18px;line-height:1.5}#island-invitation p{font-size:14px;line-height:1.7;margin:10px 0}#island-invitation small{display:block;color:#78866a;font-size:12px;margin-bottom:10px}#island-invitation .invitation-close{position:absolute;right:4px;top:4px;border:0;background:transparent;min-width:44px;padding:6px;font-size:19px}#island-invitation .invitation-enter{width:100%;min-height:46px}#island-invitation[hidden]{display:none}
+@keyframes island-invite-in{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+@media(max-width:700px){#island-invitation{top:auto;bottom:100px;right:12px;width:218px;padding:13px}#island-invitation strong{font-size:16px}#island-invitation p{font-size:12px;margin:6px 0}#island-invitation small{font-size:11px}}
+@media(prefers-reduced-motion:reduce){#island-invitation{animation:none}}

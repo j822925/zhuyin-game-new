@@ -1,0 +1,49 @@
+#expedition{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;margin:0;border:0;border-radius:0;padding:0;color:#345343;background:#d6e4c0 var(--zone-scene) center/cover no-repeat;overflow:hidden}
+.exp-header{position:absolute;z-index:5;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:start;padding:16px;gap:8px;background:linear-gradient(#fffaeddc,transparent)}
+.exp-header div{display:grid;gap:5px;background:#fffbece8;padding:12px 18px;border-radius:20px}.exp-header strong{font-size:24px}.exp-header nav{display:flex;gap:8px}
+#expedition button{background:#fffaed;color:#365a48;border:1px solid #b5c59b;border-radius:16px;padding:12px 18px;min-height:48px;font:inherit;cursor:pointer}
+#expedition button:hover{background:#e8efd2}.exp-field{position:absolute;inset:0}.exp-player{position:absolute;width:108px;height:120px;transform:translate(-50%,-100%);pointer-events:none;z-index:2}
+.exp-monsters{position:absolute;inset:0;pointer-events:none}.exp-monsters .exp-mob{pointer-events:auto;position:absolute;transform:translate(-50%,-100%);border:0!important;background:none!important;padding:0!important;display:grid;justify-items:center}.exp-mob img{width:125px;height:140px;object-fit:contain;filter:drop-shadow(0 10px 4px #252e3544)}.exp-mob small{padding:5px 10px;border-radius:20px;background:#fff9e7e6}.exp-mob.exp-boss img{width:230px;height:255px}
+.exp-foe{position:absolute;right:15%;top:15%;height:47%;width:35%;object-fit:contain;filter:drop-shadow(0 12px 6px #24263766)}
+.exp-return{position:absolute;left:10%;top:78%;transform:translate(-50%,-50%);z-index:3}
+.exp-panel{position:absolute;z-index:4;bottom:12px;left:50%;transform:translateX(-50%);width:min(740px,94%);padding:12px 20px;border-radius:24px;background:#fffbeeeF;box-sizing:border-box;max-height:65%;overflow:auto;text-align:center}
+.exp-panel h2,.exp-panel p{margin:6px}.exp-panel label{display:block}.exp-panel progress{display:block;width:100%;height:12px;accent-color:#799767}.exp-panel button{margin:4px}.exp-panel small{display:block}.exp-answers{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.exp-answers button{font-size:28px!important;min-width:85px}.exp-panel.exp-library{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}.exp-library h2{width:100%}.boss-card{width:180px;border:2px solid #cfb876;border-radius:18px;padding:10px;background:linear-gradient(#f8f0d4,#e4d7ad);display:grid;justify-items:center}.boss-card img{height:190px;width:100%;object-fit:contain}.locked-card{font-size:70px;height:190px;display:grid;place-items:center}.exp-warning{margin:15vh auto;padding:30px;background:#fff8e8;border-radius:22px;max-width:600px;text-align:center}
+
+/* Keep the teacher-recorded tone question inside the compact battle panel. */
+#expedition[data-view=battle] .exp-panel:has(.forest-tone-target){padding:6px 12px;max-height:38%;font-size:14px}
+#expedition[data-view=battle] .exp-panel:has(.forest-tone-target) p:empty{display:none}
+#expedition[data-view=battle] .exp-panel .forest-tone-target{display:inline-flex;gap:5px;font-size:25px;line-height:1.3;margin:4px 8px;vertical-align:middle}
+#expedition[data-view=battle] .exp-panel:has(.forest-tone-target) button{min-height:44px;padding:5px 15px;margin:3px}
+#expedition[data-view=battle] .exp-panel:has(.forest-tone-target) progress{height:7px}
+@keyframes boss-reveal{from{filter:brightness(2);transform:scale(.85)}to{filter:brightness(1);transform:scale(1)}}.exp-transform .exp-foe{animation:boss-reveal .8s ease-out}
+@media(max-width:650px){.exp-header{padding:6px}.exp-header div{font-size:12px;padding:8px}.exp-header strong{font-size:18px}.exp-header nav button{padding:8px!important}.exp-panel{padding:8px;max-height:58%}.exp-foe{top:20%;height:30%;right:4%}.exp-mob img{width:90px;height:105px}.exp-player{width:85px;height:96px}.exp-answers button{font-size:22px!important;min-width:60px}}
+@media(prefers-reduced-motion:reduce){.exp-transform .exp-foe{animation:none}}
+.exp-world{position:absolute;background:var(--zone-scene) center/100% 100% no-repeat}
+#expedition .exp-monsters{display:contents}.exp-mob img{pointer-events:none}.exp-mob small{font-size:12px}
+#expedition[data-view=field] .exp-panel{pointer-events:none;bottom:14px;width:auto;max-width:65%;padding:8px 18px;font-size:14px}
+#expedition[data-view=field] .exp-panel button{pointer-events:auto}
+#expedition[data-view=field] .exp-panel p:empty{display:none}
+#expedition .exp-stick{position:absolute;bottom:28px;left:24px;width:78px;height:78px;border-radius:50%;background:#fff8dfaa;border:8px solid #ffffff44;touch-action:none;z-index:100}
+#expedition .exp-return{left:auto;right:24px;top:auto;bottom:32px;transform:none;z-index:100}
+#expedition .exp-header{z-index:120}#expedition .exp-panel{z-index:120}
+#expedition.exp-local{background:transparent!important;pointer-events:none}
+#expedition.exp-local::backdrop{background:transparent;backdrop-filter:none}
+#expedition.exp-local .exp-world{background:none!important;inset:0!important;width:100%!important;height:100%!important}
+#expedition.exp-local .exp-player{visibility:hidden}
+#expedition.exp-local .exp-header{background:none;top:88px}
+#expedition.exp-local .exp-header>div{display:none}
+#expedition.exp-local .exp-header nav{margin-left:auto;pointer-events:auto}
+#expedition.exp-local .exp-panel{pointer-events:auto;width:min(620px,92%);max-height:48%;bottom:16px}
+#expedition.exp-local .exp-panel.exp-library{max-height:65%}
+@media(max-height:600px){#expedition.exp-local .exp-header{top:65px}#expedition.exp-local .exp-panel{max-height:53%}.exp-mob img{height:105px;width:95px}}
+#expedition{background-image:none}.exp-monsters .exp-mob:focus-visible{outline:3px solid #fff5af;outline-offset:6px}
+.exp-header{pointer-events:none}.exp-header>div,.exp-header nav{pointer-events:auto}.exp-mob.exp-boss img{width:190px;height:190px}.exp-mob.exp-boss{animation:boss-arrive .8s ease-out}@keyframes boss-arrive{from{opacity:0;filter:brightness(1.5)}to{opacity:1;filter:brightness(1)}}@media(prefers-reduced-motion:reduce){.exp-mob.exp-boss{animation:none}}
+/* Battle actors use the visible viewport, independently of the painted world. */
+#expedition:not(.exp-local)[data-view=battle] .exp-panel{max-height:48%;padding:10px 16px}
+#expedition:not(.exp-local)[data-view=battle] .exp-foe{object-fit:contain;object-position:center bottom;max-width:none;pointer-events:none}
+@media(max-height:500px){#expedition:not(.exp-local)[data-view=battle] .exp-header{padding:6px}#expedition:not(.exp-local)[data-view=battle] .exp-header>div{padding:6px 10px;font-size:12px}#expedition:not(.exp-local)[data-view=battle] .exp-header strong{font-size:17px}}
+/* Regional shops are optional stops. They never begin a battle or reset the visit. */
+#expedition .exp-shop-entry{position:absolute;transform:translate(-50%,-100%);z-index:110;max-width:230px;padding:12px 18px;border:2px solid #b99968;border-radius:18px;background:#fff4dce8;color:#405c4e;box-shadow:0 4px 0 #ad906255;font-size:17px}
+@media(max-width:700px){#expedition .exp-shop-entry{max-width:160px;font-size:14px;padding:10px}}
+
+#expedition .exp-world .exp-return{right:auto;bottom:auto;transform:translate(-50%,-50%);padding:7px 13px;background:#fff5dccc;border:2px solid #b99c62;box-shadow:0 3px 0 #a98d6044;z-index:100}#expedition .exp-shop-entry{width:clamp(120px,13vw,200px);padding:0;border:0;background:none;box-shadow:none;display:flex;flex-direction:column;align-items:center}#expedition .exp-shop-entry img{width:100%;height:145px;object-fit:contain;filter:drop-shadow(0 5px 3px #49332433)}#expedition .exp-shop-entry small{font-size:12px;background:#fff8e5e6;border-radius:12px;padding:4px 8px;white-space:nowrap}#expedition .exp-shop-entry:not(:disabled):active,#expedition .exp-mob:not(:disabled):active{transform:translate(-50%,-100%)}#expedition .exp-world .exp-return:not(:disabled):active{transform:translate(-50%,-50%)}#expedition[data-view=field] .exp-panel p:empty{display:none}

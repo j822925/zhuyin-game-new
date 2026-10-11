@@ -155,6 +155,7 @@ async function start(){
   if(!demo){if(!await auth.ensure(seat)){$('home-message').textContent='請先完成登入，再開始朗讀。';return;}auth.setPrimary(seat);}
   $('home-message').textContent='正在準備朗讀夥伴與反派…';
   readingRoundId=crypto.randomUUID();
+  beginIslandFarmRound({roundId:readingRoundId,mode:'reading',seat},{demo,verified:!demo&&auth.verified(seat)});
   const [profile,encounter]=await Promise.all([
    demo?Promise.resolve({avatar:'rabbit'}):auth.request({kind:'profile',seat}).catch(()=>null),
    demo?Promise.resolve(startDemoMonster(seat,readingRoundId,'reading')):auth.request({kind:'monster-start',monsterCatalog:'20261004-villains1',mode:'reading',seat,encounter:readingRoundId})
@@ -177,7 +178,7 @@ async function flushPending(){
  if(saving||demo||!seat)return;saving=true;$('retry-save').disabled=true;
  try{if(!await auth.ensure(seat))throw Error('authentication_required');
  for(const payload of [...pending].filter(p=>p.seat===seat)){
-  const out=await auth.request(payload);if(out.saved!==true)throw Error(out.error||'unconfirmed');
+  const out=await auth.request(payload);if(out.saved!==true)throw Error(out.error||'unconfirmed');completeIslandFarmRound(payload,{confirmed:true});
   pending=pending.filter(p=>p.roundId!==payload.roundId);storePending();
   if(payload.roundId===currentPayload?.roundId){$('return-guide').hidden=!appleMobile;const award=out.awards[0];$('stars').textContent=`⭐ +${award.stars}`;$('save-status').textContent=`紀錄已儲存，獲得 ${award.stars} 顆星星！${dailyAwardMessage(award)}`;readingBattle.result(award.stars,award);}
  }
@@ -212,4 +213,5 @@ window.addEventListener('pageshow',()=>{if(!$('play').hidden&&!locked&&!micBusy&
  $('leave').onclick=leave;$('stay').onclick=()=>$('leave-dialog').close();$('confirm-leave').onclick=()=>{$('leave-dialog').close();home();};
  $('again').onclick=()=>{if(hasUnsaved()){$('save-status').textContent='請先儲存這次紀錄，再開始下一回合。';return;}home();start();};
  $('retry-save').onclick=flushPending;
-load();
+mountFarmReturn();load();
+import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn} from './farm-learning.bundle.js?v=20261011-wallet1';
