@@ -1,4 +1,5 @@
 /* Local homepage rules: no new fonts or artwork downloads. */
+#learning-header-label{font:800 clamp(18px,2.6vw,27px)/1.3 "PingFang TC","Microsoft JhengHei",sans-serif;white-space:nowrap;color:#355a48;margin-right:auto}
 #home .worlds .world .home-level-title{display:block;font:800 clamp(23px,3vw,30px)/1.4 var(--island-title-font,"Microsoft JhengHei",sans-serif);color:#31574e;text-align:center;margin:2px 0 12px;letter-spacing:.04em}
 #home #forest-game-section{margin:32px 0 20px;padding:24px 20px 20px;border-top:3px dashed #bea778;background:#f5eacb;border-radius:0 0 26px 26px}
 #forest-game-heading{display:block;color:#71532b;font:800 clamp(23px,3vw,30px)/1.4 var(--island-title-font,"Microsoft JhengHei",sans-serif);margin:0 0 16px}

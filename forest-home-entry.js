@@ -3,6 +3,8 @@ import {classUrl} from './class-context.js';
 export function mountHomeDestinations(root=document){
  const home=root.querySelector('#home'),worlds=home?.querySelector('.worlds');
  if(!worlds)return;
+ const brand=root.querySelector('header a.brand');
+ if(brand&&!root.getElementById('learning-header-label')){const label=root.createElement('span');label.id='learning-header-label';label.textContent='學習廣場';brand.after(label);}
  const labels={'single':'聽音辨識','spelling':'拼音工坊','tone-entry':'聲調劇場','reading-entry':'朗讀小舞台'};
  for(const card of worlds.querySelectorAll('.world')){
   if(card.id==='forest-entry')continue;
@@ -22,7 +24,7 @@ export function mountHomeDestinations(root=document){
  let entry=root.getElementById('forest-entry');
  if(!entry){
   entry=root.createElement('a');entry.id='forest-entry';
-  entry.href=classUrl('adventure-preview.html?v=20261011-home-labels1');
+  entry.href=classUrl('adventure-preview.html?v=20261011-ipad2');
   entry.setAttribute('aria-label','注音探險島，進入冒險遊戲');
   entry.textContent='🌳 注音探險島　進入冒險 ▶';
  }

@@ -1,4 +1,4 @@
-import {cacheName,publicMedia,TTL} from './cache-policy.js?v=20260928-all1';
+import {cacheName,publicMedia,TTL} from './cache-policy.js?v=20261011-ipad2';
 const base=new URL('.',import.meta.url).href;
 let registration;
 export function startMediaCache(){
@@ -16,12 +16,12 @@ export async function missingMedia(paths){
  const urls=[...new Set(paths.filter(p=>publicMedia(p,base)).map(p=>new URL(p,base).href))];
  try{const cache=await caches.open(cacheName(base));const missing=[];for(const url of urls){const r=await cache.match(url);if(!r||Date.now()-Number(r.headers.get('x-media-saved'))>TTL)missing.push(url);}return missing;}catch{return urls;}
 }
-export async function prepareMedia(paths,{signal,onProgress=()=>{}}={}){
+export async function prepareMedia(paths,{signal,onProgress=()=>{},timeoutMs=8000}={}){
  const missing=await missingMedia(paths);let next=0,completed=0,failed=0;
  onProgress({completed,total:missing.length,failed});
  await Promise.all(Array.from({length:Math.min(2,missing.length)},async()=>{while(next<missing.length&&!signal?.aborted){
-  const url=missing[next++],controller=new AbortController(),abort=()=>controller.abort(),timer=setTimeout(abort,8000);signal?.addEventListener('abort',abort,{once:true});
-  try{if(signal?.aborted)throw Error('cancelled');const response=await fetch(url,{credentials:'omit',signal:controller.signal});if(!response.ok)throw Error('unavailable');await response.arrayBuffer();completed++;}catch{if(!signal?.aborted)failed++;}finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);}
+  const url=missing[next++],controller=new AbortController(),abort=()=>controller.abort(),timer=setTimeout(abort,timeoutMs);signal?.addEventListener('abort',abort,{once:true});
+  try{if(signal?.aborted)throw Error('cancelled');const response=await fetch(url,{credentials:'omit',headers:{'X-Zhuyin-Prepare':'1'},signal:controller.signal});if(!response.ok)throw Error('unavailable');await response.arrayBuffer();completed++;}catch{if(!signal?.aborted)failed++;}finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);}
   onProgress({completed,total:missing.length,failed});
  }}));return {completed,total:missing.length,failed,cancelled:!!signal?.aborted};
 }
