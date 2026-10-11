@@ -1,4 +1,4 @@
-import {addPreparationButton} from './preparation.js?v=20261007-ipad1';
+import {addPreparationButton} from './preparation.js?v=20261011-ipad2';
 import {tutorClips} from './little-teacher.js?v=20261009-accounts1';
 import {warmAudio} from './asset-cache.js?v=20260928-all1';
 import {playTutorOnce} from './exam-review.js?v=20261009-accounts1';

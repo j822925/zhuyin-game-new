@@ -1,7 +1,7 @@
-import {bootPreparation} from './preparation.js?v=20261007-ipad1';
+import {bootPreparation} from './preparation.js?v=20261011-ipad2';
 (async()=>{void bootPreparation().catch(()=>{});
-await import('./app.js?v=20261011-forest-wallet1');
-await import('./forest-home-entry.js?v=20261011-home-labels1');
+await import('./app.js?v=20261011-ipad2');
+await import('./forest-home-entry.js?v=20261011-ipad2');
 await import('./child-navigation.js?v=20260928-all1');
 await import('./reading-entry.js?v=20261008-safari2');
 await import('./tone-entry.js?v=20261011-teacher1');

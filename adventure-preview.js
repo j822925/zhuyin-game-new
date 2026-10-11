@@ -1,4 +1,5 @@
 import {forestMusic,installForestMusic} from './adventure-music.js';
+import {installAdventureControls} from './adventure-controls.js';
 installForestMusic();
 import {interiorDoorGeometry} from './adventure-room.js';
 import {equippedOutfit,outfitCharacter,defaultOutfit} from './adventure-model.js';
@@ -93,10 +94,11 @@ function renderState(){
 function needFood(){if(hasEnergy(state))return false;kitchen.open('bag','🥄 先吃點東西');return true;}
 function syncEnergyAccess(){
   const energy=state.life.nutrition.energy;if(energy===lastEnergyAccess)return;lastEnergyAccess=energy;const empty=energy===0;
-  for(const el of [$('wardrobe-open'),$('room-wardrobe'),$('find-monster'),monsterButton,document.querySelector('.topbar a.hud-button')]){el.dataset.energyLocked=String(empty);el.setAttribute('aria-disabled',String(empty));}
+  for(const el of [$('wardrobe-open'),$('room-wardrobe'),$('find-monster'),monsterButton,$('companions-open')]){el.dataset.energyLocked=String(empty);el.setAttribute('aria-disabled',String(empty));}
   if(empty){companions?.close();shop?.close();exploration?.close();if(wardrobe.open)closeWardrobe();}
 }
-document.querySelector('.topbar a.hud-button').addEventListener('click',e=>{e.preventDefault();if(!hasEnergy(state)){needFood();return;}companions.open();});
+$('companions-open').addEventListener('click',e=>{e.preventDefault();if(!hasEnergy(state)){needFood();return;}companions.open();});
+installAdventureControls();
 function stopMoving(){route=[];arrival=null;keys.clear();joystick.reset();if(scene){scene.player.moving=false;scene.player.phase=0;scene.marker=null;}}
 const canWalk=(x,y)=>{
   if(isInterior(scene?.area))return roomWalkable(x,y,state,scene.area);

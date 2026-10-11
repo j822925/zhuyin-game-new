@@ -1,5 +1,5 @@
-const CACHE_VERSION='v2',MAX_ITEMS=512,MAX_BYTES=96*1024*1024,MAX_FILE=4*1024*1024,TTL=30*86400000;
-function publicMedia(path,base){try{const u=new URL(path,base),b=new URL(base);return u.origin===b.origin&&u.pathname.startsWith(b.pathname)&&/^(audio|assets)\//.test(u.pathname.slice(b.pathname.length))&&/\.(mp3|wav|ogg|webp|png|jpg|jpeg|svg)$/i.test(u.pathname);}catch{return false;}}
+const CACHE_VERSION='v2',MAX_ITEMS=2048,MAX_BYTES=256*1024*1024,MAX_FILE=12*1024*1024,TTL=30*86400000;
+function publicMedia(path,base){try{const u=new URL(path,base),b=new URL(base);return u.origin===b.origin&&u.pathname.startsWith(b.pathname)&&/^(audio|assets)\//.test(u.pathname.slice(b.pathname.length))&&/\.(mp3|m4a|wav|ogg|webp|png|jpg|jpeg|svg)$/i.test(u.pathname);}catch{return false;}}
 function cacheName(base){return 'zhuyin-public-media-'+encodeURIComponent(new URL(base).pathname)+'-'+CACHE_VERSION;}
 function orderedCards(cards){const order=Array.from('ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦㄧㄨㄩ');return cards.filter(c=>order.includes(c.symbol)).slice().sort((a,b)=>order.indexOf(a.symbol)-order.indexOf(b.symbol));}
 
@@ -20,7 +20,7 @@ async function remember(cache,url,response){
 async function load(request,event){
  const cache=await caches.open(CACHE),url=request.url,cached=await cache.match(url);let response=cached&&Date.now()-Number(cached.headers.get('x-media-saved'))<TTL?cached:null;
  if(!response){let pending=inflight.get(url);if(!pending){pending=(async()=>{const headers=new Headers(request.headers);headers.delete('range');headers.delete('if-range');const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),20000);try{return await fetch(new Request(url,{headers,credentials:'omit',signal:controller.signal}));}finally{clearTimeout(timer);}})();inflight.set(url,pending);pending.finally(()=>inflight.delete(url)).catch(()=>{});}
-  try{response=(await pending).clone();if(!response.ok&&cached)response=cached;else event.waitUntil(remember(cache,url,response.clone()).catch(()=>{}));}catch(e){if(!cached)throw e;response=cached;}
+  try{response=(await pending).clone();if(!response.ok&&cached)response=cached;else{const saved=remember(cache,url,response.clone()).catch(()=>{});event.waitUntil(saved);if(request.headers.get('X-Zhuyin-Prepare')==='1')await saved;}}catch(e){if(!cached)throw e;response=cached;}
  }
  const range=request.headers.get('range');if(!range||response.status!==200)return response;const match=/^bytes=(\d*)-(\d*)$/.exec(range);if(!match||(!match[1]&&!match[2]))return fetch(request);
  const body=await response.arrayBuffer(),length=body.byteLength,start=match[1]?Number(match[1]):Math.max(0,length-Number(match[2])),end=match[1]?(match[2]?Math.min(Number(match[2]),length-1):length-1):length-1;
