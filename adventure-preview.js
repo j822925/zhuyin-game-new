@@ -81,13 +81,13 @@ function renderState(){
   journal('mission-dress',state.outfit==='gardener');journal('mission-walk',state.visited);journal('mission-battle',state.wins>0);
   canvas.dataset.outfit=equippedOutfit(state);canvas.dataset.wand=String(state.wand);
   if(art)drawDoll($('portrait'),art,{outfit:state.outfit,wand:false,height:81});
-  document.querySelector('.companion strong').textContent='棉花兔';$('portrait').setAttribute('aria-label','棉花兔');$('wardrobe-open').hidden=false;document.title='森林世界 · 注音探險島';document.querySelector('.brand h1').textContent='森林世界';
+  document.querySelector('.companion strong').textContent='棉花兔';$('portrait').setAttribute('aria-label','棉花兔');$('wardrobe-open').hidden=false;document.title='注音探險島';document.querySelector('.brand h1').textContent='注音探險島';
   if(activeWalker&&activeWalker.role.id!=='rabbit'){
     const role=activeWalker.role,portrait=$('portrait'),ctx=portrait.getContext('2d');
     drawDoll(portrait,art,{outfit:equippedOutfit(state),wand:false,height:81});
     document.querySelector('.companion strong').textContent=role.name;$('wearing-name').textContent=OUTFITS.find(o=>o.id===equippedOutfit(state))?.name||'小屋夥伴';
     portrait.setAttribute('aria-label',role.name);$('wardrobe-open').hidden=!['fox','bear'].includes(role.id);
-    document.title=`森林世界 · 注音探險島`;document.querySelector('.brand h1').textContent=`森林世界`;
+    document.title=`注音探險島`;document.querySelector('.brand h1').textContent=`注音探險島`;
   }
 }
 function needFood(){if(hasEnergy(state))return false;kitchen.open('bag','🥄 先吃點東西');return true;}

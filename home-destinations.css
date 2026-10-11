@@ -1,0 +1,9 @@
+/* Local homepage rules: no new fonts or artwork downloads. */
+#home .worlds .world .home-level-title{display:block;font:800 clamp(23px,3vw,30px)/1.4 var(--island-title-font,"Microsoft JhengHei",sans-serif);color:#31574e;text-align:center;margin:2px 0 12px;letter-spacing:.04em}
+#home #forest-game-section{margin:32px 0 20px;padding:24px 20px 20px;border-top:3px dashed #bea778;background:#f5eacb;border-radius:0 0 26px 26px}
+#forest-game-heading{display:block;color:#71532b;font:800 clamp(23px,3vw,30px)/1.4 var(--island-title-font,"Microsoft JhengHei",sans-serif);margin:0 0 16px}
+#forest-entry.forest-game-link{display:block;color:#365a43;text-decoration:none;border-radius:28px;box-sizing:border-box}
+#forest-entry .island-nameplate{margin:0;min-height:110px;box-sizing:border-box}
+#forest-entry .forest-game-go{margin-left:auto;flex:none;font-size:22px;font-weight:800;padding:12px 18px;background:#456f57;color:#fffbed;border-radius:16px}
+#forest-entry:focus-visible{outline:4px solid #bd6e26;outline-offset:4px}
+@media(max-width:550px){#home #forest-game-section{padding:20px 12px 14px}#forest-entry .island-nameplate{flex-wrap:wrap;gap:12px;padding:16px 10px}#forest-entry .forest-game-go{width:100%;text-align:center;box-sizing:border-box;font-size:21px}}
