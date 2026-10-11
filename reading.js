@@ -111,7 +111,7 @@ if(allowMicCheck){
 }
 function renderQuestion(){
  $('speech-help').hidden=true;
- cancel();locked=false;$('tap-record').disabled=false;$('tap-record').textContent='🎙️ 開始錄音';$('tap-record').dataset.state='idle';
+ cancel();locked=false;$('tap-record').hidden=false;$('tap-record').disabled=false;$('tap-record').textContent='🎙️ 開始錄音';$('tap-record').dataset.state='idle';
  $('feedback').textContent='';$('next').hidden=true;$('speech-status').textContent='點一下，開始讀';
  $('progress').textContent=`第 ${rows.length+1} / 5 題`;$('dots').replaceChildren();
  for(let i=0;i<5;i++){const dot=document.createElement('span');dot.className='dot '+(i===rows.length?'current':i<rows.length?rows[i].firstCorrect?'correct':'wrong':'');$('dots').append(dot);}
@@ -122,13 +122,13 @@ function renderQuestion(){
 function answer(text){
  if(locked||$('play').hidden)return;const word=deck[rows.length],decision=readingAttemptDecision(word,text);
  if(decision==='retry'){
-  $('feedback').textContent='這次辨識還不能確認，不扣分。請再試一次。';
+  $('feedback').textContent='沒聽清楚，再讀一次（不扣分）';
   $('speech-status').textContent='🎙️ 再試一次';
   $('tap-record').disabled=false;$('next').hidden=true;return;
  }
  locked=true;const correct=decision==='correct';rows.push({wordId:word.id,target:word.zhuyin,firstCorrect:correct,seconds:Math.round((Date.now()-questionStarted)/1000)});
- $('tap-record').disabled=true;$('feedback').textContent=correct?'⭐ 讀對了！真棒！':`這題答錯了。辨識結果是「${String(text).slice(0,60)}」，題目是「${word.word}」。`;
- $('speech-status').textContent=correct?`你讀的是「${word.word}」`:'這題已記錄，下一題再加油！';
+ $('tap-record').disabled=true;$('tap-record').hidden=true;$('feedback').textContent=correct?'⭐ 讀對了！':`再練習「${word.word}」`;
+ $('speech-status').textContent='';
  readingBattle.answer(correct,rows.length,rows.every(r=>r.firstCorrect));
  $('next').textContent=rows.length===5?'看看我的星星 →':'下一題 →';$('next').hidden=false;
 }

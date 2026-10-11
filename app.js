@@ -12,6 +12,7 @@ import {createRewards} from './rewards.js?v=20261007-ipad1';
 import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
 import {createStudentProfile} from './student-profile.js?v=20261007-ipad1';
 import {portrait} from './characters.js?v=20261007-ipad1';
+import {createQuestionReport} from './question-report.js?v=20261011-reports1';
 import {setupChildUI} from './child-ui.js?v=20260928-all1';
 import {setupCozyUI} from './cozy-ui.js?v=20261007-ipad1';
 import {createStudentAuth} from './student-auth.js?v=20261009-accounts1';
@@ -32,11 +33,11 @@ function stopPracticeReview(){practiceController?.abort();practiceController=nul
 async function replayWrongSpelling(){
  stopPracticeReview();audio.pause();voiceHelp.stop();audioReady=false;setAnswerEnabled(false);tutorButton.disabled=true;
  const controller=new AbortController(),question=rounds[active].current,currentSession=session;practiceController=controller;
- $('audio-status').textContent='一起聽：聲符 → 帶聲調的韻母 → 完整題目';
+ $('audio-status').textContent='🔊 一起聽';
  try{await playTutorOnce(reviewAudio,question,{signal:controller.signal});
   if(controller.signal.aborted||session!==currentSession||rounds[active]?.current!==question)return;
   clearWrongSpelling(question);
-  audioReady=true;setAnswerEnabled(!rounds[active].locked);$('audio-status').textContent='錯的格子清空了，換你再拼一次！';
+  audioReady=true;setAnswerEnabled(!rounds[active].locked);$('audio-status').textContent='再拼一次';
  }catch{if(!controller.signal.aborted){audioReady=false;setAnswerEnabled(false);$('audio-status').textContent='聲音暫時沒有播完，請按喇叭再聽一次。';}}
  finally{if(practiceController===controller)practiceController=null;}
 }
@@ -64,6 +65,7 @@ if(!demo)$('duo').textContent='🤝 連線輪流';
 const apiClient=createApiClient(API);
 const postJSON=payload=>apiClient.post(payload);
 const auth=createStudentAuth({demo,getConfig:()=>config,post:postJSON});
+const questionReport=createQuestionReport({parent:document.querySelector('#game .question-card'),demo,request:payload=>auth.request(payload),getQuestion:()=>rounds[active]?.current?{seat:seats[active],mode,questionId:rounds[active].current.id}:null});
 let rewards,profiles,loginGate;
 const teamUI=createMultiplayer({localPicker:demo,getIdentity:seat=>profiles?.identity(seat),getOwned:seat=>rewards?.owned(seat),getSeats:()=>[$('seat').value,$('partner').value],onExit:home,onFinish:(payload,html)=>{screen('result');clearCharacters($('result-details'));$('result-details').innerHTML=html;persistResults([payload]);}});
 function renderIdentity(){teamUI.refreshPicker();profiles?.renderHeader();if($('change-student'))$('change-student').hidden=!auth.verified($('seat').value);document.querySelector('.mascot').innerHTML=portrait(auth.verified($('seat').value)?profiles?.identity($('seat').value).character||rewards.avatar($('seat').value):rewards.avatar(''));}
@@ -150,7 +152,7 @@ async function play(){
  const currentSession=session,question=rounds[active]?.current;
  if(!question)return;
  $('audio-status').textContent='仔細聽…';
- try{audio.currentTime=0;await audio.play();if(session!==currentSession||rounds[active]?.current!==question)return;audioReady=true;setAnswerEnabled(!rounds[active].locked);$('audio-status').textContent='需要的話，可以再聽一次。';}
+ try{audio.currentTime=0;await audio.play();if(session!==currentSession||rounds[active]?.current!==question)return;audioReady=true;setAnswerEnabled(!rounds[active].locked);$('audio-status').textContent='';}
  catch{if(session!==currentSession||rounds[active]?.current!==question)return;audioReady=false;setAnswerEnabled(false);$('audio-status').textContent='請按喇叭播放聲音；若仍無聲音，請確認音量與網路。';}
 }
 audio.addEventListener('error',()=>{audioReady=false;setAnswerEnabled(false);$('audio-status').textContent='這段聲音暫時無法播放，請再按一次喇叭。';});
@@ -158,12 +160,13 @@ const opponent=createOpponent();$('game').classList.add('battle-layout');$('game
 const practiceBattle=createBattle(opponent,()=>$('player-turn'));
 function renderQuestion(){
  stopPracticeReview();
+ questionReport.refresh();$('game').classList.remove('answered');
  practiceBattle.reset();clearCharacters($('player-turn'));
  tutor.close();tutorButton.hidden=mode!=='spelling'||(!demo&&!config.tutorWrites);
  const r=rounds[active];updateOpponent(opponent,MONSTERS.find(c=>c.id===r.monsterId),r.deck.length,r.index,{wins:r.monsterWins,levels:r.monsterLevels,requiredLevels:r.monsterRequiredLevels,collected:r.monsterCollected,perfect:r.mistakes===0});r.deck[r.index]=spellingParts(r.current);const q=r.current;document.getElementById('game').classList.toggle('spelling-active',mode==='spelling');r.questionStarted=Date.now();selected={};audio.pause();audio.src=audioSource(q.audio);audioReady=false;
  $('world-title').textContent=names[mode];$('question-number').textContent=`${r.index+1} / ${r.deck.length}`;
  $('progress-fill').style.width=`${r.index/r.deck.length*100}%`;$('player-turn').classList.toggle('profile-playing',!duo);if(duo)$('player-turn').replaceChildren();else profiles.renderPlayer($('player-turn'),seats[active]);
- $('instruction').textContent=mode==='spelling'?'聽一聽，用注音積木拼出聲音':'仔細聽，選出正確的注音';$('feedback').textContent='';$('next').hidden=true;$('options').replaceChildren();$('spelling').hidden=mode!=='spelling';
+ $('instruction').textContent=mode==='spelling'?'拼出聲音':'選出注音';$('feedback').textContent='';$('next').hidden=true;$('options').replaceChildren();$('spelling').hidden=mode!=='spelling';
  if(mode!=='spelling'){for(const option of optionsFor(q,currentPool,choices)){const b=document.createElement('button');b.className='option';b.textContent=option.label;b.onclick=()=>answer(option.label,b);$('options').append(b);}}
  else{showSpellingTone(document.querySelector('#spelling .slots'),q);document.querySelectorAll('.slot').forEach(b=>{b.hidden=false;b.textContent=b.dataset.slot==='initial'?'聲符':'韻符';b.classList.remove('filled','blank-choice');b.setAttribute('aria-label',b.dataset.slot==='initial'?'聲符位置':'韻符或結合韻位置');});$('tiles').replaceChildren();const questionTiles=spellingChoices(q,currentPool);for(const kind of ['initial','final']){const row=document.createElement('div');row.className='tile-row';const tiles=questionTiles;for(const value of tiles[kind]){const b=document.createElement('button');b.className='tile';setVerticalSymbols(b,value);b.setAttribute('aria-label',value||'空白：這一格不需要注音');b.dataset.kind=kind;b.dataset.value=value;b.draggable=true;b.onclick=()=>place(kind,value);b.ondragstart=e=>e.dataTransfer.setData('text/plain',JSON.stringify({kind,value}));b.onpointerup=e=>{if(e.pointerType==='mouse')return;const slot=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-slot]');if(slot?.dataset.slot===kind)place(kind,value);};row.append(b);}$('tiles').append(row);}}
  setAnswerEnabled(false);if(duo)teamUI.turnPrompt(active,seats,()=>{r.questionStarted=Date.now();play();});else play();
@@ -172,9 +175,9 @@ function place(kind,value){if(!audioReady||rounds[active].locked)return;if(!['in
 function answer(value,button){
  if(!audioReady)return;const r=rounds[active],outcome=r.answer(value);if(outcome.ignored)return;practiceBattle.answer(outcome.correct);updateOpponent(opponent,MONSTERS.find(c=>c.id===r.monsterId),r.deck.length,r.index+(outcome.correct?1:0),{wins:r.monsterWins,levels:r.monsterLevels,requiredLevels:r.monsterRequiredLevels,collected:r.monsterCollected,perfect:r.mistakes===0});
  if(!outcome.correct){if(button){button.classList.add('wrong');button.disabled=true;} $('feedback').textContent='🔁 👂';if(mode==='spelling')void replayWrongSpelling();else play();return;}
- if(button)button.classList.add('correct');setAnswerEnabled(false);
+ if(button)button.classList.add('correct');setAnswerEnabled(false);$('game').classList.add('answered');
  $('feedback').textContent=outcome.firstCorrect?'⭐ ✨':'✅ ⭐';
- $('next').textContent=outcome.finished&&active===rounds.length-1?'🎉 →':duo?`${teamUI.character((active+1)%2)} ▶`:'▶';$('next').hidden=false;$('next').focus();
+ $('next').textContent=outcome.finished&&active===rounds.length-1?'🎉 →':duo?`${teamUI.character((active+1)%2)} 下一題 ▶`:'下一題 ▶';$('next').hidden=false;$('next').focus();
 }
 function next(){const r=rounds[active];if(!r.locked)return;r.next();if(rounds.every(x=>x.index>=x.deck.length)){finish();return;}active=(active+1)%rounds.length;if(rounds[active].index>=rounds[active].deck.length)active=(active+1)%rounds.length;renderQuestion();}
 function finish(){stopPracticeReview();practiceBattle.reset();clearCharacters($('player-turn'));audio.pause();teamUI.stop();screen('result');let html='';const results=[];

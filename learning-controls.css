@@ -1,0 +1,44 @@
+/* Only practice presentation; no changes to answer or reward rules. */
+#game .question-report{grid-column:1/-1;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:14px}
+#game #question-report{min-height:44px;padding:6px 14px;font-size:16px;box-shadow:none}
+#game #question-report-status:empty{display:none}
+#game #spelling>.small{display:none}
+#game #audio-status:empty,#game #feedback:empty{display:none}
+.cozy-ui #game.battle-layout .feedback{margin:6px 0;font-size:28px;min-height:0}
+.cozy-ui #game.battle-layout #next{min-height:54px;padding:8px 20px;margin:8px auto;font-size:26px}
+.cozy-ui #game.battle-layout .options{margin:12px auto}
+.cozy-ui #game.battle-layout #check-spelling{min-height:52px;padding:8px 20px;margin:6px auto}
+.cozy-ui #game.battle-layout .question-card{padding:14px 12px}
+@media(min-width:700px) and (max-height:750px){
+ .cozy-ui #game.battle-layout{gap:8px}
+ .cozy-ui #game.battle-layout .listen{height:72px;min-height:72px;width:90px;font-size:46px}
+ .cozy-ui #game.battle-layout .option{min-height:86px}
+ .cozy-ui #game.battle-layout .audio-status{margin:4px 0;font-size:14px}
+ .cozy-ui #game.battle-layout .progress-track{margin:8px 0}
+ .cozy-ui #game.battle-layout .game-top{margin:0}
+}
+@media(max-width:799px){
+ /* Do the question first; decorative characters no longer push controls down. */
+ .cozy-ui #game.battle-layout>.question-card{grid-row:3}
+ .cozy-ui #game.battle-layout>.practice-opponent,.cozy-ui #game.battle-layout>#player-turn{grid-row:4}
+}
+@media(max-width:699px){
+ .cozy-ui #game.battle-layout .option{min-width:54px;min-height:80px;font-size:38px}
+ .cozy-ui #game.battle-layout #next{position:sticky;bottom:10px;z-index:3;box-shadow:0 0 0 6px #fffdf2}
+}
+@media(min-width:800px) and (max-width:1200px){
+ .cozy-ui #game.battle-layout.spelling-active{grid-template-columns:110px minmax(0,1fr) 110px}
+}
+.cozy-ui #game.spelling-active.answered #check-spelling{display:none}
+#game #question-report{border:2px solid #d8cda9;border-radius:16px;background:#fffbed;color:#30574e;font-family:inherit;cursor:pointer;touch-action:manipulation}
+#game #question-report:disabled{opacity:.65;cursor:default}
+@media(max-width:699px){
+ .cozy-ui #game.spelling-active .question-card{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .cozy-ui #game.spelling-active #listen{grid-column:1;grid-row:1;justify-self:center;margin:0;height:76px;min-height:76px}
+ .cozy-ui #game.spelling-active #little-teacher{grid-column:2;grid-row:1;justify-self:center;margin:0;height:76px;min-height:76px}
+ .cozy-ui #game.spelling-active #audio-status{grid-column:1/-1;grid-row:2}
+ .cozy-ui #game.spelling-active #spelling{grid-column:1/-1;grid-row:3}
+ .cozy-ui #game.spelling-active #feedback{grid-column:1/-1;grid-row:4}
+ .cozy-ui #game.spelling-active #next{grid-column:1/-1;grid-row:5}
+ .cozy-ui #game.spelling-active .question-report{grid-column:1/-1;grid-row:6}
+}

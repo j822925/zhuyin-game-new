@@ -43,7 +43,7 @@ test('clear different vocabulary is scored incorrect once and permits the next q
   const h=harness([target]);h.answer(heard);
   assert.equal(h.context.rows.length,1);assert.equal(h.context.rows[0].firstCorrect,false);
   assert.equal(h.context.locked,true);assert.equal(h.$('next').hidden,false);assert.equal(h.$('tap-record').disabled,true);
-  assert.match(h.$('feedback').textContent,/答錯/);assert.equal(h.battles[0][0],false);
+  assert.equal(h.$('feedback').textContent,`再練習「${target}」`);assert.equal(h.$('tap-record').hidden,true);assert.equal(h.battles[0][0],false);
   h.answer(target);assert.equal(h.context.rows.length,1);assert.equal(h.context.rows[0].firstCorrect,false);
  }
 });
@@ -63,7 +63,7 @@ test('decodable far readings outside the question bank now count as wrong, not u
  for(const [target,heard] of [['早安','量子力學'],['企鵝','雞雞'],['蠟燭','拉茲'],['叉子','叉子使用繁體中文字幕']]){
   assert.ok(!READING_WORDS.some(w=>w.word===heard),'regression case must be outside question bank');
   const h=harness([target]);h.answer(heard);assert.equal(h.context.rows.length,1,target+' / '+heard);
-  assert.equal(h.context.rows[0].firstCorrect,false);assert.match(h.$('feedback').textContent,/答錯/);
+  assert.equal(h.context.rows[0].firstCorrect,false);assert.equal(h.$('feedback').textContent,`再練習「${target}」`);assert.equal(h.$('tap-record').hidden,true);
   assert.equal(h.$('next').hidden,false);h.answer(target);assert.equal(h.context.rows.length,1);
  }
 });
