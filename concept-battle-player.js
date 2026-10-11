@@ -1,7 +1,7 @@
 import {readSheet,WOLF_ACTIONS,wolfPose} from './wolf-battle-player.js?v=20261003-all-motion1';
 import {CONCEPT_BODY_RATIOS} from './data/concept-battle-scale.js?v=20261004-villains1';
 import {conceptAttackEffect,drawConceptAttackEffect} from './concept-projectiles.js?v=20261004-villains1';
-import {loadPackedBattle} from './battle-frame-loader.js?v=20261007-ipad1';
+import {loadPackedBattle} from './battle-frame-loader.js?v=20261011-battle1';
 export {WOLF_ACTIONS as CONCEPT_ACTIONS};
 const clamp=t=>Math.max(0,Math.min(1,t));
 export class ConceptBattleSprite{

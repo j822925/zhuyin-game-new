@@ -6,7 +6,9 @@ import {fileURLToPath} from 'node:url';
 import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url),{chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
 const root=fileURLToPath(new URL('../',import.meta.url));
+let preparedNetwork=0;
 const server=http.createServer((req,res)=>{
+ if(req.headers['x-zhuyin-prepare']==='1')preparedNetwork++;
  const url=new URL(req.url,'http://localhost');
  if(url.pathname==='/__battle-preparation.html'){res.setHeader('Content-Type','text/html');res.end('<!doctype html><body>Battle preparation test</body>');return;}
  const file=path.resolve(root,'.'+decodeURIComponent(url.pathname));
@@ -73,6 +75,15 @@ try{
  const preparation=await page.evaluate(()=>assets.prepareMedia(preload.BATTLE_PRELOAD));assert.equal(preparation.failed,0);
  // The old worker saves after responding. The new platform worker will await it.
  await page.waitForFunction(async()=>!(await assets.missingMedia(preload.BATTLE_PRELOAD)).length,{},{timeout:30000});
+ await page.evaluate(async()=>{const foot=document.createElement('div');foot.className='home-foot';document.body.append(foot);const {addPreparationButton}=await import('./preparation.js');addPreparationButton(()=>[]);});
+ await page.locator('.prepare-launch').click();
+ await page.waitForFunction(()=>document.querySelector('.prepare-status')?.textContent.startsWith('✓ 準備完成'),{},{timeout:60000});
+ await page.locator('[data-close]').click();await page.waitForFunction(()=>!document.querySelector('.prepare-launch').disabled);
+ const beforeSecondPreparation=preparedNetwork;
+ await page.locator('.prepare-launch').click();
+ await page.waitForFunction(()=>document.querySelector('.prepare-status')?.textContent.startsWith('✓ 準備完成'));
+ assert.equal(preparedNetwork,beforeSecondPreparation,'Second preparation must not download existing battle/adventure media');
+ await page.locator('[data-close]').click();
  await page.context().setOffline(true);
  const offline=await page.evaluate(async()=>{
   let poses=0;const ids=[...new Set(characters.PROFILE_CHARACTERS.map(c=>catalog.battleCharacter(c.id)))];
@@ -84,6 +95,6 @@ try{
   function assertPixels(canvas,id){if(!canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data.some(v=>v))throw Error('Empty offline pose '+id);}
  });
  assert.equal(offline.actors,84);assert.deepEqual(errors,[]);
- const report={preparation,offline,collectionCards:36,collectedCards:2,pngFallback:fallback,manualCardRetry:true,slowResponseMs:9000,slowRequests,errors,physicalIPadTested:false};
+ const report={preparation,offline,collectionCards:36,collectedCards:2,pngFallback:fallback,manualCardRetry:true,preparationButtonIntegrated:true,secondPreparationDownloads:0,slowResponseMs:9000,slowRequests,errors,physicalIPadTested:false};
  console.log(JSON.stringify(report));if(process.env.TEST_REPORT)fs.writeFileSync(process.env.TEST_REPORT,JSON.stringify(report,null,2));
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}

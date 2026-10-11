@@ -1,6 +1,6 @@
 import {createQuestionReport} from './question-report.js?v=20261011-reports2';
-import {createReadingBattle} from './reading-battle.js?v=20261007-ipad1';
-import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261007-ipad1';
+import {createReadingBattle} from './reading-battle.js?v=20261011-battle1';
+import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261011-battle1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20261009-accounts1';
 import './asset-cache.js?v=20260928-all1';
 import {readingStars,readingAttemptDecision,READING_WORDS} from './reading-core.js?v=20261008-safari2';

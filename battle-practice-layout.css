@@ -1,0 +1,24 @@
+/* Practice-only tablet layout; preserve upright zhuyin and touch-sized choices. */
+@media(min-width:1000px) and (max-width:1200px){
+ .cozy-ui #game.battle-layout,.cozy-ui #game.battle-layout.spelling-active{grid-template-columns:minmax(220px,1fr) minmax(440px,2fr) minmax(220px,1fr)}
+ .cozy-ui #game.battle-layout.spelling-active>.question-card{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:none}
+ .cozy-ui #game.battle-layout.spelling-active #listen{grid-column:1;grid-row:1;justify-self:center;margin:0}
+ .cozy-ui #game.battle-layout.spelling-active #little-teacher{grid-column:2;grid-row:1;justify-self:center;margin:0}
+ .cozy-ui #game.battle-layout.spelling-active #audio-status{grid-column:1/-1;grid-row:2}
+ .cozy-ui #game.battle-layout.spelling-active #spelling{grid-column:1/-1;grid-row:3;grid-template-columns:130px minmax(0,1fr);gap:8px 12px;max-width:100%;width:100%;margin:0}
+ .cozy-ui #game.battle-layout.spelling-active #spelling .slots{padding-left:0;padding-right:36px}
+ .cozy-ui #game.battle-layout.spelling-active #spelling .spelling-tone{left:100px}
+ .cozy-ui #game.battle-layout.spelling-active #spelling .slots[data-neutral=true] .spelling-tone{left:47px}
+ .cozy-ui #game.battle-layout.spelling-active #spelling .tile-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%}
+ .cozy-ui #game.battle-layout.spelling-active #spelling .tile{min-width:0;min-height:64px;width:100%;padding:6px 2px;font-size:32px}
+ .cozy-ui #game.battle-layout.spelling-active #feedback{grid-column:1/-1;grid-row:4}
+ .cozy-ui #game.battle-layout.spelling-active #next{grid-column:1/-1;grid-row:5}
+ .cozy-ui #game.battle-layout.spelling-active .question-report{grid-column:1/-1;grid-row:6}
+}
+@media(min-width:700px) and (max-width:999px){
+ .cozy-ui #game.battle-layout,.cozy-ui #game.battle-layout.spelling-active{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px}
+ .cozy-ui #game.battle-layout>.question-card{grid-column:1/-1;grid-row:3}
+ .cozy-ui #game.battle-layout>.practice-opponent{grid-column:1;grid-row:4;padding-top:0}
+ .cozy-ui #game.battle-layout>#player-turn{grid-column:2;grid-row:4}
+ .cozy-ui #game.battle-layout .opponent-art,.cozy-ui #game.battle-layout #player-turn .playing-character,.cozy-ui #game.battle-layout #player-turn .animal-face{height:240px;width:100%}
+}

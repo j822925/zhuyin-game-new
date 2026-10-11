@@ -1,13 +1,13 @@
 // Battle art and timing are independent of the home/wardrobe skeleton.
-import {drawBlossom} from './battle-effects.js?v=20261007-ipad1';
+import {drawBlossom} from './battle-effects.js?v=20261011-battle1';
 import {BATTLE_ART,BATTLE_META} from './data/battle-catalog.js?v=20261004-villains1';
-import {loadPackedBattle} from './battle-frame-loader.js?v=20261007-ipad1';
+import {loadPackedBattle} from './battle-frame-loader.js?v=20261011-battle1';
 import {watchBattleCanvas} from './battle-render-scheduler.js?v=20261007-ipad1';
 export {BATTLE_ART};
 const conceptCache=new Map(),instances=new WeakMap();
 export function battleEffectOrigin(canvas){return instances.get(canvas)?.effectOrigin;}
 export function battleDuration(id,action){return BATTLE_META[id]?.concept?({attack:1800,guard:1400,hurt:2000,victory:1700,star:2000,defeated:1800}[action]||0):BATTLE_DURATIONS[action]||0;}
-async function loadConcept(id,originalArt=false){const key=originalArt?id+'.source':id;if(conceptCache.has(key)){const p=conceptCache.get(key);conceptCache.delete(key);conceptCache.set(key,p);return p;}const p=import('./concept-battle-player.js?v=20261007-ipad1').then(async({ConceptBattleSprite})=>new ConceptBattleSprite().load(BATTLE_META[id],{originalArt}));conceptCache.set(key,p);while(conceptCache.size>3)conceptCache.delete(conceptCache.keys().next().value);p.catch(()=>{if(conceptCache.get(key)===p)conceptCache.delete(key);});return p;}
+async function loadConcept(id,originalArt=false){const key=originalArt?id+'.source':id;if(conceptCache.has(key)){const p=conceptCache.get(key);conceptCache.delete(key);conceptCache.set(key,p);return p;}const p=import('./concept-battle-player.js?v=20261011-battle1').then(async({ConceptBattleSprite})=>new ConceptBattleSprite().load(BATTLE_META[id],{originalArt}));conceptCache.set(key,p);while(conceptCache.size>3)conceptCache.delete(conceptCache.keys().next().value);p.catch(()=>{if(conceptCache.get(key)===p)conceptCache.delete(key);});return p;}
 
 export const BATTLE_DURATIONS={attack:1250,hurt:1700,victory:1600,star:1900};
 const pivots={knight:[[253,431],[645,429],[1137,427],[1584,425],[242,852],[706,854],[1115,862],[1543,863]],rabbit:[[230,453],[679,453],[1142,453],[1587,453],[237,872],[663,872],[1090,872],[1544,872]]};

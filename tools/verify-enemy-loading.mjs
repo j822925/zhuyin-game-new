@@ -14,7 +14,7 @@ try{
   await r.continue();
  });
  await page.goto(fixture);await page.evaluate(async()=>{
-  const {createOpponent,updateOpponent}=await import('./character-battle.js?v=20261007-ipad1'),{MONSTERS}=await import('./data/monsters.js?v=20261004-villains1'),{playMonster}=await import('./monster-motion.js?v=20261007-ipad1');
+  const {createOpponent,updateOpponent}=await import('./character-battle.js?v=20261011-battle1'),{MONSTERS}=await import('./data/monsters.js?v=20261004-villains1'),{playMonster}=await import('./monster-motion.js?v=20261011-battle1');
   window.enemy=createOpponent();document.body.append(enemy);window.changeEnemy=id=>updateOpponent(enemy,MONSTERS.find(m=>m.id===id),10,0);window.enemyAction=action=>playMonster(enemy,action);
  });
  const ready=id=>page.waitForFunction(id=>enemy.dataset.rigStatus==='ready'&&enemy.querySelector('canvas').dataset.ready===id,id);
@@ -31,7 +31,7 @@ try{
  // Reusing a detached arena must restart its disposed renderer.
  await page.evaluate(()=>enemy.remove());await page.waitForTimeout(100);await page.evaluate(()=>{document.body.append(enemy);changeEnemy('storm-griffin');});await ready('storm-griffin');
  // A second character() call on the same canvas must not keep old frames.
- await page.evaluate(async()=>{const {BattleSprite}=await import('./battle-sprite.js?v=20261007-ipad1');const canvas=document.createElement('canvas'),rig=new BattleSprite(canvas);await rig.character('coin-mimic');rig.draw(0,0);const slow=rig.character('mistblade-wolf');if(canvas.dataset.ready||rig.frames)throw Error('Old actor retained while loading');const newer=rig.character('ink-book-spirit');await Promise.all([slow,newer]);if(canvas.dataset.ready!=='ink-book-spirit'||rig.id!=='ink-book-spirit')throw Error('A late actor replaced the current actor');rig.dispose();});
+ await page.evaluate(async()=>{const {BattleSprite}=await import('./battle-sprite.js?v=20261011-battle1');const canvas=document.createElement('canvas'),rig=new BattleSprite(canvas);await rig.character('coin-mimic');rig.draw(0,0);const slow=rig.character('mistblade-wolf');if(canvas.dataset.ready||rig.frames)throw Error('Old actor retained while loading');const newer=rig.character('ink-book-spirit');await Promise.all([slow,newer]);if(canvas.dataset.ready!=='ink-book-spirit'||rig.id!=='ink-book-spirit')throw Error('A late actor replaced the current actor');rig.dispose();});
  // Loading transitions never shrink a portrait into a differently scaled pose.
  for(const width of [390,768,1280]){await page.setViewportSize({width,height:1000});await page.evaluate(()=>{enemyAction('attack');});await page.waitForTimeout(550);assert.equal(await page.locator('.monster-canvas').getAttribute('data-ready'),'storm-griffin');assert.equal(await page.locator('.monster-canvas').getAttribute('data-facing'),'right');}
  assert.deepEqual(errors,[]);const report={base,oldEnemyCleared:true,lateLoadCannotReplaceEnemy:true,oldTallScaleCleared:true,pendingAnswerReplayed:true,corruptCacheRecovered:true,automaticRetry:true,manualRetry:true,sameCanvasRaceSafe:true,errors};console.log(JSON.stringify(report));if(process.env.TEST_REPORT)fs.writeFileSync(process.env.TEST_REPORT,JSON.stringify(report,null,2));

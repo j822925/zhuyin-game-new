@@ -1,3 +1,4 @@
+import {BATTLE_PRELOAD} from './data/battle-preload.js?v=20261011-battle1';
 import {prepareMedia,startMediaCache,missingMedia} from './asset-cache.js?v=20261011-ipad2';
 import {ADVENTURE_PRELOAD,ADVENTURE_PRELOAD_BYTES} from './data/adventure-preload.js?v=20261011-ipad2';
 import {LOADING_CARDS,STARTUP_MEDIA} from './data/performance-assets.js?v=20261007-ipad1';
@@ -8,7 +9,7 @@ export async function prepareWithCards(paths,{startup=false}={}){
  const controller=new AbortController();active=controller;
  const dialog=document.createElement('dialog');dialog.className='prepare-dialog';dialog.setAttribute('aria-label',startup?'正在準備探險':'課前素材準備');
  dialog.innerHTML='<h2>✨ 星使陪你準備探險</h2><div class="prepare-art"><img alt="" width="280" height="420"><strong></strong></div><p class="prepare-name"></p><progress max="1" value="0" aria-label="素材準備進度"></progress><p class="prepare-status" role="status"></p><p class="prepare-hint">只準備需要的圖片與聲音，不會下載學生姓名、成績或考試答案。</p><div class="prepare-actions"><button type="button" class="primary" data-next-card>下一位星使 →</button><button type="button" class="secondary" data-close>先進遊戲 ▶</button></div>';
- if(!startup)dialog.querySelector('.prepare-hint').textContent=`包含探險島圖片與3首音樂（約 ${Math.ceil(ADVENTURE_PRELOAD_BYTES/1048576)} MB），以及本批學習聲音。已下載的不重抓；請分批準備平板，並保持此畫面開啟。`;
+ if(!startup)dialog.querySelector('.prepare-hint').textContent=`另含答題戰鬥動畫與角色圖片約44 MB；探險島圖片與3首音樂約 ${Math.ceil(ADVENTURE_PRELOAD_BYTES/1048576)} MB，以及本批學習聲音。已下載的不重抓；請分批準備平板，並保持此畫面開啟。`;
  document.body.append(dialog);const image=dialog.querySelector('img'),symbol=dialog.querySelector('strong'),name=dialog.querySelector('.prepare-name'),status=dialog.querySelector('.prepare-status'),progress=dialog.querySelector('progress'),closeButton=dialog.querySelector('[data-close]');
  let index=0,timer,showTimer,closed=false,finished=false;
  const showCard=()=>{if(!cards.length)return;const c=cards[index%cards.length];image.src=c.thumbnail;image.alt=c.symbol+'・'+c.name;symbol.textContent=c.symbol;name.textContent=c.name;};
@@ -32,6 +33,6 @@ export async function prepareWithCards(paths,{startup=false}={}){
 export async function bootPreparation(){await startMediaCache();await new Promise(resolve=>typeof requestIdleCallback==='function'?requestIdleCallback(resolve,{timeout:2500}):setTimeout(resolve,500));if(!document.hidden)await prepareMedia(STARTUP_MEDIA);}
 export function addPreparationButton(getPaths){
  const button=document.createElement('button'),notice=document.createElement('p');notice.setAttribute('role','status');notice.hidden=true;
- button.type='button';button.className='secondary prepare-launch';button.textContent='📥 課前準備・星使輪播';button.onclick=async()=>{const paths=getPaths();notice.hidden=true;button.disabled=true;try{await prepareWithCards([...ADVENTURE_PRELOAD,...(paths||[])]);if(!paths){notice.hidden=false;notice.textContent='老師範圍尚未讀取，稍後再按一次可補學習聲音。';}}catch{notice.hidden=false;notice.textContent='暫時無法準備素材，仍可先進遊戲，稍後再試。';}finally{button.disabled=false;}};
+ button.type='button';button.className='secondary prepare-launch';button.textContent='📥 課前準備・星使輪播';button.onclick=async()=>{const paths=getPaths();notice.hidden=true;button.disabled=true;try{await prepareWithCards([...BATTLE_PRELOAD,...ADVENTURE_PRELOAD,...(paths||[])]);if(!paths){notice.hidden=false;notice.textContent='老師範圍尚未讀取，稍後再按一次可補學習聲音。';}}catch{notice.hidden=false;notice.textContent='暫時無法準備素材，仍可先進遊戲，稍後再試。';}finally{button.disabled=false;}};
  document.querySelector('.home-foot')?.append(button,notice);
 }
