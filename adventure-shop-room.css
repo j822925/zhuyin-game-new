@@ -17,11 +17,11 @@
 .shop-room-talk{position:absolute;z-index:130;bottom:18px;left:50%;transform:translateX(-50%);width:min(460px,calc(100% - 32px));padding:15px 20px;border:2px solid #d5bf91;border-radius:23px;background:#fff9e9f5;box-sizing:border-box;touch-action:auto;box-shadow:0 6px 20px #40362420}
 .shop-room-talk[hidden]{display:none}.shop-room-talk p{margin:8px 0}.shop-room-talk button{margin:4px 8px 0 0}.shop-room-stick{position:absolute;bottom:24px;left:24px;border:1px solid #fff8;border-radius:50%;width:84px;height:84px;background:#fff9e8c9;color:#678260;font-size:28px;touch-action:none;z-index:110}
 .shop-room-owner.portrait-missing{min-height:100px}.shop-room-owner.portrait-missing:before{content:'💬';font-size:50px}
-.shop-room[data-shop="furniture"] .shop-room-owner{top:27%;width:12%;height:18%;z-index:27}
-.shop-room[data-shop="furniture"] .shop-room-owner img{width:100%;height:100%;max-height:none;object-fit:cover;object-position:top;filter:none}
+.shop-room[data-shop="furniture"] .shop-room-owner{left:44%;top:60%;width:12%;height:18%;z-index:60}
+.shop-room[data-shop="furniture"] .shop-room-owner img{width:100%;height:100%;max-height:none;object-fit:contain;object-position:center bottom}
 .shop-room[data-regional="true"] .shop-room-world{width:min(100vw,150dvh);height:min(66.6667vw,100dvh)}
-.shop-room[data-regional="true"] .shop-room-owner{top:33%;width:12%;height:19%;z-index:33;overflow:visible}
-.shop-room[data-regional="true"] .shop-room-owner img{width:100%;height:100%;max-height:none;object-fit:cover;object-position:top;filter:none}
+.shop-room[data-regional="true"] .shop-room-owner{left:44%;top:60%;width:12%;height:19%;z-index:60;overflow:visible}
+.shop-room[data-regional="true"] .shop-room-owner img{width:100%;height:100%;max-height:none;object-fit:contain;object-position:center bottom}
 .shop-room[data-regional="true"] .shop-room-display small{font-size:11px;padding:2px 6px}
 .shop-room[data-regional="true"] .vending-owner{top:66%;height:auto;width:18%;z-index:66}
 .vending-owner canvas{display:block;width:100%;height:auto}

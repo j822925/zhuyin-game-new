@@ -1,5 +1,7 @@
 import {FARM_CROP_ART} from './farm-crop-art.js';
 import {priceFurniture} from '../adventure-economy.js';
+import {scaleHomeFurniture} from '../furniture-surfaces.js';
+import {DISPLAY_FURNITURE} from './home-display-furniture.js';
 import {ZONE_FURNITURE} from './zone-shop-furniture.js';
 import {ZONE_SHOP_ART} from './zone-shop-art.js';
 import {EXTRA_STYLES,EXTRA_ATLASES,EXTRA_FURNITURE} from './home-extra-furniture.js';
@@ -50,5 +52,6 @@ export const FURNITURE=[
  ...EXPANSION_FURNITURE,
  ...COMPLETION_FURNITURE,
  ...ZONE_FURNITURE,
-]).map(priceFurniture);
+ ...DISPLAY_FURNITURE,
+]).map(priceFurniture).map(scaleHomeFurniture);
 export const STARTER_FURNITURE=FURNITURE.filter(f=>f.starter).map(f=>f.id);

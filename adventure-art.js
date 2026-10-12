@@ -9,6 +9,7 @@ import {isInterior,layoutFor} from './adventure-model.js';
 import {adventureMediaUrl as mediaUrl} from './adventure-media.js';
 import {WORLD,TREES,GROVE_TREES,SPAWN,MONSTER_HOME,FURNITURE} from './adventure-model.js';
 import {createRoomGround,drawPaintedRoomShell,drawRoomWardrobe,drawFurniture,drawInteriorDoors} from './adventure-room.js';
+import {attachedPosition} from './furniture-surfaces.js';
 import {walkFrame,walkPosture} from './adventure-animation.js';
 import {drawVillageLife,drawFarm} from './adventure-life-art.js';
 import {loadTerrain} from './adventure-terrain.js?v=20261010-light2';
@@ -247,13 +248,14 @@ export class ForestScene{
     else if(this.area!=='room'){if(!this.sideRoomGround)this.sideRoomGround=createRoomGround(null,false);c.drawImage(this.sideRoomGround,0,0);}
     else{if(!this.originalRoomGround)this.originalRoomGround=createRoomGround();c.drawImage(this.originalRoomGround,0,0);}
     const p=this.player;
-    const visible=layoutFor(state,this.area).filter(item=>item.id!==this.placement?.id);
+    const visible=layoutFor(state,this.area).filter(item=>item.id!==this.placement?.id).map(item=>({...item}));
     if(this.placement)visible.push(this.placement);
+    for(const item of visible){const pos=attachedPosition(item,visible,FURNITURE);if(pos)Object.assign(item,pos);}
     const paintItem=item=>drawFurniture(c,this.art,item,item===this.placement?{alpha:.9,outline:item.valid?'#658a50':'#bd795e'}:{});
     for(const item of visible.filter(item=>FURNITURE.find(f=>f.id===item.id).wall))paintItem(item);
     drawInteriorDoors(c,this.art,this.area);
     for(const item of visible.filter(item=>FURNITURE.find(f=>f.id===item.id).flat))paintItem(item);
-    const things=[...(this.area==='bedroom'?[{y:332,paint:()=>drawRoomWardrobe(c,wall,this.art)}]:[]),...visible.filter(item=>!FURNITURE.find(f=>f.id===item.id).flat&&!FURNITURE.find(f=>f.id===item.id).wall).map(item=>({y:item.y,paint:()=>paintItem(item)})),{y:p.y,paint:()=>{
+    const things=[...(this.area==='bedroom'?[{y:332,paint:()=>drawRoomWardrobe(c,wall,this.art)}]:[]),...visible.filter(item=>!FURNITURE.find(f=>f.id===item.id).flat&&!FURNITURE.find(f=>f.id===item.id).wall).map(item=>({y:item.on?(visible.find(p=>p.id===item.on)?.y??item.y)+.1:item.y,paint:()=>paintItem(item)})),{y:p.y,paint:()=>{
       if(this.homeRest)return;
       c.save();if(this.dining){c.translate(p.x,p.y);c.rotate(diningFrame(this.dining,now,this.reduced.matches).lean);c.translate(-p.x,-p.y);}
       this.drawPlayer(c,this.art,{x:p.x,y:p.y,height:116,outfit:state.outfit,direction:p.direction,walking:p.moving&&!this.reduced.matches,phase:p.phase,wand:state.wand&&!this.dining});c.restore();

@@ -18,7 +18,7 @@ function decorate(){
  for(const b of document.querySelectorAll('button,a')){
   if(b.classList.contains('child-nav'))continue;
   let icon=icons[b.id];
-  if(b.matches('[data-decor-category]'))icon=b.dataset.decorCategory==='wallpaper'?'🏡':'🪑';
+  if(b.matches('[data-decor-category]')){const category={furniture:['🪑','家具'],wallpaper:['🏡','室內風格'],clothes:['👗','服飾'],meal:['🍲','食物'],ingredients:['🥕','食材'],seeds:['🌱','種子']}[b.dataset.decorCategory];if(category){icon=category[0];b.dataset.childLabel=category[1];}}
   if(b.matches('[data-home-style]'))icon=({daisy:'🌼',fox:'🦊',moon:'🌙'})[b.dataset.homeStyle];
   if(b.matches('[id^="cook-"]'))icon='🍲';if(b.matches('[id^="eat-"],[id^="serve-"]'))icon='🥄';
   if(b.id==='life-study')icon=/拼音/.test(b.textContent)?'🧩':/朗讀/.test(b.textContent)?'🎤':'👂';
@@ -50,7 +50,7 @@ function mountHelp(){if(document.getElementById('picture-help'))return;const hel
  // Only installed local Chinese voices; never add paid/cloud speech requests.
  const synth=globalThis.speechSynthesis,voice=synth?.getVoices().find(v=>v.localService&&/^zh(-|_)/i.test(v.lang));if(voice){synth.cancel();const utterance=new SpeechSynthesisUtterance(words);utterance.voice=voice;utterance.lang=voice.lang;utterance.rate=.85;synth.speak(utterance);}
 };}
-if(enabled){const css=document.createElement('link');css.rel='stylesheet';css.href=new URL('child-picture-ui.css?v=20261008',import.meta.url).href;document.head.append(css);
+if(enabled){const css=document.createElement('link');css.rel='stylesheet';css.href=new URL('child-picture-ui.css?v=20261012-recovery1',import.meta.url).href;document.head.append(css);
  const start=()=>{decorate();new MutationObserver(records=>{if(queued||!records.some(r=>!(r.target instanceof Element&&r.target.closest('#map-stage'))))return;queued=true;requestAnimationFrame(decorate);}).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['data-state']});};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
  document.addEventListener('click',e=>{if(e.target.closest?.('#tap-record,#listen,#next,#leave'))globalThis.speechSynthesis?.cancel();},true);

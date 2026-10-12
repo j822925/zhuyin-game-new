@@ -16,7 +16,7 @@ import {RAW_FOOD,RECIPES} from './adventure-food-model.js';
 export function createExpedition(api){
  const dialog=document.createElement('dialog');dialog.id='expedition';dialog.setAttribute('aria-label','區域遠征');document.body.append(dialog);
  let z=null,view='field',message='',generation=0,loading=false,questionFailed=false,audio=null,raf=0,position={x:50,y:77},target=null,last=0;
- let motion=null,fieldMotion=null,resolving=false;
+ let motion=null,fieldMotion=null,resolving=false,opening=false;
  let local=false,localWon=null,actors=[],keys=new Set(),joystick=null,shopArrivalHeld=false,exitArrivalHeld=true;
  const state=()=>api.state(),exp=()=>state().expedition,run=()=>exp().runs[z?.id];
  const transaction=fn=>{const before=structuredClone(state()),result=fn();if(!result||result.ok===false)return false;if(!api.save()){Object.assign(state(),before);message='💾 儲存失敗，這次操作未扣款。請再試一次。';return false;}api.changed();return result;};
@@ -74,7 +74,7 @@ export function createExpedition(api){
    if(b.phase==='transform'){area.classList.add('exp-transform');panel.append(button('🔊',()=>speak(z.transform)),Object.assign(document.createElement('p'),{className:'guardian-speech',textContent:z.transform}),button('🛡 準備好了',()=>{if(transaction(()=>acknowledgeTransform(state()))){message='獸形：攻擊提升、防禦降低';render();}}));panel.querySelector('.guardian-speech')?.setAttribute('data-forest-dialogue','');fitBattle();return;}
    panel.insertAdjacentHTML('beforeend',`<h2>${b.phase==='attack'?'⚔ 我方攻擊':'🛡 守住這一回合'}</h2>`);
    if(b.question?.mode==='tone'&&!b.question.sourceId)b.question=null;
-   if(b.question)showQuestion(panel,b);else{panel.append(button('👂 載入題目',()=>{questionFailed=false;void prepareQuestion();}));if(!questionFailed)void prepareQuestion();}fitBattle();return;
+   if(b.question)showQuestion(panel,b);else{const retry=button(questionFailed?'↻ 重新載入題目':'⏳ 題目準備中',()=>{questionFailed=false;void prepareQuestion();});retry.dataset.questionLoad='';retry.disabled=loading;panel.append(retry,button('↩ 先離開挑戰',()=>depart(true)));if(!questionFailed)void prepareQuestion();}fitBattle();return;
   }
   if(local){close();return;}view='field';const exit=button('🗺️ ↩',()=>depart(),'exp-return');exit.ariaLabel='離開區域，下次三隻小怪重新出現';const [ex,ey]=fieldLayout(z.id).entry;exit.style.left=ex+'%';exit.style.top=ey+'%';dialog.querySelector('.exp-world').append(exit);
   const regional=zoneShop(z.id);if(regional&&api.openShop){const door=button('',()=>void visitShop(),'exp-shop-entry'),[sx,sy]=fieldLayout(z.id).shop,at=fieldPoint(z.id,{x:sx,y:sy});door.append(portrait(ZONE_STOREFRONTS[z.id].src,regional.name));const caption=document.createElement('small');caption.textContent=regional.icon+' '+regional.name;door.append(caption);door.ariaLabel='進入'+regional.name;door.style.left=at.x+'%';door.style.top=at.y+'%';dialog.querySelector('.exp-world').append(door);}const done=r.monsters.filter(m=>m.done).length;panel.innerHTML=`<strong>${r.complete?'🤝 切磋成功！守護者還在這裡':`小怪 ${done}/${r.monsters.length}　${done===r.monsters.length?'👑 BOSS 出現了':'🔒 BOSS'}`}</strong><p>${message}</p>`;
@@ -89,9 +89,9 @@ export function createExpedition(api){
  async function begin(slot){if(loading)return;target=null;keys.clear();joystick=null;const token=generation;loading=true;const allowed=await (globalThis.ForestAccess?.check()??true);loading=false;if(!allowed||token!==generation||!dialog.open)return;if(slot===run().monsters.length){loading=true;try{await Promise.all([z.human,z.beast].map(async src=>{const img=new Image();img.src=src;await img.decode();}));}catch{message='圖片還沒載入，請再點一次挑戰。';loading=false;if(dialog.open)render();return;}loading=false;if(token!==generation||!dialog.open)return;}
   if(transaction(()=>startExpeditionBattle(state(),slot))){view='battle';message='';render();}else{message='🥄 每場需要 8 體力，可以先吃東西。';render();}}
  async function prepareQuestion(){
-  const b=run()?.battle;if(!b||b.question||loading||b.phase==='transform')return;loading=true;const token=generation;
+  const b=run()?.battle;if(!b||b.question||loading||b.phase==='transform')return;loading=true;const token=generation;const retry=dialog.querySelector('[data-question-load]');if(retry){retry.disabled=true;retry.textContent='⏳ 題目準備中';}
   try{const mode=currentEnemy(state()).mode,{deck,pool}=await encounterDeck({mode,level:z.index===0?1:2,hp:1}),q=deck[0];
-   if(token!==generation||run()?.battle!==b)return;
+   if(token!==generation)return;if(run()?.battle!==b){questionFailed=true;message='進度已更新，請重新載入題目。';return;}
    let choices,answer;if(mode==='tone'){choices=[1,2,3,4,5].map((n,i)=>({label:['—','ˊ','ˇ','ˋ','˙'][i],value:String(n)}));answer=String(q.tone);}
    else{answer=q.label;const others=[...new Set(pool.map(x=>x.label).filter(x=>x!==answer))].sort(()=>Math.random()-.5).slice(0,3);choices=[answer,...others].sort(()=>Math.random()-.5).map(x=>({label:x,value:x}));}
    let extra=mode==='tone'?{sourceId:q.sourceId,bankVersion:q.bankVersion,targetIndex:q.targetIndex,targetCharacter:q.targetCharacter}:{};if(mode==='spelling'){const parts=spellingParts(q),pick=spellingChoices(q,pool);choices=pick.initial.map(x=>({label:x||'∅',value:x}));answer=parts.initial;extra={part:'initial',initial:parts.initial,finalAnswer:parts.final,finalChoices:pick.final.map(x=>({label:x||'∅',value:x}))};}
@@ -113,7 +113,7 @@ export function createExpedition(api){
   }));
  }
  async function open(id,{approved=false}={}){
-  if(api.blocked())return;local=false;localWon=null;dialog.classList.remove('exp-local');z=zoneById(id);if(!z)return;generation++;message='';questionFailed=false;api.stop();
+  if(opening||dialog.open||api.blocked())return;loading=false;local=false;localWon=null;dialog.classList.remove('exp-local');z=zoneById(id);if(!z)return;generation++;message='';questionFailed=false;api.stop();
   // Show a local confirmation before entering an over-level area, without charging.
   if(!approved&&exp().level+2<z.level){dialog.showModal();dialog.innerHTML=`<section class="exp-warning"><h2>${z.icon} ${z.name}</h2><p>建議 Lv.${z.level}～${z.maxLevel}，你目前 Lv.${exp().level}。</p><p>這裡的敵人很強，記得帶料理。</p></section>`;const box=dialog.querySelector('section');box.append(button('⚔ 仍要前往',chooseVisit),button('↩',close));}else chooseVisit();
  }
@@ -124,9 +124,11 @@ export function createExpedition(api){
   }enter();
  }
  function enter(restart=false){if(!transaction(()=>enterExpedition(state(),z.id,Math.random,{restart}))){api.toast('🥄 先吃點東西');close();return;}if(!dialog.open)dialog.showModal();view=run().battle?'battle':'field';const [px,py]=fieldLayout(z.id).spawn;position=fieldPoint(z.id,{x:px,y:py});exitArrivalHeld=true;shopArrivalHeld=false;actors=makeFieldActors(z.id,run().monsters.length);target=null;render();}
- async function openEncounter(area,id,onWon){if(api.blocked())return;if(!(await(globalThis.ForestAccess?.check()??true))||api.blocked())return;message='';questionFailed=false;local=true;localWon=onWon;
+ async function openEncounter(area,id,onWon){if(opening||dialog.open||api.blocked())return;opening=true;const entry=generation;
+  try{if(!(await(globalThis.ForestAccess?.check()??true))||entry!==generation||dialog.open||api.blocked())return;loading=false;message='';questionFailed=false;local=true;localWon=onWon;
    if(!transaction(()=>enterLocalEncounter(state(),area,id))){local=false;api.toast('🥄 先補充體力；未完成的挑戰可點原來的小怪繼續。');return;}
    z=expeditionZone(exp());generation++;api.stop();view='battle';dialog.showModal();render();
+  }finally{opening=false;}
   }
  return {open,openEncounter,close,get localBattle(){return dialog.open&&local;},get busy(){return dialog.open;}};
 }

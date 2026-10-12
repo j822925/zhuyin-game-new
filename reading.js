@@ -214,4 +214,4 @@ window.addEventListener('pageshow',()=>{if(!$('play').hidden&&!locked&&!micBusy&
  $('again').onclick=()=>{if(hasUnsaved()){$('save-status').textContent='請先儲存這次紀錄，再開始下一回合。';return;}home();start();};
  $('retry-save').onclick=flushPending;
 mountFarmReturn();load();
-import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn} from './farm-learning.bundle.js?v=20261011-wallet1';
+import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn} from './farm-learning.bundle.js?v=20261012-recovery1';

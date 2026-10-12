@@ -1,4 +1,5 @@
 import {inventoryItems,TRADE_KINDS} from './adventure-trade-inventory.js';
+import {furnitureSurfaces,freeSurfacePosition} from './furniture-surfaces.js';
 import {drawDoll} from './adventure-art.js';
 import {wallPosition} from './data/home-wall-furniture.js';
 import {completeAction} from './adventure-action-feedback.js';
@@ -31,9 +32,9 @@ export function createHomeDecor(api){
   $('decor-styles').querySelectorAll('button').forEach(b=>{b.hidden=!['all','special'].includes(b.dataset.homeStyle)&&!styles.has(b.dataset.homeStyle);b.setAttribute('aria-pressed',String(b.dataset.homeStyle===style));});
   $('decor-wallet').textContent=`✦ ${state().stars}`;
   $('furniture-palette').innerHTML=items.map(f=>{const owned=state().furnitureOwned.includes(f.id),here=layoutFor(state(),currentArea).some(p=>p.id===f.id),elsewhere=['room','kitchen','bedroom','bathroom'].some(a=>a!==currentArea&&layoutFor(state(),a).some(p=>p.id===f.id));return `<button type="button" data-furniture="${f.id}" aria-pressed="${scene().placement?.id===f.id}" aria-label="${f.name}，${owned?'已擁有':f.price+' 星幣'}"><canvas width="180" height="150" aria-hidden="true"></canvas><span>${f.wall?"🖼️ ":""}${f.name}</span><small>${owned?(here?'✓ 擺放中':elsewhere?'另一個房間':'已擁有・收納中'):`✦ ${f.price} 星幣`}</small></button>`;}).join('');
-  loading=true;$('furniture-palette').setAttribute('aria-busy','true');
+  loading=true;$('furniture-palette').setAttribute('aria-busy','true');$('furniture-palette').querySelectorAll('button').forEach(b=>b.disabled=true);
   try{await ensureHomeArt(api.art(),items.map(f=>f.atlas).filter(Boolean));if(token!==version)return;
-   $('furniture-palette').querySelectorAll('button').forEach(b=>{drawFurnitureThumb(b.querySelector('canvas'),api.art(),b.dataset.furniture);const f=FURNITURE.find(f=>f.id===b.dataset.furniture);if(f.areas&&!f.areas.includes(currentArea)){b.querySelector('small').textContent='放在'+f.areas.map(a=>({kitchen:'廚房',bathroom:'衛浴',bedroom:'臥室',room:'客廳'})[a]).join('／');b.disabled=true;}else b.onclick=()=>select(b.dataset.furniture);});
+   $('furniture-palette').querySelectorAll('button').forEach(b=>{drawFurnitureThumb(b.querySelector('canvas'),api.art(),b.dataset.furniture);const f=FURNITURE.find(f=>f.id===b.dataset.furniture);if(f.areas&&!f.areas.includes(currentArea)){b.querySelector('small').textContent='放在'+f.areas.map(a=>({kitchen:'廚房',bathroom:'衛浴',bedroom:'臥室',room:'客廳'})[a]).join('／');b.disabled=true;}else{b.disabled=false;b.onclick=()=>select(b.dataset.furniture);}});
   }catch{if(token===version)$('decor-hint').textContent='這套家具還没載入完成，點上方風格再試一次。';}
   finally{if(token===version){loading=false;$('furniture-palette').setAttribute('aria-busy','false');}}
  }
@@ -43,25 +44,33 @@ export function createHomeDecor(api){
   const preview={...state(),furnitureOwned:[...state().furnitureOwned,id]};
   if(!pos&&f.wall)pos={x:850,y:area()==='bathroom'?260:220};
   if(!pos){outer:for(let y=410;y<=650;y+=60)for(let x=330;x<=950;x+=75)if(!hasFurnitureOverlap(preview,id,{x,y},area())&&canPlaceFurniture(preview,id,{x,y},area())&&canReachInterior(placementState(preview,id,{x,y},area()),scene().player,area())){pos={x,y};break outer;}}
-  scene().placement={id,x:pos?.x??640,y:pos?.y??500,valid:false};update();
+  scene().placement={...pos,id,x:pos?.x??640,y:pos?.y??500,valid:false};update();
   $('furniture-palette').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.furniture===id)));
  }
- function move(at){if(!scene().placement)return;Object.assign(scene().placement,FURNITURE.find(f=>f.id===scene().placement.id)?.wall?wallPosition(at):{x:Math.round(at.x/10)*10,y:Math.round(at.y/10)*10});update();}
+ function move(at){const p=scene().placement;if(!p)return;const f=FURNITURE.find(f=>f.id===p.id),layout=layoutFor(state(),area());let snapped=null,best=Infinity;
+  if(f.small)for(const host of layout.filter(x=>x.id!==p.id))for(const [i,s]of furnitureSurfaces(FURNITURE.find(f=>f.id===host.id)).entries()){const distance=Math.hypot(at.x-host.x,at.y-host.y-s.dy),spot=freeSurfacePosition(p.id,host,i,layout,FURNITURE);if(spot&&distance<Math.max(30,s.width/2)&&distance<best){best=distance;snapped=spot;}}
+  delete p.on;delete p.surface;delete p.offsetX;Object.assign(p,snapped||(f.wall?wallPosition(at):{x:Math.round(at.x/10)*10,y:Math.round(at.y/10)*10}));update();}
+ function supportChoices(p,f){let box=$('decor-supports');if(!box){box=document.createElement('div');box.id='decor-supports';box.style.cssText='display:flex;gap:6px;flex-wrap:wrap;margin:8px 0';$('decor-hint').before(box);}box.replaceChildren();box.hidden=!f?.small;if(!f?.small)return;
+  for(const host of layoutFor(state(),area()).filter(x=>x.id!==p.id)){const base=FURNITURE.find(f=>f.id===host.id);furnitureSurfaces(base).forEach((surface,i)=>{const spot=freeSurfacePosition(p.id,host,i,layoutFor(state(),area()),FURNITURE);const b=document.createElement('button');b.type='button';b.textContent=base.name+'・'+surface.name;b.disabled=!spot;b.style.cssText='font-size:13px;min-height:44px;padding:5px 9px';b.onclick=()=>{Object.assign(p,spot);update();};box.append(b);});}
+ }
  function update(){
-  if(!['furniture','wallpaper'].includes(category)){$('decor-hint').textContent='';return;}
+  if(!['furniture','wallpaper'].includes(category)){$('decor-hint').textContent='';$('decor-supports')?.replaceChildren();return;}
   if(category==='wallpaper'){
+   $('decor-supports')?.replaceChildren();
    const w=WALLPAPERS.find(w=>w.id===wallpaper),owned=!!w&&state().wallpaperOwned.includes(w.id);
    $('decor-buy').hidden=true;$('decor-buy').disabled=loading||!w||owned||state().stars<w.price;$('decor-buy').textContent=w?`用 ${w.price} 星幣買${w.name}`:'';
    $('decor-place').disabled=loading||!owned||state().wallpaper===w?.id;$('decor-cancel').disabled=!w;$('decor-hint').classList.remove('invalid');
    $('decor-hint').textContent=!w?'選已擁有的室內風格。新款在探險島地圖的家具行。':!owned?(state().stars<w.price?`還差 ${w.price-state().stars} 星幣。`:`正在預覽${w.name}，喜歡再買下。`):state().wallpaper===w.id?'客廳、臥室和廚房換好了。':'正在預覽，按「換上整套風格」就會保存。';return;
   }
   const p=scene()?.placement,f=FURNITURE.find(f=>f.id===p?.id),owned=!!f&&state().furnitureOwned.includes(f.id);let valid=false;
+  supportChoices(p,f);
   if(p&&owned){valid=canPlaceFurniture(state(),p.id,p,area())&&canReachInterior(placementState(state(),p.id,p,area()),scene().player,area());p.valid=valid;}
   $('decor-buy').hidden=true;$('decor-buy').disabled=!f||owned||state().stars<f.price;$('decor-buy').textContent=f?`用 ${f.price} 星幣買${f.name}`:'';
   $('decor-place').disabled=!valid;$('decor-cancel').disabled=!p;$('decor-store').disabled=!p||!layoutFor(state(),area()).some(x=>x.id===p.id);
   $('decor-hint').classList.toggle('invalid',!!p&&owned&&!valid);
   $('decor-hint').textContent=!p?(area()==='kitchen'?'擺好已擁有的料理爐，再點它做料理。新家具在島上的家具行。':'挑已擁有的家具來布置。新家具在島上的家具行。'):!owned?(state().stars<f.price?`還差 ${f.price-state().stars} 星幣。已擁有的家具仍能自由布置。`:`${f.name}・${f.price} 星幣。買下就會擺好，之後也能重新移動。`):valid?(hasFurnitureOverlap(state(),p.id,p,area())?'可以放！家具會依前後位置互相遮擋。':'點地板或拖曳選位置，再按 ✓。可靠牆或與家具重疊。'):'請把家具底部放在房間的地板範圍內。';
   if(f?.wall)$('decor-hint').textContent=valid?'🖼️ 可以掛！點牆面選位置，再按 ✓。左右牆會自動轉成側面。':'🖼️ 請點房間後方或左右兩側的牆面。';
+  if(f?.small)$('decor-hint').textContent=p.on?'放好了位置，再按 ✓ 確認。':'選上面的家具放上去，或點地板擺放。';
   $('world').dataset.placement=p?.id||'';$('world').dataset.placementValid=String(valid);
  }
  $('decor-buy').onclick=null;

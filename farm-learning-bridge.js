@@ -67,9 +67,9 @@ export function completeIslandFarmRound(payload,options){
 // Reuse the existing, verified tab session and original lesson card.
 export function resumeFarmLesson(auth){
  const mode=new URL(location.href).searchParams.get('farmLesson'),card=document.querySelector('[data-mode="'+mode+'"]');
- if(!bridge()?.returnUrl()||!['single','spelling'].includes(mode)||!auth.currentSeat()||!card||card.disabled)return;
+ if(!bridge()?.returnUrl()||!['single','spelling'].includes(mode)||!card)return;
  const notice=document.getElementById('farm-learning-status');if(notice)notice.textContent='🌱 已登入 '+auth.currentSeat()+' 號，直接開始'+CROP_LESSONS[mode].name+'。';
- if(card.dataset.farmResumed)return;card.dataset.farmResumed='true';card.click();
+ const start=document.getElementById('farm-start-lesson');if(start){start.disabled=card.disabled;document.getElementById('farm-start-status').textContent=card.disabled?(card.querySelector('.world-status')?.textContent||'等待老師開放這個關卡'):'';}
 }
 export async function departForIslandLesson(mode,{demo=false}={}){try{if(globalThis.ForestStudent&&!await globalThis.ForestStudent.flush())return false;const next=bridge()?.depart(mode,{demo});if(next)location.assign(next);return !!next;}catch{return false;}}
 export function mountFarmReturn(){const back=bridge()?.returnUrl();if(!back||document.getElementById('farm-learning-return'))return;
@@ -77,5 +77,14 @@ export function mountFarmReturn(){const back=bridge()?.returnUrl();if(!back||doc
  const wanted=new URL(location.href).searchParams.get('farmLesson'),lesson=CROP_LESSONS[wanted];
  const text=document.createElement('span');text.id='farm-learning-status';text.textContent=lesson?`🌱 玩「${lesson.name}」，第一次答對至少 ${Math.ceil(lesson.questions*.7)}／${lesson.questions} 題，作物就會長大。`:'🌱 玩平常的關卡，第一次作答正確率達 70%，再回農場收成。';
  const a=document.createElement('a');a.href=back;a.textContent='回森林農場 →';a.style.cssText='color:#36593e;font-weight:bold;padding:10px;white-space:nowrap';panel.append(text,a);document.querySelector('header')?.after(panel);
- if(['single','spelling'].includes(wanted)){const card=document.querySelector(`[data-mode="${wanted}"]`);if(card){card.style.outline='3px solid #91aa70';card.title='這批作物需要的原有關卡';const start=document.createElement('button');start.id='farm-start-lesson';start.type='button';start.className='primary';start.textContent='開始'+lesson.name;start.onclick=()=>{if(card.disabled){card.scrollIntoView({block:'center'});text.textContent='目前這個關卡尚未能開始，請查看原關卡的提示，或重新整理連線。';return;}card.click();};panel.insertBefore(start,a);}}
+ if(['single','spelling'].includes(wanted)){
+  const card=document.querySelector(`[data-mode="${wanted}"]`);if(!card)return;
+  const gate=document.createElement('dialog');gate.id='farm-lesson-start';gate.setAttribute('aria-label',lesson.name);gate.style.cssText='width:min(520px,90vw);box-sizing:border-box;border:3px solid #bbcb9e;border-radius:28px;background:#fffbed;color:#36593e;text-align:center;padding:32px';
+  const title=document.createElement('h1');title.textContent=(wanted==='single'?'👂 ':'🧩 ')+lesson.name;
+  const status=document.createElement('p');status.id='farm-start-status';status.setAttribute('role','status');status.textContent='正在準備關卡…';
+  const start=document.createElement('button');start.id='farm-start-lesson';start.type='button';start.className='primary';start.textContent='▶ 開始';start.disabled=true;start.style.cssText='font-size:28px;padding:18px 48px;margin:18px';
+  start.onclick=async()=>{if(card.disabled)return;start.disabled=true;status.textContent='正在準備…';document.getElementById('solo')?.click();try{await card.onclick();if(!document.getElementById('game').hidden){gate.close();return;}status.textContent=document.getElementById('home-message')?.textContent||'請確認登入後再開始。';}catch{status.textContent='連線暫時不穩，請再按開始。';}finally{start.disabled=card.disabled;}};
+  const backLink=a.cloneNode(true);backLink.style.display='block';gate.append(title,start,status,backLink);document.body.append(gate);gate.showModal();
+  const observer=new MutationObserver(()=>{const error=document.getElementById('home-message')?.textContent;if(error&&start.disabled){status.textContent=error;}});observer.observe(document.getElementById('home-message'),{childList:true,subtree:true,characterData:true});
+ }
 }

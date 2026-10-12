@@ -134,5 +134,5 @@ window.addEventListener('online',()=>{if(seat&&auth.verified(seat))void recorder
 window.addEventListener('pagehide',stop);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)return;stop();if(!$('play').hidden){if(submitted&&!reviewDone){$('retry').hidden=false;$('review-status').textContent='播放已暫停，請重新聽兩遍。';}render();}});
 mountFarmReturn();void initialize();
-import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn} from './farm-learning.bundle.js?v=20261011-wallet1';
+import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn} from './farm-learning.bundle.js?v=20261012-recovery1';
 import {toneFarmResult} from './adventure-tone-farm.js';

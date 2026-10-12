@@ -70,7 +70,7 @@ export function createLife(api){
  const task=CROP_LESSONS[CROPS[p.crop].lesson],mode=CROPS[p.crop].lesson;let owner=null;try{owner=JSON.parse(state().life.learningOwner);}catch{}
  const demo=owner?owner[1]==='demo':new URL(location.href).searchParams.get('demo')==='1',batch=state().life.plots.filter(q=>q?.crop===p.crop&&plotStage(q)==='growing').length;
  $('life-message').textContent=`這批已有 ${batch} 處${CROPS[p.crop].name}澆好水。直接去玩平常的「${task.name}」，第一次答對至少 ${Math.ceil(task.questions*CROP_ACCURACY/100)}／${task.questions} 題，回來就能一起採收。不用老師另外指派。`;
- const go=trial=>{save();if(!departForIslandLesson(mode,{demo:trial}))api.toast('暫時無法保存往返進度，請確認瀏覽器允許儲存。');};
+ let leaving=false;const go=async trial=>{if(leaving)return;leaving=true;try{if(!save()||!await departForIslandLesson(mode,{demo:trial}))api.toast('暫時無法保存往返進度，請再試一次。');}finally{leaving=false;}};
  btn('去玩'+task.name+(demo?'（試玩）':''),()=>go(demo),{primary:true,id:'life-study'});
  }else{$('life-message').textContent=CROPS[p.crop].name+'長好了！收下來放進小竹籃吧。';btn('採收'+CROPS[p.crop].name,()=>{const crop=harvestCrop(state(),plotId);if(crop){save();close();farmEffect(scene(),'harvest',FARM_PLOTS[plotId],crop,p.plantId);chime();}},{primary:true,id:'life-harvest'});}
  $('life-note').textContent='完成原有關卡，第一次作答達到 70%，回來就能收成。';

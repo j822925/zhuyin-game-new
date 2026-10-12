@@ -60,7 +60,7 @@ export function drawFurniture(c,art,item,{alpha=1,outline=null}={}){
   const f=FURNITURE.find(x=>x.id===item.id),atlas=art[f.atlas||'furniture'];if(!atlas)return;const s=atlas.cells[f.index],height=f.height,width=s.w/s.h*height;
   c.save();c.globalAlpha=alpha;
   if(f.wall){const side=wallSide(item);c.translate(item.x,item.y);if(side)c.transform(.5,side*1.15,0,1,0,0);c.drawImage(atlas.image,s.x,s.y,s.w,s.h,-width/2,-height,width,height);if(outline){c.strokeStyle=outline;c.lineWidth=3;c.setLineDash([7,5]);c.strokeRect(-width/2,-height,width,height);}c.restore();return;}
-  if(!f.flat)ellipse(c,item.x,item.y+1,f.fw*.51,f.fh*.17,'#654d322d');
+  if(!f.flat)ellipse(c,item.x,item.y+1,f.fw*.51,f.fh*(item.on?.07:.17),'#654d322d');
   c.drawImage(atlas.image,s.x,s.y,s.w,s.h,item.x-width/2,item.y-height,width,height);
   if(outline){const r=furnitureRect(item);c.strokeStyle=outline;c.lineWidth=3;c.setLineDash([7,5]);c.beginPath();c.roundRect(r.x,r.y,r.w,r.h,9);c.stroke();c.setLineDash([]);}
   c.restore();

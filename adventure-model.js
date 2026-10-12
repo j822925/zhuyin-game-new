@@ -1,4 +1,5 @@
 import {freshRest,sanitizeRest} from './adventure-rest-model.js';
+import {attachedPosition} from './furniture-surfaces.js';
 import {WALK_OUTFITS} from './data/walk-outfits.js';
 import {wallPosition,wallPlacementValid} from './data/home-wall-furniture.js';
 import {freshExpedition,sanitizeExpedition} from './adventure-expedition-model.js';
@@ -99,11 +100,16 @@ export function sanitizeState(raw){
   s.furnitureOwned=[...new Set([...STARTER_FURNITURE,...(Array.isArray(raw.furnitureOwned)?raw.furnitureOwned.filter(id=>FURNITURE.some(f=>f.id===id)):[])])];
   if(Array.isArray(raw.layout)){
     s.layout=[];
-    for(const item of raw.layout)if(item&&FURNITURE.some(f=>f.id===item.id)&&!s.layout.some(f=>f.id===item.id)&&canPlaceFurniture(s,item.id,item))s.layout.push({id:item.id,x:item.x,y:item.y});
+    for(const item of raw.layout)if(item&&!item.on&&FURNITURE.some(f=>f.id===item.id)&&!s.layout.some(f=>f.id===item.id)&&canPlaceFurniture(s,item.id,item))s.layout.push({id:item.id,x:item.x,y:item.y});
   }
   s.kitchenLayout=[];s.bedroomLayout=[];s.bathroomLayout=[];
   for(const area of ['kitchen','bedroom','bathroom'])for(const item of Array.isArray(raw[layoutKeyFor(area)])?raw[layoutKeyFor(area)]:[]){
-    if(item&&!INTERIOR_AREAS.some(a=>layoutFor(s,a).some(f=>f.id===item.id))&&canPlaceFurniture(s,item.id,item,area))s[layoutKeyFor(area)].push({id:item.id,x:item.x,y:item.y});
+    if(item&&!item.on&&!INTERIOR_AREAS.some(a=>layoutFor(s,a).some(f=>f.id===item.id))&&canPlaceFurniture(s,item.id,item,area))s[layoutKeyFor(area)].push({id:item.id,x:item.x,y:item.y});
+  }
+  // Hosts first, then their small objects, independent of save array ordering.
+  for(const area of INTERIOR_AREAS)for(const item of Array.isArray(raw[layoutKeyFor(area)])?raw[layoutKeyFor(area)]:[]){
+    if(!item?.on||INTERIOR_AREAS.some(a=>layoutFor(s,a).some(p=>p.id===item.id)))continue;
+    const pos=attachedPosition(item,layoutFor(s,area),FURNITURE);if(pos&&canPlaceFurniture(s,item.id,pos,area))s[layoutKeyFor(area)].push({id:item.id,...pos});
   }
   // Move only currently placed beds/lamps once. Later personal arrangements stay put.
   if(raw.homeRoomsVersion!==1){
@@ -208,6 +214,7 @@ export function roomWalkable(x,y,state,area='room'){
 export function canPlaceFurniture(state,id,pos,area='room'){
  const f=FURNITURE.find(f=>f.id===id);if(!f||!isInterior(area)||!state.furnitureOwned?.includes(id)||(f.areas&&!f.areas.includes(area))||!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))return false;
  if(f.wall)return wallPlacementValid(f,pos,area);
+ if(pos.on){const p=attachedPosition({id,...pos},layoutFor(state,area),FURNITURE);return !!p&&p.x>=158&&p.x<=1122&&p.y>=150&&p.y<=728;}
  const r=furnitureRect({id,...pos});
  return r.x>=158&&r.x+r.w<=1122&&r.y>=280&&r.y+r.h<=728;
 }
@@ -223,8 +230,10 @@ export function stoveApproach(state,item){
 }
 export function canUseStove(state,id,area){return area==='kitchen'&&state.furnitureOwned?.includes(id)&&FURNITURE.some(f=>f.id===id&&f.cooking)&&state.kitchenLayout?.some(f=>f.id===id);}
 export function placementState(state,id,pos,area='room'){
- const next={...state};for(const a of INTERIOR_AREAS)next[layoutKeyFor(a)]=layoutFor(state,a).filter(x=>x.id!==id);
- next[layoutKeyFor(area)].push({id,x:Math.round(pos.x/10)*10,y:Math.round(pos.y/10)*10});return next;
+ const next={...state},children=INTERIOR_AREAS.flatMap(a=>layoutFor(state,a).filter(x=>x.on===id));for(const a of INTERIOR_AREAS)next[layoutKeyFor(a)]=layoutFor(state,a).filter(x=>x.id!==id&&x.on!==id).map(x=>({...x}));
+ const attached=pos.on?attachedPosition({id,...pos},next[layoutKeyFor(area)],FURNITURE):null;
+ next[layoutKeyFor(area)].push({id,...(attached||{x:Math.round(pos.x/10)*10,y:Math.round(pos.y/10)*10})});
+ for(const item of children){const p=attachedPosition(item,next[layoutKeyFor(area)],FURNITURE);if(p)next[layoutKeyFor(area)].push({id:item.id,...p});}return next;
 }
 export function canReachInterior(state,player,area='room'){
  const checker=(x,y)=>roomWalkable(x,y,state,area);
@@ -235,13 +244,13 @@ export function canReachInterior(state,player,area='room'){
 }
 export function placeFurniture(state,id,pos,player=ROOM_ENTRY,area='room'){if(!hasEnergy(state))return false;
  if(!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))return false;
- const snapped=FURNITURE.find(f=>f.id===id)?.wall?wallPosition(pos):{x:Math.round(pos.x/10)*10,y:Math.round(pos.y/10)*10};
+ const snapped=pos.on?attachedPosition({id,...pos},layoutFor(state,area),FURNITURE):FURNITURE.find(f=>f.id===id)?.wall?wallPosition(pos):{x:Math.round(pos.x/10)*10,y:Math.round(pos.y/10)*10};
  if(!canPlaceFurniture(state,id,snapped,area))return false;
  const next=placementState(state,id,snapped,area);
  if(!canReachInterior(next,player,area))return false;
  for(const a of INTERIOR_AREAS)state[layoutKeyFor(a)]=next[layoutKeyFor(a)];return true;
 }
-export function storeFurniture(state,id,area='room'){if(!hasEnergy(state)||!isInterior(area))return false;const key=layoutKeyFor(area),before=layoutFor(state,area).length;state[key]=layoutFor(state,area).filter(x=>x.id!==id);return state[key].length!==before;}
+export function storeFurniture(state,id,area='room'){if(!hasEnergy(state)||!isInterior(area))return false;const key=layoutKeyFor(area),before=layoutFor(state,area).length;state[key]=layoutFor(state,area).filter(x=>x.id!==id&&x.on!==id);return state[key].length!==before;}
 export const MONSTER_STOPS=[{x:810,y:400},{x:680,y:345},{x:920,y:370},{x:740,y:535},{x:940,y:470},{x:620,y:470},{x:840,y:540}];
 export function advanceMonster(monster,dt,paused=false,rng=Math.random){
   monster.moving=false;if(paused)return;
