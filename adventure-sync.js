@@ -29,6 +29,9 @@ export async function openForestSync({send,storage,key,fresh,onStatus=()=>{},onB
  }
  if(journal?.dirty)schedule();
  return {state:copy(current),cards:remote.cards||['rabbit'],key,flush,
+  get revision(){return revision;},
+  publish(){if(revision===0&&!journal&&!pending){journal=true;persist();}return flush();},
+  adopt(result){if(pending||running||journal)throw Error('pending_save');current={...copy(result.state),stars:result.stars};revision=result.revision;baseStars=result.stars;storage.setItem(key,JSON.stringify({revision,baseStars,state:current,dirty:false}));this.state=copy(current);onBalance(current.stars);return copy(current);},
   save(next){if(pending||running){onStatus('error','pending_save');return false;}
    if(JSON.stringify(next)===JSON.stringify(current))return true;
    const before=current,oldJournal=journal;current=copy(next);journal=true;

@@ -1,3 +1,4 @@
+import {createIslandVisits} from './island-visits-ui.js';
 import {forestMusic,installForestMusic} from './adventure-music.js';
 import {installAdventureControls} from './adventure-controls.js';
 installForestMusic();
@@ -16,7 +17,7 @@ import {createExplorationUI} from './adventure-exploration-ui.js';
 import {encounterDeck,challengeChoices,expectedAnswer,challengePrompt} from './adventure-encounters.js';
 import {AREA_EXITS,createExitProximity} from './adventure-exits.js';
 const exitProximity=createExitProximity();
-let shop=null,exploration=null,expedition=null,rest=null;
+let shop=null,exploration=null,expedition=null,rest=null,visits=null;
 import {ensureHomeArt,furnitureArtKeys} from './adventure-home-art.js?v=20261010-light2';
 import {ensureWardrobeArt} from './adventure-wardrobe-art.js';
 import {createCompanions} from './adventure-companions.js';
@@ -55,10 +56,10 @@ let keys=new Set(),walked=0,lastDoll=0,previousFocus=null;
 let switching=false,decorPointer=null,monsterHovered=false,lastEnergyAccess=null;
 const directions={down:[0,1,0],right:[1,0,1],up:[0,-1,2],left:[-1,0,3]};
 const keyDirections={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',s:'down',a:'left',d:'right'};
-const joystick=createJoystick($('joystick'),{isEnabled:()=>!!scene&&!round&&!companions?.busy&&!expedition?.busy&&!shop?.busy&&!exploration?.busy&&!wardrobe.open&&!trail.open&&!(life.busy||(kitchen.busy||rest?.busy))&&!scene.editing&&!switching,onStart:()=>stopMoving()});
-const life=createLife({state:()=>state,scene:()=>scene,art:()=>art,walkTo,stopMoving,save,renderState,toast,switchArea,arrived:()=>exitProximity.reset(scene.area,scene.player),food:()=>kitchen.eatAtHome(),cook:()=>kitchen.cookAtHome(),blocked:()=>!scene||!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||switching||scene.editing||(life.busy||(kitchen.busy||rest?.busy))});
-const kitchen=createKitchen({state:()=>state,scene:()=>scene,art:()=>art,stopMoving,save,renderState,toast,switchArea,decorate:()=>openDecor(),blocked:()=>!scene||!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||switching||scene.editing||life.busy||(kitchen.busy||rest?.busy)});
-companions=createCompanions({state:()=>state,cards:companionCards,trial:companionCards().length>1,prepare:id=>id==='rabbit'?Promise.resolve(null):loadWalker(id),apply:setCompanion,save,changed:()=>{renderState();renderArea();},stop:stopMoving,toast,blocked:()=>!scene||!!round||switching||scene.editing||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)});
+const joystick=createJoystick($('joystick'),{isEnabled:()=>!!scene&&!round&&!companions?.busy&&!expedition?.busy&&!shop?.busy&&!exploration?.busy&&!visits?.busy&&!wardrobe.open&&!trail.open&&!(life.busy||(kitchen.busy||rest?.busy))&&!scene.editing&&!switching,onStart:()=>stopMoving()});
+const life=createLife({state:()=>state,scene:()=>scene,art:()=>art,walkTo,stopMoving,save,renderState,toast,switchArea,arrived:()=>exitProximity.reset(scene.area,scene.player),food:()=>kitchen.eatAtHome(),cook:()=>kitchen.cookAtHome(),blocked:()=>!scene||!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||switching||scene.editing||(life.busy||(kitchen.busy||rest?.busy))});
+const kitchen=createKitchen({state:()=>state,scene:()=>scene,art:()=>art,stopMoving,save,renderState,toast,switchArea,decorate:()=>openDecor(),blocked:()=>!scene||!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||switching||scene.editing||life.busy||(kitchen.busy||rest?.busy)});
+companions=createCompanions({state:()=>state,cards:companionCards,trial:companionCards().length>1,prepare:id=>id==='rabbit'?Promise.resolve(null):loadWalker(id),apply:setCompanion,save,changed:()=>{renderState();renderArea();},stop:stopMoving,toast,blocked:()=>!scene||!!round||switching||scene.editing||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)});
 function setCompanion(id,walker){activeWalker=walker;canvas.dataset.character=id;void ensureClothingArt(equippedOutfit(state,id)).then(()=>renderState()).catch(()=>toast('衣服圖片暫時沒載入，重新開啟可再試。'));}
 async function restoreCompanion(requested=null){
  const token=++walkerGeneration;
@@ -113,7 +114,7 @@ function walkTo(target,onArrival=null){
   if(!path)return false;
   keys.clear();joystick.reset();route=path;arrival=onArrival;scene.marker={...target,at:performance.now()};return true;
 }
-function exitsBlocked(){return !scene||switching||scene.editing||!!round||(scene.area==='farm'&&!!arrival)||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy);}
+function exitsBlocked(){return !scene||switching||scene.editing||!!round||(scene.area==='farm'&&!!arrival)||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy);}
 function enterExit(id){
  if(exitsBlocked())return;
  const e=AREA_EXITS[scene.area]?.find(e=>e.id===id);if(!e)return;
@@ -126,7 +127,7 @@ function enterExit(id){
 function face(dx,dy){if(Math.abs(dx)>Math.abs(dy))return dx>=0?1:3;return dy>=0?0:2;}
 function move(dt){
   if(!scene)return;
-  if(switching||scene.editing||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||(round&&round.phase!=='approach')){scene.player.moving=false;return;}
+  if(switching||scene.editing||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||(round&&round.phase!=='approach')){scene.player.moving=false;return;}
   const p=scene.player,before={x:p.x,y:p.y};
   let dx=joystick.input.x,dy=joystick.input.y;
   if(!joystick.input.active){
@@ -173,8 +174,8 @@ function tick(now){
   if(expedition?.busy&&!expedition.localBattle||shop?.busy)return;
   move(dt);
   const nearby=exitProximity.poll(scene.area,scene.player,exitsBlocked());if(nearby){if(nearby.interaction==='offer')exploration.offerDestination(nearby.id,true);else enterExit(nearby.id);}
-  if(scene.area==='grove')advanceEncounters(scene.encounters,dt,!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||switching);
-  else if(scene.area==='forest')advanceMonster(scene.monster,dt,!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||isInterior(scene.area)||scene.area==='farm'||monsterHovered||switching);
+  if(scene.area==='grove')advanceEncounters(scene.encounters,dt,!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||switching);
+  else if(scene.area==='forest')advanceMonster(scene.monster,dt,!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||isInterior(scene.area)||scene.area==='farm'||monsterHovered||switching);
   scene.render(now,state,!!round&&round.phase!=='approach');positionHotspots();life.position(now);kitchen.tick(now);rest?.tick(now);rest?.position();syncEnergyAccess();
   if(wardrobe.open&&now-lastDoll>65){renderDoll(now);lastDoll=now;}
 }
@@ -192,7 +193,7 @@ async function init(){
 }
 $('load-retry').addEventListener('click',init);
 canvas.addEventListener('pointerdown',e=>{
-  if(!scene||round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||switching||joystick.input.active)return;e.preventDefault();canvas.focus({preventScroll:true});
+  if(!scene||round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||switching||joystick.input.active)return;e.preventDefault();canvas.focus({preventScroll:true});
   const at=scene.toWorld(e.clientX,e.clientY);
   if(scene.area==='grove'){const hit=[...(scene.encounters||[])].reverse().find(m=>m.visible&&Math.abs(at.x-m.x)<48&&at.y<m.y+12&&at.y>m.y-(m.level===2?120:100));if(hit){startBattle(hit);return;}}
   if(scene.editing){
@@ -204,7 +205,7 @@ canvas.addEventListener('pointerdown',e=>{
 canvas.addEventListener('pointermove',e=>{if(decorPointer===e.pointerId&&scene?.editing)moveFurniture(scene.toWorld(e.clientX,e.clientY));});
 for(const event of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,()=>decorPointer=null);
 document.addEventListener('keydown',e=>{
-  if(wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||!scene)return;
+  if(wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||!scene)return;
   if(e.key==='Escape'&&scene.editing){closeDecor();return;}
   if(scene.editing||switching)return;
   if(e.key==='Escape'&&round){endBattle();return;}
@@ -213,7 +214,7 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('keyup',e=>keys.delete(e.key));
 window.addEventListener('blur',()=>{keys.clear();joystick.reset();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(round?.phase==='approach')endBattle({focus:false});else stopMoving();stopAudio();}});
-$('find-monster').addEventListener('click',()=>{if(round||isInterior(scene?.area)||expedition?.busy||shop?.busy||exploration?.busy||needFood())return;if(scene.area==='grove'){const m=scene.encounters.filter(m=>m.visible).sort((a,b)=>Math.hypot(a.x-scene.player.x,a.y-scene.player.y)-Math.hypot(b.x-scene.player.x,b.y-scene.player.y))[0];if(m)walkTo({x:m.x,y:m.y+40},()=>startBattle(m));else toast('🌿 小怪很快就回來');return;}walkTo({x:750,y:495},()=>{toast('蘑菇怪正在附近散步，點一下牠才會開始挑戰。');monsterButton.focus({preventScroll:true});});});
+$('find-monster').addEventListener('click',()=>{if(round||isInterior(scene?.area)||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||needFood())return;if(scene.area==='grove'){const m=scene.encounters.filter(m=>m.visible).sort((a,b)=>Math.hypot(a.x-scene.player.x,a.y-scene.player.y)-Math.hypot(b.x-scene.player.x,b.y-scene.player.y))[0];if(m)walkTo({x:m.x,y:m.y+40},()=>startBattle(m));else toast('🌿 小怪很快就回來');return;}walkTo({x:750,y:495},()=>{toast('蘑菇怪正在附近散步，點一下牠才會開始挑戰。');monsterButton.focus({preventScroll:true});});});
 $('go-home').addEventListener('click',()=>{if((kitchen.busy||rest?.busy))return;if(round)endBattle();if(scene?.area==='grove'||scene?.area==='island'||scene?.area==='farm')switchArea('forest');else if(scene?.area==='kitchen'||scene?.area==='bedroom'||scene?.area==='bathroom')leaveKitchen();else if(scene?.area==='room')leaveRoom();else enterExit('home');});
 $('house-button').addEventListener('click',()=>enterExit('home'));
 $('room-exit').addEventListener('click',()=>scene?.area==='room'?leaveRoom():leaveKitchen());
@@ -286,10 +287,11 @@ $('grove-unlock').addEventListener('click',()=>{
 });
 
 rest=createHomeRest({dine:id=>kitchen.eatAtHome(id),state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,walkTo,toast,blocked:()=>!scene||switching||scene.editing||!!round||wardrobe.open||trail.open||life.busy||kitchen.busy||shop?.busy||expedition?.busy||companions?.busy});
-const decor=createHomeDecor({useInventory:(kind)=>{if(kind==='clothes')document.getElementById('wardrobe-open').click();else if(kind==='seeds')life.visit('farm');else if(kind==='fish')kitchen.cookAtHome();else kitchen.eatAtHome();},state:()=>state,scene:()=>scene,art:()=>art,stopMoving,save,renderState,toast,changed:()=>renderArea(),blocked:()=>!scene||!!round||switching||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)});
+const decor=createHomeDecor({useInventory:(kind)=>{if(kind==='clothes')document.getElementById('wardrobe-open').click();else if(kind==='seeds')life.visit('farm');else if(kind==='fish')kitchen.cookAtHome();else kitchen.eatAtHome();},state:()=>state,scene:()=>scene,art:()=>art,stopMoving,save,renderState,toast,changed:()=>renderArea(),blocked:()=>!scene||!!round||switching||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)});
 expedition=createExpedition({openShop:(id,onReturn)=>shop.openRegion(id,onReturn),state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,toast,defeated:()=>switchArea('forest',()=>completeAction('lose',{detail:'🥄 吃點東西，補充體力'})),blocked:()=>!scene||!!round||switching||wardrobe.open||shop?.busy||companions?.busy||life.busy||(kitchen.busy||rest?.busy)});
-shop=createShop({state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,toast,blocked:()=>!scene||!!round||switching||wardrobe.open||companions?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||exploration?.busy});
-exploration=createExplorationUI({state:()=>state,scene:()=>scene,enter:enterExit,switchArea,shop:id=>shop.open(id),expedition:(id,options)=>expedition.open(id,options),battle:m=>startBattle(m),stop:stopMoving,blocked:()=>!scene||!!round||switching||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||exploration?.busy});
+shop=createShop({state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,toast,blocked:()=>!scene||!!round||switching||wardrobe.open||companions?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||visits?.busy||exploration?.busy});
+visits=createIslandVisits({state:()=>state,art:()=>art,save,stop:stopMoving,toast,apply:next=>{state=sanitizeState(next);renderState();}});
+exploration=createExplorationUI({visits:()=>visits.open(),state:()=>state,scene:()=>scene,enter:enterExit,switchArea,shop:id=>shop.open(id),expedition:(id,options)=>expedition.open(id,options),battle:m=>startBattle(m),stop:stopMoving,blocked:()=>!scene||!!round||switching||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||visits?.busy||exploration?.busy});
 function openDecor(){decor.open();}
 function closeDecor(){decor.close();decorPointer=null;}
 function selectFurniture(id){decor.select(id);}
@@ -312,7 +314,7 @@ $('fullscreen').addEventListener('click',async()=>{
 document.addEventListener('fullscreenchange',syncFullscreen);document.addEventListener('webkitfullscreenchange',syncFullscreen);
 
 function openWardrobe(){
-  if((kitchen.busy||rest?.busy)||life.busy||expedition?.busy||shop?.busy||exploration?.busy)return;
+  if((kitchen.busy||rest?.busy)||life.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy)return;
   if(needFood())return;
   if(!isInterior(scene?.area)){toast('🧥 回家到衣櫃換衣服');return;}
   if(!['rabbit','fox','bear'].includes(state.companions.active)){companions.open();return;}
@@ -382,7 +384,7 @@ function endBattle({focus=true}={}){
 }
 async function startBattle(encounter=null){
   if(expedition){if(!scene||!['forest','grove'].includes(scene.area)||switching)return;const m=encounter||scene.monster;if(!m?.visible)return;if(encounter)scene.monster=m;await expedition.openEncounter(scene.area,m.id||'mushroom',()=>{if(scene.area==='grove')dismissEncounter(m,true);else{m.visible=false;setTimeout(()=>{if(scene.area==='forest')m.visible=true;},12000);}});return;}
- if(!scene||round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||!['forest','grove'].includes(scene.area)||switching)return;
+ if(!scene||round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||!['forest','grove'].includes(scene.area)||switching)return;
  if(!canSpendEnergy(state,'battle')){kitchen.open('bag','森林挑戰需要 8 體力，先吃點東西吧。');return;}
  const spec=scene.area==='grove'?enemySpec(encounter?.id):enemySpec('mushroom');if(scene.area==='grove'&&(!encounter?.visible||!scene.encounters.includes(encounter)))return;
  if(encounter)scene.monster=encounter;stopMoving();const token=++roundGeneration,area=scene.area,m=scene.monster;round={id:crypto.randomUUID(),spec,index:0,phase:'loading',errors:0};canvas.dataset.battle='loading';setBattleControls(true);toast('♫ 準備小挑戰…');

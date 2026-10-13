@@ -29,10 +29,27 @@ export async function connectForestStudent({classId='main',blocked}={}){
   }
   if(!dialog.open)dialog.showModal();
  }
+ const sendVisit=async data=>{
+  const current=auth.read();if(current?.seat!==session.seat)throw Error('authentication_required');
+  const result=await api.post({...data,seat:session.seat,token:current.token});if(result.error)throw Error(result.error);return result;
+ };
+ const giftKey=saveKey+':gift-operation';
+ const giftRejected=e=>['gift_protected','gift_quantity','gift_owned','gift_mail_full','gift_claimed','gift_unavailable','visit_closed','visit_unavailable','invalid_payload','forest_closed','writes_disabled','forest_conflict','id_conflict'].includes(e.message);
+ // A confirmed gift survives an interrupted response. Resolve it before reading a save.
+ const recovery=localStorage.getItem(giftKey);
+ if(recovery){try{await sendVisit(JSON.parse(recovery));localStorage.removeItem(saveKey);}catch(e){if(!giftRejected(e))throw e;}localStorage.removeItem(giftKey);}
  try{store=await openForestSync({key:saveKey,storage:localStorage,fresh:freshState,onStatus:status,onBalance:stars=>window.dispatchEvent(new CustomEvent('forest-wallet',{detail:{stars}})),send:async data=>{
   const current=auth.read();if(current?.seat!==session.seat)throw Error('authentication_required');return api.post({...data,seat:session.seat,token:current.token});
  }});}catch(e){if(['forest_conflict','insufficient_stars','authentication_required'].includes(e.message)){status('error',e.message);return null;}throw e;}
  store.seat=session.seat;store.classId=classId;
+ store.visitRequest=sendVisit;
+ store.visitTransfer=async payload=>{
+  let operation=localStorage.getItem(giftKey);
+  if(!operation){if(!await store.flush())throw Error('pending_save');operation=JSON.stringify({...payload,operationId:crypto.randomUUID(),revision:store.revision});localStorage.setItem(giftKey,operation);}
+  try{const result=await sendVisit(JSON.parse(operation));const next=store.adopt(result);localStorage.removeItem(giftKey);return next;}
+  catch(e){if(giftRejected(e))localStorage.removeItem(giftKey);throw e;}
+ };
+ store.getPendingGift=()=>!!localStorage.getItem(giftKey);
  const home=document.getElementById('forest-home');if(home)home.href=new URL('index.html?class='+classId,location.href).href;
  const note=document.querySelector('.trail-footnote');if(note)note.textContent='星星與星幣共用；買過的入口只付一次。';
  const mission=document.querySelector('#mission-battle span');if(mission)mission.textContent='練習注音，獲得經驗與星星';

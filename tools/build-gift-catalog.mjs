@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import {FURNITURE,OUTFITS} from '../adventure-model.js';
+import {STARTER_FURNITURE} from '../data/home-furniture.js';
+import {WALLPAPERS} from '../adventure-wallpaper.js';
+import {SEEDS} from '../adventure-exploration-model.js';
+import {BAITS} from '../adventure-bait.js';
+import {CROPS,FISH} from '../adventure-life-model.js';
+import {RECIPES} from '../adventure-food-model.js';
+const list=o=>Object.entries(o).map(([id,v])=>({...v,id}));
+const catalogs={furniture:FURNITURE,clothes:OUTFITS,wallpaper:WALLPAPERS,seeds:list(SEEDS),bait:list(BAITS),harvest:list(CROPS),fish:list(FISH),meal:list(RECIPES)};
+const rows=Object.entries(catalogs).flatMap(([kind,items])=>items.map(i=>({kind,id:i.id,name:i.name,icon:i.icon||({furniture:'🪑',clothes:'👗',wallpaper:'🏠',fish:'🐟',meal:'🍽️'}[kind]||'🎁'),protected:!!i.giftOnly||!!i.starter||kind==='furniture'&&STARTER_FURNITURE.includes(i.id)||['clothes','wallpaper'].includes(kind)&&!i.price})));
+fs.writeFileSync(new URL('../data/island-gift-catalog.json',import.meta.url),JSON.stringify(rows));
+console.log('Gift catalog:',rows.length);

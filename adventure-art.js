@@ -230,7 +230,7 @@ export class ForestScene{
       drawMonster(c,this.art,m,this.reduced.matches?0:m.phase,hit);
       if(battle){c.fillStyle='#fff9ed';c.beginPath();c.roundRect(m.x-36,m.y-120,72,10,5);c.fill();if(m.hp){c.fillStyle='#c48765';c.beginPath();c.roundRect(m.x-33,m.y-117,66*m.hp/3,4,2);c.fill();}}
     }});
-    things.sort((a,b)=>a.y-b.y).forEach(o=>o.paint());
+    things.push(...(this.extraPlayers||[]));things.sort((a,b)=>a.y-b.y).forEach(o=>o.paint());
     drawFishing(c,this.art,state,this,now);
     if(casting>0&&casting<1){
       const t=Math.max(0,Math.min(1,(casting-.12)/.43)),from={x:p.x+22,y:p.y-61},to={x:m.x,y:m.y-47};
@@ -260,7 +260,7 @@ export class ForestScene{
       c.save();if(this.dining){c.translate(p.x,p.y);c.rotate(diningFrame(this.dining,now,this.reduced.matches).lean);c.translate(-p.x,-p.y);}
       this.drawPlayer(c,this.art,{x:p.x,y:p.y,height:116,outfit:state.outfit,direction:p.direction,walking:p.moving&&!this.reduced.matches,phase:p.phase,wand:state.wand&&!this.dining});c.restore();
     }}];
-    things.sort((a,b)=>a.y-b.y).forEach(x=>x.paint());
+    things.push(...(this.extraPlayers||[]));things.sort((a,b)=>a.y-b.y).forEach(x=>x.paint());
     drawDining(c,this.art,this,now);drawHomeRest(c,this,state,now);drawHomePlay(c,this,state,now);
     if(this.marker&&!this.editing){c.strokeStyle='#fff8e2';c.lineWidth=2;c.beginPath();c.ellipse(this.marker.x,this.marker.y,13,6,0,0,TAU);c.stroke();}
   }
