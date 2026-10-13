@@ -11,7 +11,7 @@ const $=id=>document.getElementById(id);
 export function createLife(api){
  const dialog=$('life-dialog'),body=$('life-body');let mode=null,plotId=0,selectedCrop='carrot',lastTick=0,lastStage='',result=null;
  const state=()=>api.state(),scene=()=>api.scene();
- const save=()=>{api.save();api.renderState();};
+ const save=()=>{const saved=api.save();api.renderState();return saved;};
  function chime(){try{const Audio=globalThis.AudioContext||globalThis.webkitAudioContext;if(!Audio)return;const ctx=new Audio();[523,659,784].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+i*.1;o.frequency.value=f;g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.001,t+.23);o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+.24);});setTimeout(()=>ctx.close(),700);}catch{}}
 
  function show(next){
