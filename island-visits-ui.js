@@ -9,14 +9,16 @@ import {loadWalker,drawWalker} from './adventure-characters.js';
 import {companionById,companionReady} from './adventure-companions-model.js';
 import {createJoystick} from './adventure-joystick.js';
 import {inventoryItems} from './adventure-trade-inventory.js';
-import {islandSnapshot,VISIT_LAYOUTS,VISIT_EMOTES,giftBlocked} from './island-visits-model.js';
+import {VISIT_LAYOUTS,giftBlocked} from './island-visits-model.js';
 import catalog from './data/island-gift-catalog.json' with {type:'json'};
 import {openVisitPeer} from './island-visits-peer.js';
+import {SOCIAL_ACTIONS,createSocialSession,canPair} from './social-motion-model.js';
+import {ensureSocialArt,drawSocialMotion} from './social-motion-art.js';
 const el=(tag,text)=>{const n=document.createElement(tag);if(text)n.textContent=text;return n;};
 const names={forest:'🌳 村莊',room:'🛋️ 客廳',bedroom:'🛏️ 臥室',kitchen:'🍳 廚房',bathroom:'🫧 衛浴'};
 const errors={visit_closed:'島主暫時不開放參觀。',visit_not_ready:'這座小島還沒保存，等同學玩過再來！',visit_unavailable:'暫時無法拜訪這位同學。',gift_owned:'已經擁有這件物品，禮物仍保留在收禮箱。',gift_claimed:'這份禮物已經領取。',gift_quantity:'物品數量已改變，請重新選擇。',gift_mail_full:'對方收禮箱滿了，等朋友領取後再送。',gift_protected:'先收納或換下這件物品，再送給朋友。',forest_conflict:'另一個分頁已更新進度，請重新整理後再試。',authentication_required:'請回學習廣場重新登入。',forest_closed:'老師暫時關閉探險島。'};
 export function createIslandVisits(api){
- const css=el('link');css.rel='stylesheet';css.href=new URL('./island-visits.css?v=20261013-visits1',import.meta.url).href;document.head.append(css);
+ const css=el('link');css.rel='stylesheet';css.href=new URL('./island-visits.css?v=20261013-social1',import.meta.url).href;document.head.append(css);
  const dialog=el('dialog');dialog.id='island-visits';dialog.setAttribute('aria-label','搭船拜訪同學');
  const head=el('header'),title=el('h2','⛵ 搭船拜訪'),mail=button('🎁 收禮箱',showMail),lobbyButton=button('⛵ 碼頭',lobby),close=button('✕ 返回',leave),note=el('div');note.className='visit-message';note.setAttribute('role','status');
  head.append(title,mail,lobbyButton,close);
@@ -24,14 +26,23 @@ export function createIslandVisits(api){
  const list=el('section');list.className='visit-lobby';const nav=el('nav');nav.className='visit-nav';const stick=el('button');stick.className='visit-stick';stick.setAttribute('aria-label','移動角色');
  const drawer=el('section');drawer.className='visit-drawer';drawer.hidden=true;
  const request=el('aside');request.className='visit-request';request.hidden=true;
- dialog.append(canvas,head,note,list,nav,stick,drawer,request);document.body.append(dialog);
- let owner=null,snapshot=null,scene=null,connection=null,working=false,generation=0,last=0,frameId,route=[],ownPose=null,emote='',emoteUntil=0,open=true;
+ const socialRequest=el('aside');socialRequest.className='visit-request visit-social-request';socialRequest.hidden=true;socialRequest.setAttribute('aria-live','polite');
+ dialog.append(canvas,head,note,list,nav,stick,drawer,request,socialRequest);document.body.append(dialog);
+ let owner=null,snapshot=null,scene=null,connection=null,working=false,generation=0,last=0,frameId,route=[],ownPose=null,open=true;
  const peers=new Map(),walkers=new Map(),loading=new Set(),keys=new Set();
  const store=()=>globalThis.ForestStudent;
+ const currentPose=()=>scene?{...scene.player,room:scene.area}:null;
+ const social=createSocialSession({seat:store()?.seat||'',getPose:currentPose,getPeers:()=>peers,send:e=>connection?.sendSocial(e),onMessage:message,onPrompt:p=>{
+  socialRequest.hidden=!p;if(!p)return;
+  const text=p.outgoing?'等待 '+p.target+' 回應…':p.waiting?'準備一起玩…':p.target+' 邀請你'+(p.action==='hug'?'擁抱':'一起跳舞');
+  socialRequest.replaceChildren(el('strong',text));
+  if(!p.outgoing&&!p.waiting)socialRequest.append(button('好呀！',async()=>{const s=api.state();if(!await ensureSocialArt(s.companions.active,equippedOutfit(s))){message('動作圖片還沒準備好，請再試一次。');social.answer(false);return;}route=[];keys.clear();joystick.reset();social.answer(true);}),button('先不要',()=>social.answer(false)));
+  else socialRequest.append(button('取消',()=>social.cancel()));
+ }});
  function button(text,action){const b=el('button',text);b.type='button';b.onclick=()=>run(action);return b;}
  async function run(fn){if(working)return;working=true;dialog.setAttribute('aria-busy','true');try{await fn();}catch(e){message(errors[e.message]||'連線還沒完成，請再試一次。');if(store()?.getPendingGift?.())retryTransfer();}finally{working=false;dialog.setAttribute('aria-busy','false');}}
  function message(s){note.textContent=s;}
- function clearConnection(){connection?.close();connection=null;peers.clear();request.hidden=true;}
+ function clearConnection(){connection?.close();connection=null;peers.clear();request.hidden=true;social.reset();}
  function retryTransfer(){drawer.hidden=false;drawer.replaceChildren(el('h3','🎁 確認送禮進度'),el('p','剛才的交易可能已完成。請確認結果後再繼續，不會重複扣除。'),button('重新確認',async()=>{const next=await store().visitTransfer({});api.apply(next);drawer.hidden=true;message('✓ 禮物交易已確認');}));}
  function leave(){if(store()?.getPendingGift?.()){message('請先重新確認剛才的禮物交易。');retryTransfer();return;}generation++;clearConnection();keys.clear();joystick.reset();cancelAnimationFrame(frameId);dialog.close();api.stop();}
  dialog.oncancel=e=>{e.preventDefault();if(!working)leave();};
@@ -51,21 +62,42 @@ export function createIslandVisits(api){
   owner=target;title.textContent=hosting?'🏡 在家接待':target+' 的小島';list.hidden=true;canvas.hidden=false;nav.hidden=false;stick.hidden=false;drawer.hidden=true;
   scene=new ForestScene(canvas,api.art());scene.monster.visible=false;scene.extraPlayers=[];
   const defaultDraw=scene.drawPlayer;
-  function draw(c,a,pose){const id=pose.character||api.state().companions.active;const opt={...pose,outfit:pose.outfit||equippedOutfit(api.state())};if(!drawClothing(c,a,opt)){const walker=walkers.get(id);if(walker)drawWalker(c,a,walker,opt);else defaultDraw(c,a,opt);}}
-  scene.drawPlayer=(c,a,p)=>draw(c,a,{...p,character:api.state().companions.active,outfit:equippedOutfit(api.state())});scene.visitDraw=draw;
+  function draw(c,a,pose){
+   const id=pose.character||api.state().companions.active,opt={...pose,outfit:pose.outfit||equippedOutfit(api.state())},motion=social.motions.get(pose.seat),now=performance.now();
+   if(motion&&motion.room===scene.area){
+    const partner=motion.partner===store().seat?scene.player:peers.get(motion.partner);
+    let x=pose.x,y=pose.y;
+    if(motion.action==='hug'&&partner&&!scene.reduced.matches){const t=now-motion.started,ease=Math.max(0,Math.min(1,t/650,(SOCIAL_ACTIONS.hug.duration-t)/650));x+=((pose.x+partner.x)/2+motion.side*23-pose.x)*ease;y+=((pose.y+partner.y)/2-pose.y)*ease;}
+    if(drawSocialMotion(c,{...opt,character:id,x,y,motion,now,reduced:scene.reduced.matches}))return;
+   }
+   if(!drawClothing(c,a,opt)){const walker=walkers.get(id);if(walker)drawWalker(c,a,walker,opt);else defaultDraw(c,a,opt);}
+  }
+  scene.drawPlayer=(c,a,p)=>draw(c,a,{...p,seat:store().seat,character:api.state().companions.active,outfit:equippedOutfit(api.state())});scene.visitDraw=draw;
   await prepareAppearance({character:api.state().companions.active,outfit:equippedOutfit(api.state())});await room('room');
-  nav.replaceChildren(...Object.entries(names).map(([id,label])=>button(label,()=>room(id))),...VISIT_EMOTES.map(v=>button(v,()=>{emote=v;emoteUntil=performance.now()+2200;})));
-  if(!hosting)nav.append(button('🎁 送禮',showGifts),button('👋 申請一起玩',()=>connect(false)));
+  const rooms=el('div'),actions=el('div');rooms.className='visit-room-buttons';actions.className='visit-action-buttons';
+  rooms.append(...Object.entries(names).map(([id,label])=>button(label,()=>room(id))));
+  actions.append(...Object.entries(SOCIAL_ACTIONS).map(([id,a])=>button(a.label,()=>socialAction(id))));
+  nav.replaceChildren(rooms,actions);
+  if(!hosting)rooms.append(button('🎁 送禮',showGifts),button('👋 申請一起玩',()=>connect(false)));
   message(hosting?'正在準備接待…':'島主不在這裡。可以自在參觀，喜歡的布置也能仔細看看！');
   if(hosting)await connect(true);
  }
  async function prepareAppearance(p){
   if(!companionReady(companionById(p.character)))return;
   const key=p.character+':'+p.outfit;if(loading.has(key))return;loading.add(key);
-  try{await ensureClothingArt(p.outfit);if(p.character!=='rabbit'&&!walkers.has(p.character))walkers.set(p.character,await loadWalker(p.character));}catch{}finally{loading.delete(key);}
+  try{await Promise.all([ensureClothingArt(p.outfit),ensureSocialArt(p.character,p.outfit)]);if(p.character!=='rabbit'&&!walkers.has(p.character))walkers.set(p.character,await loadWalker(p.character));}catch{}finally{loading.delete(key);}
+ }
+ async function socialAction(action){
+  route=[];keys.clear();joystick.reset();scene.player.moving=false;
+  const s=api.state();if(!await ensureSocialArt(s.companions.active,equippedOutfit(s))){message('動作圖片還沒準備好，請再試一次。');return;}
+  if(!SOCIAL_ACTIONS[action].paired){social.perform(action);return;}
+  const nearby=[...peers].filter(([,p])=>canPair(currentPose(),p));
+  if(!nearby.length){message('先和在線的朋友走到一起，再邀請擁抱或跳舞。');return;}
+  if(nearby.length===1){social.perform(action,nearby[0][0]);return;}
+  socialRequest.hidden=false;socialRequest.replaceChildren(el('strong','想邀請哪位朋友？'),...nearby.map(([seat])=>button(seat,()=>social.perform(action,seat))),button('取消',()=>{socialRequest.hidden=true;}));
  }
  async function room(id){
-  route=[];keys.clear();joystick.reset();
+  social.cancel();socialRequest.hidden=true;route=[];keys.clear();joystick.reset();
   if(isInterior(id))await Promise.all([ensureHomeArt(api.art(),['daisyHome',...furnitureArtKeys(layoutFor(snapshot,id))]),id==='bathroom'?ensureBathroom(api.art()):ensureWallpapers(api.art(),[snapshot.wallpaper]),id==='bedroom'?ensureWardrobeArt(api.art(),snapshot.wallpaper):null]);
   scene.area=id;Object.assign(scene.player,{x:id==='forest'?630:owner===store().seat?700:580,y:id==='forest'?610:630,moving:false});
  }
@@ -76,7 +108,7 @@ export function createIslandVisits(api){
   connection=openVisitPeer({socketUrl:store().visitSocketUrl?.(result)||url.href,ticket:result.ticket,seat:store().seat,hosting,
    onStatus:s=>message({hosting:'👋 正在接待朋友（最多三位）。',requesting:'正在詢問島主…',waiting:'等待島主同意，你可以繼續散步。',connected:'✨ 朋友來了！可以招手、一起逛逛。',offline:hosting?'即時接待暫時中斷，回碼頭可重新開放。':'島主不在場或連線未成功，繼續離線參觀吧！',declined:'島主現在不方便，仍可繼續參觀。'}[s]||s),
    onInvitation:(seat,answer)=>{request.hidden=false;request.replaceChildren(el('strong',seat+' 想一起逛小島'),button('👋 歡迎',()=>{answer(true);request.hidden=true;}),button('稍後再玩',()=>{answer(false);request.hidden=true;}));},
-   onPose:(seat,p)=>{const old=peers.get(seat);peers.set(seat,{...p,drawX:old?.drawX??p.x,drawY:old?.drawY??p.y});if(!old||old.character!==p.character||old.outfit!==p.outfit)void prepareAppearance(p);},onLeave:seat=>peers.delete(seat)});
+   onPose:(seat,p)=>{const old=peers.get(seat);peers.set(seat,{...p,drawX:old?.drawX??p.x,drawY:old?.drawY??p.y});if(p.moving||old?.room!==p.room)social.depart(seat);if(!old||old.character!==p.character||old.outfit!==p.outfit)void prepareAppearance(p);},onSocial:(seat,event)=>social.receive(seat,event),onLeave:seat=>{peers.delete(seat);social.depart(seat);}});
  }
  const allowed=(x,y)=>scene&&(isInterior(scene.area)?roomWalkable(x,y,snapshot,scene.area):walkable(x,y));
  canvas.onpointerdown=e=>{if(!owner||working||!drawer.hidden)return;e.preventDefault();canvas.focus();const p=scene.toWorld(e.clientX,e.clientY);route=findPath(scene.player,p,allowed)||[];};
@@ -88,8 +120,8 @@ export function createIslandVisits(api){
    if(!working&&drawer.hidden){dx=(keys.has('ArrowRight')?1:0)-(keys.has('ArrowLeft')?1:0)+joystick.input.x;dy=(keys.has('ArrowDown')?1:0)-(keys.has('ArrowUp')?1:0)+joystick.input.y;if(!dx&&!dy&&route.length){dx=route[0].x-p.x;dy=route[0].y-p.y;if(Math.hypot(dx,dy)<5){route.shift();dx=dy=0;}}}
    const distance=Math.hypot(dx,dy),speed=145*dt;p.moving=distance>0;
    if(distance){const x=p.x+dx/distance*Math.min(speed,distance),y=p.y+dy/distance*Math.min(speed,distance);if(allowed(x,y)){p.x=x;p.y=y;}else route=[];p.direction=Math.abs(dx)>Math.abs(dy)?dx>0?1:3:dy>0?0:2;p.phase+=dt*9;}
-   ownPose={room:scene.area,x:p.x,y:p.y,direction:p.direction,moving:p.moving,character:api.state().companions.active,outfit:equippedOutfit(api.state()),emote:now<emoteUntil?emote:''};connection?.sendPose(ownPose);
-   scene.extraPlayers=[];for(const [seat,other]of peers){if(other.room!==scene.area)continue;other.drawX+=(other.x-other.drawX)*.28;other.drawY+=(other.y-other.drawY)*.28;scene.extraPlayers.push({y:other.drawY,paint:()=>{scene.visitDraw(scene.c,api.art(),{...other,x:other.drawX,y:other.drawY,height:116,walking:other.moving,phase:now/110});label(seat,other.drawX,other.drawY,other.emote);}});}
+   social.tick();ownPose={room:scene.area,x:p.x,y:p.y,direction:p.direction,moving:p.moving,character:api.state().companions.active,outfit:equippedOutfit(api.state()),emote:''};connection?.sendPose(ownPose);
+   scene.extraPlayers=[];for(const [seat,other]of peers){if(other.room!==scene.area)continue;other.drawX+=(other.x-other.drawX)*.28;other.drawY+=(other.y-other.drawY)*.28;scene.extraPlayers.push({y:other.drawY,paint:()=>{scene.visitDraw(scene.c,api.art(),{...other,seat,x:other.drawX,y:other.drawY,height:116,walking:other.moving,phase:now/110});label(seat,other.drawX,other.drawY,other.emote);}});}
    scene.render(now,{...snapshot,outfit:equippedOutfit(api.state()),wand:false},null);label('我',p.x,p.y,ownPose.emote);
   }
   frameId=requestAnimationFrame(animate);
