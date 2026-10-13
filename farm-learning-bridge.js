@@ -40,7 +40,9 @@ export function createFarmLearningBridge({storage,tabStorage,href}){
  function depart(mode,{demo=false}={}){
   if(!Object.hasOwn(CROP_LESSONS,mode))return null;
   const destination=new URL(CROP_LESSONS[mode].page,url),back=new URL('adventure-preview.html',url);
-  for(const u of [destination,back]){if(classId!=='main')u.searchParams.set('class',classId);}
+  // iPad standalone treats an unlabelled main-class link as an old home icon.
+  // Keep class explicit in both directions, alongside the lesson and trip.
+  for(const u of [destination,back])u.searchParams.set('class',classId);
   destination.searchParams.set('farmLesson',mode);if(demo)destination.searchParams.set('demo','1');
   back.searchParams.set('v','20261011-items7');back.searchParams.set('returnFarm','1');
   const character=url.searchParams.get('character');if(character)back.searchParams.set('character',character);

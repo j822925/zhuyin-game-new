@@ -1,9 +1,17 @@
 <!doctype html>
-<html lang="zh-Hant-TW">
+<html lang="zh-Hant-TW" data-adventure-boot>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f5ec"><title>注音探險島</title><link rel="stylesheet" href="adventure-preview.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-world.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-food.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-home.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-farm-feedback.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-companions.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-exploration.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-expedition.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-cart.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-rest.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-action-feedback.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-shop-room.css?v=20261012-recovery1">
 <link rel="stylesheet" href="adventure-expedition-motion.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-tone-question.css?v=20261011-forest-wallet1"><link rel="stylesheet" href="adventure-controls.css?v=20261011-ipad2"></head>
 <body class="immersive">
-<main class="app-shell">
+<style>
+html[data-adventure-boot] .app-shell{visibility:hidden;pointer-events:none}
+#adventure-boot{position:fixed;inset:0;z-index:10000;display:grid;place-content:center;justify-items:center;gap:12px;background:#f7f5ec;color:#365c48;font:20px system-ui,sans-serif;text-align:center;padding:24px}
+#adventure-boot[hidden],#adventure-boot button[hidden]{display:none}
+#adventure-boot strong{font-size:28px}#adventure-boot p{margin:0 0 12px}#adventure-boot a,#adventure-boot button{font:inherit;color:inherit;background:#fff7dc;border:2px solid #c5b68b;border-radius:18px;padding:14px 24px;text-decoration:none}
+</style>
+<section id="adventure-boot" role="status" aria-live="polite"><strong>🌳 注音探險島</strong><p>正在準備冒險…</p><button type="button" hidden>再試一次</button><a href="index.html?class=main">回學習廣場</a></section>
+<script src="adventure-boot.js?v=20261013-entry2" defer></script>
+<main class="app-shell" inert>
   <header class="topbar">
     <div class="brand-mark" aria-hidden="true">✿</div>
     <div class="brand"><p>一起出發冒險</p><h1>注音探險島</h1></div>
@@ -86,7 +94,7 @@ if(location.protocol==='file:'){
   loading.append(entrance);
 }
 </script>
-<script type="module" src="adventure-entry.bundle.js?v=20261013-farm-save1"></script>
+<script type="module" src="adventure-entry.bundle.js?v=20261013-entry2"></script>
 </body></html>
 
 
