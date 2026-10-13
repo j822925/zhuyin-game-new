@@ -22,7 +22,6 @@ export const ACTION_COPY={
  tool:{text:'準備好了！',icon:'✨',particles:'✦',tone:'gold'},
  music:{text:'真好聽！',icon:'🎵',particles:'♪',tone:'peach'},
  bubbles:{text:'泡泡好漂亮！',icon:'🫧',particles:'○',tone:'aqua'},
- sparkles:{text:'畫畫真有趣！',icon:'🎨',particles:'✦',tone:'peach'},
  attack:{text:'答對了！攻擊成功！',icon:'⚔️',particles:'✦',tone:'gold'},
  defend:{text:'答對了！守住了！',icon:'🛡️',particles:'✦',tone:'aqua'},
  retry:{text:'沒關係！再試一次！',icon:'🌱',particles:'',tone:'leaf'},

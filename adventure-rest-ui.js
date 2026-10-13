@@ -27,7 +27,10 @@ export function createHomeRest(api){
  }
  function update(){box.replaceChildren();if(!scene()||!isInterior(scene().area))return;
   for(const item of items()){const f=restFurniture(item.id),kind=restKind(f);if(!kind&&!f?.play&&!f?.dining)continue;
-   const b=document.createElement('button');b.className='home-action';b.dataset.item=item.id;b.setAttribute('aria-label',f.name+(f.dining?'，吃東西':kind==='sleep'?'，睡覺，每日體力加10':kind==='bath'?'，洗澡，每日體力加5':kind==='toilet'?'，上廁所，體力加1，今天還有'+toiletRemaining(s())+'次':'，點一下互動'));b.title=b.ariaLabel;b.innerHTML='<span>'+(f.dining?'🍽️':kind==='sleep'?'💤':kind==='bath'?'🫧':kind==='toilet'?'🚽':'✨')+'</span>';b.onclick=()=>use(item.id);box.append(b);
+   const b=document.createElement('button');b.className='home-action';b.dataset.item=item.id;b.setAttribute('aria-label',f.name+(f.dining?'，吃東西':kind==='sleep'?'，睡覺，每日體力加10':kind==='bath'?'，洗澡，每日體力加5':kind==='toilet'?'，上廁所，體力加1，今天還有'+toiletRemaining(s())+'次':'，點一下互動'));b.title=b.ariaLabel;
+   // Decorative toys remain tappable without a badge covering their artwork.
+   const icon=f.dining?'🍽️':kind==='sleep'?'💤':kind==='bath'?'🫧':kind==='toilet'?'🚽':'';
+   if(icon)b.innerHTML='<span>'+icon+'</span>';b.onclick=()=>use(item.id);box.append(b);
   }position();
  }
  function position(){if(!scene())return;const scale=scene().camera.scale;for(const b of box.children){const item=items().find(p=>p.id===b.dataset.item);if(!item){b.hidden=true;continue;}const f=restFurniture(item.id),at=scene().toScreen(item.x,item.y);b.hidden=scene().editing||!!scene().homeRest||api.blocked();b.style.left=at.x+'px';b.style.top=at.y+'px';b.style.width=Math.max(64,f.fw*scale)+'px';b.style.height=Math.max(64,f.height*scale)+'px';b.style.zIndex=Math.round(item.y);}}
