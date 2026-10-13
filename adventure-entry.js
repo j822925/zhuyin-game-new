@@ -7,9 +7,9 @@ function blocked(reason){
  if(!barrier){barrier=document.createElement('dialog');barrier.setAttribute('aria-label','注音探險島入口');document.body.append(barrier);}
  barrier.replaceChildren();const title=document.createElement('h2'),home=document.createElement('a'),retry=document.createElement('button');
  title.textContent=reason==='closed'?'🌳 老師暫時關閉注音探險島':reason==='login'?'🔒 請先回首頁登入':'🌳 連線還沒準備好';
- const url=new URL('./index.html',location.href);if(classId!=='main')url.searchParams.set('class',classId);home.href=url.href;home.textContent='🏠 回學習廣場';
+ const url=new URL('./index.html',location.href);url.searchParams.set('class',classId);home.href=url.href;home.textContent='🏠 回學習廣場';
  retry.type='button';retry.textContent='再試一次';retry.onclick=()=>location.reload();barrier.append(title,home,document.createTextNode('　'),retry);
- barrier.oncancel=e=>e.preventDefault();if(!barrier.open)barrier.showModal();
+ barrier.oncancel=e=>e.preventDefault();if(!barrier.open)barrier.showModal();document.dispatchEvent(new Event('adventure-ui-blocked'));
 }
 const gate=createForestAccess({classId,onBlocked:blocked,endpoint:resolveApiEndpoint('https://zhuyin-api.j822925.workers.dev/api')});
 // Shared by battle entry points; never called for individual answers.

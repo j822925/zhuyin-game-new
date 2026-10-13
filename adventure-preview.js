@@ -190,6 +190,7 @@ async function init(){
     scene.drawPlayer=withEnergyMood((c,a,options)=>{const pose={...options,outfit:equippedOutfit(state)};if(drawClothing(c,a,pose))return;return activeWalker?drawWalker(c,a,activeWalker,pose):rabbitDraw(c,a,pose);},()=>state.life.nutrition.energy);
     $('map-loading').hidden=true;canvas.dataset.ready='true';renderState();renderArea();if(new URL(location.href).searchParams.get('returnFarm')==='1'&&state.life.farmUnlocked)switchArea('farm',()=>{const ready=state.life.plots.filter(p=>p?.ready).length;if(ready)toast(`有 ${ready} 處作物成熟了！點「採收」帶回家做料理。`);});
   }catch(e){console.error(e);$('map-loading').querySelector('strong').textContent='森林圖片還沒準備好';$('map-loading').querySelector('p').textContent='請確認連線後再試一次。';$('load-retry').hidden=false;}
+  finally{document.dispatchEvent(new Event('adventure-ui-ready'));}
 }
 $('load-retry').addEventListener('click',init);
 canvas.addEventListener('pointerdown',e=>{
