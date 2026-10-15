@@ -257,7 +257,7 @@ async function switchArea(area,onArrival=null){
     if(area==='room')toast(hasEnergy(state)?'🛏️ ← 客廳 → 🍲':'🥄 先吃點東西');
     if(area==='bedroom')toast('🛏️ 點床休息・🛁 左邊是衛浴');
     if(area==='bathroom')toast('🚽 點馬桶 +1 體力，每天 5 次；🛁 浴缸可以買回來布置');
-    if(area==='kitchen')toast(!hasEnergy(state)?'🥄 先吃點東西':state.kitchenLayout.some(p=>FURNITURE.find(f=>f.id===p.id)?.cooking)?'點料理爐，把今天的收穫做成料理吧。':'按椅子圖示，把已有的料理爐擺回廚房。');
+    if(area==='kitchen')toast(state.kitchenLayout.some(p=>FURNITURE.find(f=>f.id===p.id)?.cooking)?'點料理爐，把今天的收穫做成料理吧。':'按椅子圖示，把已有的料理爐擺回廚房。');
     if(!onArrival)completeAction('travel',{duration:1800});onArrival?.();resolve(true);
   },180));
 }

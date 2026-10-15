@@ -1,0 +1,1001 @@
+{
+  "totalBytes": 2502368,
+  "outfits": [
+    {
+      "id": "daisy",
+      "bytes": 231730,
+      "sourceDimensions": [
+        1230,
+        1278
+      ],
+      "poses": [
+        {
+          "left": 162,
+          "top": 8,
+          "width": 209,
+          "height": 399,
+          "pixels": 60073,
+          "anchor": 95.93510594480802
+        },
+        {
+          "left": 519,
+          "top": 9,
+          "width": 246,
+          "height": 399,
+          "pixels": 59759,
+          "anchor": 94.70459819103093
+        },
+        {
+          "left": 886,
+          "top": 7,
+          "width": 208,
+          "height": 401,
+          "pixels": 59860,
+          "anchor": 90.75948151704273
+        },
+        {
+          "left": 150,
+          "top": 429,
+          "width": 265,
+          "height": 388,
+          "pixels": 61394,
+          "anchor": 100.66343947875562
+        },
+        {
+          "left": 530,
+          "top": 431,
+          "width": 277,
+          "height": 386,
+          "pixels": 60791,
+          "anchor": 130.09149749926448
+        },
+        {
+          "left": 888,
+          "top": 427,
+          "width": 270,
+          "height": 390,
+          "pixels": 62370,
+          "anchor": 101.6613828297882
+        },
+        {
+          "left": 154,
+          "top": 842,
+          "width": 220,
+          "height": 392,
+          "pixels": 59809,
+          "anchor": 101.99701612184911
+        },
+        {
+          "left": 522,
+          "top": 831,
+          "width": 265,
+          "height": 404,
+          "pixels": 63289,
+          "anchor": 98.03454146319609
+        },
+        {
+          "left": 891,
+          "top": 830,
+          "width": 281,
+          "height": 405,
+          "pixels": 64243,
+          "anchor": 100.37590298148066
+        }
+      ],
+      "bodyHeight": 300
+    },
+    {
+      "id": "gardener",
+      "bytes": 201370,
+      "sourceDimensions": [
+        1222,
+        1287
+      ],
+      "poses": [
+        {
+          "left": 71,
+          "top": 6,
+          "width": 271,
+          "height": 413,
+          "pixels": 64654,
+          "anchor": 123.54232550710749
+        },
+        {
+          "left": 463,
+          "top": 8,
+          "width": 324,
+          "height": 410,
+          "pixels": 69727,
+          "anchor": 123.33132579482137
+        },
+        {
+          "left": 876,
+          "top": 10,
+          "width": 275,
+          "height": 409,
+          "pixels": 67766,
+          "anchor": 126.50547037052101
+        },
+        {
+          "left": 70,
+          "top": 434,
+          "width": 325,
+          "height": 395,
+          "pixels": 68067,
+          "anchor": 126.46706064331892
+        },
+        {
+          "left": 503,
+          "top": 434,
+          "width": 307,
+          "height": 395,
+          "pixels": 68735,
+          "anchor": 122.86863790596219
+        },
+        {
+          "left": 895,
+          "top": 434,
+          "width": 297,
+          "height": 396,
+          "pixels": 66916,
+          "anchor": 121.01026668336046
+        },
+        {
+          "left": 65,
+          "top": 847,
+          "width": 269,
+          "height": 404,
+          "pixels": 63596,
+          "anchor": 122.98402146985963
+        },
+        {
+          "left": 481,
+          "top": 845,
+          "width": 314,
+          "height": 406,
+          "pixels": 66467,
+          "anchor": 121.98842227570752
+        },
+        {
+          "left": 876,
+          "top": 843,
+          "width": 331,
+          "height": 408,
+          "pixels": 68983,
+          "anchor": 125.04308434878936
+        }
+      ],
+      "bodyHeight": 265
+    },
+    {
+      "id": "rabbit-strawberry",
+      "bytes": 221608,
+      "sourceDimensions": [
+        1247,
+        1261
+      ],
+      "poses": [
+        {
+          "left": 143,
+          "top": 9,
+          "width": 207,
+          "height": 392,
+          "pixels": 58855,
+          "anchor": 93.60976415094339
+        },
+        {
+          "left": 535,
+          "top": 9,
+          "width": 254,
+          "height": 392,
+          "pixels": 60624,
+          "anchor": 92.02716533550146
+        },
+        {
+          "left": 950,
+          "top": 9,
+          "width": 216,
+          "height": 392,
+          "pixels": 60181,
+          "anchor": 98.26393828814264
+        },
+        {
+          "left": 138,
+          "top": 429,
+          "width": 266,
+          "height": 384,
+          "pixels": 63363,
+          "anchor": 97.47182273855812
+        },
+        {
+          "left": 552,
+          "top": 431,
+          "width": 281,
+          "height": 382,
+          "pixels": 61474,
+          "anchor": 125.02934571043569
+        },
+        {
+          "left": 969,
+          "top": 429,
+          "width": 251,
+          "height": 385,
+          "pixels": 60970,
+          "anchor": 94.38089812968765
+        },
+        {
+          "left": 110,
+          "top": 836,
+          "width": 223,
+          "height": 399,
+          "pixels": 61313,
+          "anchor": 97.95170637475853
+        },
+        {
+          "left": 510,
+          "top": 845,
+          "width": 278,
+          "height": 389,
+          "pixels": 63351,
+          "anchor": 100.63606040117196
+        },
+        {
+          "left": 938,
+          "top": 843,
+          "width": 286,
+          "height": 391,
+          "pixels": 62067,
+          "anchor": 101.87105738502153
+        }
+      ],
+      "bodyHeight": 284
+    },
+    {
+      "id": "rabbit-wedding",
+      "bytes": 289094,
+      "sourceDimensions": [
+        1223,
+        1286
+      ],
+      "poses": [
+        {
+          "left": 63,
+          "top": 6,
+          "width": 255,
+          "height": 407,
+          "pixels": 70055,
+          "anchor": 135.7146826244924
+        },
+        {
+          "left": 472,
+          "top": 8,
+          "width": 303,
+          "height": 405,
+          "pixels": 73417,
+          "anchor": 143.15541149701627
+        },
+        {
+          "left": 889,
+          "top": 9,
+          "width": 260,
+          "height": 403,
+          "pixels": 69954,
+          "anchor": 137.95823646278058
+        },
+        {
+          "left": 73,
+          "top": 437,
+          "width": 309,
+          "height": 400,
+          "pixels": 73645,
+          "anchor": 146.0876539673446
+        },
+        {
+          "left": 513,
+          "top": 438,
+          "width": 300,
+          "height": 397,
+          "pixels": 70851,
+          "anchor": 140.44571742816552
+        },
+        {
+          "left": 916,
+          "top": 436,
+          "width": 292,
+          "height": 400,
+          "pixels": 71620,
+          "anchor": 138.38411626149949
+        },
+        {
+          "left": 59,
+          "top": 858,
+          "width": 266,
+          "height": 408,
+          "pixels": 73791,
+          "anchor": 151.4764255251935
+        },
+        {
+          "left": 484,
+          "top": 860,
+          "width": 318,
+          "height": 406,
+          "pixels": 77368,
+          "anchor": 138.59849928074337
+        },
+        {
+          "left": 897,
+          "top": 860,
+          "width": 314,
+          "height": 406,
+          "pixels": 73989,
+          "anchor": 143.06991239892184
+        }
+      ],
+      "bodyHeight": 303
+    },
+    {
+      "id": "fox-original",
+      "bytes": 216412,
+      "sourceDimensions": [
+        1230,
+        1278
+      ],
+      "poses": [
+        {
+          "left": 40,
+          "top": 17,
+          "width": 320,
+          "height": 397,
+          "pixels": 82865,
+          "anchor": 186.4047033455746
+        },
+        {
+          "left": 442,
+          "top": 11,
+          "width": 350,
+          "height": 402,
+          "pixels": 85571,
+          "anchor": 196.79227491792975
+        },
+        {
+          "left": 859,
+          "top": 7,
+          "width": 324,
+          "height": 405,
+          "pixels": 85008,
+          "anchor": 190.696676821795
+        },
+        {
+          "left": 37,
+          "top": 443,
+          "width": 371,
+          "height": 384,
+          "pixels": 86450,
+          "anchor": 192.59416445623341
+        },
+        {
+          "left": 467,
+          "top": 447,
+          "width": 343,
+          "height": 379,
+          "pixels": 80083,
+          "anchor": 201.72697264459038
+        },
+        {
+          "left": 881,
+          "top": 437,
+          "width": 325,
+          "height": 390,
+          "pixels": 80326,
+          "anchor": 164.48218629274575
+        },
+        {
+          "left": 31,
+          "top": 850,
+          "width": 311,
+          "height": 405,
+          "pixels": 86249,
+          "anchor": 180.68259681825486
+        },
+        {
+          "left": 438,
+          "top": 850,
+          "width": 358,
+          "height": 405,
+          "pixels": 86421,
+          "anchor": 199.10681965645597
+        },
+        {
+          "left": 868,
+          "top": 847,
+          "width": 349,
+          "height": 408,
+          "pixels": 86884,
+          "anchor": 186.24815700003367
+        }
+      ],
+      "bodyHeight": 251
+    },
+    {
+      "id": "fox-postman",
+      "bytes": 199740,
+      "sourceDimensions": [
+        1225,
+        1284
+      ],
+      "poses": [
+        {
+          "left": 57,
+          "top": 10,
+          "width": 308,
+          "height": 409,
+          "pixels": 76252,
+          "anchor": 185.7184640024405
+        },
+        {
+          "left": 453,
+          "top": 11,
+          "width": 324,
+          "height": 408,
+          "pixels": 76749,
+          "anchor": 172.15597405641947
+        },
+        {
+          "left": 847,
+          "top": 11,
+          "width": 309,
+          "height": 408,
+          "pixels": 74551,
+          "anchor": 183.78519697572622
+        },
+        {
+          "left": 43,
+          "top": 434,
+          "width": 360,
+          "height": 394,
+          "pixels": 78075,
+          "anchor": 192.67309992822393
+        },
+        {
+          "left": 457,
+          "top": 441,
+          "width": 360,
+          "height": 386,
+          "pixels": 76197,
+          "anchor": 201.64324956165984
+        },
+        {
+          "left": 873,
+          "top": 441,
+          "width": 313,
+          "height": 383,
+          "pixels": 75641,
+          "anchor": 168.99294320783756
+        },
+        {
+          "left": 49,
+          "top": 843,
+          "width": 302,
+          "height": 400,
+          "pixels": 75347,
+          "anchor": 183.217256314922
+        },
+        {
+          "left": 446,
+          "top": 844,
+          "width": 352,
+          "height": 399,
+          "pixels": 78329,
+          "anchor": 183.44597379655528
+        },
+        {
+          "left": 858,
+          "top": 843,
+          "width": 349,
+          "height": 400,
+          "pixels": 77550,
+          "anchor": 177.13313758065138
+        }
+      ],
+      "bodyHeight": 256
+    },
+    {
+      "id": "fox-stars",
+      "bytes": 199402,
+      "sourceDimensions": [
+        1230,
+        1278
+      ],
+      "poses": [
+        {
+          "left": 42,
+          "top": 12,
+          "width": 281,
+          "height": 407,
+          "pixels": 74766,
+          "anchor": 164.0135281602505
+        },
+        {
+          "left": 449,
+          "top": 11,
+          "width": 345,
+          "height": 407,
+          "pixels": 76194,
+          "anchor": 177.09991900763035
+        },
+        {
+          "left": 874,
+          "top": 12,
+          "width": 287,
+          "height": 406,
+          "pixels": 75047,
+          "anchor": 160.06039574082857
+        },
+        {
+          "left": 30,
+          "top": 441,
+          "width": 383,
+          "height": 391,
+          "pixels": 79823,
+          "anchor": 191.6714525675892
+        },
+        {
+          "left": 478,
+          "top": 442,
+          "width": 354,
+          "height": 386,
+          "pixels": 73328,
+          "anchor": 207.2275382845003
+        },
+        {
+          "left": 878,
+          "top": 449,
+          "width": 340,
+          "height": 380,
+          "pixels": 70799,
+          "anchor": 204.1929808568824
+        },
+        {
+          "left": 34,
+          "top": 842,
+          "width": 301,
+          "height": 411,
+          "pixels": 75883,
+          "anchor": 182.00963529224398
+        },
+        {
+          "left": 444,
+          "top": 844,
+          "width": 355,
+          "height": 409,
+          "pixels": 78890,
+          "anchor": 186.19112252384446
+        },
+        {
+          "left": 866,
+          "top": 846,
+          "width": 351,
+          "height": 408,
+          "pixels": 79160,
+          "anchor": 166.81781133884695
+        }
+      ],
+      "bodyHeight": 249
+    },
+    {
+      "id": "fox-suit",
+      "bytes": 173264,
+      "sourceDimensions": [
+        1230,
+        1278
+      ],
+      "poses": [
+        {
+          "left": 45,
+          "top": 18,
+          "width": 309,
+          "height": 403,
+          "pixels": 80919,
+          "anchor": 191.92045245200987
+        },
+        {
+          "left": 476,
+          "top": 22,
+          "width": 351,
+          "height": 399,
+          "pixels": 80034,
+          "anchor": 170.00446192240793
+        },
+        {
+          "left": 887,
+          "top": 21,
+          "width": 299,
+          "height": 400,
+          "pixels": 80570,
+          "anchor": 182.5176558978212
+        },
+        {
+          "left": 31,
+          "top": 440,
+          "width": 400,
+          "height": 389,
+          "pixels": 84622,
+          "anchor": 217.86016223859494
+        },
+        {
+          "left": 462,
+          "top": 444,
+          "width": 381,
+          "height": 385,
+          "pixels": 79253,
+          "anchor": 202.80365835108
+        },
+        {
+          "left": 867,
+          "top": 444,
+          "width": 341,
+          "height": 384,
+          "pixels": 78410,
+          "anchor": 201.8547293370016
+        },
+        {
+          "left": 43,
+          "top": 841,
+          "width": 314,
+          "height": 404,
+          "pixels": 81580,
+          "anchor": 190.97418666666667
+        },
+        {
+          "left": 462,
+          "top": 844,
+          "width": 369,
+          "height": 401,
+          "pixels": 83022,
+          "anchor": 177.73134649910233
+        },
+        {
+          "left": 877,
+          "top": 845,
+          "width": 347,
+          "height": 400,
+          "pixels": 80581,
+          "anchor": 169.74651260025087
+        }
+      ],
+      "bodyHeight": 239
+    },
+    {
+      "id": "bear-original",
+      "bytes": 193892,
+      "sourceDimensions": [
+        1214,
+        1295
+      ],
+      "poses": [
+        {
+          "left": 139,
+          "top": 14,
+          "width": 228,
+          "height": 403,
+          "pixels": 65558,
+          "anchor": 101.49454161286536
+        },
+        {
+          "left": 496,
+          "top": 18,
+          "width": 293,
+          "height": 399,
+          "pixels": 71500,
+          "anchor": 119.66465305464943
+        },
+        {
+          "left": 869,
+          "top": 20,
+          "width": 250,
+          "height": 397,
+          "pixels": 67159,
+          "anchor": 113.48189833814148
+        },
+        {
+          "left": 123,
+          "top": 442,
+          "width": 283,
+          "height": 387,
+          "pixels": 69168,
+          "anchor": 117.18697855156387
+        },
+        {
+          "left": 499,
+          "top": 442,
+          "width": 291,
+          "height": 388,
+          "pixels": 66553,
+          "anchor": 145.20971469202738
+        },
+        {
+          "left": 896,
+          "top": 439,
+          "width": 286,
+          "height": 390,
+          "pixels": 66747,
+          "anchor": 141.8582801847372
+        },
+        {
+          "left": 85,
+          "top": 843,
+          "width": 269,
+          "height": 412,
+          "pixels": 74224,
+          "anchor": 125.33895567242675
+        },
+        {
+          "left": 489,
+          "top": 854,
+          "width": 300,
+          "height": 401,
+          "pixels": 74188,
+          "anchor": 118.46414913957935
+        },
+        {
+          "left": 881,
+          "top": 855,
+          "width": 304,
+          "height": 400,
+          "pixels": 73980,
+          "anchor": 106.8684767011555
+        }
+      ],
+      "bodyHeight": 271
+    },
+    {
+      "id": "bear-baker",
+      "bytes": 208210,
+      "sourceDimensions": [
+        1225,
+        1284
+      ],
+      "poses": [
+        {
+          "left": 89,
+          "top": 8,
+          "width": 227,
+          "height": 408,
+          "pixels": 69454,
+          "anchor": 103.0774200495316
+        },
+        {
+          "left": 482,
+          "top": 11,
+          "width": 280,
+          "height": 404,
+          "pixels": 71394,
+          "anchor": 113.6923047429163
+        },
+        {
+          "left": 885,
+          "top": 8,
+          "width": 259,
+          "height": 408,
+          "pixels": 72780,
+          "anchor": 127.38076908977602
+        },
+        {
+          "left": 70,
+          "top": 439,
+          "width": 310,
+          "height": 383,
+          "pixels": 71344,
+          "anchor": 139.2133267968927
+        },
+        {
+          "left": 531,
+          "top": 442,
+          "width": 261,
+          "height": 383,
+          "pixels": 66229,
+          "anchor": 113.02468707875987
+        },
+        {
+          "left": 921,
+          "top": 440,
+          "width": 257,
+          "height": 385,
+          "pixels": 66841,
+          "anchor": 110.11746546879328
+        },
+        {
+          "left": 90,
+          "top": 845,
+          "width": 224,
+          "height": 408,
+          "pixels": 69990,
+          "anchor": 102.56805917878712
+        },
+        {
+          "left": 471,
+          "top": 846,
+          "width": 301,
+          "height": 408,
+          "pixels": 76446,
+          "anchor": 129.0960936956975
+        },
+        {
+          "left": 894,
+          "top": 848,
+          "width": 300,
+          "height": 408,
+          "pixels": 76516,
+          "anchor": 122.98327863188807
+        }
+      ],
+      "bodyHeight": 300
+    },
+    {
+      "id": "bear-orchard",
+      "bytes": 172986,
+      "sourceDimensions": [
+        1226,
+        1283
+      ],
+      "poses": [
+        {
+          "left": 102,
+          "top": 10,
+          "width": 243,
+          "height": 403,
+          "pixels": 70143,
+          "anchor": 111.78002394872156
+        },
+        {
+          "left": 488,
+          "top": 12,
+          "width": 286,
+          "height": 401,
+          "pixels": 73804,
+          "anchor": 112.33344322344323
+        },
+        {
+          "left": 854,
+          "top": 10,
+          "width": 271,
+          "height": 401,
+          "pixels": 73341,
+          "anchor": 136.77215011782914
+        },
+        {
+          "left": 97,
+          "top": 432,
+          "width": 305,
+          "height": 401,
+          "pixels": 76769,
+          "anchor": 113.1945738363617
+        },
+        {
+          "left": 512,
+          "top": 433,
+          "width": 293,
+          "height": 398,
+          "pixels": 72347,
+          "anchor": 137.13744270115157
+        },
+        {
+          "left": 930,
+          "top": 432,
+          "width": 265,
+          "height": 400,
+          "pixels": 70999,
+          "anchor": 116.39414913957935
+        },
+        {
+          "left": 91,
+          "top": 854,
+          "width": 260,
+          "height": 404,
+          "pixels": 73341,
+          "anchor": 119.1486231478893
+        },
+        {
+          "left": 476,
+          "top": 848,
+          "width": 313,
+          "height": 410,
+          "pixels": 76168,
+          "anchor": 117.9025394646534
+        },
+        {
+          "left": 867,
+          "top": 846,
+          "width": 326,
+          "height": 412,
+          "pixels": 78096,
+          "anchor": 120.01369340636484
+        }
+      ],
+      "bodyHeight": 268
+    },
+    {
+      "id": "bear-gentleman",
+      "bytes": 194660,
+      "sourceDimensions": [
+        1247,
+        1261
+      ],
+      "poses": [
+        {
+          "left": 123,
+          "top": 16,
+          "width": 225,
+          "height": 398,
+          "pixels": 68352,
+          "anchor": 106.55493816096075
+        },
+        {
+          "left": 499,
+          "top": 21,
+          "width": 285,
+          "height": 395,
+          "pixels": 72011,
+          "anchor": 111.58788037775446
+        },
+        {
+          "left": 886,
+          "top": 18,
+          "width": 255,
+          "height": 398,
+          "pixels": 70766,
+          "anchor": 131.62175175506303
+        },
+        {
+          "left": 110,
+          "top": 427,
+          "width": 285,
+          "height": 382,
+          "pixels": 69303,
+          "anchor": 116.92490406753646
+        },
+        {
+          "left": 502,
+          "top": 426,
+          "width": 307,
+          "height": 380,
+          "pixels": 70715,
+          "anchor": 125.12785946152377
+        },
+        {
+          "left": 915,
+          "top": 438,
+          "width": 293,
+          "height": 371,
+          "pixels": 68461,
+          "anchor": 116.55418006430868
+        },
+        {
+          "left": 139,
+          "top": 828,
+          "width": 232,
+          "height": 399,
+          "pixels": 68967,
+          "anchor": 108.89576241750608
+        },
+        {
+          "left": 518,
+          "top": 826,
+          "width": 288,
+          "height": 401,
+          "pixels": 73067,
+          "anchor": 114.0867881629898
+        },
+        {
+          "left": 923,
+          "top": 828,
+          "width": 303,
+          "height": 399,
+          "pixels": 74619,
+          "anchor": 122.19302366969211
+        }
+      ],
+      "bodyHeight": 279
+    }
+  ]
+}

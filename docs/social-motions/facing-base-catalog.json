@@ -1,0 +1,122 @@
+[
+  {
+    "id": "daisy",
+    "character": "rabbit",
+    "name": "雛菊日常服",
+    "image": "assets/social-motions/v1/daisy.eafd9893b25a.webp",
+    "cellWidth": 288,
+    "cellHeight": 336,
+    "bodyHeight": 304,
+    "baseline": 322
+  },
+  {
+    "id": "gardener",
+    "character": "rabbit",
+    "name": "胡蘿蔔園丁裝",
+    "image": "assets/social-motions/v1/gardener.9fed54ae0ca2.webp",
+    "cellWidth": 288,
+    "cellHeight": 336,
+    "bodyHeight": 304,
+    "baseline": 322
+  },
+  {
+    "id": "rabbit-strawberry",
+    "character": "rabbit",
+    "name": "草莓烘焙裝",
+    "image": "assets/social-motions/v1/rabbit-strawberry.98afad727953.webp",
+    "cellWidth": 288,
+    "cellHeight": 336,
+    "bodyHeight": 304,
+    "baseline": 322
+  },
+  {
+    "id": "rabbit-wedding",
+    "character": "rabbit",
+    "name": "白色婚紗",
+    "image": "assets/social-motions/v1/rabbit-wedding.b0f839b6c24e.webp",
+    "cellWidth": 288,
+    "cellHeight": 336,
+    "bodyHeight": 304,
+    "baseline": 322
+  },
+  {
+    "id": "fox-original",
+    "character": "fox",
+    "name": "橘子狐原裝",
+    "image": "assets/social-motions/v1/fox-original.2ef2fcb8d1fd.webp",
+    "cellWidth": 288,
+    "cellHeight": 336,
+    "bodyHeight": 285,
+    "baseline": 322
+  },
+  {
+    "id": "fox-postman",
+    "character": "fox",
+    "name": "森林郵差裝",
+    "image": "assets/social-motions/v1/fox-postman.5ac1f513a419.webp",
+    "cellWidth": 288,
+    "cellHeight": 336,
+    "bodyHeight": 304,
+    "baseline": 322
+  },
+  {
+    "id": "fox-stars",
+    "character": "fox",
+    "name": "星空旅人裝",
+    "image": "assets/social-motions/v1/fox-stars.093c11b15441.webp",
+    "cellWidth": 288,
+    "cellHeight": 336,
+    "bodyHeight": 298,
+    "baseline": 322
+  },
+  {
+    "id": "fox-suit",
+    "character": "fox",
+    "name": "黑色西裝",
+    "image": "assets/social-motions/v1/fox-suit.fe4593f90ee8.webp",
+    "cellWidth": 288,
+    "cellHeight": 336,
+    "bodyHeight": 292,
+    "baseline": 322
+  },
+  {
+    "id": "bear-original",
+    "character": "bear",
+    "name": "蜂蜜熊原裝",
+    "image": "assets/social-motions/v1/bear-original.94a155c07ebf.webp",
+    "cellWidth": 288,
+    "cellHeight": 336,
+    "bodyHeight": 292,
+    "baseline": 322
+  },
+  {
+    "id": "bear-baker",
+    "character": "bear",
+    "name": "蜂蜜烘焙裝",
+    "image": "assets/social-motions/v1/bear-baker.8a3c48bf3d6d.webp",
+    "cellWidth": 288,
+    "cellHeight": 336,
+    "bodyHeight": 304,
+    "baseline": 322
+  },
+  {
+    "id": "bear-orchard",
+    "character": "bear",
+    "name": "果園吊帶裝",
+    "image": "assets/social-motions/v1/bear-orchard.ddc7a06dd7f6.webp",
+    "cellWidth": 288,
+    "cellHeight": 336,
+    "bodyHeight": 295,
+    "baseline": 322
+  },
+  {
+    "id": "bear-gentleman",
+    "character": "bear",
+    "name": "蜂蜜紳士裝",
+    "image": "assets/social-motions/v1/bear-gentleman.6b3d8385fd5b.webp",
+    "cellWidth": 288,
+    "cellHeight": 336,
+    "bodyHeight": 303,
+    "baseline": 322
+  }
+]

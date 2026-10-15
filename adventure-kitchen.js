@@ -1,7 +1,7 @@
 import {playerStats} from './adventure-expedition-model.js';
 import {completeAction} from './adventure-action-feedback.js';
 import {canUseStove,FURNITURE} from './adventure-model.js';
-import {hasEnergy,MAX_ENERGY,RAW_FOOD,RECIPES,INGREDIENT_NAMES,ingredientCount,canCook,cookMeal,decayEnergy} from './adventure-food-model.js';
+import {MAX_ENERGY,RAW_FOOD,RECIPES,INGREDIENT_NAMES,ingredientCount,canCook,cookMeal,decayEnergy,hasEnergy} from './adventure-food-model.js';
 import {CROPS} from './adventure-life-model.js';
 import {lifeStamp} from './adventure-life-art.js';
 import {ensureHomeArt} from './adventure-home-art.js';
@@ -10,11 +10,11 @@ import {diningSpot,restoreDiningTable,availableFood,beginDining,diningFrame} fro
 export function createKitchen(api){
  const $=id=>document.getElementById(id);let tab='bag',message='',lastSecond=-1,stationId=null,travelling=false,diningRun=0,tableId=null;
  const hud=document.createElement('button');hud.id='energy-open';hud.className='energy-hud';hud.type='button';hud.innerHTML='<span>體力 <strong id="energy-value"></strong></span><meter id="energy-meter" min="0" max="100" low="20" optimum="100"></meter><span class="combat-stats" aria-label="攻擊力與防禦力"><span>⚔ <b id="attack-value">10</b></span><span>🛡 <b id="defense-value">3</b></span></span><small id="energy-hint">吃東西，補充體力</small>';$('map-stage').append(hud);
- const dialog=document.createElement('dialog');dialog.id='food-dialog';dialog.setAttribute('aria-labelledby','food-title');dialog.innerHTML='<div class="wardrobe-header"><div><p class="eyebrow">把今天的收穫，變成明天的力氣</p><h2 id="food-title">我的食物籃</h2></div><button id="food-close" class="close" aria-label="收起食物籃">✕</button></div><div class="food-content"><p id="food-energy"></p><nav class="food-tabs" aria-label="食物與料理"><button id="food-bag-tab">吃東西</button><button id="food-cook-tab" hidden>料理食譜</button></nav><p id="food-message" role="status" aria-live="polite"></p><div id="food-list"></div><p class="food-footnote">每小時自然減少 1 體力，離線期間也會計算。散步不扣體力，每次戰鬥需要 8 體力。釣魚和農作不扣體力。體力歸零時仍能農作、玩注音、釣魚、吃東西，以及每日睡覺（+10）和洗澡（+5）；購買、布置、換裝、料理與戰鬥先暫停，仍可以散步逛店。</p></div>';document.body.append(dialog);
+ const dialog=document.createElement('dialog');dialog.id='food-dialog';dialog.setAttribute('aria-labelledby','food-title');dialog.innerHTML='<div class="wardrobe-header"><div><p class="eyebrow">把今天的收穫，變成明天的力氣</p><h2 id="food-title">我的食物籃</h2></div><button id="food-close" class="close" aria-label="收起食物籃">✕</button></div><div class="food-content"><p id="food-energy"></p><nav class="food-tabs" aria-label="食物與料理"><button id="food-bag-tab">吃東西</button><button id="food-cook-tab" hidden>料理食譜</button></nav><p id="food-message" role="status" aria-live="polite"></p><div id="food-list"></div><p class="food-footnote">每小時自然減少 1 體力，離線期間也會計算。散步不扣體力，每次戰鬥需要 8 體力。釣魚和農作不扣體力。體力歸零時仍能農作、玩注音、釣魚、做料理、吃東西，以及每日睡覺（+10）和洗澡（+5）；購買、布置、換裝與戰鬥先暫停，仍可以散步逛店。</p></div>';document.body.append(dialog);
  const nutrition=()=>api.state().life.nutrition;
  const save=()=>{api.save();api.renderState();};
  function update(){const stats=playerStats(api.state().expedition.level);$('attack-value').textContent=stats.attack;$('defense-value').textContent=stats.defense;$('attack-value').parentElement.setAttribute('aria-label','攻擊力 '+stats.attack);$('defense-value').parentElement.setAttribute('aria-label','防禦力 '+stats.defense);const n=nutrition();decayEnergy(n);document.body.dataset.exhausted=String(n.energy===0);$('world').dataset.energy=String(n.energy);$('energy-value').textContent=`${n.energy} / ${MAX_ENERGY}`;$('energy-meter').value=n.energy;hud.dataset.low=String(n.energy<20);hud.setAttribute('aria-label',`體力 ${n.energy}／${MAX_ENERGY}，${n.energy<20?'肚子餓了，':'點選'}吃東西補充體力`);$('energy-hint').textContent=n.energy<20?'肚子餓了，吃點東西吧':'吃東西，補充體力';}
- function open(next='bag',notice='',station=null){if(api.blocked())return;if(next==='cook'&&!hasEnergy(api.state())){next='bag';notice='🥄 先吃點東西';}if(next==='cook'&&!canUseStove(api.state(),station,api.scene()?.area))return;api.stopMoving();stationId=next==='cook'?station:null;tab=next;message=notice;render();dialog.show();if(api.scene())api.scene().foodTrayHeight=dialog.getBoundingClientRect().height;}
+ function open(next='bag',notice='',station=null){if(api.blocked())return;if(next==='cook'&&!canUseStove(api.state(),station,api.scene()?.area))return;api.stopMoving();stationId=next==='cook'?station:null;tab=next;message=notice;render();dialog.show();if(api.scene())api.scene().foodTrayHeight=dialog.getBoundingClientRect().height;}
  function cookAtHome(){dialog.close();if(api.scene()?.area==='kitchen'){api.toast('點料理爐，就可以做料理；如果收起來了，按椅子圖示擺回。');return;}if(api.scene()?.area==='room'){api.toast('走進客廳右側的小門，就是廚房。');return;}api.switchArea('room',()=>api.toast('帶著收穫回家了！走進客廳右側的小門，到廚房找料理爐。'));}
  const cookingContext=()=>({stationId,area:api.scene()?.area});
  function canvasCard(id,title,count,energy,draw,action,label,disabled){const card=document.createElement('article');card.className='food-card';card.innerHTML=`<canvas width="180" height="140" aria-hidden="true"></canvas><h3>${title}</h3><p>${count}</p><small aria-label="補充 ${energy} 體力">⚡ +${energy}</small>`;draw(card.querySelector('canvas').getContext('2d'));const b=document.createElement('button');b.id=id;b.type='button';b.textContent=label;b.disabled=disabled;b.onclick=action;card.append(b);return card;}
@@ -39,7 +39,7 @@ export function createKitchen(api){
   const gained=beginDining(api.state(),api.scene(),id,cooked,performance.now(),tableId);if(!gained)return;
   save();document.body.classList.add('dining');$('world').dataset.dining='eating';
  }
- function render(){dialog.classList.add('food-tray');const s=api.state(),n=nutrition(),art=api.art();if(!art)return;if(!hasEnergy(s)&&tab==='cook'){tab='bag';stationId=null;message='🥄 先吃點東西';}
+ function render(){dialog.classList.add('food-tray');const s=api.state(),n=nutrition(),art=api.art();if(!art)return;
   $('food-title').textContent=tab==='cook'?(FURNITURE.find(f=>f.id===stationId)?.name||'料理食譜'):'我的食物籃';$('food-energy').textContent=`現在體力 ${n.energy} / ${MAX_ENERGY}`;$('food-message').textContent=message||(tab==='cook'?'把收穫做成料理，吃下去能補更多體力。':'蔬菜可以直接吃；料理補得更多，體力全滿時會幫你留著食物。');
   $('food-cook-tab').hidden=!stationId;
   $('food-message').hidden=!message;

@@ -10,14 +10,26 @@ export function cleanSocialEvent(m){
  const paired=SOCIAL_ACTIONS[m.action].paired;
  if(m.type==='solo'&&paired||['invite','accept','decline','start'].includes(m.type)&&!paired)return null;
  const target=typeof m.target==='string'?m.target:'';
- if(paired&&!/^\d{1,6}$/.test(target))return null;
- return {v:1,type:m.type,id:m.id,action:m.action,room:m.room,target:paired?target:''};
+ if((paired||target)&&!/^\d{1,6}$/.test(target))return null;
+ return {v:1,type:m.type,id:m.id,action:m.action,room:m.room,target};
 }
 export function socialFrame(action,elapsed,reduced=false){
  const a=SOCIAL_ACTIONS[action];if(!a||!Number.isFinite(elapsed)||elapsed<0||elapsed>=a.duration)return null;
  return {row:a.row,column:reduced?(action==='hug'?2:0):a.frames[Math.min(a.frames.length-1,Math.floor(elapsed/a.duration*a.frames.length))],progress:elapsed/a.duration};
 }
 export function canPair(a,b){return !!a&&!!b&&a.room===b.room&&!a.moving&&!b.moving&&Math.hypot(a.x-b.x,a.y-b.y)<=170;}
+
+// Visual offsets never change saved positions or pathfinding. Left/right is spatial,
+// not invitation order, including a deterministic tie for vertical neighbours.
+export function socialPlacement(p,other,motion,now,height=116,reduced=false){
+ let x=p.x,y=p.y;const side=motion.side===1?1:-1;
+ const facing=other&&other.room===motion.room?(p.x===other.x?-side:p.x<other.x?1:-1):(p.direction===3?-1:1);
+ if(motion.action==='hug'&&other&&other.room===motion.room&&!reduced){
+  const t=now-motion.started,ease=Math.max(0,Math.min(1,t/650,(SOCIAL_ACTIONS.hug.duration-t)/650));
+  x+=((p.x+other.x)/2-facing*height*.24-p.x)*ease;y+=((p.y+other.y)/2-p.y)*ease;
+ }
+ return {x,y,facing};
+}
 
 // Ephemeral device-to-device state only: never stored in a student's save or wallet.
 export function createSocialSession({seat,getPose,getPeers,send,onPrompt=()=>{},onMessage=()=>{},now=()=>performance.now(),makeId=()=>crypto.randomUUID()}){
@@ -28,7 +40,8 @@ export function createSocialSession({seat,getPose,getPeers,send,onPrompt=()=>{},
  function clearPrompt(){pending=null;onPrompt(null);}
  function start(from,e){
   const at=now()+250,actors=[from,e.target];
-  for(const [i,actor]of actors.entries())motions.set(actor,{id:e.id,action:e.action,room:e.room,started:at,partner:actors[1-i],side:i?1:-1});
+  const a=from===seat?getPose():peers().get(from),b=e.target===seat?getPose():peers().get(e.target),left=a.x===b.x?from<e.target:a.x<b.x;
+  for(const [i,actor]of actors.entries())motions.set(actor,{id:e.id,action:e.action,room:e.room,started:at,partner:actors[1-i],side:(i===0?left:!left)?-1:1});
   if(actors.includes(seat))clearPrompt();
  }
  function cancel(){
@@ -38,9 +51,10 @@ export function createSocialSession({seat,getPose,getPeers,send,onPrompt=()=>{},
  function perform(action,target=''){
   const a=SOCIAL_ACTIONS[action],p=getPose();if(!a||!p||now()-lastAction<650)return false;
   if(a.paired&&!canPair(p,peers().get(target))){onMessage('先走到朋友身旁，再邀請一起玩。');return false;}
-  cancel();lastAction=now();const e={v:1,type:a.paired?'invite':'solo',id:makeId(),action,room:p.room,target:a.paired?target:''};
+  if(!a.paired&&target&&!canPair(p,peers().get(target)))return false;
+  cancel();lastAction=now();const e={v:1,type:a.paired?'invite':'solo',id:makeId(),action,room:p.room,target};
   if(a.paired){pending={from:seat,event:e,until:now()+30000};offers.set(key(seat,e.id),{from:seat,event:e,accepted:false,until:pending.until});onPrompt({outgoing:true,target,action});emit(e);}
-  else {motions.set(seat,{id:e.id,action,room:p.room,started:now(),side:1});emit(e);}
+  else {motions.set(seat,{id:e.id,action,room:p.room,started:now(),side:seat<target?-1:1,target});emit(e);}
   return true;
  }
  function answer(accept){
@@ -52,7 +66,7 @@ export function createSocialSession({seat,getPose,getPeers,send,onPrompt=()=>{},
  }
  function receive(from,input){
   const e=cleanSocialEvent(input);if(!e||from===seat||!/^\d{1,6}$/.test(from)||!peers().has(from))return;
-  if(e.type==='solo'){const p=peers().get(from);if(p.room!==e.room)return;motions.set(from,{id:e.id,action:e.action,room:e.room,started:now(),side:1});return;}
+  if(e.type==='solo'){const p=peers().get(from),target=e.target===seat?getPose():peers().get(e.target);if(p.room!==e.room||e.target&&(e.target===from||!canPair(p,target)))return;motions.set(from,{id:e.id,action:e.action,room:e.room,started:now(),side:from<e.target?-1:1,target:e.target});return;}
   if(e.type==='cancel'){const m=motions.get(from);if(m?.id===e.id){motions.delete(from);if(m.partner)motions.delete(m.partner);}if(pending?.event.id===e.id&&(pending.from===from||pending.event.target===from))clearPrompt();offers.delete(key(from,e.id));offers.delete(key(e.target,e.id));return;}
   if(e.type==='invite'){
    if(from===e.target||peers().get(from).room!==e.room)return;
