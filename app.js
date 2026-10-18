@@ -1,13 +1,13 @@
 import {addPreparationButton} from './preparation.js?v=20261011-fastprep1';
-import {tutorClips} from './little-teacher.js?v=20261009-accounts1';
+import {tutorClips} from './little-teacher.js?v=20261018-teacher1';
 import {warmAudio} from './asset-cache.js?v=20260928-all1';
-import {playTutorOnce} from './exam-review.js?v=20261009-accounts1';
+import {playTutorOnce} from './exam-review.js?v=20261018-teacher1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
-import {audioSource} from './audio-source.js?v=20260928-all1';
-import {createLittleTeacher} from './little-teacher.js?v=20261009-accounts1';
+import {audioSource} from './audio-source.js?v=20261018-teacher1';
+import {createLittleTeacher} from './little-teacher.js?v=20261018-teacher1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260928-all1';
 import {BASE,COMPOUNDS,normalizeConfig,createCatalog,poolFor,optionsFor,shuffle,questionDeck,Round,spellingChoices,spellingParts} from './core.js?v=20261009-accounts1';
-import {createMultiplayer} from './multiplayer.js?v=20261011-battle1';
+import {createMultiplayer} from './multiplayer.js?v=20261018-teacher1';
 import {createRewards} from './rewards.js?v=20261007-ipad1';
 import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
 import {createStudentProfile} from './student-profile.js?v=20261011-battle1';
@@ -109,7 +109,7 @@ function refreshHome(){
 async function jsonGet(params=''){const p=new URLSearchParams(params);if(p.get('api')&&p.get('api')!=='config')return auth.request({kind:'query',api:p.get('api'),seat:p.get('seat')||$('seat').value,id:p.get('id')||''});return apiClient.get(Object.fromEntries(p));}
 async function load(){
  $('reload').disabled=true;$('home-message').textContent='';
- try{catalog=createCatalog(await fetch('data/syllables.json?v=20261018-s441').then(r=>{if(!r.ok)throw new Error();return r.json();}));
+ try{catalog=createCatalog(await fetch('data/syllables.json?v=20261018-teacher1').then(r=>{if(!r.ok)throw new Error();return r.json();}));
   config=normalizeConfig(demo?{version:2,symbols:({fo2:['ㄈ','ㄛ'],lve4:['ㄌ','ㄩㄝ']})[new URLSearchParams(location.search).get('lesson')]||['ㄅ','ㄆ','ㄇ','ㄉ','ㄧ','ㄠ'],compounds:[],seats:Array.from({length:15},(_,i)=>String(i+1)),questions:10,spellingApproved:true}:await jsonGet('?api=config'));
   refreshHome();if(config.legacy)$('home-message').textContent='老師提醒：目前連接舊版後台。正式記錄前，請先更新後台；現在仍可讀取已教注音。';
   const restored=auth.currentSeat();if(restored&&!config.seats.includes(restored))auth.forgetAll();

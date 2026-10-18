@@ -1,4 +1,4 @@
-import {audioSource} from './audio-source.js?v=20260928-all1';
+import {audioSource} from './audio-source.js?v=20261018-teacher1';
 import {SUPPLIED_TUTOR_AUDIO} from './data/supplied-audio.js?v=20260928-all1';
 import {BASE,COMPOUNDS} from './core.js?v=20261009-accounts1';
 import {setVerticalSymbols,showSpellingTone} from './spelling-layout.js?v=20260928-all1';

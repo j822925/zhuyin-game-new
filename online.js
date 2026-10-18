@@ -4,7 +4,7 @@ import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
 import {CHARACTER_CATALOG} from './data/character-catalog.js';
 import {STAR_SPRITES} from './data/star-sprites.js';
-import {audioSource} from './audio-source.js?v=20260928-all1';
+import {audioSource} from './audio-source.js?v=20261018-teacher1';
 import {STAR_CARDS} from './data/star-cards.js';
 import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20261011-battle1';
 import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261011-battle1';
@@ -58,7 +58,7 @@ function retry(){if(stopped||!roomId||!session)return;$('reconnect').hidden=fals
 $('reconnect').onclick=()=>{for(const [key,value] of onlineEncounters)if(value.failed)onlineEncounters.delete(key);attempts=0;connect();};$('takeover').onclick=()=>connect(true);
 function send(kind,value){if(!state||ws?.readyState!==1){message('請先按重新連線。');return;}const d={protocolVersion:1,id:crypto.randomUUID(),kind,matchId:state.matchId,version:state.version,questionId:state.question?.id,...(value!==undefined?{value}:{})};ws.send(JSON.stringify(d));return d.id;}
 function disableAnswers(){$('choices').querySelectorAll('button').forEach(b=>b.disabled=true);}
-async function unlock(){stopAudio();try{audio.muted=true;audio.src='audio/audio_F1.WAV';await audio.play();audio.pause();}catch{}finally{audio.muted=false;}}
+async function unlock(){stopAudio();try{audio.muted=true;audio.src=audioSource('audio/audio_F1.WAV');await audio.play();audio.pause();}catch{}finally{audio.muted=false;}}
 function showAction(label,kind,disabled=false){$('action').hidden=false;$('action').textContent=label;$('action').disabled=disabled;$('action').onclick=async()=>{if(['ready','resume','turn_start'].includes(kind))await unlock();$('action').disabled=true;send(kind);};}
 const onlineOpponent=createOpponent(),onlineHero=document.createElement('aside'),battlePanel=document.querySelector('.battle-panel'),battleLayout=document.createElement('div');onlineHero.className='battle-hero';onlineHero.setAttribute('aria-label','作答角色');battleLayout.className='online-battle-layout battle-layout';battlePanel.before(battleLayout);battleLayout.append(onlineOpponent,battlePanel,onlineHero);const onlineBattle=createBattle(onlineOpponent,()=>onlineHero);let motionQuestion='',motionPerson='',motionEvent='';const onlineEncounters=new Map();
 function renderMotion(s){

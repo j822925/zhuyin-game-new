@@ -1,5 +1,6 @@
 // Personal practice after server settlement. This module never grants rewards,
 // changes scores, or deletes the teacher's original mistake records.
+import {audioSource} from './audio-source.js?v=20261018-teacher1';
 export function createCompletion({document,storage=globalThis.sessionStorage,rankTable}){
  const $=id=>document.getElementById(id),el=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
  const audio=new Audio();let key='',progress=null,selected=null,correct=false,wrong=false,audioKey='';
@@ -31,7 +32,7 @@ export function createCompletion({document,storage=globalThis.sessionStorage,ran
    $('room-note').textContent=s.transport==='peer'?'P2P 試玩訂正完成！老師可下載本場 CSV，這次沒有更動正式成績或星星。':'原本的作答與錯題紀錄仍保留在教師後台。星星每場只發一次。';return true;
   }
   const q=review[progress.index],qkey=key+':'+progress.index;
-  const play=async()=>{audio.src=q.audio;$('audio-status').textContent='🔊 正在播放…';audio.onended=()=>{$('audio-status').textContent='聽完了，可以再聽一次。';};audio.onerror=()=>{$('audio-status').textContent='聲音還沒讀取好，請再按「聽題目」。';};try{await audio.play();}catch{$('audio-status').textContent='請點「聽題目」播放聲音。';}};
+  const play=async()=>{audio.src=audioSource(q.audio);$('audio-status').textContent='🔊 正在播放…';audio.onended=()=>{$('audio-status').textContent='聽完了，可以再聽一次。';};audio.onerror=()=>{$('audio-status').textContent='聲音還沒讀取好，請再按「聽題目」。';};try{await audio.play();}catch{$('audio-status').textContent='請點「聽題目」播放聲音。';}};
   $('phase-title').textContent='📖 我的錯題重做';$('progress').textContent='訂正第 '+(progress.index+1)+' / '+review.length+' 題・原第 '+(q.index+1)+' 題';
   $('audio-area').hidden=false;$('listen').onclick=play;
   for(const [i,value]of q.choices.entries()){

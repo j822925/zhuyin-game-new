@@ -22,14 +22,14 @@ test('s441 keeps its ID but requires ㄏ + ㄜ and second tone, with existing fu
 });
 test('practice and parent audio bank never offer ㄏˊ and do not duplicate ㄏㄜˊ',()=>{
  for(const rows of [pool,gameSamples(catalog)]){
-  assert.equal(rows.length,1313);assert.equal(rows.filter(q=>q.displayLabel==='ㄏㄜˊ').length,1);
+  assert.equal(rows.length,1312);assert.equal(rows.filter(q=>q.displayLabel==='ㄏㄜˊ').length,1);
   assert.ok(!rows.some(q=>q.displayLabel==='ㄏˊ'));
  }
  assert.ok(!poolFor('spelling',{symbols:['ㄏ'],compounds:[]},catalog).some(q=>q.id==='s441'));
  assert.ok(poolFor('spelling',{symbols:['ㄏ','ㄜ'],compounds:[]},catalog).some(q=>q.displayLabel==='ㄏㄜˊ'));
 });
 test('both grade entries and parent audio refresh the corrected bank',()=>{
- for(const page of ['index.html','grade2.html'])assert.ok(read(page).includes('game-boot.js?v=20261018-s441'));
- assert.ok(read('game-boot.js').includes('app.js?v=20261018-s441'));
- for(const file of ['app.js','teacher-audio.js'])assert.ok(read(file).includes('data/syllables.json?v=20261018-s441'));
+ for(const page of ['index.html','grade2.html'])assert.ok(read(page).includes('game-boot.js?v=20261018-teacher1'));
+ assert.ok(read('game-boot.js').includes('app.js?v=20261018-teacher1'));
+ for(const file of ['app.js','teacher-audio.js'])assert.ok(read(file).includes('data/syllables.json?v=20261018-teacher1'));
 });

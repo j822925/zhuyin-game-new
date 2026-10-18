@@ -1,4 +1,5 @@
 import {Race} from './race-core.js?v=20260928-all1';
+import {audioSource} from './audio-source.js?v=20261018-teacher1';
 import {questionDeck,optionsFor} from './core.js?v=20261009-accounts1';
 import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20261007-ipad1';
 
@@ -50,7 +51,7 @@ export function createMultiplayer({onExit,onFinish,getOwned,getSeats,getIdentity
  }
  function renderRaceQuestion(){
   clearCharacters($('race-arena'));
-  const target=race.current;currentOptions=optionsFor(target,pool,count);sound.pause();sound.src=target.audio;
+  const target=race.current;currentOptions=optionsFor(target,pool,count);sound.pause();sound.src=audioSource(target.audio);
   $('race-progress').textContent=`${race.index+1} / ${race.deck.length}`;$('race-next').hidden=true;$('race-listen').disabled=!ready.every(Boolean);$('race-cue-symbol').textContent=ready.every(Boolean)?'👂':'👇';
   $('race-message').textContent=ready.every(Boolean)?'👂 → ⚡':'👇 🐾';
   $('race-arena').innerHTML=[0,1].map(i=>`<section class="race-panel team-${i}" aria-label="${i===0?'左方藍隊':'右方橘隊'}"><div class="race-player">${teamMarkup(i)}<strong id="race-score-${i}">🏁 ${race.scores[i]}</strong></div><div id="race-player-status-${i}" class="race-player-status"></div><div class="race-options">${currentOptions.map((q,n)=>`<button class="race-option" data-race-player="${i}" data-choice="${n}" disabled aria-label="${i===0?'藍隊':'橘隊'} ${escape(q.displayLabel||q.label)}"><span>${escape(q.label)}</span><small>${keys[i][n].toUpperCase()}</small></button>`).join('')}</div>${!ready[i]?`<button class="race-ready" data-ready="${i}" aria-label="${animals[picked[i]][1]}準備好了">${character(i)}<span>▶</span></button>`:''}</section>`).join('');

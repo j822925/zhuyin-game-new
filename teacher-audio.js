@@ -1,6 +1,6 @@
-import {audioSource} from './audio-source.js?v=20260928-all1';
+import {audioSource} from './audio-source.js?v=20261018-teacher1';
 import {BASE as SYMBOLS,COMPOUNDS as FINALS,poolFor} from './core.js?v=20261009-accounts1';
-export function gameSamples(rows){return poolFor('spelling',{symbols:SYMBOLS,compounds:FINALS},rows).filter(s=>(audioSource(s.audio).startsWith('audio/processed-')||audioSource(s.audio)==='audio/original-bo4-20260928.wav'));}
+export function gameSamples(rows){return poolFor('spelling',{symbols:SYMBOLS,compounds:FINALS},rows);}
 // One native player for the entire catalogue: avoid hundreds of Safari media controls.
 export const PAGE_SIZE=18;
 export function samplePage(rows,initial='',page=0,query=''){
@@ -38,7 +38,7 @@ export function setupTeacherAudio({BASE,COMPOUNDS,createCatalog}){
  COMPOUNDS.forEach((s,i)=>add($('compounds'),s,'audio/compound/c'+String(i+1).padStart(2,'0')+'.mp3'));
  const baseDetails=$('base').closest('details');
  baseDetails.addEventListener('toggle',()=>{if(baseDetails.open&&!$('base').children.length)BASE.forEach((s,i)=>add($('base'),s,'audio/audio_F'+(i+1)+'.WAV'));});
- return fetch('data/syllables.json?v=20261018-s441').then(r=>{if(!r.ok)throw new Error('catalog');return r.json();}).then(rows=>{
+ return fetch('data/syllables.json?v=20261018-teacher1').then(r=>{if(!r.ok)throw new Error('catalog');return r.json();}).then(rows=>{
   const all=gameSamples(createCatalog(rows));
   const filter=$('syllable-initial-filter');let page=0;
   const searchLabel=document.createElement('label');searchLabel.className='sample-search';searchLabel.htmlFor='syllable-search';searchLabel.textContent='搜尋注音或例字：';

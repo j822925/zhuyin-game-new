@@ -1,3 +1,4 @@
+import {audioSource} from './audio-source.js?v=20261018-teacher1';
 // Retry the same command ID, never create a second answer or advance a second question.
 export function reliableCommands({getState,getSocket,onChange,onError,storage,key,now=Date.now}){
  const pending=new Map();let timer=null;
@@ -16,6 +17,6 @@ export function reliableCommands({getState,getSocket,onChange,onError,storage,ke
 // Download once per device and reuse the exact bytes for playback (including Safari).
 export function audioStore({fetcher=fetch,timeout=12000}={}){
  const files=new Map(),urls=new Set();let disposed=false;
- async function load(url){if(files.has(url))return files.get(url);const task=(async()=>{for(let attempt=0;attempt<3;attempt++){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeout);try{const r=await fetcher(url,{cache:'force-cache',signal:controller.signal});if(!r.ok)throw Error('audio');const blob=await r.blob();if(!blob.size)throw Error('audio');if(disposed)throw Error('disposed');const local=URL.createObjectURL(blob);urls.add(local);return local;}catch(e){if(disposed||attempt===2)throw e;await new Promise(r=>setTimeout(r,300+attempt*500));}finally{clearTimeout(timer);}}})();files.set(url,task);try{return await task;}catch(e){files.delete(url);throw e;}}
+ async function load(url){url=audioSource(url);if(files.has(url))return files.get(url);const task=(async()=>{for(let attempt=0;attempt<3;attempt++){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeout);try{const r=await fetcher(url,{cache:'force-cache',signal:controller.signal});if(!r.ok)throw Error('audio');const blob=await r.blob();if(!blob.size)throw Error('audio');if(disposed)throw Error('disposed');const local=URL.createObjectURL(blob);urls.add(local);return local;}catch(e){if(disposed||attempt===2)throw e;await new Promise(r=>setTimeout(r,300+attempt*500));}finally{clearTimeout(timer);}}})();files.set(url,task);try{return await task;}catch(e){files.delete(url);throw e;}}
  return {load,dispose(){disposed=true;for(const u of urls)URL.revokeObjectURL(u);urls.clear();files.clear();}};
 }

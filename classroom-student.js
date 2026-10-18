@@ -1,5 +1,5 @@
-import {reliableCommands,audioStore} from './classroom-reliable.js?v=20261006-stable2';
-import {createCompletion} from './classroom-completion.js?v=20261007-peer1';
+import {reliableCommands,audioStore} from './classroom-reliable.js?v=20261018-teacher1';
+import {createCompletion} from './classroom-completion.js?v=20261018-teacher1';
 const $=id=>document.getElementById(id),params=new URL(location.href).searchParams,normal=document.documentElement.dataset.student==='authenticated',host=!normal&&params.get('role')==='teacher',base=normal?'https://zhuyin-api.j822925.workers.dev/trial/classroom-api':'/trial/classroom-api';
 let studentSession=null,studentIdentity=null,classId='main',homeUrl='https://j822925.github.io/zhuyin-game-new/';
 if(normal){

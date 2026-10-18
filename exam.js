@@ -1,12 +1,12 @@
 import './asset-cache.js?v=20260928-all1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
-import {audioSource} from './audio-source.js?v=20260928-all1';
+import {audioSource} from './audio-source.js?v=20261018-teacher1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
 import {createStudentAuth} from './student-auth.js?v=20261009-accounts1';
 import {createStarCollection} from './star-cards-ui.js?v=20261007-ipad1';
 import {PROFILE_CHARACTERS} from './student-profile.js?v=20261011-battle1';
 import {portrait} from './characters.js?v=20261007-ipad1';
-import {createExamReview} from './exam-review.js?v=20261009-accounts1';
+import {createExamReview} from './exam-review.js?v=20261018-teacher1';
 import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,motionPortrait} from './character-motion.js?v=20261011-battle1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
 import {showMonsterReward} from './monster-cards-ui.js?v=20261011-battle1';

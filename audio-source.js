@@ -1,8 +1,16 @@
 // Preserve saved question paths while refreshing corrected pronunciation assets.
 import {SUPPLIED_SYLLABLE_AUDIO,SUPPLIED_LISTENING_AUDIO,SUPPLIED_SOURCE_AUDIO} from './data/supplied-audio.js?v=20260928-all1';
+import {TEACHER_AUDIO} from './data/teacher-recordings.js?v=20261018-teacher1';
 export function audioSource(source){
  if(typeof source!=='string')return source;
  const base=source.split(/[?#]/,1)[0];
+ // The classroom can provide absolute public game URLs; never rewrite another origin.
+ const publicRoot='https://j822925.github.io/zhuyin-game-new/';
+ const key=base.startsWith(publicRoot)?base.slice(publicRoot.length):base;
+ const has=(map,k)=>Object.prototype.hasOwnProperty.call(map,k);
+ const legacy=has(SUPPLIED_SYLLABLE_AUDIO,key)?SUPPLIED_SYLLABLE_AUDIO[key]:has(SUPPLIED_LISTENING_AUDIO,key)?SUPPLIED_LISTENING_AUDIO[key]:has(SUPPLIED_SOURCE_AUDIO,key)?SUPPLIED_SOURCE_AUDIO[key]:key;
+ const replacement=has(TEACHER_AUDIO,key)?TEACHER_AUDIO[key]:has(TEACHER_AUDIO,legacy)?TEACHER_AUDIO[legacy]:null;
+ if(replacement)return (base.startsWith(publicRoot)?publicRoot:'')+replacement+source.slice(base.length);
  // Teacher-approved original-pitch whole ㄅㄛˋ; preserve saved question IDs.
  if(['audio/processed-20260925/m_1_26_40.mp3','audio/supplied-20260923/m_1_26_40.mp3','audio/supplied-20260925/m_1_26_40.mp3'].includes(base))return 'audio/original-bo4-20260928.wav'+source.slice(base.length);
  // Teacher-selected original standalone ㄦ; keep all syllable recordings unchanged.

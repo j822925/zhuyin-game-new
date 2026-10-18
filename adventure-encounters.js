@@ -1,7 +1,7 @@
 import {BASE,COMPOUNDS,createCatalog,poolFor,questionDeck,spellingParts,spellingChoices,optionsFor} from './core.js';
 import {teacherToneDeck} from './adventure-tone-question.js';
 import {createQuestionLoader} from './adventure-question-loader.js';
-const loadCatalog=createQuestionLoader('data/syllables.json',rows=>poolFor('spelling',{symbols:BASE,compounds:COMPOUNDS},createCatalog(rows)).filter(q=>!q.reviewRequired));
+const loadCatalog=createQuestionLoader('data/syllables.json?v=20261018-teacher1',rows=>poolFor('spelling',{symbols:BASE,compounds:COMPOUNDS},createCatalog(rows)).filter(q=>!q.reviewRequired));
 export async function encounterDeck(spec){
  if(spec.mode==='tone')return teacherToneDeck(spec.hp);
  if(spec.mode==='single'){const pool=poolFor('single',{symbols:spec.level===2?BASE:BASE.slice(0,12),compounds:[]},[]);return {deck:questionDeck(pool,spec.hp),pool};}

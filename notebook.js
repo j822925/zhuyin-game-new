@@ -1,5 +1,5 @@
 import './asset-cache.js?v=20260928-all1';
-import {audioSource} from './audio-source.js?v=20260928-all1';
+import {audioSource} from './audio-source.js?v=20261018-teacher1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
 import {createStudentAuth} from './student-auth.js?v=20261009-accounts1';
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
