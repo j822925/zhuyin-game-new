@@ -38,7 +38,7 @@ export function setupTeacherAudio({BASE,COMPOUNDS,createCatalog}){
  COMPOUNDS.forEach((s,i)=>add($('compounds'),s,'audio/compound/c'+String(i+1).padStart(2,'0')+'.mp3'));
  const baseDetails=$('base').closest('details');
  baseDetails.addEventListener('toggle',()=>{if(baseDetails.open&&!$('base').children.length)BASE.forEach((s,i)=>add($('base'),s,'audio/audio_F'+(i+1)+'.WAV'));});
- return fetch('data/syllables.json?v=20260925-familyclean1').then(r=>{if(!r.ok)throw new Error('catalog');return r.json();}).then(rows=>{
+ return fetch('data/syllables.json?v=20261018-s441').then(r=>{if(!r.ok)throw new Error('catalog');return r.json();}).then(rows=>{
   const all=gameSamples(createCatalog(rows));
   const filter=$('syllable-initial-filter');let page=0;
   const searchLabel=document.createElement('label');searchLabel.className='sample-search';searchLabel.htmlFor='syllable-search';searchLabel.textContent='搜尋注音或例字：';

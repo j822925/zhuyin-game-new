@@ -7,8 +7,8 @@ test('all 1450 recordings are used exactly once in symbol units or exact-tone qu
  assert.equal(report.files.length,1450);assert.equal(new Set([...report.units,...report.syllables].filter(r=>r.available).map(r=>r.path)).size,1450);
  assert.ok(catalog.filter(q=>!q.final).length>=152);assert.equal(catalog.filter(q=>q.tone===5).length,44);
  assert.deepEqual(report.syllables.filter(q=>!q.available).map(q=>q.id),['s275']);
- assert.equal(new Set(catalog.map(q=>q.displayLabel)).size,1315);
- const pool=poolFor('spelling',{symbols:BASE,compounds:COMPOUNDS},catalog);assert.equal(pool.length,1314);assert.equal(pool.filter(q=>q.preferredAudio).length,77);assert.ok(pool.every(q=>!q.audioVariants));
+ assert.equal(new Set(catalog.map(q=>q.displayLabel)).size,1314);
+ const pool=poolFor('spelling',{symbols:BASE,compounds:COMPOUNDS},catalog);assert.equal(pool.length,1313);assert.equal(pool.filter(q=>q.preferredAudio).length,77);assert.ok(pool.every(q=>!q.audioVariants));
 });
 test('77 same-label pairs use one fixed preferred recording, regardless of catalog or shuffle order',()=>{
  const preferred=catalog.filter(q=>q.preferredAudio);assert.equal(preferred.length,77);
