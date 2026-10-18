@@ -24,7 +24,8 @@ export function createLittleTeacher({onReturn}){
   voice.src=audioSource(clips[step]);
   const fail=()=>{if(token!==generation)return;stop();status.textContent='🔇 請按 🔊 重試';};
   voice.onerror=fail;
-  voice.onended=()=>{if(token!==generation)return;if(step<clips.length-1){step++;timer=setTimeout(()=>playStep(token),150);}else{stop();status.textContent='🙋 ✨';}};
+  // Start only after ended: shorten just consonant -> final by 60 ms, never overlap.
+  voice.onended=()=>{if(token!==generation)return;if(step<clips.length-1){const gap=clips.length===3&&step===0?90:150;step++;timer=setTimeout(()=>playStep(token),gap);}else{stop();status.textContent='🙋 ✨';}};
   try{await voice.play();}catch{fail();}
  }
  function replay(){stop();step=0;playStep(generation);}
