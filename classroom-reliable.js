@@ -1,4 +1,4 @@
-import {audioSource} from './audio-source.js?v=20261018-teacher1';
+import {audioSource} from './audio-source.js?v=20261020-bo1';
 // Retry the same command ID, never create a second answer or advance a second question.
 export function reliableCommands({getState,getSocket,onChange,onError,storage,key,now=Date.now}){
  const pending=new Map();let timer=null;

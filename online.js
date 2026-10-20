@@ -4,7 +4,7 @@ import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
 import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
 import {CHARACTER_CATALOG} from './data/character-catalog.js';
 import {STAR_SPRITES} from './data/star-sprites.js';
-import {audioSource} from './audio-source.js?v=20261018-teacher1';
+import {audioSource} from './audio-source.js?v=20261020-bo1';
 import {STAR_CARDS} from './data/star-cards.js';
 import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20261011-battle1';
 import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261011-battle1';

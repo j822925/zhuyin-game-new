@@ -14,7 +14,7 @@ function blocked(reason){
 const gate=createForestAccess({classId,onBlocked:blocked,endpoint:resolveApiEndpoint('https://zhuyin-api.j822925.workers.dev/api')});
 // Shared by battle entry points; never called for individual answers.
 globalThis.ForestAccess=gate;
-if(await gate.check()){try{globalThis.ForestStudent=await connectForestStudent({classId,blocked});if(globalThis.ForestStudent)await import('./adventure-play.bundle.js?v=20261018-teacher1');}catch(e){blocked(e.message==='forest_closed'?'closed':e.message==='authentication_required'?'login':'offline');}}
+if(await gate.check()){try{globalThis.ForestStudent=await connectForestStudent({classId,blocked});if(globalThis.ForestStudent)await import('./adventure-play.bundle.js?v=20261020-bo1');}catch(e){blocked(e.message==='forest_closed'?'closed':e.message==='authentication_required'?'login':'offline');}}
 document.addEventListener('visibilitychange',()=>{
  if(document.hidden||document.querySelector('#expedition[open],.in-battle'))return;
  void gate.check();

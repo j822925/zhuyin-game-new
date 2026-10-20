@@ -29,7 +29,7 @@ test('practice and parent audio bank never offer ㄏˊ and do not duplicate ㄏ�
  assert.ok(poolFor('spelling',{symbols:['ㄏ','ㄜ'],compounds:[]},catalog).some(q=>q.displayLabel==='ㄏㄜˊ'));
 });
 test('both grade entries and parent audio refresh the corrected bank',()=>{
- for(const page of ['index.html','grade2.html'])assert.ok(read(page).includes('game-boot.js?v=20261018-tutorgap1'));
- assert.ok(read('game-boot.js').includes('app.js?v=20261018-tutorgap1'));
+ for(const page of ['index.html','grade2.html'])assert.ok(read(page).includes('game-boot.js?v=20261020-bo1'));
+ assert.ok(read('game-boot.js').includes('app.js?v=20261020-bo1'));
  for(const file of ['app.js','teacher-audio.js'])assert.ok(read(file).includes('data/syllables.json?v=20261018-teacher1'));
 });

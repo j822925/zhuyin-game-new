@@ -1,6 +1,6 @@
 // Preserve saved question paths while refreshing corrected pronunciation assets.
 import {SUPPLIED_SYLLABLE_AUDIO,SUPPLIED_LISTENING_AUDIO,SUPPLIED_SOURCE_AUDIO} from './data/supplied-audio.js?v=20260928-all1';
-import {TEACHER_AUDIO} from './data/teacher-recordings.js?v=20261018-teacher1';
+import {TEACHER_AUDIO} from './data/teacher-recordings.js?v=20261020-bo1';
 export function audioSource(source){
  if(typeof source!=='string')return source;
  const base=source.split(/[?#]/,1)[0];

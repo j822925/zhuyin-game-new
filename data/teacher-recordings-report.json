@@ -1,5 +1,5 @@
 {
-  "version": "20261018-teacher1",
+  "version": "20261020-bo1",
   "variant": "clean",
   "pitchShiftSemitones": 0,
   "gameSpelling": 1312,
@@ -17,9 +17,10 @@
     {
       "id": "L001",
       "label": "ㄅ",
-      "path": "audio/teacher-20261018/L001.mp3",
-      "sha256": "edf353646d46940c0dfda57178e806d4217e8294b6cb48f3b87e7bd3d9f423ef",
-      "bytes": 13292
+      "path": "audio/teacher-20261020/L001.mp3",
+      "sha256": "405b578cfd9be87edfa657fdab14ba381c3dd4b7d5d65c31e15c5d4b12aa3382",
+      "bytes": 13292,
+      "revision": "Teacher approved gentle cleanup, 2026-10-20; original pitch and tempo."
     },
     {
       "id": "L002",

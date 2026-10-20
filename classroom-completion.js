@@ -1,6 +1,6 @@
 // Personal practice after server settlement. This module never grants rewards,
 // changes scores, or deletes the teacher's original mistake records.
-import {audioSource} from './audio-source.js?v=20261018-teacher1';
+import {audioSource} from './audio-source.js?v=20261020-bo1';
 export function createCompletion({document,storage=globalThis.sessionStorage,rankTable}){
  const $=id=>document.getElementById(id),el=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
  const audio=new Audio();let key='',progress=null,selected=null,correct=false,wrong=false,audioKey='';

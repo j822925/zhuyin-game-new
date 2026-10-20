@@ -25,15 +25,22 @@ test('every listening, spelling and toned tutor segment resolves to the correct 
 });
 test('legacy cache URLs, full classroom URLs and aliases refresh without rewriting external media',()=>{
  for(const [old,fresh] of Object.entries(TEACHER_AUDIO)){assert.equal(audioSource(old+'?v=old#play'),fresh+'?v=old#play');assert.equal(audioSource(fresh),fresh);}
- const root='https://j822925.github.io/zhuyin-game-new/';assert.equal(audioSource(root+'audio/audio_F1.WAV'),root+'audio/teacher-20261018/L001.mp3');
+ const root='https://j822925.github.io/zhuyin-game-new/';assert.equal(audioSource(root+'audio/audio_F1.WAV'),root+'audio/teacher-20261020/L001.mp3');
  for(const s of ['__proto__','toString',undefined,'https://other.invalid/audio/audio_F1.WAV','audio/tone-teacher-20261011/T0001.mp3','audio/music.mp3'])assert.equal(audioSource(s),s);
  for(const id of ['s383','s858','s892'])assert.equal(audioSource(catalog.find(q=>q.id===id).audio),'audio/teacher-20261018/'+id+'.mp3');
 });
 test('all public players and entry dependency chains use the new audio version',()=>{
- for(const f of ['app.js','little-teacher.js','exam-review.js','exam.js','online.js','multiplayer.js','notebook.js','teacher-audio.js','classroom-completion.js','classroom-reliable.js'])assert.match(read(f),/audio-source.js\?v=20261018-teacher1/,f);
- for(const f of ['index.html','grade2.html'])assert.match(read(f),/game-boot.js\?v=20261018-tutorgap1/);
+ for(const f of ['app.js','little-teacher.js','exam-review.js','exam.js','online.js','multiplayer.js','notebook.js','teacher-audio.js','classroom-completion.js','classroom-reliable.js'])assert.match(read(f),/audio-source.js\?v=20261020-bo1/,f);
+ for(const f of ['index.html','grade2.html'])assert.match(read(f),/game-boot.js\?v=20261020-bo1/);
  assert.ok(read('app.js').includes('tutorClips(spellingParts(q)).map(audioSource)'));
- assert.match(read('adventure-entry.js'),/adventure-play.bundle.js\?v=20261018-teacher1/);
- assert.match(read('adventure-preview.html'),/adventure-entry.bundle.js\?v=20261018-teacher1/);
- assert.match(read('adventure-play.bundle.js'),/audio\/teacher-20261018\/L001.mp3/);
+ assert.match(read('adventure-entry.js'),/adventure-play.bundle.js\?v=20261020-bo1/);
+ assert.match(read('adventure-preview.html'),/adventure-entry.bundle.js\?v=20261020-bo1/);
+ assert.match(read('adventure-play.bundle.js'),/audio\/teacher-20261020\/L001.mp3/);
+});
+test('approved gentle standalone bo replaces legacy paths while preserving the original recording',()=>{
+ const fresh='audio/teacher-20261020/L001.mp3';
+ for(const old of ['audio/audio_F1.WAV','audio/processed-20260925/s_1.mp3','audio/teacher-20261018/L001.mp3'])assert.equal(audioSource(old),fresh);
+ assert.equal(TEACHER_SYMBOLS['ㄅ'],fresh);
+ assert.equal(files.get(fresh).sha256,'405b578cfd9be87edfa657fdab14ba381c3dd4b7d5d65c31e15c5d4b12aa3382');
+ assert.equal(crypto.createHash('sha256').update(fs.readFileSync(new URL('../audio/teacher-20261018/L001.mp3',import.meta.url))).digest('hex'),'edf353646d46940c0dfda57178e806d4217e8294b6cb48f3b87e7bd3d9f423ef');
 });

@@ -1,4 +1,4 @@
-import {audioSource} from './audio-source.js?v=20261018-teacher1';
+import {audioSource} from './audio-source.js?v=20261020-bo1';
 import {BASE as SYMBOLS,COMPOUNDS as FINALS,poolFor} from './core.js?v=20261009-accounts1';
 export function gameSamples(rows){return poolFor('spelling',{symbols:SYMBOLS,compounds:FINALS},rows);}
 // One native player for the entire catalogue: avoid hundreds of Safari media controls.

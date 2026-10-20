@@ -1,5 +1,6 @@
 // Teacher-approved clean recordings. Legacy paths stay valid for saved questions.
 export const TEACHER_AUDIO=Object.freeze({
+  "audio/teacher-20261018/L001.mp3": "audio/teacher-20261020/L001.mp3",
   "audio/processed-20260925/m_1_31.mp3": "audio/teacher-20261018/s01.mp3",
   "audio/processed-20260925/m_2_31.mp3": "audio/teacher-20261018/s02.mp3",
   "audio/processed-20260925/m_3_31.mp3": "audio/teacher-20261018/s03.mp3",
@@ -2421,7 +2422,7 @@ export const TEACHER_AUDIO=Object.freeze({
   "audio/syllable-clear/s1391.wav": "audio/teacher-20261018/s1391.mp3",
   "audio/processed-20260925/m_9_59_41.mp3": "audio/teacher-20261018/s1392.mp3",
   "audio/syllable-clear/s1392.wav": "audio/teacher-20261018/s1392.mp3",
-  "audio/processed-20260925/s_1.mp3": "audio/teacher-20261018/L001.mp3",
+  "audio/processed-20260925/s_1.mp3": "audio/teacher-20261020/L001.mp3",
   "audio/processed-20260925/s_2.mp3": "audio/teacher-20261018/L002.mp3",
   "audio/processed-20260925/s_3.mp3": "audio/teacher-20261018/L003.mp3",
   "audio/processed-20260925/s_4.mp3": "audio/teacher-20261018/L004.mp3",
@@ -2606,7 +2607,7 @@ export const TEACHER_AUDIO=Object.freeze({
   "audio/original-bo4-20260928.wav": "audio/teacher-20261018/s763.mp3"
 });
 export const TEACHER_SYMBOLS=Object.freeze({
-  "ㄅ": "audio/teacher-20261018/L001.mp3",
+  "ㄅ": "audio/teacher-20261020/L001.mp3",
   "ㄆ": "audio/teacher-20261018/L002.mp3",
   "ㄇ": "audio/teacher-20261018/L003.mp3",
   "ㄈ": "audio/teacher-20261018/L004.mp3",

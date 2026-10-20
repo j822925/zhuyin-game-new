@@ -1,5 +1,5 @@
 import {Race} from './race-core.js?v=20260928-all1';
-import {audioSource} from './audio-source.js?v=20261018-teacher1';
+import {audioSource} from './audio-source.js?v=20261020-bo1';
 import {questionDeck,optionsFor} from './core.js?v=20261009-accounts1';
 import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20261007-ipad1';
 
