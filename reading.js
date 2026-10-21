@@ -1,4 +1,5 @@
 import {createQuestionReport} from './question-report.js?v=20261011-reports2';
+import {createReadingFarm,renderReadingFarm} from './reading-farm.bundle.js?v=20261021-farm1';
 import {createReadingBattle} from './reading-battle.js?v=20261011-battle1';
 import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261011-battle1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20261009-accounts1';
@@ -17,6 +18,8 @@ const allowMicCheck=!demo||localPreview;
 const client=createApiClient('https://zhuyin-api.j822925.workers.dev/api');
 let config,eligibleWords=[],lessonReady=false,seat='',deck=[],rows=[],started=0,questionStarted=0,locked=false,currentPayload=null,saving=false,starting=false,micBusy=false;
 const auth=createStudentAuth({demo,getConfig:()=>config,post:d=>client.post(d)});
+let farmStorage;try{farmStorage=localStorage;}catch{}
+const readingFarm=createReadingFarm({href:location.href,storage:farmStorage,request:p=>auth.request(p)});
 const questionReport=createQuestionReport({parent:document.querySelector('.reading-question'),demo,request:p=>auth.request(p),getQuestion:()=>{const q=deck[locked?rows.length-1:rows.length];return q?{seat,mode:'reading',questionId:q.id}:null;}});
 const readingBattle=createReadingBattle({play:$('play'),result:$('result')});let readingRoundId='';
 const Recognition=globalThis.SpeechRecognition||globalThis.webkitSpeechRecognition;
@@ -26,11 +29,11 @@ const storageKey=classStorageKey('zhuyin.reading.pending.v1');
 let pending=[];
 try{const saved=JSON.parse(localStorage.getItem(storageKey)||'[]');if(Array.isArray(saved))pending=saved;}catch{}
 function storePending(){try{localStorage.setItem(storageKey,JSON.stringify(pending));return true;}catch{return false;}}
-function show(id){$('home-link').hidden=appleMobile&&id==='result';$('return-guide').hidden=true;document.body.classList.toggle('reading-battle-active',id==='play');for(const name of ['intro','play','result'])$(name).hidden=name!==id;window.scrollTo(0,0);}
+function show(id){$('home-link').hidden=appleMobile&&id==='result';$('return-guide').hidden=true;if(id==='play')$('reading-farm-result')?.remove();document.body.classList.toggle('reading-battle-active',id==='play');for(const name of ['intro','play','result'])$(name).hidden=name!==id;window.scrollTo(0,0);}
 for(const link of document.querySelectorAll('#home-link,a.home'))link.href=classUrl(demo?'./?demo=1':'./');
 const appleMobile=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const standalone=appleMobile&&(navigator.standalone===true||globalThis.matchMedia?.('(display-mode: standalone)').matches);
-const browserReadingUrl=classUrl('reading.html?v=20261008-safari2&speech=native');
+const browserReadingUrl=classUrl('reading.html?v=20261021-farm1&speech=native'+(readingFarm.active?'&farmLesson=reading':''));
 for(const link of document.querySelectorAll('[data-reading-browser]'))link.href=browserReadingUrl;
 $('standalone-help').hidden=true;
 $('desktop-return').hidden=appleMobile;
@@ -155,7 +158,11 @@ async function start(){
   if(!demo){if(!await auth.ensure(seat)){$('home-message').textContent='請先完成登入，再開始朗讀。';return;}auth.setPrimary(seat);}
   $('home-message').textContent='正在準備朗讀夥伴與反派…';
   readingRoundId=crypto.randomUUID();
-  beginIslandFarmRound({roundId:readingRoundId,mode:'reading',seat},{demo,verified:!demo&&auth.verified(seat)});
+  const farmRound={roundId:readingRoundId,mode:'reading',seat};
+  if(readingFarm.active){
+   $('home-message').textContent='🌱 正在連結你的農場…';
+   try{await readingFarm.begin(farmRound);}catch{ $('home-message').textContent='🌱 尚未連結農場。請確認萵苣已澆水、農場已保存，並使用同一班級與學號；再按開始重試。';return; }
+  }else beginIslandFarmRound(farmRound,{demo,verified:!demo&&auth.verified(seat)});
   const [profile,encounter]=await Promise.all([
    demo?Promise.resolve({avatar:'rabbit'}):auth.request({kind:'profile',seat}).catch(()=>null),
    demo?Promise.resolve(startDemoMonster(seat,readingRoundId,'reading')):auth.request({kind:'monster-start',monsterCatalog:'20261004-villains1',mode:'reading',seat,encounter:readingRoundId})
@@ -171,19 +178,24 @@ function finish(){
  $('score').textContent=`通過 ${correct} / 5 題`;$('stars').textContent=demo?(stars?'⭐'.repeat(stars):'再接再厲'):'星星正在確認…';
  $('review').replaceChildren();for(const row of rows){const word=READING_WORDS.find(w=>w.id===row.wordId),p=document.createElement('p');p.textContent=`${row.firstCorrect?'✓':'再練練'}　${word.word}　${word.zhuyin}`;$('review').append(p);}
  if(demo){$('return-guide').hidden=!appleMobile;readingBattle.result(stars,creditDemoMonster(seat,readingRoundId,correct===5,'reading'));$('save-status').textContent=`老師試玩：本回合 ${stars} 顆星星，不傳送學生成績。`;$('retry-save').hidden=true;return;}
- currentPayload={kind:'round',mode:'reading',roundId:readingRoundId,monsterBattle:1,seat,total:5,mistakes:5-correct,seconds:Math.round((Date.now()-started)/1000),results:rows};
+ currentPayload={kind:'round',mode:'reading',roundId:readingRoundId,monsterBattle:1,seat,total:5,mistakes:5-correct,seconds:Math.round((Date.now()-started)/1000),results:rows,...(readingFarm.active?{farmReading:1}:{})};
  pending.push(currentPayload);const stored=storePending();$('save-status').textContent=stored?'正在儲存紀錄與星星…':'此裝置無法暫存，請保持頁面開啟，等待儲存完成。';flushPending();
 }
 async function flushPending(){
  if(saving||demo||!seat)return;saving=true;$('retry-save').disabled=true;
  try{if(!await auth.ensure(seat))throw Error('authentication_required');
  for(const payload of [...pending].filter(p=>p.seat===seat)){
-  const out=await auth.request(payload);if(out.saved!==true)throw Error(out.error||'unconfirmed');completeIslandFarmRound(payload,{confirmed:true});
+  const out=await auth.request(payload);if(out.saved!==true)throw Error(out.error||'unconfirmed');
+  if(readingFarm.has(payload)){
+   try{const farmResult=await readingFarm.complete(payload,{confirmed:true});if(payload.roundId===currentPayload?.roundId)renderReadingFarm(farmResult,readingFarm.returnUrl);}
+   catch{throw Error('farm_save_pending');}
+  }else if(payload.farmReading===1){throw Error('farm_save_pending');}
+  else completeIslandFarmRound(payload,{confirmed:true});
   pending=pending.filter(p=>p.roundId!==payload.roundId);storePending();
   if(payload.roundId===currentPayload?.roundId){$('return-guide').hidden=!appleMobile;const award=out.awards[0];$('stars').textContent=`⭐ +${award.stars}`;$('save-status').textContent=`紀錄已儲存，獲得 ${award.stars} 顆星星！${dailyAwardMessage(award)}`;readingBattle.result(award.stars,award);}
  }
  if(!currentPayload)$('home-message').textContent='之前暫存的朗讀紀錄已儲存。';
- }catch{const stored=storePending();const message=stored?'紀錄已暫存，星星尚未確認入帳。請重新儲存。':'紀錄尚未儲存，請勿關閉此頁，請重新儲存。';if(currentPayload)$('save-status').textContent=message;else $('home-message').textContent=message;}
+ }catch(error){const stored=storePending();const message=error.message==='farm_save_pending'?'朗讀成績已儲存，農場尚未確認。請按「重新儲存紀錄」，成功後再回農場。':stored?'紀錄已暫存，星星尚未確認入帳。請重新儲存。':'紀錄尚未儲存，請勿關閉此頁，請重新儲存。';if(currentPayload)$('save-status').textContent=message;else $('home-message').textContent=message;}
  finally{saving=false;$('retry-save').disabled=false;$('retry-save').hidden=!pending.some(p=>p.seat===seat);$('recover-pending')?.remove();if(pending.some(p=>p.seat===seat)&&!currentPayload){const b=document.createElement('button');b.id='recover-pending';b.className='secondary';b.textContent='儲存先前的朗讀紀錄';b.onclick=flushPending;$('home-message').after(b);}}
 }
 async function load(){
