@@ -162,6 +162,7 @@ export function drawDoll(canvas,art,options){
   }
   drawRabbit(c,art,pose);
 }
+import {islandCamera,islandZoomLimits} from './adventure-map-zoom.js';
 export class ForestScene{
   constructor(canvas,art){
     this.drawPlayer=drawRabbit;
@@ -199,8 +200,18 @@ export class ForestScene{
       scale=Math.max(scale,Math.min(1.5,this.height/470));viewW=this.width/scale;viewH=this.height/scale;
       desired={x:Math.max(0,Math.min(1280-viewW,(p.x+this.dining.table.x)/2-viewW/2)),y:Math.max(-60,Math.min(800-viewH,p.y-55-viewH*.5))};
     }
+    if(this.area==='island'){
+      const view=this.islandView;
+      if(view&&p.moving)view.free=false;
+      const limits=islandZoomLimits(this.width,this.height);
+      scale=view?Math.max(limits.min,Math.min(limits.max,view.scale)):limits.normal;
+      const bounded=islandCamera({scale,x:view?.free?view.x:p.x-this.width/scale/2,y:view?.free?view.y:p.y-this.height/scale/2},this.width,this.height);
+      scale=bounded.scale;desired={x:bounded.x,y:bounded.y};
+      if(view){Object.assign(view,bounded);if(view.free)Object.assign(this.camera,bounded);}
+    }
     if(this.wasDining!==!!this.dining){this.camera.x=desired.x;this.camera.y=desired.y;this.wasDining=!!this.dining;}
     this.camera.scale=scale;for(const axis of ['x','y'])this.camera[axis]=Math.abs(desired[axis]-this.camera[axis])<.1?desired[axis]:this.camera[axis]+(desired[axis]-this.camera[axis])*(this.reduced.matches?1:.13);
+    if(this.area==='island')Object.assign(this.camera,islandCamera(this.camera,this.width,this.height));
 
     if(this.area==='farm'){this.camera.x=Math.max(0,Math.min(WORLD.width-viewW,this.camera.x));this.camera.y=Math.max(0,Math.min(WORLD.height-viewH,this.camera.y));}
     c.setTransform(this.dpr,0,0,this.dpr,0,0);c.fillStyle=isInterior(this.area)?'#d9dfcb':this.area==='island'?'#46b6c8':'#abc48d';c.fillRect(0,0,this.width,this.height);c.scale(scale,scale);c.translate(-this.camera.x,-this.camera.y);

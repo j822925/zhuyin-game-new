@@ -1,4 +1,5 @@
 import {createIslandVisits} from './island-visits-ui.js';
+import {installMapZoom} from './adventure-map-zoom.js';
 import {forestMusic,installForestMusic} from './adventure-music.js';
 import {installAdventureControls} from './adventure-controls.js';
 installForestMusic();
@@ -59,6 +60,7 @@ const keyDirections={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'
 const joystick=createJoystick($('joystick'),{isEnabled:()=>!!scene&&!round&&!companions?.busy&&!expedition?.busy&&!shop?.busy&&!exploration?.busy&&!visits?.busy&&!wardrobe.open&&!trail.open&&!(life.busy||(kitchen.busy||rest?.busy))&&!scene.editing&&!switching,onStart:()=>stopMoving()});
 const life=createLife({state:()=>state,scene:()=>scene,art:()=>art,walkTo,stopMoving,save,renderState,toast,switchArea,arrived:()=>exitProximity.reset(scene.area,scene.player),food:()=>kitchen.eatAtHome(),cook:()=>kitchen.cookAtHome(),blocked:()=>!scene||!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||switching||scene.editing||(life.busy||(kitchen.busy||rest?.busy))});
 const kitchen=createKitchen({state:()=>state,scene:()=>scene,art:()=>art,stopMoving,save,renderState,toast,switchArea,decorate:()=>openDecor(),blocked:()=>!scene||!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||switching||scene.editing||life.busy||(kitchen.busy||rest?.busy)});
+const mapZoom=installMapZoom({stage:$('map-stage'),canvas,scene:()=>scene,enabled:()=>scene?.area==='island'&&!round&&!wardrobe.open&&!companions?.busy&&!expedition?.busy&&!shop?.busy&&!visits?.busy&&!exploration?.busy&&!trail.open&&!switching&&!scene.editing&&!life.busy&&!kitchen.busy&&!rest?.busy&&!joystick.input.active,stop:()=>{stopMoving();keys.clear();},tap:(x,y)=>walkTo(scene.toWorld(x,y)),hideOffer:()=>exploration?.hideOffer()});
 companions=createCompanions({state:()=>state,cards:companionCards,trial:companionCards().length>1,prepare:id=>id==='rabbit'?Promise.resolve(null):loadWalker(id),apply:setCompanion,save,changed:()=>{renderState();renderArea();},stop:stopMoving,toast,blocked:()=>!scene||!!round||switching||scene.editing||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)});
 function setCompanion(id,walker){activeWalker=walker;canvas.dataset.character=id;void ensureClothingArt(equippedOutfit(state,id)).then(()=>renderState()).catch(()=>toast('衣服圖片暫時沒載入，重新開啟可再試。'));}
 async function restoreCompanion(requested=null){
@@ -127,6 +129,7 @@ function enterExit(id){
 function face(dx,dy){if(Math.abs(dx)>Math.abs(dy))return dx>=0?1:3;return dy>=0?0:2;}
 function move(dt){
   if(!scene)return;
+  if(mapZoom.active){scene.player.moving=false;return;}
   if(switching||scene.editing||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||(round&&round.phase!=='approach')){scene.player.moving=false;return;}
   const p=scene.player,before={x:p.x,y:p.y};
   let dx=joystick.input.x,dy=joystick.input.y;
@@ -173,10 +176,10 @@ function tick(now){
   requestAnimationFrame(tick);const dt=Math.min(.035,(now-last)/1000);last=now;if(!scene||document.hidden)return;
   if(expedition?.busy&&!expedition.localBattle||shop?.busy)return;
   move(dt);
-  const nearby=exitProximity.poll(scene.area,scene.player,exitsBlocked());if(nearby){if(nearby.interaction==='offer')exploration.offerDestination(nearby.id,true);else enterExit(nearby.id);}
+  const nearby=exitProximity.poll(scene.area,scene.player,exitsBlocked()||mapZoom.active);if(nearby){if(nearby.interaction==='offer')exploration.offerDestination(nearby.id,true);else enterExit(nearby.id);}
   if(scene.area==='grove')advanceEncounters(scene.encounters,dt,!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||switching);
   else if(scene.area==='forest')advanceMonster(scene.monster,dt,!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||isInterior(scene.area)||scene.area==='farm'||monsterHovered||switching);
-  scene.render(now,state,!!round&&round.phase!=='approach');positionHotspots();life.position(now);kitchen.tick(now);rest?.tick(now);rest?.position();syncEnergyAccess();
+  scene.render(now,state,!!round&&round.phase!=='approach');positionHotspots();mapZoom.update();life.position(now);kitchen.tick(now);rest?.tick(now);rest?.position();syncEnergyAccess();
   if(wardrobe.open&&now-lastDoll>65){renderDoll(now);lastDoll=now;}
 }
 async function init(){
@@ -206,6 +209,7 @@ canvas.addEventListener('pointerdown',e=>{
 canvas.addEventListener('pointermove',e=>{if(decorPointer===e.pointerId&&scene?.editing)moveFurniture(scene.toWorld(e.clientX,e.clientY));});
 for(const event of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,()=>decorPointer=null);
 document.addEventListener('keydown',e=>{
+  if(mapZoom.active)return;
   if(wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||!scene)return;
   if(e.key==='Escape'&&scene.editing){closeDecor();return;}
   if(scene.editing||switching)return;
@@ -244,7 +248,7 @@ function renderArea(){
 }
 async function switchArea(area,onArrival=null){
   if(!['forest','room','kitchen','bedroom','bathroom','grove','farm','island'].includes(area)||(area==='grove'&&!state.groveUnlocked)||(area==='farm'&&!state.life.farmUnlocked))return false;
-  if(switching||!scene||scene.dining)return false;switching=true;stopMoving();closeDecor();
+  if(switching||!scene||scene.dining)return false;switching=true;stopMoving();closeDecor();mapZoom.reset();scene.islandView=null;
   if(area==='grove'||area==='island'){try{toast('🌲 正在展開地圖…');await ensureExplorationArt(art,area);}catch(e){switching=false;toast('地圖暫時沒載入，請再試一次。');return false;}}
   if(area==='farm'){try{toast('🌱 正在走進農場…');await Promise.all([ensureTerrain(art.terrain,'farm'),ensureHomeArt(art,['extraCrops'])]);}catch(e){switching=false;toast('農場圖片暫時沒載入，請再試一次。');return false;}}
   if(area==='island'){state.world.visited=true;save();}
