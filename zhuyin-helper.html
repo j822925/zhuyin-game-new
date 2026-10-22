@@ -4,7 +4,7 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>注音小幫手｜學習廣場</title>
   <meta name="apple-mobile-web-app-capable" content="no">
-  <link rel="stylesheet" href="./zhuyin-helper.css?v=20261022-safari1">
+  <link rel="stylesheet" href="./zhuyin-helper.css?v=20261022-audio1">
 </head>
 <body>
   <header><a id="back" href="./index.html?class=main">← 學習廣場</a><h1>📖 注音小幫手</h1></header>
@@ -22,10 +22,12 @@
     <section aria-labelledby="say-title" class="panel say">
       <div class="heading"><span class="badge">🎤</span><div><h2 id="say-title">說詞語，查注音</h2><p>想寫的詞，說給我聽</p></div></div>
       <button id="mic" class="primary mic" disabled>🎤 開始說話</button>
+      <button id="stop-audio" class="stop-audio" hidden>⏹ 停止播放</button>
       <p id="mic-status" class="status" role="status">也可以直接打字查詢。</p>
+      <button id="audio-reload" hidden>↻ 重新開啟小幫手</button>
       <form id="lookup-form">
         <label for="word">你要查的詞</label>
-        <div class="input-row"><input id="word" maxlength="24" placeholder="例如：快樂" autocomplete="off"><button class="primary" type="submit">查注音</button></div>
+        <div class="input-row"><input id="word" maxlength="24" placeholder="例如：快樂" autocomplete="off"><button id="lookup-submit" class="primary" type="submit">查注音</button></div>
       </form>
       <div class="examples" aria-label="試試這些詞"><button data-word="快樂">快樂</button><button data-word="學校">學校</button><button data-word="銀行">銀行</button></div>
       <p id="lookup-status" class="status" role="status">先確認國字，再查注音。</p>
@@ -66,6 +68,6 @@
     </details>
   </footer>
   <details id="example-details" class="example-details"><summary>📚 常用生活例句 · 給大人</summary><p>點一句就能查注音；也可以換字造句。語音辨識後，請先確認國字是否正確。</p><div id="example-list"></div></details>
-  <script type="module" src="./helper-bootstrap.js?v=20261022-safari1"></script>
+  <script type="module" src="./helper-bootstrap.js?v=20261022-audio1"></script>
 </body>
 </html>

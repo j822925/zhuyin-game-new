@@ -1,4 +1,4 @@
-import {helperLaunchEnvironment, helperLaunchPlan, mountHelperLaunch, showHelperReturnHint} from './helper-launch.js?v=20261022-safari1';
+import {helperLaunchEnvironment, helperLaunchPlan, mountHelperLaunch, showHelperReturnHint} from './helper-launch.js?v=20261022-audio1';
 
 const plan = helperLaunchPlan(location.href, helperLaunchEnvironment());
 if (plan.standalone) {
@@ -7,7 +7,7 @@ if (plan.standalone) {
   mountHelperLaunch(plan);
 } else {
   if (new URL(location.href).searchParams.get('source') === 'homescreen-helper') showHelperReturnHint();
-  try { await import('./zhuyin-helper.js?v=20261022-safari1'); }
+  try { await import('./zhuyin-helper.js?v=20261022-audio1'); }
   catch {
     document.getElementById('mic-status').textContent = '小幫手還沒載入完成，請重新整理。';
     const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = '重新載入';

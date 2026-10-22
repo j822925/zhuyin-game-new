@@ -18,7 +18,7 @@ export function helperLaunchPlan(href, env = {}) {
   const selected = base.searchParams.get('class');
   const classId = selected === 'grade2' || (selected === null && base.pathname.endsWith('/grade2.html')) ? 'grade2' : 'main';
   const browser = new URL('zhuyin-helper.html', base);
-  browser.searchParams.set('v', '20261022-safari1');
+  browser.searchParams.set('v', '20261022-audio1');
   browser.searchParams.set('class', classId);
   if (base.searchParams.get('demo') === '1') browser.searchParams.set('demo', '1');
   if (standalone) browser.searchParams.set('source', 'homescreen-helper');

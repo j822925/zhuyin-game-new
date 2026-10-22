@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 const read=f=>readFileSync(new URL('../'+f,import.meta.url),'utf8');
 test('both class entrances load naming presentation without changing class launch',()=>{
  for(const file of ['index.html','grade2.html']){
-  const text=read(file);assert.match(text,/island-names.css\?v=20261022-helper1/);assert.match(text,/game-boot.js\?v=20261022-safari1/);
+  const text=read(file);assert.match(text,/island-names.css\?v=20261022-helper1/);assert.match(text,/game-boot.js\?v=20261022-audio1/);
   assert.match(text,/school-launch.js\?v=20261007-ipad1/);
  }
  assert.match(read('game-boot.js'),/reading-entry.js\?v=20261022-collection1/);

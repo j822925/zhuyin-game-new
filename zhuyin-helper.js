@@ -1,5 +1,6 @@
 import {INITIALS, FINALS, TONES, displaySound, createSoundIndex, boardQuestion, createWordLookup} from './helper-core.js?v=20261022-common1';
-import {createHelperPlayer} from './helper-player.js?v=20261020-preview1';
+import {createHelperWebAudioPlayer} from './helper-web-audio.js?v=20261022-audio1';
+import {createHelperSpeech} from './helper-speech.js?v=20261022-audio1';
 import {tutorClips} from './little-teacher.js?v=20261020-bo1';
 import {audioSource} from './audio-source.js?v=20261020-bo1';
 import {symbolPage, symbolPageSize, resizeSymbolPage} from './helper-pagination.js?v=20261022-pages1';
@@ -10,11 +11,11 @@ const state = {initial: '', final: '', tone: 1, kind: 'initial'};
 const trayPages = {initial: 0, final: 0, tone: 0};
 const narrowTray = matchMedia('(max-width: 900px)');
 let pageSize = symbolPageSize(innerWidth);
-let index, lookup, lookupJob = 0, playbackJob = 0, currentWord = null, recognition = null, micTimer;
+let index, lookup, lookupJob = 0, playbackJob = 0, currentWord = null;
 let readyPromise, dictionaryPromise;
-const voice = new Audio();
-voice.preload = 'none';
-const player = createHelperPlayer(voice, {
+let audioBusy = false, releasingAudio = false, audioBlocked = false, speech;
+const Recognition = globalThis.SpeechRecognition || globalThis.webkitSpeechRecognition;
+const player = createHelperWebAudioPlayer({
   resolve: audioSource,
   onStep: step => document.querySelectorAll('.word-card').forEach((card, i) =>
     card.classList.toggle('speaking', step.wordIndex === i))
@@ -41,11 +42,51 @@ function dictionary() {
     lookup = createWordLookup(data.PRONUNCIATIONS, data.PRONUNCIATION_SYLLABLES, bank.questions);
   }).catch(error => { dictionaryPromise = null; throw error; });
 }
-function stopAudio() {
+function canPlay() { return !speech?.busy && !releasingAudio && !audioBlocked; }
+function syncControls() {
+  const micState = speech?.state || 'idle';
+  $('mic').disabled = !Recognition || audioBusy || releasingAudio || audioBlocked || ['starting','stopping','blocked'].includes(micState);
+  $('mic').textContent = audioBusy ? '🔊 請先停止播放' : releasingAudio ? '稍等一下…'
+    : micState === 'starting' ? '🎤 正在開啟…' : micState === 'listening' ? '⏹ 說完了'
+    : micState === 'stopping' ? '正在結束收音…' : '🎤 開始說話';
+  $('mic').classList.toggle('recording', micState === 'listening');
+  $('stop-audio').hidden = !audioBusy && !releasingAudio;
+  $('audio-reload').hidden = !audioBlocked && micState !== 'blocked';
+  const blocked = !canPlay();
+  $('lookup-submit').disabled = blocked;
+  $('word-play').disabled = blocked;
+  $('board-play').disabled = blocked || !(index && boardQuestion(index, state.initial, state.final, state.tone));
+  document.querySelectorAll('[data-word], #variants button').forEach(button => { button.disabled = blocked; });
+}
+function releaseAudio(job) {
+  if (job !== playbackJob) return;
+  audioBusy = false; releasingAudio = true; syncControls();
+  // A stopped source is not the same as a released audio session on iPad.
+  Promise.resolve(player.suspend()).then(() => {
+    if (job !== playbackJob) return;
+    releasingAudio = false; syncControls();
+  }).catch(() => {
+    if (job !== playbackJob) return;
+    releasingAudio = false; audioBlocked = true; syncControls();
+    $('mic-status').textContent = '聲音暫時卡住了，請按「重新開啟小幫手」。';
+  });
+}
+function stopAudio(release = true) {
   playbackJob++; player.stop();
+  audioBusy = false;
   for (const id of ['lookup-status', 'board-status'])
-    if ($(id).textContent === '🔊 老師正在拼讀…') $(id).textContent = '點喇叭，再聽一次。';
+    if (['🔊 老師正在拼讀…','正在準備這一輪的聲音…'].includes($(id).textContent)) $(id).textContent = '點喇叭，再聽一次。';
   document.querySelectorAll('.speaking').forEach(el => el.classList.remove('speaking'));
+  if (release) releaseAudio(playbackJob);
+  else syncControls();
+}
+function reserveAudio() {
+  if (!canPlay()) return null;
+  stopAudio(false); audioBusy = true; syncControls();
+  // Resume inside the tap, before any dictionary/network await loses the gesture.
+  const job = playbackJob;
+  const unlocked = player.unlock().then(() => true, () => false);
+  return {job, unlocked};
 }
 function cancelLookup() {
   lookupJob++;
@@ -53,16 +94,17 @@ function cancelLookup() {
     $('lookup-status').textContent = '查詢已暫停，請再按「查注音」。';
 }
 function stopMic() {
-  clearTimeout(micTimer);
-  const old = recognition; recognition = null;
-  old?.abort();
-  if (old) $('mic-status').textContent = '收音已停止，可確認國字或重新說話。';
-  $('mic').textContent = '🎤 開始說話'; $('mic').classList.remove('recording');
+  return speech?.stop();
 }
-async function playQuestions(questions, status, highlight = false) {
-  stopMic(); stopAudio();
-  const job = playbackJob;
+async function playQuestions(questions, status, highlight = false, ticket = null) {
+  ticket ||= reserveAudio();
+  if (!ticket) return;
+  const {job} = ticket;
   try {
+    status.textContent = '正在準備這一輪的聲音…';
+    const unlocked = await ticket.unlocked;
+    if (job !== playbackJob) return;
+    if (!unlocked) throw new Error('請再點播放');
     const steps = questions.flatMap((q, wordIndex) => {
       const clips = q.initial && q.final ? tutorClips(q) : [q.audio];
       return clips.map((src, i) => ({src, wordIndex: highlight ? wordIndex : -1,
@@ -73,7 +115,10 @@ async function playQuestions(questions, status, highlight = false) {
   } catch {
     if (job === playbackJob) status.textContent = '聲音沒播出來，請再點一次喇叭。';
   } finally {
-    if (job === playbackJob) document.querySelectorAll('.speaking').forEach(el => el.classList.remove('speaking'));
+    if (job === playbackJob) {
+      document.querySelectorAll('.speaking').forEach(el => el.classList.remove('speaking'));
+      releaseAudio(job);
+    }
   }
 }
 function updateBoard() {
@@ -81,7 +126,7 @@ function updateBoard() {
   document.querySelector('[data-slot=final] strong').textContent = state.final || '＋';
   document.querySelector('[data-slot=tone] strong').textContent = state.tone === 1 ? '一聲' : TONES[state.tone];
   const q = index && boardQuestion(index, state.initial, state.final, state.tone);
-  $('board-play').disabled = !q;
+  $('board-play').disabled = !q || !canPlay();
   $('board-status').textContent = !index ? '資料還沒載入，請點「重新載入」。'
     : !state.initial && !state.final ? '先選注音，再選聲調。'
     : q ? `拼好了：${displaySound(q.displayLabel)}`
@@ -178,8 +223,8 @@ $('board-play').onclick = () => {
   const q = index && boardQuestion(index, state.initial, state.final, state.tone);
   if (q) playQuestions([q], $('board-status'));
 };
-function renderWord(text, sounds, autoPlay = true) {
-  stopAudio(); currentWord = null; $('word-play').hidden = true;
+function renderWord(text, sounds) {
+  currentWord = null; $('word-play').hidden = true;
   $('word-result').replaceChildren();
   const questions = sounds.map(sound => index.get(sound));
   Array.from(text).forEach((char, i) => {
@@ -193,20 +238,28 @@ function renderWord(text, sounds, autoPlay = true) {
   }
   currentWord = questions; $('word-play').hidden = false;
   $('lookup-status').textContent = '點喇叭，聽老師慢慢拼。';
-  if (autoPlay) playQuestions(questions, $('lookup-status'), true);
 }
 async function search() {
+  const ticket = reserveAudio();
+  if (!ticket) return;
   const job = ++lookupJob, text = $('word').value;
-  stopMic(); stopAudio(); currentWord = null;
+  let handedToPlayer = false;
+  currentWord = null;
   $('word-result').replaceChildren(); $('variants').replaceChildren(); $('word-play').hidden = true;
   $('alternative-readings').hidden = true; $('alternative-readings').open = false;
   $('lookup-status').textContent = '查注音中…';
   try {
     await Promise.all([ready(), dictionary()]);
-    if (job !== lookupJob) return;
+    if (job !== lookupJob || ticket.job !== playbackJob) return;
     const result = lookup(text);
     if (result.error) { $('lookup-status').textContent = result.error; return; }
-    if (result.choices.length === 1 || result.preferred) renderWord(result.text, result.choices[0]);
+    if (result.choices.length === 1 || result.preferred) {
+      renderWord(result.text, result.choices[0]);
+      if (currentWord) {
+        handedToPlayer = true;
+        void playQuestions(currentWord, $('lookup-status'), true, ticket);
+      }
+    }
     if (result.choices.length === 1) return;
     $('alternative-readings').hidden = false;
     if (!result.preferred) {
@@ -216,16 +269,23 @@ async function search() {
     for (const sounds of result.choices) {
       const button = document.createElement('button');
       button.textContent = sounds.map(displaySound).join(' ');
-      button.onclick = () => renderWord(result.text, sounds);
+      button.onclick = () => {
+        if (!canPlay()) return;
+        renderWord(result.text, sounds);
+        if (currentWord) void playQuestions(currentWord, $('lookup-status'), true);
+        else stopAudio();
+      };
       $('variants').append(button);
     }
   } catch {
     if (job === lookupJob) $('lookup-status').textContent = '資料載入較久，請再按一次「查注音」。';
+  } finally {
+    if (!handedToPlayer) releaseAudio(ticket.job);
   }
 }
 $('lookup-form').onsubmit = e => { e.preventDefault(); search(); };
-function invalidateWord() {
-  lookupJob++; stopAudio(); currentWord = null;
+function invalidateWord(stop = true) {
+  lookupJob++; if (stop) stopAudio(); currentWord = null;
   $('word-play').hidden = true; $('word-result').replaceChildren(); $('variants').replaceChildren();
   $('alternative-readings').hidden = true;
   $('lookup-status').textContent = '確認國字後，按「查注音」。';
@@ -246,52 +306,31 @@ document.querySelectorAll('[data-word]').forEach(b => b.onclick = () => {
 $('word-play').onclick = () => { if (currentWord) playQuestions(currentWord, $('lookup-status'), true); };
 $('stop').onclick = () => {
   lookupJob++; stopAudio(); stopMic();
-  $('lookup-status').textContent = '已停止播放。'; $('mic-status').textContent = '也可以直接打字查詢。';
+  $('lookup-status').textContent = '已停止播放。';
+  if (!speech.busy && !audioBlocked) $('mic-status').textContent = '也可以直接打字查詢。';
   updateBoard();
 };
-const Recognition = globalThis.SpeechRecognition || globalThis.webkitSpeechRecognition;
-$('mic').disabled = !Recognition;
+$('stop-audio').onclick = () => { cancelLookup(); stopAudio(); };
+$('audio-reload').onclick = () => location.reload();
+speech = createHelperSpeech({
+  Recognition,
+  onState: syncControls,
+  onText: text => { $('word').value = text; invalidateWord(false); },
+  onMessage: message => { $('mic-status').textContent = message; }
+});
 if (!Recognition) $('mic-status').textContent = '這個瀏覽器不支援收音辨識，可改用 Safari／Chrome，或直接打字。';
 $('mic').onclick = () => {
-  if (recognition) { recognition.stop(); $('mic-status').textContent = '正在整理你說的詞…'; return; }
-  lookupJob++; stopAudio();
-  const r = new Recognition(); recognition = r;
-  r.lang = 'zh-TW'; r.continuous = false; r.interimResults = true; r.maxAlternatives = 1;
-  let finalText = '', heard = false;
-  $('mic').classList.add('recording'); $('mic').textContent = '⏹ 說完了';
-  $('mic-status').textContent = '請說一個詞語…';
-  r.onresult = event => {
-    if (recognition !== r) return;
-    const results = Array.from(event.results);
-    const text = results.map(row => row[0]?.transcript || '').join('').trim();
-    if (!text) return;
-    heard = true; finalText = text;
-    $('word').value = text; invalidateWord();
-    $('mic-status').textContent = '聽到了！請確認國字，再按「查注音」。';
-  };
-  r.onerror = event => {
-    if (recognition !== r) return;
-    stopMic();
-    $('mic-status').textContent = ['not-allowed','service-not-allowed'].includes(event.error)
-      ? '麥克風未獲允許，可以在瀏覽器設定開啟，或直接打字。'
-      : '這次沒有聽清楚，請再試一次，或直接打字。';
-  };
-  r.onend = () => {
-    if (recognition !== r) return;
-    clearTimeout(micTimer); recognition = null;
-    $('mic').textContent = '🎤 開始說話'; $('mic').classList.remove('recording');
-    if (heard && finalText) $('mic-status').textContent = '請確認國字，再按「查注音」。';
-    else $('mic-status').textContent = '沒聽到詞語，再試一次吧。';
-  };
-  micTimer = setTimeout(() => {
-    if (recognition !== r) return;
-    stopMic(); $('mic-status').textContent = heard ? '請確認國字，再按「查注音」。' : '這次沒聽清楚，請再試一次。';
-  }, 15000);
-  try { r.start(); } catch { stopMic(); $('mic-status').textContent = '無法開始收音，請改用 Safari 或直接打字。'; }
+  // Guard even programmatic/rapid clicks: no microphone while buffers are loading,
+  // playing, or the audio context is still releasing the device.
+  if (audioBusy || releasingAudio || audioBlocked || !Recognition) return;
+  if (speech.busy) { void speech.stop({abort:false}); return; }
+  cancelLookup();
+  speech.start();
 };
 document.addEventListener('visibilitychange', () => { if (document.hidden) { lookupJob++; stopAudio(); stopMic(); } });
 window.addEventListener('pagehide', () => { lookupJob++; stopAudio(); stopMic(); });
 showTray('initial');
+syncControls();
 function prepare() {
   ready().catch(() => {
     $('board-status').textContent = '聲音資料還沒載入。';

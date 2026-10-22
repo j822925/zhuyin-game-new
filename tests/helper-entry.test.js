@@ -13,7 +13,7 @@ test('helper links preserve the explicit class and only carry the supported demo
    assert.equal(link.origin,'https://j822925.github.io');
    assert.equal(link.pathname,'/zhuyin-game-new/zhuyin-helper.html');
    assert.equal(link.searchParams.get('class'),expected);
-   assert.equal(link.searchParams.get('v'),'20261022-safari1');
+   assert.equal(link.searchParams.get('v'),'20261022-audio1');
    assert.equal(link.searchParams.get('demo'),demo==='&demo=1'?'1':null);
    assert.equal(link.hash,'');
    assert.deepEqual([...link.searchParams.keys()].sort(),demo==='&demo=1'?['class','demo','v']:['class','v']);
@@ -39,7 +39,7 @@ test('helper mounts once as a standard link and needs no account or network acce
 
 test('homepage removes only the classroom entry and retains its existing services and battle navigation',()=>{
  const boot=read('game-boot.js'),names=read('island-names.js'),entry=read('helper-entry.js');
- assert.match(boot,/helper-entry.js\?v=20261022-safari1/);
+ assert.match(boot,/helper-entry.js\?v=20261022-audio1/);
  assert.match(boot,/island-names.js\?v=20261022-helper1/);
  assert.doesNotMatch(boot,/classroom-entry/);
  assert.match(names,/if\(helper\|\|root.getElementById\('duo'\)\|\|root.getElementById\('race'\)\)/);

@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import {helperLaunchPlan, mountHelperLaunch, showHelperReturnHint} from '../helper-launch.js';
 
 const base = 'https://j822925.github.io/zhuyin-game-new/';
-const version = '20261022-safari1';
+const version = '20261022-audio1';
 const ipad = {
   userAgent: 'Mozilla/5.0 (iPad; CPU OS 17_7 like Mac OS X) AppleWebKit/605.1.15 Version/17.7 Mobile/15E148 Safari/604.1',
   platform: 'iPad', maxTouchPoints: 5, standalone: true
