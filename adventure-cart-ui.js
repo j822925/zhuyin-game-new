@@ -1,3 +1,4 @@
+import {CROPS,FISH} from './adventure-life-model.js';
 import {BAITS} from './adventure-bait.js';
 import {zoneShop,getShopRoomArt} from './adventure-zone-shop-data.js';
 import {completeAction} from './adventure-action-feedback.js';
@@ -67,11 +68,13 @@ export function createShop(api){
   const observer=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){observer.unobserve(e.target);void draw(e.target,list[Number(e.target.dataset.index)]);}}, {root:grid,rootMargin:'80px'});observers.push(observer);
   async function draw(b,item){const cv=b.querySelector('canvas');if(!cv)return;try{
    if(item.kind==='furniture')await ensureHomeArt(api.art(),[item.atlas].filter(Boolean));
+   if(['meal','fish','harvest','seeds'].includes(item.kind))await ensureHomeArt(api.art(),[(item.kind==='fish'?FISH[item.id]:['harvest','seeds'].includes(item.kind)?CROPS[item.id]:item)?.atlas].filter(Boolean));
    if(item.kind==='wallpaper')await ensureWallpaperThumbs(api.art(),[item.id]);
    if(token!==version||!dialog.open)return;
    if(item.kind==='furniture')drawFurnitureThumb(cv,api.art(),item.id);
    else if(item.kind==='clothes')drawDoll(cv,api.art(),{outfit:item.id,wand:false});
-   else if(item.kind==='meal')lifeStamp(cv.getContext('2d'),api.art().cooking,item.art,100,166,140);
+   else if(item.kind==='meal')lifeStamp(cv.getContext('2d'),api.art()[item.atlas||'cooking'],item.art,100,166,140,186);
+   else if(['fish','harvest','seeds'].includes(item.kind)){const definition=item.kind==='fish'?FISH[item.id]:CROPS[item.id];lifeStamp(cv.getContext('2d'),api.art()[definition?.atlas||(item.kind==='fish'?'fish':'life')],definition?.art,100,166,140,186);}
    else if(item.kind==='wallpaper')cv.getContext('2d').drawImage(api.art().wallpaperThumbs[item.id],0,20,200,125);
   }catch{if(token===version){cv.replaceWith(Object.assign(document.createElement('span'),{className:'trade-icon',textContent:'📦'}));}}}
   list.forEach((item,i)=>{
@@ -80,7 +83,7 @@ export function createShop(api){
    const locked=inventory?mode!=='sell'||!!item.sellReason:mode==='sell'||roleLocked||(count>0&&!['seeds','meal','bait'].includes(item.kind));
    const b=btn('',()=>add(item),'trade-slot'+(selected?' selected':''));b.dataset.index=i;b.dataset[inventory?'inventoryItem':'shopItem']=item.id;b.disabled=locked;
    const icon=item.kind==='seeds'?'🌱':item.icon||'🐟';
-   b.innerHTML=`<div class="trade-picture">${['seeds','harvest','fish','bait'].includes(item.kind)?'<span class="trade-icon">'+(item.icon||icon)+'</span>':'<canvas width="200" height="170" aria-hidden="true"></canvas>'}<b class="trade-count">${inventory?'× '+count:'持有 '+count}</b></div><span class="trade-name">${item.name}${item.kind==='seeds'?'種子':''}</span><small>${inventory?(item.sellReason||'賣出 ✦ '+item.sellPrice):'✦ '+item.price}</small>${selected?'<em>籃內 '+selected+'</em>':''}`;
+   b.innerHTML=`<div class="trade-picture">${item.kind==='bait'?'<span class="trade-icon">'+(item.icon||icon)+'</span>':'<canvas width="200" height="170" aria-hidden="true"></canvas>'}<b class="trade-count">${inventory?'× '+count:'持有 '+count}</b></div><span class="trade-name">${item.name}${item.kind==='seeds'?'種子':''}</span><small>${inventory?(item.sellReason||'賣出 ✦ '+item.sellPrice):'✦ '+item.price}</small>${selected?'<em>籃內 '+selected+'</em>':''}`;
    if(!inventory&&roleLocked)b.querySelector('small').textContent='🔒 先解鎖'+({fox:'橘子狐',bear:'蜂蜜熊',rabbit:'棉花兔'}[item.character]||'夥伴');
    b.title=item.name+' · 持有 '+count+(inventory?' · '+(item.sellReason||'賣出單價 '+item.sellPrice):' · 單價 '+item.price);grid.append(b);observer.observe(b);
   });

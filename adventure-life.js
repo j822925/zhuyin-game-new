@@ -1,3 +1,4 @@
+import {ensureHomeArt} from './adventure-home-art.js';
 import {completeAction} from './adventure-action-feedback.js';
 import {FREE_SEEDS} from './adventure-exploration-model.js';
 import {fishingEffect,fishingStage} from './adventure-fishing-feedback.js';
@@ -5,7 +6,7 @@ import {hasEnergy} from './adventure-food-model.js';
 import {drawFieldDetail} from './adventure-terrain.js';
 import {departForIslandLesson} from './farm-learning-bridge.js';
 import {ACTIVITY_PRICES,CROPS,CROP_LESSONS,CROP_ACCURACY,FISH,FARM_GATE,POND_BANK,FARM_PLOTS,unlockActivity,plotStage,plantCrop,waterCrop,harvestCrop,castLine,reelFish} from './adventure-life-model.js';
-import {lifeStamp,drawFish,drawSeedling} from './adventure-life-art.js';
+import {lifeStamp,drawFish,drawFishItem,drawSeedling} from './adventure-life-art.js';
 import {farmEffect,farmProgress} from './adventure-farm-feedback.js';
 const $=id=>document.getElementById(id);
 export function createLife(api){
@@ -22,6 +23,7 @@ export function createLife(api){
   mode=next;result=null;dialog.classList.toggle('farm-panel',next==='plot');dialog.classList.toggle('fishing-panel',next==='pond');
   if(scene()){scene().fishingView=next==='pond';if(next!=='pond')scene().fishingEffect=null;}
   render();if(!dialog.open){if(modal)dialog.showModal();else dialog.show();}
+  if(['pond','collection'].includes(next))void ensureHomeArt(api.art(),['collectionFish']).then(()=>{if(dialog.open&&mode===next)render();}).catch(()=>api.toast('魚的圖片還沒載入，可關閉後再試。'));
  }
  function resetClosed(){if(dialog.open)return;if(scene()){scene().fishingView=false;scene().fishingEffect=null;}mode=null;$('world').focus({preventScroll:true});}
  function close(){dialog.close();resetClosed();}
@@ -81,7 +83,7 @@ export function createLife(api){
  }else if(mode==='collection'){
 
  base('我的小竹籃','收下每一次小小發現');$('life-picture').hidden=true;$('life-message').textContent='魚圖鑑與農場收穫，都保存在這個小屋裡。';const grid=document.createElement('div');grid.className='life-collection';
- for(const [id,fish]of Object.entries(FISH)){const item=document.createElement('div');item.className='collection-fish';item.innerHTML=`<canvas width="120" height="72" aria-hidden="true"></canvas><strong>${fish.name}</strong><span>食材 ${state().life.fish[id]} 尾 · 曾釣到 ${state().life.fishFound[id]} 尾</span>`;lifeStamp(item.querySelector('canvas').getContext('2d'),api.art().fish,Object.keys(FISH).indexOf(id),60,65,58);grid.append(item);}
+ for(const [id,fish]of Object.entries(FISH)){const item=document.createElement('div');item.className='collection-fish';item.innerHTML=`<canvas width="120" height="72" aria-hidden="true"></canvas><strong>${fish.name}</strong><span>食材 ${state().life.fish[id]} 尾 · 曾釣到 ${state().life.fishFound[id]} 尾</span>`;drawFishItem(item.querySelector('canvas').getContext('2d'),api.art(),id,60,65,58,116);grid.append(item);}
  for(const [id,crop]of Object.entries(CROPS)){const item=document.createElement('div');item.innerHTML=`<span class="crop-symbol">${crop.icon}</span><strong>${crop.name}</strong><span>${state().life.harvest[id]} 份</span>`;grid.append(item);}$('life-choices').append(grid);btn('🥄 吃東西',()=>{close();api.food();},{primary:true,id:'life-eat'});btn('🎣 返回釣魚',()=>{close();visit('pond');},{id:'life-return-pond'});$('life-note').textContent='魚可以做成料理，吃完也會保留釣魚圖鑑記錄。';
  }if(mode==='plot'){$('life-picture').hidden=true;$('life-note').hidden=true;const p=state().life.plots[plotId],crop=p&&CROPS[p.crop];$('life-message').dataset.picture=crop?`${({single:'👂',spelling:'🧩',tone:'🎵',reading:'🎤'})[crop.lesson]} → ✅ ${crop.lesson==='reading'?'4/5':'7/10'} → ${crop.icon}`:'🌱 ↓';}paint();
  }
@@ -90,7 +92,7 @@ export function createLife(api){
  c.fillStyle='#aec7b0';c.beginPath();c.ellipse(315,164,272,125,0,0,Math.PI*2);c.fill();c.fillStyle='#9ac7bb';c.beginPath();c.ellipse(315,158,257,110,0,0,Math.PI*2);c.fill();c.strokeStyle='#e4edce';c.lineWidth=3;c.beginPath();c.ellipse(350,164,80,18,0,0,Math.PI*2);c.stroke();lifeStamp(c,art.life,1,120,293,157);
  const t=scene()?.reduced.matches?0:performance.now()/1000;for(let i=0;i<3;i++)drawFish(c,230+i*100+Math.sin(t+i)*14,126+(i%2)*75,19,FISH[Object.keys(FISH)[i]].color);
  if(state().life.fishing){c.strokeStyle='#f8efc9';c.lineWidth=2;c.beginPath();c.moveTo(145,180);c.quadraticCurveTo(210,40,335,153);c.stroke();const ready=Date.now()>=state().life.fishing.biteAt;c.fillStyle=ready?'#d17d60':'#fbefcb';c.beginPath();c.ellipse(335,153+Math.sin(t*4)*3,8,10,0,0,Math.PI*2);c.fill();if(ready){c.fillStyle='#6e7150';c.font='bold 28px sans-serif';c.fillText('!',331,129);}}
- if(result){c.fillStyle='#fffae9ee';c.beginPath();c.roundRect(221,49,242,184,35);c.fill();lifeStamp(c,art.fish,Object.keys(FISH).indexOf(result),343,220,158);}
+ if(result){c.fillStyle='#fffae9ee';c.beginPath();c.roundRect(221,49,242,184,35);c.fill();drawFishItem(c,art,result,343,220,158);}
  }else if(mode==='unlock-farm'){lifeStamp(c,art.life,0,300,285,259);lifeStamp(c,art.life,3,87,279,100);lifeStamp(c,art.life,5,496,279,127);
  }else if(mode==='harvest'){drawFieldDetail(c,art);lifeStamp(c,art[CROPS[result].atlas||'life'],CROPS[result].art,300,263,216);
  }else if(mode==='plot'){

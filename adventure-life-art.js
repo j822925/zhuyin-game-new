@@ -1,9 +1,10 @@
-import {FARM_PLOTS,FARM_TREES,CROPS,plotStage} from './adventure-life-model.js';
+import {FARM_PLOTS,FARM_TREES,CROPS,FISH,plotStage} from './adventure-life-model.js';
 import {drawFarmPlant} from './adventure-farm-feedback.js';
 const TAU=Math.PI*2;
 function ellipse(c,x,y,rx,ry,fill){c.fillStyle=fill;c.beginPath();c.ellipse(x,y,rx,ry,0,0,TAU);c.fill();}
 function path(c,points,width,fill){c.strokeStyle=fill;c.lineWidth=width;c.lineCap='round';c.lineJoin='round';c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();}
-export function lifeStamp(c,atlas,index,x,y,h){if(!atlas)return;const a=atlas.cells[index],w=a.w/a.h*h;c.drawImage(atlas.image,a.x,a.y,a.w,a.h,x-w/2,y-h,w,h);}
+export function lifeStamp(c,atlas,index,x,y,h,maxWidth=Infinity){if(!atlas?.cells?.[index])return;const a=atlas.cells[index];h=Math.min(h,maxWidth*a.h/a.w);const w=Math.min(maxWidth,a.w/a.h*h);c.drawImage(atlas.image,a.x,a.y,a.w,a.h,x-w/2,y-h,w,h);}
+export function drawFishItem(c,art,id,x,y,h,maxWidth=Infinity){const f=FISH[id];if(!f)return;const atlas=art[f.atlas||'fish'];if(atlas?.cells?.[f.art])lifeStamp(c,atlas,f.art,x,y,h,maxWidth);else drawFish(c,x,y-h/2,h*.42,f.color);}
 export function drawVillageLife(c,art,state,now,scene){
  // The farm branch is painted into the shared ground layer.
  for(const x of [373,518]){path(c,[[x,696],[x,747]],10,'#a78c61');ellipse(c,x,694,7,4,'#d0b787');}

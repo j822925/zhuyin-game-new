@@ -12,8 +12,8 @@ export function furnitureSurfaces(f){
  if(!f||f.small||f.flat||f.cooking)return [];
  const kind=f.surfaceKind||(/bookcase|plant-stand/.test(f.id)?'shelf':/cabinet|pantry/.test(f.id)?'cabinet':f.id==='sofa'||f.id.endsWith('-sofa')?'sofa':f.id==='table'||/-table$|-desk$|-tea-cart$/.test(f.id)?'table':null);
  if(!kind)return [];
- const levels=kind==='shelf'?[.72,.45,.18]:kind==='cabinet'?[.82]:kind==='sofa'?[.27]:[.6];
- return levels.map((level,i)=>({name:kind==='shelf'?['上層','中層','下層'][i]:kind==='sofa'?'座墊':'檯面',dy:-Math.round(f.height*level),width:Math.max(40,f.fw*(kind==='sofa'?.6:.72))}));
+ const levels=f.surfaceLevels||(kind==='shelf'?[.72,.45,.18]:kind==='cabinet'?[.82]:kind==='sofa'?[.27]:[.6]);
+ return levels.map((level,i)=>({name:kind==='shelf'?['上層','中層','下層'][i]:kind==='sofa'?'座墊':'檯面',dy:-Math.round(f.height*level),width:f.surfaceWidth??Math.max(40,f.fw*(kind==='sofa'?.6:.72))}));
 }
 export function attachedPosition(item,layout,catalog){
  if(!item?.on)return null;

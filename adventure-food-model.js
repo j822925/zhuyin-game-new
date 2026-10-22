@@ -1,11 +1,12 @@
+import {COLLECTION_CROPS,COLLECTION_RAW_FOOD,COLLECTION_RECIPES} from './data/collection-foods.js';
 import {SHOP_FOODS} from './data/zone-shop-foods.js';
 import {FURNITURE} from './data/home-furniture.js';
 export const MAX_ENERGY=100;
 export const ENERGY_COST={fish:0,battle:8};
 export const ENERGY_DECAY_MS=60*60*1000;
-export const RAW_FOOD={strawberry:{name:'草莓',energy:9},cucumber:{name:'小黃瓜',energy:8},blueberry:{name:'藍莓',energy:10},lettuce:{name:'萵苣',energy:6},carrot:{name:'紅蘿蔔',energy:8},tomato:{name:'小番茄',energy:6},corn:{name:'甜玉米',energy:8}};
-export const INGREDIENT_NAMES={carrot:'紅蘿蔔',tomato:'小番茄',corn:'甜玉米',pumpkin:'南瓜',fish:'魚'};
-export const RECIPES={...SHOP_FOODS,
+export const RAW_FOOD={...COLLECTION_RAW_FOOD,strawberry:{name:'草莓',energy:9},cucumber:{name:'小黃瓜',energy:8},blueberry:{name:'藍莓',energy:10},lettuce:{name:'萵苣',energy:6},carrot:{name:'紅蘿蔔',energy:8},tomato:{name:'小番茄',energy:6},corn:{name:'甜玉米',energy:8}};
+export const INGREDIENT_NAMES={...Object.fromEntries(Object.entries(COLLECTION_CROPS).map(([id,crop])=>[id,crop.name])),carrot:'紅蘿蔔',tomato:'小番茄',corn:'甜玉米',pumpkin:'南瓜',fish:'魚'};
+export const RECIPES={...SHOP_FOODS,...COLLECTION_RECIPES,
  soup:{name:'蔬菜暖湯',ingredients:{carrot:1,tomato:1},energy:35,art:2,description:'第一道家常料理，把今天的收穫煮成暖暖的一碗。'},
  tomatoFish:{name:'番茄烤魚',ingredients:{fish:1,tomato:2},energy:55,art:3,description:'把池塘釣到的魚，配上香甜的小番茄。'},
  cornCup:{name:'香甜玉米盅',ingredients:{corn:2,tomato:1},energy:45,art:4,description:'金黃玉米加上番茄丁，裝進小木杯。'},

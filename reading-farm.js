@@ -62,6 +62,6 @@ export function renderReadingFarm(result,back,root=document.getElementById('resu
  let panel=document.getElementById('reading-farm-result');
  if(!panel){panel=document.createElement('aside');panel.id='reading-farm-result';panel.className='panel';root.insertBefore(panel,root.querySelector('#return-guide'));}
  panel.replaceChildren();const text=document.createElement('p');text.setAttribute('role','status');
- text.textContent=result.grown?'🥬 萵苣長大了！':result.status==='practice'?'🌱 再練一次，答對 4 題就能長大。':'🌱 回農場查看作物';
- const a=document.createElement('a');a.className='primary';a.href=back;a.textContent=result.grown?'🥬 回農場收成':'🌱 回農場';panel.append(text,a);
+ text.textContent=result.grown?'🌱 作物長大了！':result.status==='practice'?'🌱 再練一次，答對 4 題就能長大。':'🌱 回農場查看作物';
+ const a=document.createElement('a');a.className='primary';a.href=back;a.textContent=result.grown?'🌱 回農場收成':'🌱 回農場';panel.append(text,a);
 }

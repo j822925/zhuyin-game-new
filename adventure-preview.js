@@ -250,7 +250,7 @@ async function switchArea(area,onArrival=null){
   if(!['forest','room','kitchen','bedroom','bathroom','grove','farm','island'].includes(area)||(area==='grove'&&!state.groveUnlocked)||(area==='farm'&&!state.life.farmUnlocked))return false;
   if(switching||!scene||scene.dining)return false;switching=true;stopMoving();closeDecor();mapZoom.reset();scene.islandView=null;
   if(area==='grove'||area==='island'){try{toast('🌲 正在展開地圖…');await ensureExplorationArt(art,area);}catch(e){switching=false;toast('地圖暫時沒載入，請再試一次。');return false;}}
-  if(area==='farm'){try{toast('🌱 正在走進農場…');await Promise.all([ensureTerrain(art.terrain,'farm'),ensureHomeArt(art,['extraCrops'])]);}catch(e){switching=false;toast('農場圖片暫時沒載入，請再試一次。');return false;}}
+  if(area==='farm'){try{toast('🌱 正在走進農場…');await Promise.all([ensureTerrain(art.terrain,'farm'),ensureHomeArt(art,['extraCrops','collectionCrops'])]);}catch(e){switching=false;toast('農場圖片暫時沒載入，請再試一次。');return false;}}
   if(area==='island'){state.world.visited=true;save();}
   if(isInterior(area)){try{toast('正在推開房間的小門…');await Promise.all([ensureHomeArt(art,['daisyHome',...furnitureArtKeys(layoutFor(state,area))]),(area==='bathroom'?ensureBathroom(art):ensureWallpapers(art,[state.wallpaper])),(area==='bedroom'?ensureWardrobeArt(art,state.wallpaper):null)]);}catch(error){console.warn(error);switching=false;toast('房間圖片暫時沒載入，請再點門口試一次。');return false;}}
   clearTimeout(toastTimer);$('map-toast').hidden=true;$('scene-fade').classList.add('changing');
@@ -436,7 +436,7 @@ save();renderState();requestAnimationFrame(tick);init();
 window.addEventListener('forest-wallet',event=>{state.stars=event.detail.stars;renderState();});
 window.addEventListener('storage',async e=>{if(globalThis.ForestStudent)return;if(e.key!==SAVE_KEY)return;actionFeedback.clear();expedition?.close();companions.close();shop.close();exploration.close();endBattle({focus:false});state=load();if(!scene)return;kitchen.cancelDining();rest?.cancel();stopMoving();closeDecor();life.close();document.getElementById('food-dialog').close();await restoreCompanion();
  try{if(isInterior(scene.area))await Promise.all([ensureHomeArt(art,[...furnitureArtKeys(layoutFor(state,scene.area))]),ensureWallpapers(art,[state.wallpaper]),(scene.area==='bedroom'?ensureWardrobeArt(art,state.wallpaper):null)]);}catch{toast('圖片還沒載入，請重新進房間。');}
- renderState();renderArea();if(scene.area==='farm'){await ensureHomeArt(art,['extraCrops']);life.enterFarm();}
+ renderState();renderArea();if(scene.area==='farm'){await ensureHomeArt(art,['extraCrops','collectionCrops']);life.enterFarm();}
 });
 window.addEventListener('pageshow',async e=>{if(e.persisted){expedition?.close();companions.close();state=load();await restoreCompanion();renderState();}});
 

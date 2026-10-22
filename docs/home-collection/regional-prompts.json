@@ -1,0 +1,56 @@
+[
+  {
+    "zone": "bud",
+    "source": "..\\..\\..\\output\\home-collection-20261022\\regional\\bud-goods-source.png",
+    "mode": "builtin image_gen",
+    "transparentPercent": 50.94
+  },
+  {
+    "zone": "stone",
+    "source": "..\\..\\..\\output\\home-collection-20261022\\regional\\stone-goods-source.png",
+    "mode": "builtin image_gen",
+    "transparentPercent": 49.48
+  },
+  {
+    "zone": "sail",
+    "source": "..\\..\\..\\output\\home-collection-20261022\\regional\\sail-goods-source.png",
+    "mode": "builtin image_gen",
+    "transparentPercent": 62.05
+  },
+  {
+    "zone": "shell",
+    "source": "..\\..\\..\\output\\home-collection-20261022\\regional\\shell-goods-source.png",
+    "prompt": "Use case: stylized-concept. Asset type: a production game sprite atlas of exactly twelve separate cozy household shop objects. Reference image is STYLE ONLY, copy painterly cottage game finish, not the furniture shapes. Transparent background: actual alpha channel, no solid color, no checkerboard, no scenery, no floor, no shadows outside each object. Landscape canvas, 4 equal columns by 3 equal rows, EXACTLY 12 sprites in row-major order. Each object completely inside its own equal cell with generous transparent margins on all sides. Do not let wide items span more than one column. No labels, numbers, captions, borders, letters, logos, watermarks. Orthographic slightly elevated front three-quarter view suitable for an indoor RPG, consistent camera from all objects. Soft hand-painted 2.5D illustrated textures, round friendly silhouettes, readable details, not photorealistic. Palette: ocean blue, seafoam, sandy cream, shell pink and natural wood. Exactly these objects in numbered cell order (do not print numbers): 1 miniature sailboat souvenir. 2 standing shell photo frame empty cream center. 3 hourglass filled with blue sand. 4 sea glass vase. 5 paired coral-shaped bookends with no books. 6 sea-island illustrated atlas as one closed book with pictorial sea cover no words. 7 tidepool storybook closed with starfish picture no words. 8 miniature lighthouse ornament. 9 round wave wall clock readable simple dots, no numerals. 10 stone fish-trap miniature model as a single ornament on shallow oval base. 11 woven sea breeze basket. 12 shell hanging windchime.",
+    "mode": "builtin image_gen",
+    "transparentPercent": 49.25
+  },
+  {
+    "zone": "whale",
+    "source": "..\\..\\..\\output\\home-collection-20261022\\regional\\whale-goods-source.png",
+    "prompt": "Use case: stylized-concept. Asset type: a production game sprite atlas of exactly twelve separate cozy household shop objects. Reference image is STYLE ONLY, copy painterly cottage game finish, not the furniture shapes. Transparent background: actual alpha channel, no solid color, no checkerboard, no scenery, no floor, no shadows outside each object. Landscape canvas, 4 equal columns by 3 equal rows, EXACTLY 12 sprites in row-major order. Each object completely inside its own equal cell with generous transparent margins on all sides. Do not let wide items span more than one column. No labels, numbers, captions, borders, letters, logos, watermarks. Orthographic slightly elevated front three-quarter view suitable for an indoor RPG, consistent camera from all objects. Soft hand-painted 2.5D illustrated textures, round friendly silhouettes, readable details, not photorealistic. Palette: seafoam blue, warm cream, muted salmon and wood. Exactly these objects in numbered cell order (do not print numbers): 1 pet bed with cute cat-ear shape. 2 small dog canvas teepee bed. 3 whale-shaped flat pet sleeping mat. 4 two empty pet bowls on a leafy wooden stand. 5 shell water bowl. 6 colorful pet toy ball. 7 soft fish-shaped cushion. 8 short sisal scratching post on base. 9 basket with pet toys inside. 10 fabric star-print pet tunnel. 11 small grooming kit tray with brush comb. 12 flat paw-print doormat. These are pet supplies only; NO living animals.",
+    "mode": "builtin image_gen",
+    "transparentPercent": 51.64
+  },
+  {
+    "zone": "watch",
+    "source": "..\\..\\..\\output\\home-collection-20261022\\regional\\watch-goods-source.png",
+    "prompt": "Create a PNG sprite atlas with a genuinely TRANSPARENT ALPHA BACKGROUND (clear empty pixels). This is a production game asset sheet, NOT a showroom scene and NOT a brown studio backdrop. Exactly 12 isolated objects arranged in a 4-column, 3-row grid with large transparent gutters and transparent margins. Every object fits its own cell. Cute illustrated RPG household furniture, handpainted storybook textures, slight elevated orthographic front view, rounded shapes, ornate but soft. Palette deep teal velvet, midnight wood, pearl cream and antique gold. No floor, no gradient, no ground, no background color, no scenery, no outside shadows, no labels, no letters. These 12 separate objects in row order: 1 luxurious curved double sofa upholstered deep teal with tasteful star motifs, empty seat. 2 reclining lounge chair, no person. 3 long oval dining table with empty tabletop. 4 elegant jade dining chair. 5 grand arched glass display cabinet with three EMPTY visible shelves. 6 corner open bookshelf, EMPTY shelves. 7 pearl upholstered bedroom bench. 8 curved ocean-pattern folding room screen. 9 starry dark wood nightstand with empty top. 10 gold and crescent ring pendant lamp hanging from short stem. 11 curved wooden sideboard with empty top. 12 large flat patterned long area rug.",
+    "fixed": true,
+    "mode": "builtin image_gen",
+    "transparentPercent": 50.14
+  },
+  {
+    "zone": "bridge",
+    "source": "..\\..\\..\\output\\home-collection-20261022\\regional\\bridge-goods-source.png",
+    "prompt": "Use case: stylized-concept. Asset type: a production game sprite atlas of exactly twelve separate cozy household shop objects. Reference image is STYLE ONLY, copy painterly cottage game finish, not the furniture shapes. Transparent background: actual alpha channel, no solid color, no checkerboard, no scenery, no floor, no shadows outside each object. Landscape canvas, 4 equal columns by 3 equal rows, EXACTLY 12 sprites in row-major order. Each object completely inside its own equal cell with generous transparent margins on all sides. Do not let wide items span more than one column. No labels, numbers, captions, borders, letters, logos, watermarks. Orthographic slightly elevated front three-quarter view suitable for an indoor RPG, consistent camera from all objects. Soft hand-painted 2.5D illustrated textures, round friendly silhouettes, readable details, not photorealistic. Palette: pastel fabric colors, cozy stitched seams. Exactly these objects in numbered cell order (do not print numbers): 1 cute caramel-colored cat plush. 2 blue and white penguin plush. 3 cute pink petal fairy plush with leafy wings. 4 golden sun lion plush. 5 beautiful galaxy dream weaver plush humanoid with purple star robe. 6 friendly blue-shield robot plush. 7 brown sea otter plush. 8 fluffy lamb plush. 9 mushroom fairy plush. 10 white seal plush. 11 starry jellyfish plush. 12 tiny ferry boat plush. All soft stuffed fabric toys, distinct faces, full objects, charming small collectible dolls; no realistic human, no existing copyrighted characters.",
+    "mode": "builtin image_gen",
+    "transparentPercent": 40.24
+  },
+  {
+    "zone": "deep",
+    "source": "..\\..\\..\\output\\home-collection-20261022\\regional\\deep-goods-source.png",
+    "prompt": "Use case: stylized-concept. Asset type: a production game sprite atlas of exactly twelve separate cozy household shop objects. Reference image is STYLE ONLY, copy painterly cottage game finish, not the furniture shapes. Transparent background: actual alpha channel, no solid color, no checkerboard, no scenery, no floor, no shadows outside each object. Landscape canvas, 4 equal columns by 3 equal rows, EXACTLY 12 sprites in row-major order. Each object completely inside its own equal cell with generous transparent margins on all sides. Do not let wide items span more than one column. No labels, numbers, captions, borders, letters, logos, watermarks. Orthographic slightly elevated front three-quarter view suitable for an indoor RPG, consistent camera from all objects. Soft hand-painted 2.5D illustrated textures, round friendly silhouettes, readable details, not photorealistic. Palette: lavender, sea blue, berry red crystals, cream books and antique gold. Exactly these objects in numbered cell order (do not print numbers): 1 pale lavender moonlight crystal bottle with small stopper and faceted rounded body. 2 ocean blue crystal bottle with stopper. 3 berry red crystal bottle with stopper. 4 small star-etched crystal drinking cup. 5 small shell-etched crystal cup. 6 tall crystal flower vase, empty. 7 miniature antique star globe armillary ornament. 8 crystal ball on crescent base. 9 miniature gemstone tree. 10 closed night-sky storybook, picture cover no words. 11 closed enchanted tide illustrated atlas, cover no words. 12 three tiny constellation books grouped standing upright. Bottles and cups are empty decorative objects only, NO alcohol, NO wine, NO labels.",
+    "mode": "builtin image_gen",
+    "transparentPercent": 56.36
+  }
+]

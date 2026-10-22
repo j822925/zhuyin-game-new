@@ -1,4 +1,5 @@
 // Stable IDs are separate from names; visiting a shop never creates a new expedition run.
+import {collectionRegionalProducts} from './collection-zone-furniture.js';
 const furniture=ids=>ids.map(id=>({kind:'furniture',id}));
 const rows=[
  ['bud','花芽生活舖','🌼','森林精靈','furniture','今天想帶一點花草回家嗎？',['bud-daisies','wall-plant-shelf','wall-picture','berry-hanging-vase'],'boutiqueRoom'],
@@ -13,6 +14,6 @@ const rows=[
  ['deep','幻潮魔法飾品店','🔮','星河織夢師','clothes','把一點幻潮星光，帶回自己的小屋吧。',['deep-lamp','deep-mirror','plush-4','plush-11','moon-lamp'],'boutiqueRoom'],
 ];
 const owners=[["rose","花瓣精靈"],["cat","奶糖貓"],["bear","蜂蜜熊"],["owl","星夜貓頭鷹"],["sea","海泡精靈"],["penguin","冰糖企鵝"],["lion","太陽獅"],["mecha","藍盾機甲"],["rainbow","彩虹精靈"],["moon","月光精靈"]];
-export const ZONE_SHOPS=rows.map(([zone,name,icon,owner,ownerArt,greeting,ids,room],i)=>({id:'region-'+zone,zone,name,icon,owner:owners[i][1],ownerId:owners[i][0],ownerArt,greeting:greeting.replace('呱！',''),room,kind:'shop',price:0,ready:true,products:[...furniture(ids),...(zone==='sand'?[{kind:'meal',id:'sandSoup'},{kind:'meal',id:'sandFish'}]:zone==='shell'?[{kind:'meal',id:'shellCorn'}]:[])],gift:'gift-'+zone}));
+export const ZONE_SHOPS=rows.map(([zone,name,icon,owner,ownerArt,greeting,ids,room],i)=>({id:'region-'+zone,zone,name,icon,owner:owners[i][1],ownerId:owners[i][0],ownerArt,greeting:greeting.replace('呱！',''),room,kind:'shop',price:0,ready:true,products:[...furniture(ids),...(zone==='sand'?[{kind:'meal',id:'sandSoup'},{kind:'meal',id:'sandFish'}]:zone==='shell'?[{kind:'meal',id:'shellCorn'}]:[]),...collectionRegionalProducts(zone)],gift:'gift-'+zone}));
 export const zoneShop=id=>ZONE_SHOPS.find(s=>s.id===id||s.zone===id);
 export const regionalProductAllowed=(shop,kind,id)=>!!zoneShop(shop)?.products.some(p=>p.kind===kind&&p.id===id);

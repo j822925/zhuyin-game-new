@@ -1,5 +1,5 @@
 import {createQuestionReport} from './question-report.js?v=20261011-reports2';
-import {createReadingFarm,renderReadingFarm} from './reading-farm.bundle.js?v=20261021-farm1';
+import {createReadingFarm,renderReadingFarm} from './reading-farm.bundle.js?v=20261022-collection1';
 import {createReadingBattle} from './reading-battle.js?v=20261011-battle1';
 import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261011-battle1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20261009-accounts1';
@@ -226,4 +226,4 @@ window.addEventListener('pageshow',()=>{if(!$('play').hidden&&!locked&&!micBusy&
  $('again').onclick=()=>{if(hasUnsaved()){$('save-status').textContent='請先儲存這次紀錄，再開始下一回合。';return;}home();start();};
  $('retry-save').onclick=flushPending;
 mountFarmReturn();load();
-import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn} from './farm-learning.bundle.js?v=20261013-entry2';
+import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn} from './farm-learning.bundle.js?v=20261022-collection1';

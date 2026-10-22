@@ -14,7 +14,7 @@ const stack=(s,kind)=>({bait:s.life?.bait,seeds:s.life?.seeds,meal:s.life?.nutri
 export function ownedQuantity(s,kind,id){return UNIQUE[kind]?(s[UNIQUE[kind]]||[]).includes(id)?1:0:stack(s,kind)?.[id]||0;}
 export function shopAcceptsItem(shop,kind,id){
  if(shop==='clothes')return kind==='clothes';
- if(shop==='furniture')return ['furniture','wallpaper'].includes(kind);
+ if(shop==='furniture')return kind==='wallpaper'||kind==='furniture'&&!!FURNITURE.find(item=>item.id===id&&!item.zoneShop);
  if(shop==='seeds')return ['seeds','harvest','bait','fish'].includes(kind);
  const region=zoneShop(shop);if(!region)return false;
  if(region.products.some(p=>p.kind==='meal')&&['meal','harvest','fish'].includes(kind))return true;

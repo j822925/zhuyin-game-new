@@ -233,7 +233,7 @@ export function placementState(state,id,pos,area='room'){
  const next={...state},children=INTERIOR_AREAS.flatMap(a=>layoutFor(state,a).filter(x=>x.on===id));for(const a of INTERIOR_AREAS)next[layoutKeyFor(a)]=layoutFor(state,a).filter(x=>x.id!==id&&x.on!==id).map(x=>({...x}));
  const attached=pos.on?attachedPosition({id,...pos},next[layoutKeyFor(area)],FURNITURE):null;
  next[layoutKeyFor(area)].push({id,...(attached||{x:Math.round(pos.x/10)*10,y:Math.round(pos.y/10)*10})});
- for(const item of children){const p=attachedPosition(item,next[layoutKeyFor(area)],FURNITURE);if(p)next[layoutKeyFor(area)].push({id:item.id,...p});}return next;
+ for(const item of children){const p=attachedPosition(item,next[layoutKeyFor(area)],FURNITURE);if(p&&canPlaceFurniture(next,item.id,p,area))next[layoutKeyFor(area)].push({id:item.id,...p});}return next;
 }
 export function canReachInterior(state,player,area='room'){
  const checker=(x,y)=>roomWalkable(x,y,state,area);
@@ -244,7 +244,8 @@ export function canReachInterior(state,player,area='room'){
 }
 export function placeFurniture(state,id,pos,player=ROOM_ENTRY,area='room'){if(!hasEnergy(state))return false;
  if(!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))return false;
- const snapped=pos.on?attachedPosition({id,...pos},layoutFor(state,area),FURNITURE):FURNITURE.find(f=>f.id===id)?.wall?wallPosition(pos):{x:Math.round(pos.x/10)*10,y:Math.round(pos.y/10)*10};
+ const furniture=FURNITURE.find(f=>f.id===id);
+ const snapped=pos.on?attachedPosition({id,...pos},layoutFor(state,area),FURNITURE):furniture?.wall?wallPosition(pos,furniture):{x:Math.round(pos.x/10)*10,y:Math.round(pos.y/10)*10};
  if(!canPlaceFurniture(state,id,snapped,area))return false;
  const next=placementState(state,id,snapped,area);
  if(!canReachInterior(next,player,area))return false;

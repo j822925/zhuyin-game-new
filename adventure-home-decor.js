@@ -42,14 +42,14 @@ export function createHomeDecor(api){
   if(loading||category!=='furniture')return;if(!hasEnergy(state())){api.toast('🥄 先吃點東西，再布置');return;}const f=FURNITURE.find(f=>f.id===id);if(!f||!state().furnitureOwned.includes(id)||!api.art()[f.atlas||'furniture'])return;
   let pos=layoutFor(state(),area()).find(p=>p.id===id);
   const preview={...state(),furnitureOwned:[...state().furnitureOwned,id]};
-  if(!pos&&f.wall)pos={x:850,y:area()==='bathroom'?260:220};
+  if(!pos&&f.wall)pos=f.ceiling?{x:640,y:160}:{x:850,y:area()==='bathroom'?260:220};
   if(!pos){outer:for(let y=410;y<=650;y+=60)for(let x=330;x<=950;x+=75)if(!hasFurnitureOverlap(preview,id,{x,y},area())&&canPlaceFurniture(preview,id,{x,y},area())&&canReachInterior(placementState(preview,id,{x,y},area()),scene().player,area())){pos={x,y};break outer;}}
   scene().placement={...pos,id,x:pos?.x??640,y:pos?.y??500,valid:false};update();
   $('furniture-palette').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.furniture===id)));
  }
  function move(at){const p=scene().placement;if(!p)return;const f=FURNITURE.find(f=>f.id===p.id),layout=layoutFor(state(),area());let snapped=null,best=Infinity;
   if(f.small)for(const host of layout.filter(x=>x.id!==p.id))for(const [i,s]of furnitureSurfaces(FURNITURE.find(f=>f.id===host.id)).entries()){const distance=Math.hypot(at.x-host.x,at.y-host.y-s.dy),spot=freeSurfacePosition(p.id,host,i,layout,FURNITURE);if(spot&&distance<Math.max(30,s.width/2)&&distance<best){best=distance;snapped=spot;}}
-  delete p.on;delete p.surface;delete p.offsetX;Object.assign(p,snapped||(f.wall?wallPosition(at):{x:Math.round(at.x/10)*10,y:Math.round(at.y/10)*10}));update();}
+  delete p.on;delete p.surface;delete p.offsetX;Object.assign(p,snapped||(f.wall?wallPosition(at,f):{x:Math.round(at.x/10)*10,y:Math.round(at.y/10)*10}));update();}
  function supportChoices(p,f){let box=$('decor-supports');if(!box){box=document.createElement('div');box.id='decor-supports';box.style.cssText='display:flex;gap:6px;flex-wrap:wrap;margin:8px 0';$('decor-hint').before(box);}box.replaceChildren();box.hidden=!f?.small;if(!f?.small)return;
   for(const host of layoutFor(state(),area()).filter(x=>x.id!==p.id)){const base=FURNITURE.find(f=>f.id===host.id);furnitureSurfaces(base).forEach((surface,i)=>{const spot=freeSurfacePosition(p.id,host,i,layoutFor(state(),area()),FURNITURE);const b=document.createElement('button');b.type='button';b.textContent=base.name+'・'+surface.name;b.disabled=!spot;b.style.cssText='font-size:13px;min-height:44px;padding:5px 9px';b.onclick=()=>{Object.assign(p,spot);update();};box.append(b);});}
  }
@@ -70,6 +70,7 @@ export function createHomeDecor(api){
   $('decor-hint').classList.toggle('invalid',!!p&&owned&&!valid);
   $('decor-hint').textContent=!p?(area()==='kitchen'?'擺好已擁有的料理爐，再點它做料理。新家具在島上的家具行。':'挑已擁有的家具來布置。新家具在島上的家具行。'):!owned?(state().stars<f.price?`還差 ${f.price-state().stars} 星幣。已擁有的家具仍能自由布置。`:`${f.name}・${f.price} 星幣。買下就會擺好，之後也能重新移動。`):valid?(hasFurnitureOverlap(state(),p.id,p,area())?'可以放！家具會依前後位置互相遮擋。':'點地板或拖曳選位置，再按 ✓。可靠牆或與家具重疊。'):'請把家具底部放在房間的地板範圍內。';
   if(f?.wall)$('decor-hint').textContent=valid?'🖼️ 可以掛！點牆面選位置，再按 ✓。左右牆會自動轉成側面。':'🖼️ 請點房間後方或左右兩側的牆面。';
+  if(f?.ceiling)$('decor-hint').textContent='選房間上方的位置掛好吊扇，再按 ✓。';
   if(f?.small)$('decor-hint').textContent=p.on?'放好了位置，再按 ✓ 確認。':'選上面的家具放上去，或點地板擺放。';
   $('world').dataset.placement=p?.id||'';$('world').dataset.placementValid=String(valid);
  }

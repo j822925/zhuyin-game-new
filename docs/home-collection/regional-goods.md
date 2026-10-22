@@ -1,0 +1,13 @@
+# Regional goods, 2026-10-22
+
+108 new placeable objects: 12 each in the life, toy, music, souvenir, pet-supply, luxury-furniture, electrical, plush-vending and crystal shops. The remaining region, the snack shop, gets 12 foods from the food collection. Every new product has one home shop; existing products retain their IDs and placements.
+
+`data/collection-zone-furniture.js` exports `COLLECTION_ZONE_FURNITURE` and `collectionRegionalProducts(zone)`. IDs use `collection-{zone}-1` through `-12`. `zoneShop` keeps these items out of the general furniture purchase catalog; `shopZone` records the specific region. Prices are reviewed final values marked `priceVersion: '20261022'`; resale is the integer half of the paid price. Ordinary furnishings in the six room themes remain in the general furniture shop.
+
+TVs, stereos, bottles, cups, books, plush toys and small appliances can attach to tables and shelves. The three cooking appliances share the existing kitchen cooking rules. The ceiling fan and luxury pendant carry the ceiling placement flag. The luxury table can be used to eat in the living room. Decorative pet supplies do not imply a following pet exists. The souvenir fishing-basket miniature is named 潮汐漁籠擺飾 to match its actual image.
+
+Nine WebP atlases total 3,085,152 bytes (about 2.94 MiB). They are loaded on demand through the existing home-art loader; no new requests are made per frame. The electric atlas reuses the previously generated appliance sheet. All eight new sheets use built-in `image_gen`. Source images remain in local output and the generated-image store. Exact prompts and selected source references are in `regional-prompts.json`; hashed production assets and cell bounds are in `regional-art-report.json`.
+
+Visual and numerical checks: inspected every generated sheet, checked genuine alpha (the image viewer may show hidden RGB under transparent pixels), and measured non-overlapping sprite bounds. `regional-cell-coverage.json` verifies every connected component larger than 300 opaque pixels falls entirely within a sprite cell, including the separated violin bow, xylophone mallets and bookends. Only encoding and metadata extraction were performed with Sharp; creative generation and edits used imagegen.
+
+`node --test tests/collection-regional.test.js`: four passing tests, including all 108 purchases, correct-shop visibility, unique ownership, room placement, sanitize/reload and half-price sale. The stand-alone local HTML preview was not browser-verified because the browser tool blocks `file:` URLs; integrated game UI verification remains part of the parent release task. No official student data was used and this subtask did not publish.

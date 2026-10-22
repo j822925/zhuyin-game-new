@@ -15,7 +15,7 @@ export function createHomeRest(api){
   if(f.dining){if(area==='room')api.dine?.(id);else api.toast('把餐桌放在客廳，就可以在桌邊吃飯。');return;}
   if(f.play){if(!hasEnergy(s())){api.toast('🥄 先吃點東西，或躺床休息');return;}api.stop();scene().homePlay={item:{...item},kind:f.play,start:performance.now(),duration:2200};if(f.play==='music')music();return;}
   const status=restStatus(s(),id,area);if(!status.ok){api.toast(message(status));return;}
-  const target={x:Math.max(190,Math.min(1090,item.x)),y:Math.max(300,Math.min(715,item.y+38))};
+  const target={x:Math.max(190,Math.min(1090,item.x)),y:Math.max(area==='bathroom'?445:300,Math.min(715,item.y+38))};
   api.walkTo(target,()=>{
    if(scene().area!==area||api.blocked())return;api.stop();
    const before={nutrition:structuredClone(s().life.nutrition),homeRest:structuredClone(s().homeRest)},result=takeRest(s(),id,area);

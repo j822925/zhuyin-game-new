@@ -1,6 +1,7 @@
 import {FURNITURE,roomWalkable,placementState,INTERIOR_AREAS,layoutKeyFor} from './adventure-model.js';
 import {RECIPES,RAW_FOOD,eatFood,hasEnergy} from './adventure-food-model.js';
 import {CROPS} from './adventure-life-model.js';
+import {furnitureSurfaces} from './furniture-surfaces.js';
 
 export const DINING_TABLES=FURNITURE.filter(f=>f.dining).map(f=>f.id);
 export function diningSpot(state,tableId=null){
@@ -8,7 +9,7 @@ export function diningSpot(state,tableId=null){
   if(tableId&&table.id!==tableId)continue;
   if(!DINING_TABLES.includes(table.id)||!state.furnitureOwned.includes(table.id))continue;
   const f=FURNITURE.find(f=>f.id===table.id),y=Math.min(720,table.y+12);
-  for(const side of [-1,1]){const x=table.x+side*96;if(roomWalkable(x,y,state,'room'))return {table:{...table},surface:{x:table.x,y:table.y-f.height*.72},player:{x,y,direction:side===-1?1:3,moving:false,phase:0}};}
+  for(const side of [-1,1]){const x=table.x+side*96;if(roomWalkable(x,y,state,'room'))return {table:{...table},surface:{x:table.x,y:table.y+(f.surfaceLevels?furnitureSurfaces(f)[0]?.dy??-f.height*.72:-f.height*.72)},player:{x,y,direction:side===-1?1:3,moving:false,phase:0}};}
  }
  return null;
 }
@@ -28,7 +29,7 @@ export function beginDining(state,scene,id,cooked,now=performance.now(),tableId=
  const spot=diningSpot(state,tableId);if(!spot)return false;
  const gained=eatFood(state,id,{cooked});if(!gained)return false;
  const crop=CROPS[id],recipe=RECIPES[id];scene.player={...scene.player,...spot.player};
- scene.dining={...spot,id,cooked,gained,atlas:cooked?'cooking':crop.atlas||'life',index:cooked?recipe.art:crop.art,start:now,duration:scene.reduced.matches?1100:3200};return gained;
+ scene.dining={...spot,id,cooked,gained,atlas:cooked?(recipe.atlas||'cooking'):crop.atlas||'life',index:cooked?recipe.art:crop.art,start:now,duration:scene.reduced.matches?1100:3200};return gained;
 }
 export function diningFrame(effect,now,reduced=false){
  const t=Math.max(0,Math.min(1,(now-effect.start)/effect.duration)),side=effect.player.direction===1?1:-1;

@@ -1,3 +1,4 @@
+import {COLLECTION_SEEDS} from './data/collection-foods.js';
 import {battleRewardLimit} from './adventure-economy.js';
 import {ZONES} from './data/adventure-zones.js';
 import {hasEnergy} from './adventure-food-model.js';
@@ -20,7 +21,7 @@ export const DESTINATIONS=[
  {id:'harbor',name:'搭船拜訪',icon:'⛵',kind:'visits',x:448,y:649,entry:{x:480,y:629},via:[{x:640,y:476},{x:602,y:521},{x:558,y:560},{x:523,y:593}],price:0,ready:true},
 ] .map(d=>({...d,x:d.x*2*ISLAND_SCALE,y:d.y*2*ISLAND_SCALE,entry:{x:d.entry.x*2*ISLAND_SCALE,y:d.entry.y*2*ISLAND_SCALE},via:d.via?.map(p=>({x:p.x*2*ISLAND_SCALE,y:p.y*2*ISLAND_SCALE}))}));
 DESTINATIONS.push(...ZONES.map(z=>({id:'zone-'+z.id,name:z.name,icon:z.icon,kind:'adventure',x:z.x*ISLAND_SCALE,y:z.y*ISLAND_SCALE,entry:{x:z.x*ISLAND_SCALE,y:(z.y+30)*ISLAND_SCALE},price:0,ready:true,zone:z.id})));
-export const SEEDS={strawberry:{name:'草莓',icon:'🍓',price:1},cucumber:{name:'小黃瓜',icon:'🥒',price:1},blueberry:{name:'藍莓',icon:'🫐',price:2},lettuce:{name:'萵苣',icon:'🥬',price:2},sunflower:{name:'向日葵',icon:'🌻',price:1},pumpkin:{name:'南瓜',icon:'🎃',price:2}};
+export const SEEDS={...COLLECTION_SEEDS,strawberry:{name:'草莓',icon:'🍓',price:1},cucumber:{name:'小黃瓜',icon:'🥒',price:1},blueberry:{name:'藍莓',icon:'🫐',price:2},lettuce:{name:'萵苣',icon:'🥬',price:2},sunflower:{name:'向日葵',icon:'🌻',price:1},pumpkin:{name:'南瓜',icon:'🎃',price:2}};
 export const FREE_SEEDS=['carrot','tomato','corn'];
 export const ENEMIES=[
  {id:'mushroom',name:'蘑菇寶寶',art:'mushroom',mode:'single',hp:3,reward:3,level:1},

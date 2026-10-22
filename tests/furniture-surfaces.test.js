@@ -19,5 +19,5 @@ test('full slots reject overlap; placing back on floor detaches; new furniture u
  assert(placeFurniture(s,'plush-0',{x:900,y:600}));assert.equal(s.layout.find(x=>x.id==='plush-0').on,undefined);
  const buyer=freshState();buyer.stars=1000;buyer.world.shops=['furniture'];const all=FURNITURE.filter(f=>f.id.startsWith('display-'));assert.equal(all.length,6);
  const result=checkoutCart(buyer,'furniture',all.map(f=>({kind:'furniture',id:f.id,quantity:1})));assert(result.ok);assert.equal(buyer.stars,1000-all.reduce((n,f)=>n+f.price,0));assert.equal(sanitizeState(buyer).furnitureOwned.filter(id=>id.startsWith('display-')).length,6);
- for(const f of FURNITURE.filter(f=>f.small)){assert(f.height<=65);assert(f.fw<=80);}assert(furnitureSurfaces(all.find(f=>f.id==='display-ocean-bookcase')).length===3);
+ for(const f of FURNITURE.filter(f=>f.small&&!f.id.startsWith('collection-'))){assert(f.height<=65);assert(f.fw<=80);}assert(furnitureSurfaces(all.find(f=>f.id==='display-ocean-bookcase')).length===3);
 });

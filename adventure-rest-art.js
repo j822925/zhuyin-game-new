@@ -9,6 +9,13 @@ export function drawHomeRest(c,scene,state,now){
   const top=e.item.y-86;c.fillStyle='#edf0dbee';c.strokeStyle='#b1b99a';c.lineWidth=2;c.beginPath();c.roundRect(x-67,top,134,94,9);c.fill();c.stroke();
   c.strokeStyle='#c4cdb5';for(let i=0;i<6;i++){const xx=x-52+i*21+Math.sin(t*2+i)*2;c.beginPath();c.moveTo(xx,top+5);c.lineTo(xx,top+88);c.stroke();}
   c.fillStyle='#fffaf0';c.font='22px sans-serif';c.textAlign='center';c.fillText('✿',x,top+54);
+ }else if(e.kind==='bath'&&f.wall){
+  // A wall shower uses the reachable floor position, not the wall's anchor.
+  const px=scene.player.x,py=scene.player.y;
+  scene.drawPlayer(c,scene.art,{x:px,y:py,height:116,outfit:state.outfit,direction:0,walking:false,phase:0,wand:false});
+  c.strokeStyle='#b7e5ecc4';c.lineWidth=2.5;
+  for(let i=0;i<12;i++){const dx=px-36+(i%6)*14,dy=py-112+((t*55+i*21)%100);c.beginPath();c.moveTo(dx,dy);c.lineTo(dx-2,dy+9);c.stroke();}
+  for(let i=0;i<5;i++){c.fillStyle='#f4fdffb8';c.strokeStyle='#a8d3d77a';c.beginPath();c.arc(px-30+i*15,py-8+Math.sin(t*3+i)*3,6+i%2*3,0,Math.PI*2);c.fill();c.stroke();}
  }else if(e.kind==='bath'){
   // Keep the original dressed sprite; only the head peeks above the foam.
   c.beginPath();c.rect(x-70,y-112,140,66);c.clip();scene.drawPlayer(c,scene.art,{x,y:y+12,height:125,outfit:state.outfit,direction:0,walking:false,phase:0,wand:false});c.restore();c.save();

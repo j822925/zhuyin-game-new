@@ -1,3 +1,4 @@
+import {FISH} from './adventure-life-model.js';
 // Paint over the existing pond. No new images, animation downloads or reward timers.
 export const FISHING_MS={cast:1100,reel:2100};
 const clamp=n=>Math.max(0,Math.min(1,n));
@@ -36,8 +37,8 @@ export function drawFishing(c,art,state,scene,now){
  if(casting&&!reduced)splash(c,water.x,water.y,(t-.65)/.35);
  if(reeling&&!reduced)splash(c,water.x,water.y,t/.45);
  if((reeling||stage==='caught')&&e?.fish&&art.fish){
-  const cell=art.fish.cells[({silver:0,gold:1,star:2})[e.fish]],x=reeling?float.x:hand.x+23,y=reeling?float.y+20:hand.y-10,h=52,w=cell.w/cell.h*h;
-  c.save();c.translate(x,y);if(reeling&&!reduced)c.rotate(Math.sin(t*30)*.14);c.drawImage(art.fish.image,cell.x,cell.y,cell.w,cell.h,-w/2,-h,w,h);c.restore();
+  const definition=FISH[e.fish],atlas=art[definition?.atlas||'fish'],cell=atlas?.cells?.[definition?.art],x=reeling?float.x:hand.x+23,y=reeling?float.y+20:hand.y-10,h=52,w=cell?cell.w/cell.h*h:72;
+  c.save();c.translate(x,y);if(reeling&&!reduced)c.rotate(Math.sin(t*30)*.14);if(cell)c.drawImage(atlas.image,cell.x,cell.y,cell.w,cell.h,-w/2,-h,w,h);else {oval(c,0,-h/2,24,13,definition?.color||'#a8c2ba');oval(c,12,-h/2-3,2,2,'#405e55');}c.restore();
   if(stage==='caught'){c.fillStyle='#fff5d6';c.font='bold 21px sans-serif';c.textAlign='center';c.fillText('+1',x,y-h-8);}
  }
  c.restore();

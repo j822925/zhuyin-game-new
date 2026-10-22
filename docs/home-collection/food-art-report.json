@@ -1,0 +1,332 @@
+{
+  "collectionCrops": {
+    "src": "assets/home-collection/collectionCrops-92c5f50f93bb.webp",
+    "width": 1514,
+    "height": 1039,
+    "bytes": 715308,
+    "source": "C:\\Users\\j8229\\.codex\\generated_images\\01a1632c-5b4d-7d61-942d-1bff9384d241\\exec-2ad3b165-46c9-4762-ac20-1de24e76406e.png",
+    "cells": [
+      {
+        "x": 25,
+        "y": 16,
+        "w": 349,
+        "h": 328,
+        "edgePixels": 0
+      },
+      {
+        "x": 397,
+        "y": 35,
+        "w": 353,
+        "h": 307,
+        "edgePixels": 0
+      },
+      {
+        "x": 776,
+        "y": 11,
+        "w": 347,
+        "h": 327,
+        "edgePixels": 0
+      },
+      {
+        "x": 1150,
+        "y": 31,
+        "w": 342,
+        "h": 308,
+        "edgePixels": 0
+      },
+      {
+        "x": 26,
+        "y": 356,
+        "w": 348,
+        "h": 317,
+        "edgePixels": 0
+      },
+      {
+        "x": 395,
+        "y": 347,
+        "w": 359,
+        "h": 325,
+        "edgePixels": 0
+      },
+      {
+        "x": 772,
+        "y": 357,
+        "w": 345,
+        "h": 314,
+        "edgePixels": 0
+      },
+      {
+        "x": 1149,
+        "y": 353,
+        "w": 347,
+        "h": 317,
+        "edgePixels": 0
+      },
+      {
+        "x": 24,
+        "y": 673,
+        "w": 347,
+        "h": 335,
+        "edgePixels": 0
+      },
+      {
+        "x": 386,
+        "y": 693,
+        "w": 366,
+        "h": 313,
+        "edgePixels": 0
+      },
+      {
+        "x": 765,
+        "y": 695,
+        "w": 378,
+        "h": 314,
+        "edgePixels": 0
+      },
+      {
+        "x": 1161,
+        "y": 670,
+        "w": 343,
+        "h": 347,
+        "edgePixels": 0
+      }
+    ]
+  },
+  "collectionFish": {
+    "src": "assets/home-collection/collectionFish-89d7f74b9479.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 313106,
+    "source": "C:\\Users\\j8229\\.codex\\generated_images\\01a1632c-5b4d-7d61-942d-1bff9384d241\\exec-f3303e01-64dc-48e3-a091-ceebda40ef9a.png",
+    "cells": [
+      {
+        "x": 12,
+        "y": 62,
+        "w": 370,
+        "h": 250,
+        "edgePixels": 0
+      },
+      {
+        "x": 390,
+        "y": 60,
+        "w": 371,
+        "h": 263,
+        "edgePixels": 0
+      },
+      {
+        "x": 769,
+        "y": 108,
+        "w": 401,
+        "h": 190,
+        "edgePixels": 0
+      },
+      {
+        "x": 1184,
+        "y": 60,
+        "w": 341,
+        "h": 273,
+        "edgePixels": 0
+      },
+      {
+        "x": 11,
+        "y": 389,
+        "w": 373,
+        "h": 211,
+        "edgePixels": 0
+      },
+      {
+        "x": 397,
+        "y": 379,
+        "w": 371,
+        "h": 255,
+        "edgePixels": 0
+      },
+      {
+        "x": 773,
+        "y": 404,
+        "w": 385,
+        "h": 188,
+        "edgePixels": 0
+      },
+      {
+        "x": 1173,
+        "y": 405,
+        "w": 354,
+        "h": 190,
+        "edgePixels": 0
+      },
+      {
+        "x": 12,
+        "y": 666,
+        "w": 363,
+        "h": 265,
+        "edgePixels": 0
+      },
+      {
+        "x": 386,
+        "y": 688,
+        "w": 377,
+        "h": 258,
+        "edgePixels": 0
+      },
+      {
+        "x": 768,
+        "y": 683,
+        "w": 397,
+        "h": 266,
+        "edgePixels": 0
+      },
+      {
+        "x": 1178,
+        "y": 653,
+        "w": 345,
+        "h": 311,
+        "edgePixels": 0
+      }
+    ]
+  },
+  "collectionMeals": {
+    "src": "assets/home-collection/collectionMeals-30bd09f6101a.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 307484,
+    "source": "C:\\Users\\j8229\\.codex\\generated_images\\01a1632c-5b4d-7d61-942d-1bff9384d241\\exec-5f616e56-1436-47ee-86cc-15ddd235385b.png",
+    "cells": [
+      {
+        "x": 45,
+        "y": 88,
+        "w": 319,
+        "h": 228,
+        "edgePixels": 0
+      },
+      {
+        "x": 438,
+        "y": 87,
+        "w": 302,
+        "h": 228,
+        "edgePixels": 0
+      },
+      {
+        "x": 812,
+        "y": 80,
+        "w": 293,
+        "h": 251,
+        "edgePixels": 0
+      },
+      {
+        "x": 1189,
+        "y": 79,
+        "w": 300,
+        "h": 251,
+        "edgePixels": 0
+      },
+      {
+        "x": 50,
+        "y": 378,
+        "w": 303,
+        "h": 254,
+        "edgePixels": 0
+      },
+      {
+        "x": 420,
+        "y": 391,
+        "w": 346,
+        "h": 231,
+        "edgePixels": 0
+      },
+      {
+        "x": 793,
+        "y": 384,
+        "w": 343,
+        "h": 238,
+        "edgePixels": 0
+      },
+      {
+        "x": 1195,
+        "y": 379,
+        "w": 296,
+        "h": 250,
+        "edgePixels": 0
+      },
+      {
+        "x": 47,
+        "y": 677,
+        "w": 318,
+        "h": 259,
+        "edgePixels": 0
+      },
+      {
+        "x": 450,
+        "y": 684,
+        "w": 294,
+        "h": 250,
+        "edgePixels": 0
+      },
+      {
+        "x": 795,
+        "y": 674,
+        "w": 311,
+        "h": 264,
+        "edgePixels": 0
+      },
+      {
+        "x": 1174,
+        "y": 675,
+        "w": 325,
+        "h": 266,
+        "edgePixels": 0
+      }
+    ]
+  },
+  "collectionHomeMeals": {
+    "src": "assets/home-collection/collectionHomeMeals-938d2a56231c.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 373334,
+    "source": "C:\\Users\\j8229\\.codex\\generated_images\\01a1632c-5b4d-7d61-942d-1bff9384d241\\exec-e5433fa3-7487-4596-b63d-c672f2d4eb61.png",
+    "cells": [
+      {
+        "x": 33,
+        "y": 55,
+        "w": 481,
+        "h": 414,
+        "edgePixels": 0
+      },
+      {
+        "x": 553,
+        "y": 64,
+        "w": 459,
+        "h": 410,
+        "edgePixels": 0
+      },
+      {
+        "x": 1030,
+        "y": 50,
+        "w": 481,
+        "h": 431,
+        "edgePixels": 0
+      },
+      {
+        "x": 31,
+        "y": 518,
+        "w": 492,
+        "h": 434,
+        "edgePixels": 0
+      },
+      {
+        "x": 541,
+        "y": 519,
+        "w": 481,
+        "h": 429,
+        "edgePixels": 0
+      },
+      {
+        "x": 1056,
+        "y": 545,
+        "w": 456,
+        "h": 403,
+        "edgePixels": 0
+      }
+    ]
+  }
+}

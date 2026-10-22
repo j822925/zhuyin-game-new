@@ -1,0 +1,9461 @@
+{
+  "schemaVersion": 1,
+  "collection": "HOME-COLLECTION-20261022",
+  "status": "候選；發布狀態由整合交接與正式線上驗證為準",
+  "currency": "星幣",
+  "source": "由最終 FURNITURE／ZONE_SHOPS／SEEDS／CROPS／FISH／RECIPES 與 inventoryItems() 實際規則產生",
+  "countingNotes": [
+    "十區每區 12 件，共 120 件：108 件可布置商品與 12 道小吃。",
+    "新增食物共 18 道：12 道小吃加 6 道自製料理；小吃不重複計為另一批食物。",
+    "12 種種子對應同 12 種作物；種子與收穫是不同持有物類型，不是 24 種作物。",
+    "可購買新商品共 204 款：72 款主題家具、108 件區域布置品、12 道小吃、12 種種子。",
+    "234 筆持有物價格記錄另包含 12 種收穫、12 種魚與 6 道自製料理。"
+  ],
+  "counts": {
+    "householdFurniture": 72,
+    "regionalDecorations": 108,
+    "regionalShopMeals": 12,
+    "regionalShopProducts": 120,
+    "seedVarieties": 12,
+    "cropVarieties": 12,
+    "fishVarieties": 12,
+    "homemadeMeals": 6,
+    "totalNewMealTypes": 18,
+    "purchasableProducts": 204,
+    "inventoryRecords": 234,
+    "byGroup": {
+      "household-furniture": 72,
+      "regional-goods": 108,
+      "seeds": 12,
+      "harvest": 12,
+      "fish": 12,
+      "homemade-meals": 6,
+      "shop-meals": 12
+    },
+    "byRegionalShop": [
+      {
+        "id": "region-bud",
+        "name": "花芽生活舖",
+        "addedProducts": 12
+      },
+      {
+        "id": "region-stone",
+        "name": "咕咕玩具店",
+        "addedProducts": 12
+      },
+      {
+        "id": "region-sand",
+        "name": "暖沙小吃店",
+        "addedProducts": 12
+      },
+      {
+        "id": "region-sail",
+        "name": "風鈴樂器行",
+        "addedProducts": 12
+      },
+      {
+        "id": "region-shell",
+        "name": "銀貝特產舖",
+        "addedProducts": 12
+      },
+      {
+        "id": "region-whale",
+        "name": "鯨夢寵物用品店",
+        "addedProducts": 12
+      },
+      {
+        "id": "region-watch",
+        "name": "玄岩高級家具店",
+        "addedProducts": 12
+      },
+      {
+        "id": "region-port",
+        "name": "暮光電器行",
+        "addedProducts": 12
+      },
+      {
+        "id": "region-bridge",
+        "name": "星光販賣機",
+        "addedProducts": 12
+      },
+      {
+        "id": "region-deep",
+        "name": "幻潮魔法飾品店",
+        "addedProducts": 12
+      }
+    ]
+  },
+  "pricingNotes": [
+    "買進商品賣價為買價的一半並無條件捨去；1 星幣種子半價不足 1 星幣，目前不可賣出。",
+    "沒有直接買價的收穫、魚與自製料理，採遊戲現行回收價；buyPrice 為 null。",
+    "家具列出的賣價以未擺放狀態計算；擺放中的家具需先收納。",
+    "賣出仍受既有商店開放、持有數量與體力規則限制，這份清單不更改交易規則。"
+  ],
+  "items": [
+    {
+      "kind": "furniture",
+      "id": "collection-daisy-tv-stand",
+      "name": "雛菊電視矮櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-daisy-display-cabinet",
+      "name": "雛菊展示高櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 60,
+      "sellPrice": 30,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-daisy-kitchen-base",
+      "name": "雛菊廚具地櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 50,
+      "sellPrice": 25,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-daisy-kitchen-wall",
+      "name": "雛菊壁掛廚櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "掛牆布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-daisy-appliance-counter",
+      "name": "雛菊電器收納櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-daisy-dining-table",
+      "name": "雛菊家用餐桌",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物",
+        "在客廳可點選用餐"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-daisy-dining-chair",
+      "name": "雛菊木背餐椅",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-daisy-bookcase",
+      "name": "雛菊開放書櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-daisy-nightstand",
+      "name": "雛菊床頭小櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-daisy-bath-cabinet",
+      "name": "雛菊衛浴收納高櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-daisy-shower",
+      "name": "雛菊淋浴花灑",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "掛牆布置",
+        "可洗澡，每日共用一次、恢復 5 體力"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-daisy-glass-door",
+      "name": "雛菊霧面玻璃隔間",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-fox-tv-stand",
+      "name": "橡果電視矮櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-fox-display-cabinet",
+      "name": "橡果展示高櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 60,
+      "sellPrice": 30,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-fox-kitchen-base",
+      "name": "橡果廚具地櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 50,
+      "sellPrice": 25,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-fox-kitchen-wall",
+      "name": "橡果壁掛廚櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "掛牆布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-fox-appliance-counter",
+      "name": "橡果電器收納櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-fox-dining-table",
+      "name": "橡果家用餐桌",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物",
+        "在客廳可點選用餐"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-fox-dining-chair",
+      "name": "橡果木背餐椅",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-fox-bookcase",
+      "name": "橡果開放書櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-fox-nightstand",
+      "name": "橡果床頭小櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-fox-bath-cabinet",
+      "name": "橡果衛浴收納高櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-fox-shower",
+      "name": "橡果淋浴花灑",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "掛牆布置",
+        "可洗澡，每日共用一次、恢復 5 體力"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-fox-glass-door",
+      "name": "橡果霧面玻璃隔間",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-moon-tv-stand",
+      "name": "月光電視矮櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-moon-display-cabinet",
+      "name": "月光展示高櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 60,
+      "sellPrice": 30,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-moon-kitchen-base",
+      "name": "月光廚具地櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 50,
+      "sellPrice": 25,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-moon-kitchen-wall",
+      "name": "月光壁掛廚櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "掛牆布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-moon-appliance-counter",
+      "name": "月光電器收納櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-moon-dining-table",
+      "name": "月光家用餐桌",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物",
+        "在客廳可點選用餐"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-moon-dining-chair",
+      "name": "月光木背餐椅",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-moon-bookcase",
+      "name": "月光開放書櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-moon-nightstand",
+      "name": "月光床頭小櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-moon-bath-cabinet",
+      "name": "月光衛浴收納高櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-moon-shower",
+      "name": "月光淋浴花灑",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "掛牆布置",
+        "可洗澡，每日共用一次、恢復 5 體力"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-moon-glass-door",
+      "name": "月光霧面玻璃隔間",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-honey-tv-stand",
+      "name": "蜂蜜電視矮櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-honey-display-cabinet",
+      "name": "蜂蜜展示高櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 60,
+      "sellPrice": 30,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-honey-kitchen-base",
+      "name": "蜂蜜廚具地櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 50,
+      "sellPrice": 25,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-honey-kitchen-wall",
+      "name": "蜂蜜壁掛廚櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "掛牆布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-honey-appliance-counter",
+      "name": "蜂蜜電器收納櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-honey-dining-table",
+      "name": "蜂蜜家用餐桌",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物",
+        "在客廳可點選用餐"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-honey-dining-chair",
+      "name": "蜂蜜木背餐椅",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-honey-bookcase",
+      "name": "蜂蜜開放書櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-honey-nightstand",
+      "name": "蜂蜜床頭小櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-honey-bath-cabinet",
+      "name": "蜂蜜衛浴收納高櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-honey-shower",
+      "name": "蜂蜜淋浴花灑",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "掛牆布置",
+        "可洗澡，每日共用一次、恢復 5 體力"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-honey-glass-door",
+      "name": "蜂蜜霧面玻璃隔間",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-ocean-tv-stand",
+      "name": "貝殼電視矮櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-ocean-display-cabinet",
+      "name": "貝殼展示高櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 60,
+      "sellPrice": 30,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-ocean-kitchen-base",
+      "name": "貝殼廚具地櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 50,
+      "sellPrice": 25,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-ocean-kitchen-wall",
+      "name": "貝殼壁掛廚櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "掛牆布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-ocean-appliance-counter",
+      "name": "貝殼電器收納櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-ocean-dining-table",
+      "name": "貝殼家用餐桌",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物",
+        "在客廳可點選用餐"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-ocean-dining-chair",
+      "name": "貝殼木背餐椅",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-ocean-bookcase",
+      "name": "貝殼開放書櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-ocean-nightstand",
+      "name": "貝殼床頭小櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-ocean-bath-cabinet",
+      "name": "貝殼衛浴收納高櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-ocean-shower",
+      "name": "貝殼淋浴花灑",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "掛牆布置",
+        "可洗澡，每日共用一次、恢復 5 體力"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-ocean-glass-door",
+      "name": "貝殼霧面玻璃隔間",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-berry-tv-stand",
+      "name": "草莓電視矮櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "berry",
+      "styleName": "草莓花園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-berry-display-cabinet",
+      "name": "草莓展示高櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 60,
+      "sellPrice": 30,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "berry",
+      "styleName": "草莓花園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-berry-kitchen-base",
+      "name": "草莓廚具地櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 50,
+      "sellPrice": 25,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "berry",
+      "styleName": "草莓花園",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-berry-kitchen-wall",
+      "name": "草莓壁掛廚櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "berry",
+      "styleName": "草莓花園",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "掛牆布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-berry-appliance-counter",
+      "name": "草莓電器收納櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "berry",
+      "styleName": "草莓花園",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-berry-dining-table",
+      "name": "草莓家用餐桌",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "berry",
+      "styleName": "草莓花園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物",
+        "在客廳可點選用餐"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-berry-dining-chair",
+      "name": "草莓木背餐椅",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "berry",
+      "styleName": "草莓花園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-berry-bookcase",
+      "name": "草莓開放書櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "berry",
+      "styleName": "草莓花園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-berry-nightstand",
+      "name": "草莓床頭小櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "berry",
+      "styleName": "草莓花園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-berry-bath-cabinet",
+      "name": "草莓衛浴收納高櫃",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "berry",
+      "styleName": "草莓花園",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-berry-shower",
+      "name": "草莓淋浴花灑",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "berry",
+      "styleName": "草莓花園",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "掛牆布置",
+        "可洗澡，每日共用一次、恢復 5 體力"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-berry-glass-door",
+      "name": "草莓霧面玻璃隔間",
+      "group": "household-furniture",
+      "shops": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "furniture",
+          "name": "家具行"
+        }
+      ],
+      "style": "berry",
+      "styleName": "草莓花園",
+      "rooms": [
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bud-1",
+      "name": "小葉蕨盆",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bud-2",
+      "name": "圓葉椒草盆",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bud-3",
+      "name": "迷你仙人掌盆",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bud-4",
+      "name": "垂葉吊盆",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "掛牆布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bud-5",
+      "name": "水培綠葉瓶",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bud-6",
+      "name": "陶製花瓶",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bud-7",
+      "name": "花草茶杯組",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bud-8",
+      "name": "編織收納籃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bud-9",
+      "name": "雛菊窗邊花箱",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "掛牆布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bud-10",
+      "name": "蘑菇小凳",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bud-11",
+      "name": "園藝工具掛架",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "掛牆布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bud-12",
+      "name": "葉形小腳踏墊",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bud",
+          "name": "花芽生活舖"
+        }
+      ],
+      "style": "daisy",
+      "styleName": "雛菊田園",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面平鋪布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-stone-1",
+      "name": "彩虹積木",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-stone-2",
+      "name": "森林小火車",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-stone-3",
+      "name": "木馬搖搖椅",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-stone-4",
+      "name": "橡果不倒翁",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-stone-5",
+      "name": "迷你娃娃屋",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-stone-6",
+      "name": "小船模型",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-stone-7",
+      "name": "旋轉木馬音樂盒",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-stone-8",
+      "name": "彩色陀螺",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-stone-9",
+      "name": "玩具機器人",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-stone-10",
+      "name": "迷你彈珠台",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-stone-11",
+      "name": "木製拼圖盤",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-stone-12",
+      "name": "玩具收納箱",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-stone",
+          "name": "咕咕玩具店"
+        }
+      ],
+      "style": "fox",
+      "styleName": "橡果木屋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-sail-1",
+      "name": "小木吉他",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-sail-2",
+      "name": "星光烏克麗麗",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-sail-3",
+      "name": "森林小提琴",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "buyPrice": 50,
+      "sellPrice": 25,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-sail-4",
+      "name": "海風長笛",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-sail-5",
+      "name": "貝殼手鼓",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-sail-6",
+      "name": "彩虹木琴",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-sail-7",
+      "name": "小小電子琴",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "buyPrice": 55,
+      "sellPrice": 27,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-sail-8",
+      "name": "月牙鈴鼓",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-sail-9",
+      "name": "葉片拇指琴",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-sail-10",
+      "name": "銅色三角鐵",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-sail-11",
+      "name": "節拍小沙鈴",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-sail-12",
+      "name": "樂譜架",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sail",
+          "name": "風鈴樂器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-shell-1",
+      "name": "帆船紀念模型",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-shell-2",
+      "name": "貝殼小相框",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-shell-3",
+      "name": "潮汐沙漏",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-shell-4",
+      "name": "海玻璃花瓶",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-shell-5",
+      "name": "珊瑚造型書擋",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-shell-6",
+      "name": "海島圖鑑",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-shell-7",
+      "name": "潮間帶故事書",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-shell-8",
+      "name": "迷你燈塔擺飾",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-shell-9",
+      "name": "海浪壁掛鐘",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "掛牆布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-shell-10",
+      "name": "潮汐漁籠擺飾",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-shell-11",
+      "name": "海風編織籃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-shell-12",
+      "name": "貝殼風鈴",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "掛牆布置",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-whale-1",
+      "name": "貓耳軟墊窩",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "寵物用品目前僅擺設，沒有跟隨寵物功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-whale-2",
+      "name": "小狗帳篷窩",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "寵物用品目前僅擺設，沒有跟隨寵物功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-whale-3",
+      "name": "鯨魚睡墊",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面平鋪布置",
+        "寵物用品目前僅擺設，沒有跟隨寵物功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-whale-4",
+      "name": "葉子食盆架",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "寵物用品目前僅擺設，沒有跟隨寵物功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-whale-5",
+      "name": "貝殼飲水盆",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "寵物用品目前僅擺設，沒有跟隨寵物功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-whale-6",
+      "name": "寵物玩具球",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果",
+        "寵物用品目前僅擺設，沒有跟隨寵物功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-whale-7",
+      "name": "小魚抱枕",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "寵物用品目前僅擺設，沒有跟隨寵物功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-whale-8",
+      "name": "磨爪小柱",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "寵物用品目前僅擺設，沒有跟隨寵物功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-whale-9",
+      "name": "寵物玩具籃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "寵物用品目前僅擺設，沒有跟隨寵物功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-whale-10",
+      "name": "星星隧道",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "寵物用品目前僅擺設，沒有跟隨寵物功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-whale-11",
+      "name": "寵物梳理盒",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "寵物用品目前僅擺設，沒有跟隨寵物功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-whale-12",
+      "name": "爪印地墊",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-whale",
+          "name": "鯨夢寵物用品店"
+        }
+      ],
+      "style": "ocean",
+      "styleName": "泡泡海洋",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面平鋪布置",
+        "寵物用品目前僅擺設，沒有跟隨寵物功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-watch-1",
+      "name": "星紋雙人沙發",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "buyPrice": 110,
+      "sellPrice": 55,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-watch-2",
+      "name": "森林躺椅",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "buyPrice": 85,
+      "sellPrice": 42,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-watch-3",
+      "name": "弧形長餐桌",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "buyPrice": 90,
+      "sellPrice": 45,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物",
+        "在客廳可點選用餐"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-watch-4",
+      "name": "翡翠餐椅",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-watch-5",
+      "name": "玄岩玻璃展示櫃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "buyPrice": 100,
+      "sellPrice": 50,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-watch-6",
+      "name": "轉角大書櫃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "buyPrice": 100,
+      "sellPrice": 50,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "可在分層檯面放小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-watch-7",
+      "name": "珍珠床尾凳",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "buyPrice": 50,
+      "sellPrice": 25,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-watch-8",
+      "name": "海潮屏風",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "buyPrice": 65,
+      "sellPrice": 32,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-watch-9",
+      "name": "星夜床頭櫃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "buyPrice": 50,
+      "sellPrice": 25,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-watch-10",
+      "name": "月環吊燈",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "buyPrice": 65,
+      "sellPrice": 32,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "安裝於房間後方天花範圍",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-watch-11",
+      "name": "圓弧餐邊櫃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "buyPrice": 85,
+      "sellPrice": 42,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "檯面可放合適尺寸的小物"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-watch-12",
+      "name": "花紋長地毯",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "buyPrice": 60,
+      "sellPrice": 30,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-watch",
+          "name": "玄岩高級家具店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面平鋪布置"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-port-1",
+      "name": "液晶電視",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "buyPrice": 80,
+      "sellPrice": 40,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-port-2",
+      "name": "桌上微波爐",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "擺在廚房可製作料理，體力歸零仍可煮飯"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-port-3",
+      "name": "小烤箱",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "擺在廚房可製作料理，體力歸零仍可煮飯"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-port-4",
+      "name": "圓圓電鍋",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "擺在廚房可製作料理，體力歸零仍可煮飯"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-port-5",
+      "name": "雙喇叭音響",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "buyPrice": 70,
+      "sellPrice": 35,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-port-6",
+      "name": "葉片吊扇",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "安裝於房間後方天花範圍",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-port-7",
+      "name": "快煮壺",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-port-8",
+      "name": "水果果汁機",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-port-9",
+      "name": "小型除溼機",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "buyPrice": 45,
+      "sellPrice": 22,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-port-10",
+      "name": "圓圓掃地機",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "buyPrice": 50,
+      "sellPrice": 25,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "地面布置",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-port-11",
+      "name": "床頭小檯燈",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-port-12",
+      "name": "桌上電子鐘",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-port",
+          "name": "暮光電器行"
+        }
+      ],
+      "style": "honey",
+      "styleName": "蜂蜜暖木",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bridge-1",
+      "name": "奶糖貓娃娃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bridge-2",
+      "name": "冰糖企鵝娃娃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bridge-3",
+      "name": "花瓣精靈娃娃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bridge-4",
+      "name": "太陽獅娃娃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bridge-5",
+      "name": "星河織夢師娃娃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bridge-6",
+      "name": "藍盾機甲娃娃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bridge-7",
+      "name": "小海獺娃娃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bridge-8",
+      "name": "軟綿羊娃娃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bridge-9",
+      "name": "蘑菇精靈娃娃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bridge-10",
+      "name": "雪白海豹娃娃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bridge-11",
+      "name": "星星水母娃娃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-bridge-12",
+      "name": "迷你渡輪娃娃",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-bridge",
+          "name": "星光販賣機"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-deep-1",
+      "name": "月光水晶瓶",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果",
+        "水晶瓶杯為裝飾品，不含酒類飲用功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-deep-2",
+      "name": "海藍水晶瓶",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果",
+        "水晶瓶杯為裝飾品，不含酒類飲用功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-deep-3",
+      "name": "莓紅水晶瓶",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果",
+        "水晶瓶杯為裝飾品，不含酒類飲用功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-deep-4",
+      "name": "星紋水晶杯",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "水晶瓶杯為裝飾品，不含酒類飲用功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-deep-5",
+      "name": "貝光水晶杯",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "buyPrice": 20,
+      "sellPrice": 10,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "水晶瓶杯為裝飾品，不含酒類飲用功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-deep-6",
+      "name": "水晶花瓶",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "buyPrice": 30,
+      "sellPrice": 15,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "水晶瓶杯為裝飾品，不含酒類飲用功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-deep-7",
+      "name": "迷你星象儀",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "buyPrice": 40,
+      "sellPrice": 20,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果",
+        "水晶瓶杯為裝飾品，不含酒類飲用功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-deep-8",
+      "name": "月夜水晶球",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果",
+        "水晶瓶杯為裝飾品，不含酒類飲用功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-deep-9",
+      "name": "微光寶石樹",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "buyPrice": 35,
+      "sellPrice": 17,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "點選有簡短互動效果",
+        "水晶瓶杯為裝飾品，不含酒類飲用功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-deep-10",
+      "name": "夜空故事書",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "水晶瓶杯為裝飾品，不含酒類飲用功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-deep-11",
+      "name": "幻潮圖鑑",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "buyPrice": 15,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "水晶瓶杯為裝飾品，不含酒類飲用功能"
+      ]
+    },
+    {
+      "kind": "furniture",
+      "id": "collection-deep-12",
+      "name": "星座小書組",
+      "group": "regional-goods",
+      "shops": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "buyPrice": 25,
+      "sellPrice": 12,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-deep",
+          "name": "幻潮魔法飾品店"
+        }
+      ],
+      "style": "moon",
+      "styleName": "月光夢境",
+      "rooms": [
+        {
+          "id": "room",
+          "name": "客廳"
+        },
+        {
+          "id": "bedroom",
+          "name": "臥室"
+        },
+        {
+          "id": "kitchen",
+          "name": "廚房"
+        },
+        {
+          "id": "bathroom",
+          "name": "衛浴"
+        }
+      ],
+      "uses": [
+        "可擺地面或附著於合適的桌櫃／層架",
+        "水晶瓶杯為裝飾品，不含酒類飲用功能"
+      ]
+    },
+    {
+      "kind": "seeds",
+      "id": "potato",
+      "name": "馬鈴薯種子",
+      "group": "seeds",
+      "shops": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "buyPrice": 1,
+      "sellPrice": 0,
+      "sellRestriction": "半價不足 1 星幣，保留使用",
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "cropId": "potato",
+      "lesson": {
+        "id": "single",
+        "name": "聽音辨識"
+      },
+      "uses": [
+        "播種、澆水後，完成對應學習關卡讓作物成長"
+      ]
+    },
+    {
+      "kind": "seeds",
+      "id": "sweet-potato",
+      "name": "地瓜種子",
+      "group": "seeds",
+      "shops": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "buyPrice": 1,
+      "sellPrice": 0,
+      "sellRestriction": "半價不足 1 星幣，保留使用",
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "cropId": "sweet-potato",
+      "lesson": {
+        "id": "spelling",
+        "name": "拼音工坊"
+      },
+      "uses": [
+        "播種、澆水後，完成對應學習關卡讓作物成長"
+      ]
+    },
+    {
+      "kind": "seeds",
+      "id": "onion",
+      "name": "洋蔥種子",
+      "group": "seeds",
+      "shops": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "buyPrice": 1,
+      "sellPrice": 0,
+      "sellRestriction": "半價不足 1 星幣，保留使用",
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "cropId": "onion",
+      "lesson": {
+        "id": "spelling",
+        "name": "拼音工坊"
+      },
+      "uses": [
+        "播種、澆水後，完成對應學習關卡讓作物成長"
+      ]
+    },
+    {
+      "kind": "seeds",
+      "id": "broccoli",
+      "name": "花椰菜種子",
+      "group": "seeds",
+      "shops": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "buyPrice": 2,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "cropId": "broccoli",
+      "lesson": {
+        "id": "tone",
+        "name": "聲調小劇場"
+      },
+      "uses": [
+        "播種、澆水後，完成對應學習關卡讓作物成長"
+      ]
+    },
+    {
+      "kind": "seeds",
+      "id": "eggplant",
+      "name": "茄子種子",
+      "group": "seeds",
+      "shops": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "buyPrice": 1,
+      "sellPrice": 0,
+      "sellRestriction": "半價不足 1 星幣，保留使用",
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "cropId": "eggplant",
+      "lesson": {
+        "id": "reading",
+        "name": "朗讀小舞台"
+      },
+      "uses": [
+        "播種、澆水後，完成對應學習關卡讓作物成長"
+      ]
+    },
+    {
+      "kind": "seeds",
+      "id": "pepper",
+      "name": "甜椒種子",
+      "group": "seeds",
+      "shops": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "buyPrice": 2,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "cropId": "pepper",
+      "lesson": {
+        "id": "tone",
+        "name": "聲調小劇場"
+      },
+      "uses": [
+        "播種、澆水後，完成對應學習關卡讓作物成長"
+      ]
+    },
+    {
+      "kind": "seeds",
+      "id": "peas",
+      "name": "甜豌豆種子",
+      "group": "seeds",
+      "shops": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "buyPrice": 1,
+      "sellPrice": 0,
+      "sellRestriction": "半價不足 1 星幣，保留使用",
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "cropId": "peas",
+      "lesson": {
+        "id": "single",
+        "name": "聽音辨識"
+      },
+      "uses": [
+        "播種、澆水後，完成對應學習關卡讓作物成長"
+      ]
+    },
+    {
+      "kind": "seeds",
+      "id": "rice",
+      "name": "稻米種子",
+      "group": "seeds",
+      "shops": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "buyPrice": 2,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "cropId": "rice",
+      "lesson": {
+        "id": "reading",
+        "name": "朗讀小舞台"
+      },
+      "uses": [
+        "播種、澆水後，完成對應學習關卡讓作物成長"
+      ]
+    },
+    {
+      "kind": "seeds",
+      "id": "wheat",
+      "name": "小麥種子",
+      "group": "seeds",
+      "shops": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "buyPrice": 2,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "cropId": "wheat",
+      "lesson": {
+        "id": "spelling",
+        "name": "拼音工坊"
+      },
+      "uses": [
+        "播種、澆水後，完成對應學習關卡讓作物成長"
+      ]
+    },
+    {
+      "kind": "seeds",
+      "id": "watermelon",
+      "name": "西瓜種子",
+      "group": "seeds",
+      "shops": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "buyPrice": 2,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "cropId": "watermelon",
+      "lesson": {
+        "id": "single",
+        "name": "聽音辨識"
+      },
+      "uses": [
+        "播種、澆水後，完成對應學習關卡讓作物成長"
+      ]
+    },
+    {
+      "kind": "seeds",
+      "id": "melon",
+      "name": "香瓜種子",
+      "group": "seeds",
+      "shops": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "buyPrice": 2,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "cropId": "melon",
+      "lesson": {
+        "id": "tone",
+        "name": "聲調小劇場"
+      },
+      "uses": [
+        "播種、澆水後，完成對應學習關卡讓作物成長"
+      ]
+    },
+    {
+      "kind": "seeds",
+      "id": "radish",
+      "name": "白蘿蔔種子",
+      "group": "seeds",
+      "shops": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "buyPrice": 1,
+      "sellPrice": 0,
+      "sellRestriction": "半價不足 1 星幣，保留使用",
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        }
+      ],
+      "cropId": "radish",
+      "lesson": {
+        "id": "reading",
+        "name": "朗讀小舞台"
+      },
+      "uses": [
+        "播種、澆水後，完成對應學習關卡讓作物成長"
+      ]
+    },
+    {
+      "kind": "harvest",
+      "id": "potato",
+      "name": "馬鈴薯",
+      "group": "harvest",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "農場收成",
+      "energy": null,
+      "recipes": [
+        {
+          "id": "collection-cornMash",
+          "name": "玉米薯泥"
+        }
+      ],
+      "uses": [
+        "料理食材",
+        "可賣出收穫"
+      ]
+    },
+    {
+      "kind": "harvest",
+      "id": "sweet-potato",
+      "name": "地瓜",
+      "group": "harvest",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "農場收成",
+      "energy": null,
+      "recipes": [
+        {
+          "id": "collection-sweetSoup",
+          "name": "地瓜暖湯"
+        }
+      ],
+      "uses": [
+        "料理食材",
+        "可賣出收穫"
+      ]
+    },
+    {
+      "kind": "harvest",
+      "id": "onion",
+      "name": "洋蔥",
+      "group": "harvest",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "農場收成",
+      "energy": null,
+      "recipes": [
+        {
+          "id": "collection-gardenNoodles",
+          "name": "番茄蔬菜麵"
+        }
+      ],
+      "uses": [
+        "料理食材",
+        "可賣出收穫"
+      ]
+    },
+    {
+      "kind": "harvest",
+      "id": "broccoli",
+      "name": "花椰菜",
+      "group": "harvest",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "農場收成",
+      "energy": null,
+      "recipes": [
+        {
+          "id": "collection-gardenRice",
+          "name": "田園燉飯"
+        }
+      ],
+      "uses": [
+        "料理食材",
+        "可賣出收穫"
+      ]
+    },
+    {
+      "kind": "harvest",
+      "id": "eggplant",
+      "name": "茄子",
+      "group": "harvest",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "農場收成",
+      "energy": null,
+      "recipes": [
+        {
+          "id": "collection-gardenRice",
+          "name": "田園燉飯"
+        }
+      ],
+      "uses": [
+        "料理食材",
+        "可賣出收穫"
+      ]
+    },
+    {
+      "kind": "harvest",
+      "id": "pepper",
+      "name": "甜椒",
+      "group": "harvest",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "農場收成",
+      "energy": 7,
+      "recipes": [],
+      "uses": [
+        "可直接食用，最多恢復 7 體力",
+        "可賣出收穫"
+      ]
+    },
+    {
+      "kind": "harvest",
+      "id": "peas",
+      "name": "甜豌豆",
+      "group": "harvest",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "農場收成",
+      "energy": 6,
+      "recipes": [],
+      "uses": [
+        "可直接食用，最多恢復 6 體力",
+        "可賣出收穫"
+      ]
+    },
+    {
+      "kind": "harvest",
+      "id": "rice",
+      "name": "稻米",
+      "group": "harvest",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "農場收成",
+      "energy": null,
+      "recipes": [
+        {
+          "id": "collection-gardenRice",
+          "name": "田園燉飯"
+        },
+        {
+          "id": "collection-fishPorridge",
+          "name": "鮮魚米粥"
+        }
+      ],
+      "uses": [
+        "料理食材",
+        "可賣出收穫"
+      ]
+    },
+    {
+      "kind": "harvest",
+      "id": "wheat",
+      "name": "小麥",
+      "group": "harvest",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "農場收成",
+      "energy": null,
+      "recipes": [
+        {
+          "id": "collection-gardenNoodles",
+          "name": "番茄蔬菜麵"
+        }
+      ],
+      "uses": [
+        "料理食材",
+        "可賣出收穫"
+      ]
+    },
+    {
+      "kind": "harvest",
+      "id": "watermelon",
+      "name": "西瓜",
+      "group": "harvest",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "農場收成",
+      "energy": 10,
+      "recipes": [
+        {
+          "id": "collection-melonBowl",
+          "name": "雙瓜水果盅"
+        }
+      ],
+      "uses": [
+        "可直接食用，最多恢復 10 體力",
+        "料理食材",
+        "可賣出收穫"
+      ]
+    },
+    {
+      "kind": "harvest",
+      "id": "melon",
+      "name": "香瓜",
+      "group": "harvest",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "農場收成",
+      "energy": 10,
+      "recipes": [
+        {
+          "id": "collection-melonBowl",
+          "name": "雙瓜水果盅"
+        }
+      ],
+      "uses": [
+        "可直接食用，最多恢復 10 體力",
+        "料理食材",
+        "可賣出收穫"
+      ]
+    },
+    {
+      "kind": "harvest",
+      "id": "radish",
+      "name": "白蘿蔔",
+      "group": "harvest",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "農場收成",
+      "energy": 6,
+      "recipes": [
+        {
+          "id": "collection-fishPorridge",
+          "name": "鮮魚米粥"
+        }
+      ],
+      "uses": [
+        "可直接食用，最多恢復 6 體力",
+        "料理食材",
+        "可賣出收穫"
+      ]
+    },
+    {
+      "kind": "fish",
+      "id": "collection-fish-0",
+      "name": "圓肚鯉魚",
+      "group": "fish",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "池塘釣魚",
+      "rarity": "常見",
+      "uses": [
+        "可作為魚料理食材",
+        "可賣出"
+      ]
+    },
+    {
+      "kind": "fish",
+      "id": "collection-fish-1",
+      "name": "紅尾鯉魚",
+      "group": "fish",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "池塘釣魚",
+      "rarity": "常見",
+      "uses": [
+        "可作為魚料理食材",
+        "可賣出"
+      ]
+    },
+    {
+      "kind": "fish",
+      "id": "collection-fish-2",
+      "name": "青背草魚",
+      "group": "fish",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "池塘釣魚",
+      "rarity": "常見",
+      "uses": [
+        "可作為魚料理食材",
+        "可賣出"
+      ]
+    },
+    {
+      "kind": "fish",
+      "id": "collection-fish-3",
+      "name": "銀腹鰱魚",
+      "group": "fish",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "池塘釣魚",
+      "rarity": "常見",
+      "uses": [
+        "可作為魚料理食材",
+        "可賣出"
+      ]
+    },
+    {
+      "kind": "fish",
+      "id": "collection-fish-4",
+      "name": "點點鱒魚",
+      "group": "fish",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "池塘釣魚",
+      "rarity": "常見",
+      "uses": [
+        "可作為魚料理食材",
+        "可賣出"
+      ]
+    },
+    {
+      "kind": "fish",
+      "id": "collection-fish-5",
+      "name": "鬍鬚鯰魚",
+      "group": "fish",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "池塘釣魚",
+      "rarity": "常見",
+      "uses": [
+        "可作為魚料理食材",
+        "可賣出"
+      ]
+    },
+    {
+      "kind": "fish",
+      "id": "collection-fish-6",
+      "name": "溪光香魚",
+      "group": "fish",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "池塘釣魚",
+      "rarity": "少見",
+      "uses": [
+        "可作為魚料理食材",
+        "可賣出"
+      ]
+    },
+    {
+      "kind": "fish",
+      "id": "collection-fish-7",
+      "name": "山泉溪哥",
+      "group": "fish",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "池塘釣魚",
+      "rarity": "少見",
+      "uses": [
+        "可作為魚料理食材",
+        "可賣出"
+      ]
+    },
+    {
+      "kind": "fish",
+      "id": "collection-fish-8",
+      "name": "花斑鱸魚",
+      "group": "fish",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "池塘釣魚",
+      "rarity": "少見",
+      "uses": [
+        "可作為魚料理食材",
+        "可賣出"
+      ]
+    },
+    {
+      "kind": "fish",
+      "id": "collection-fish-9",
+      "name": "圓鰭吳郭魚",
+      "group": "fish",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "池塘釣魚",
+      "rarity": "少見",
+      "uses": [
+        "可作為魚料理食材",
+        "可賣出"
+      ]
+    },
+    {
+      "kind": "fish",
+      "id": "collection-fish-10",
+      "name": "金線鯝魚",
+      "group": "fish",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 2,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "池塘釣魚",
+      "rarity": "稀有",
+      "uses": [
+        "可作為魚料理食材",
+        "可賣出"
+      ]
+    },
+    {
+      "kind": "fish",
+      "id": "collection-fish-11",
+      "name": "湖光鯿魚",
+      "group": "fish",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 2,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "seeds",
+          "name": "種子店"
+        },
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "池塘釣魚",
+      "rarity": "稀有",
+      "uses": [
+        "可作為魚料理食材",
+        "可賣出"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sweetSoup",
+      "name": "地瓜暖湯",
+      "group": "homemade-meals",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "廚房料理",
+      "energy": 35,
+      "ingredients": [
+        {
+          "id": "sweet-potato",
+          "name": "地瓜",
+          "quantity": 1
+        },
+        {
+          "id": "carrot",
+          "name": "紅蘿蔔",
+          "quantity": 1
+        }
+      ],
+      "uses": [
+        "食用最多恢復 35 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-cornMash",
+      "name": "玉米薯泥",
+      "group": "homemade-meals",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "廚房料理",
+      "energy": 40,
+      "ingredients": [
+        {
+          "id": "potato",
+          "name": "馬鈴薯",
+          "quantity": 1
+        },
+        {
+          "id": "corn",
+          "name": "甜玉米",
+          "quantity": 1
+        }
+      ],
+      "uses": [
+        "食用最多恢復 40 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-gardenRice",
+      "name": "田園燉飯",
+      "group": "homemade-meals",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "廚房料理",
+      "energy": 50,
+      "ingredients": [
+        {
+          "id": "rice",
+          "name": "稻米",
+          "quantity": 1
+        },
+        {
+          "id": "broccoli",
+          "name": "花椰菜",
+          "quantity": 1
+        },
+        {
+          "id": "tomato",
+          "name": "小番茄",
+          "quantity": 1
+        },
+        {
+          "id": "eggplant",
+          "name": "茄子",
+          "quantity": 1
+        }
+      ],
+      "uses": [
+        "食用最多恢復 50 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-gardenNoodles",
+      "name": "番茄蔬菜麵",
+      "group": "homemade-meals",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "廚房料理",
+      "energy": 50,
+      "ingredients": [
+        {
+          "id": "wheat",
+          "name": "小麥",
+          "quantity": 1
+        },
+        {
+          "id": "tomato",
+          "name": "小番茄",
+          "quantity": 1
+        },
+        {
+          "id": "onion",
+          "name": "洋蔥",
+          "quantity": 1
+        }
+      ],
+      "uses": [
+        "食用最多恢復 50 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-fishPorridge",
+      "name": "鮮魚米粥",
+      "group": "homemade-meals",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "廚房料理",
+      "energy": 55,
+      "ingredients": [
+        {
+          "id": "fish",
+          "name": "魚",
+          "quantity": 1
+        },
+        {
+          "id": "rice",
+          "name": "稻米",
+          "quantity": 1
+        },
+        {
+          "id": "radish",
+          "name": "白蘿蔔",
+          "quantity": 1
+        }
+      ],
+      "uses": [
+        "食用最多恢復 55 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-melonBowl",
+      "name": "雙瓜水果盅",
+      "group": "homemade-meals",
+      "shops": [],
+      "buyPrice": null,
+      "sellPrice": 1,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "廚房料理",
+      "energy": 35,
+      "ingredients": [
+        {
+          "id": "watermelon",
+          "name": "西瓜",
+          "quantity": 1
+        },
+        {
+          "id": "melon",
+          "name": "香瓜",
+          "quantity": 1
+        }
+      ],
+      "uses": [
+        "食用最多恢復 35 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sand-1",
+      "name": "暖沙飯糰",
+      "group": "shop-meals",
+      "shops": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        }
+      ],
+      "buyPrice": 8,
+      "sellPrice": 4,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "暖沙小吃店購買",
+      "energy": 50,
+      "ingredients": [],
+      "uses": [
+        "食用最多恢復 50 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sand-2",
+      "name": "香烤地瓜餐",
+      "group": "shop-meals",
+      "shops": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        }
+      ],
+      "buyPrice": 8,
+      "sellPrice": 4,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "暖沙小吃店購買",
+      "energy": 55,
+      "ingredients": [],
+      "uses": [
+        "食用最多恢復 55 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sand-3",
+      "name": "田園濃湯餐",
+      "group": "shop-meals",
+      "shops": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        }
+      ],
+      "buyPrice": 10,
+      "sellPrice": 5,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "暖沙小吃店購買",
+      "energy": 65,
+      "ingredients": [],
+      "uses": [
+        "食用最多恢復 65 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sand-4",
+      "name": "蔬菜燉飯餐",
+      "group": "shop-meals",
+      "shops": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        }
+      ],
+      "buyPrice": 12,
+      "sellPrice": 6,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "暖沙小吃店購買",
+      "energy": 75,
+      "ingredients": [],
+      "uses": [
+        "食用最多恢復 75 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sand-5",
+      "name": "南瓜濃湯餐",
+      "group": "shop-meals",
+      "shops": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        }
+      ],
+      "buyPrice": 10,
+      "sellPrice": 5,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "暖沙小吃店購買",
+      "energy": 65,
+      "ingredients": [],
+      "uses": [
+        "食用最多恢復 65 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sand-6",
+      "name": "香草烤魚餐",
+      "group": "shop-meals",
+      "shops": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        }
+      ],
+      "buyPrice": 14,
+      "sellPrice": 7,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "暖沙小吃店購買",
+      "energy": 85,
+      "ingredients": [],
+      "uses": [
+        "食用最多恢復 85 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sand-7",
+      "name": "甜椒焗飯餐",
+      "group": "shop-meals",
+      "shops": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        }
+      ],
+      "buyPrice": 12,
+      "sellPrice": 6,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "暖沙小吃店購買",
+      "energy": 75,
+      "ingredients": [],
+      "uses": [
+        "食用最多恢復 75 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sand-8",
+      "name": "鮮魚米粥餐",
+      "group": "shop-meals",
+      "shops": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        }
+      ],
+      "buyPrice": 12,
+      "sellPrice": 6,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "暖沙小吃店購買",
+      "energy": 80,
+      "ingredients": [],
+      "uses": [
+        "食用最多恢復 80 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sand-9",
+      "name": "番茄蔬菜麵",
+      "group": "shop-meals",
+      "shops": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        }
+      ],
+      "buyPrice": 12,
+      "sellPrice": 6,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "暖沙小吃店購買",
+      "energy": 75,
+      "ingredients": [],
+      "uses": [
+        "食用最多恢復 75 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sand-10",
+      "name": "玉米薯泥盅",
+      "group": "shop-meals",
+      "shops": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        }
+      ],
+      "buyPrice": 10,
+      "sellPrice": 5,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "暖沙小吃店購買",
+      "energy": 65,
+      "ingredients": [],
+      "uses": [
+        "食用最多恢復 65 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sand-11",
+      "name": "雙色蔬菜飯",
+      "group": "shop-meals",
+      "shops": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        }
+      ],
+      "buyPrice": 10,
+      "sellPrice": 5,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "暖沙小吃店購買",
+      "energy": 65,
+      "ingredients": [],
+      "uses": [
+        "食用最多恢復 65 體力",
+        "可帶去遠征使用"
+      ]
+    },
+    {
+      "kind": "meal",
+      "id": "collection-sand-12",
+      "name": "暖沙野餐盒",
+      "group": "shop-meals",
+      "shops": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        }
+      ],
+      "buyPrice": 16,
+      "sellPrice": 8,
+      "sellRestriction": null,
+      "sellAt": [
+        {
+          "id": "region-sand",
+          "name": "暖沙小吃店"
+        },
+        {
+          "id": "region-shell",
+          "name": "銀貝特產舖"
+        }
+      ],
+      "source": "暖沙小吃店購買",
+      "energy": 95,
+      "ingredients": [],
+      "uses": [
+        "食用最多恢復 95 體力",
+        "可帶去遠征使用"
+      ]
+    }
+  ]
+}

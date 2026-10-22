@@ -1,0 +1,34 @@
+{
+  "tool": "built-in image_gen",
+  "prompts": [
+    {
+      "key": "crops",
+      "prompt": "Use case: stylized-concept. Production sprite atlas for a cozy Taiwanese children's storybook RPG. Hand-painted watercolor/gouache, soft warm edges and detailed cute miniature shapes matching the supplied reference. Genuinely transparent alpha background, no room, no floor, no colored backdrop, no checkerboard painted into image, NO text/no labels/no numbers. All objects isolated with generous empty margins and no overlap. Exact regular 4 columns by 3 rows with every sprite wholly inside its cell. Maintain full uncut silhouettes. Soft warm upper-left lighting. Object-only sprites, not a scenic illustration. Create EXACTLY 12 mature crop plant clumps, each rooted in its own very small dirt mound (except no farm plot). Top row left to right: (1) potato plant with visible tan potatoes at roots; (2) sweet potato vine with purple sweet potatoes; (3) onion plant with plump gold onions; (4) broccoli green head and leaves. Middle row: (5) purple eggplants on short bush; (6) red and yellow bell peppers on bush; (7) green pea vine with pods; (8) golden rice stalks with drooping grain heads. Bottom row: (9) golden wheat with upright grain heads; (10) round striped watermelon with vine; (11) pale green muskmelon with vine; (12) white daikon radish with green leaves and visible white root. Distinguish each plant at small game size.",
+      "refs": [
+        "C:/ChatGPT工作區/國小低年級注音教學/zhuyin-game/.local/home-collection-20261022/assets/farm-crops/four-0e90d75eb511.webp"
+      ]
+    },
+    {
+      "key": "fish",
+      "prompt": "Use case: stylized-concept. Production sprite atlas for a cozy Taiwanese children's storybook RPG. Hand-painted watercolor/gouache, soft warm edges and detailed cute miniature shapes matching the supplied reference. Genuinely transparent alpha background, no room, no floor, no colored backdrop, no checkerboard painted into image, NO text/no labels/no numbers. All objects isolated with generous empty margins and no overlap. Exact regular 4 columns by 3 rows with every sprite wholly inside its cell. Maintain full uncut silhouettes. Soft warm upper-left lighting. Object-only sprites, not a scenic illustration. Create EXACTLY 12 lively cute freshwater-inspired fish, side profile facing RIGHT, plump gentle eyes not realistic gross fish, each different silhouette and color, no bowls or water. Top row: (1) plump brown-gold common carp with short barbels; (2) cream koi with vivid red tail; (3) long grass carp jade green back; (4) silver carp with high silver body. Middle row: (5) rainbow trout with pink stripe and tiny dark spots; (6) rounded blue-grey catfish with unmistakable long whiskers; (7) slender ayu sweetfish olive back and golden cheek; (8) slender silver blue stream fish with orange gills. Bottom row: (9) spotted olive perch with tall dorsal fin; (10) round pink-brown tilapia with rounded striped tail; (11) golden-stripe fish with elegant amber fins; (12) pale iridescent lavender bream with tall flat body. Fish are small fantastical pond catches, related to real types but whimsical and child-friendly.",
+      "refs": []
+    },
+    {
+      "key": "meals",
+      "prompt": "Use case: stylized-concept. Production sprite atlas for a cozy Taiwanese children's storybook RPG. Hand-painted watercolor/gouache, soft warm edges and detailed cute miniature shapes matching the supplied reference. Genuinely transparent alpha background, no room, no floor, no colored backdrop, no checkerboard painted into image, NO text/no labels/no numbers. All objects isolated with generous empty margins and no overlap. Exact regular 4 columns by 3 rows with every sprite wholly inside its cell. Maintain full uncut silhouettes. Soft warm upper-left lighting. Object-only sprites, not a scenic illustration. Create EXACTLY 12 tasty cooked food servings, 3/4 slightly top view on small warm ceramic plates or bowls. Top row: (1) triangular rice ball with seaweed and vegetable bits on small plate; (2) golden roasted sweet potatoes cut open on plate; (3) creamy green vegetable soup with carrot cubes in bowl; (4) colorful vegetable risotto in bowl. Middle row: (5) creamy orange pumpkin soup; (6) whole golden herb grilled fish with lemon on plate; (7) red bell pepper baked rice in oval gratin dish; (8) white rice congee with fish flakes and green herbs. Bottom row: (9) tomato vegetable noodles in round bowl; (10) fluffy mashed potato topped with golden corn in cup; (11) rice with two colorful vegetable sides in bowl; (12) divided wooden picnic lunchbox with rice vegetables and fish. Only food/dish, NO cutlery outside cell, no text.",
+      "refs": [
+        "C:/ChatGPT工作區/國小低年級注音教學/zhuyin-game/.local/home-collection-20261022/assets/adventure-lite/cooking-atlas-v1.736f23422bc0.webp"
+      ]
+    },
+    {
+      "key": "home-meals",
+      "prompt": "Use case: stylized-concept. Production sprite atlas for a cozy Taiwanese children's storybook RPG. Hand-painted watercolor/gouache, soft warm edges and detailed cute miniature shapes matching the supplied reference. Genuinely transparent alpha background, no room, no floor, no colored backdrop, no checkerboard painted into image, NO text/no labels/no numbers. All objects isolated with generous empty margins and no overlap. Exact regular 4 columns by 3 rows with every sprite wholly inside its cell. Maintain full uncut silhouettes. Soft warm upper-left lighting. Object-only sprites, not a scenic illustration. Create EXACTLY 6 homemade food servings in a regular 3 columns by 2 rows (override 4x3 grid instruction), 3/4 slightly top view. Top row: (1) orange sweet-potato and carrot soup in ceramic bowl; (2) buttery mashed potato with corn in small wooden cup; (3) vegetable risotto with broccoli and tomato in round bowl. Bottom row: (4) tomato vegetable noodles with onion in bowl; (5) gentle rice porridge with fish flakes and white radish in bowl; (6) fresh green melon and red watermelon cubes in a small ceramic fruit bowl. Cozy appetizing game food, full plate visible isolated on transparent alpha.",
+      "refs": [
+        "C:/ChatGPT工作區/國小低年級注音教學/zhuyin-game/.local/home-collection-20261022/assets/adventure-lite/cooking-atlas-v1.736f23422bc0.webp"
+      ]
+    }
+  ],
+  "revision": {
+    "meals": "Keep the exact 12 dishes and row-major order, reduce each ~15% for generous transparent margins in 4x3 cells; complete uncut silhouettes."
+  }
+}
