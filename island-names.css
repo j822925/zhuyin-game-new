@@ -13,7 +13,8 @@
 .island-battle-links button{display:flex;align-items:center;justify-content:center;gap:12px;min-height:80px;width:100%;border:2px solid #c8b5d4;border-bottom:5px solid #b59bc5;border-radius:22px;background:#fffcf4;color:#604d77;font:700 clamp(20px,2.6vw,25px)/1.4 var(--island-title-font);padding:12px;touch-action:manipulation}
 .island-battle-links button:focus-visible{outline:4px solid #bc7621;outline-offset:3px}
 .island-battle-icon{font-size:34px}
-.island-challenge #classroom-home-entry{margin:16px 0 4px}
+.island-challenge #helper-home-entry{margin:16px 0 4px}
+.destination-icon.helper-icon{display:grid;place-items:center;font-size:64px;line-height:1}
 .island-named-home .destination-title{font-family:var(--island-title-font);font-weight:800}
 .island-named-home .setup .segmented[hidden]{display:none!important}
 .island-page-title{background:#fff8df;border:2px solid #ddcaa4;border-bottom:5px solid #cdb58c;border-radius:20px;padding:12px 20px;width:fit-content;max-width:100%;box-sizing:border-box}

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>注音小幫手｜學習廣場</title>
+  <link rel="stylesheet" href="./zhuyin-helper.css?v=20261022-common1">
+</head>
+<body>
+  <header><a id="back" href="./index.html?class=main">← 學習廣場</a><h1>📖 注音小幫手</h1></header>
+  <script id="helper-return-bootstrap">
+    // Run before any module download: a slow/failed connection must not change class.
+    (() => {
+      const params=new URLSearchParams(location.search), grade2=params.get('class')==='grade2';
+      const back=new URL(grade2?'./grade2.html':'./index.html',location.href);
+      back.searchParams.set('class',grade2?'grade2':'main');
+      if(params.get('demo')==='1')back.searchParams.set('demo','1');
+      document.getElementById('back').href=back.href;
+    })();
+  </script>
+  <main>
+    <section aria-labelledby="say-title" class="panel say">
+      <div class="heading"><span class="badge">🎤</span><div><h2 id="say-title">說詞語，查注音</h2><p>想寫的詞，說給我聽</p></div></div>
+      <button id="mic" class="primary mic" disabled>🎤 開始說話</button>
+      <p id="mic-status" class="status" role="status">也可以直接打字查詢。</p>
+      <form id="lookup-form">
+        <label for="word">你要查的詞</label>
+        <div class="input-row"><input id="word" maxlength="24" placeholder="例如：快樂" autocomplete="off"><button class="primary" type="submit">查注音</button></div>
+      </form>
+      <div class="examples" aria-label="試試這些詞"><button data-word="快樂">快樂</button><button data-word="學校">學校</button><button data-word="銀行">銀行</button></div>
+      <p id="lookup-status" class="status" role="status">先確認國字，再查注音。</p>
+      <details id="alternative-readings" hidden><summary>其他讀音 · 給大人</summary><div id="variants" class="variants"></div></details>
+      <div id="word-result" class="word-result" aria-label="查詢結果"></div>
+      <button id="word-play" class="primary wide" hidden>🔊 聽老師拼讀</button>
+    </section>
+    <section aria-labelledby="spell-title" class="panel spell">
+      <div class="heading"><span class="badge">🧩</span><div><h2 id="spell-title">拼注音，聽讀音</h2><p>點一點，也可以拖進格子</p></div></div>
+      <div class="slots" aria-label="拼音格">
+        <button class="slot" data-slot="initial"><small>聲符</small><strong>＋</strong></button>
+        <button class="slot" data-slot="final"><small>韻符／結合韻</small><strong>＋</strong></button>
+        <button class="slot tone-slot" data-slot="tone"><small>聲調</small><strong>一聲</strong></button>
+      </div>
+      <div class="board-actions"><button id="board-play" class="primary" disabled>🔊 聽讀音</button><button id="clear">↺ 清空</button></div>
+      <p id="board-status" class="status" role="status">正在準備老師的聲音…</p>
+      <div class="tabs" role="tablist" aria-label="選注音種類">
+        <button id="tab-initial" role="tab" aria-selected="true" aria-controls="symbol-tray" data-kind="initial">聲符</button>
+        <button id="tab-final" role="tab" aria-selected="false" aria-controls="symbol-tray" data-kind="final">韻符／結合韻</button>
+        <button id="tab-tone" role="tab" aria-selected="false" aria-controls="symbol-tray" data-kind="tone">聲調</button>
+      </div>
+      <div id="symbol-tray" class="symbol-tray" role="tabpanel" aria-labelledby="tab-initial"></div>
+      <nav class="symbol-pager" aria-label="注音分組">
+        <button id="symbols-prev" aria-controls="symbol-tray">◀ 上一組</button>
+        <span id="symbols-page" role="status" aria-live="polite" aria-atomic="true"></span>
+        <button id="symbols-next" aria-controls="symbol-tray">下一組 ▶</button>
+      </nav>
+    </section>
+  </main>
+  <footer>
+    <button id="stop" class="stop">🔇 停止播放</button>
+    <details><summary>給大人 · 使用說明</summary>
+      <p>這是查詢工具，不計分、不發星星。先看完整詞語與老師核對答案，再使用已整理的常見讀音。常用音是可修正的預設，不是人工智慧判斷，仍可能不符合特殊句意或人名；其他讀音可展開查看，未涵蓋的多音會請大人協助。沒有老師錄音的音不會用其他聲音代替。</p>
+      <p>麥克風須允許權限；iPad 若無法辨識，請在 Safari 開啟或改用打字。本工具不保存錄音、不將錄音送到遊戲後台；瀏覽器的語音辨識服務可能需要網路並處理語音。</p>
+      <p>字音沿用教育部《國語辭典簡編本》字音索引及老師核對的聲調題庫；並非教育部官方工具。<a href="./docs/reading-pronunciations.md" target="_blank" rel="noopener">來源與授權說明</a></p>
+      <p>詞語拆音依標示聲調分段讀，連續三聲仍顯示原本的三聲。</p>
+    </details>
+  </footer>
+  <details id="example-details" class="example-details"><summary>📚 常用生活例句 · 給大人</summary><p>點一句就能查注音；也可以換字造句。語音辨識後，請先確認國字是否正確。</p><div id="example-list"></div></details>
+  <script type="module" src="./zhuyin-helper.js?v=20261022-helper1"></script>
+</body>
+</html>
