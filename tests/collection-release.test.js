@@ -31,7 +31,10 @@ test('home, farm, Safari and shortcut entry chains refresh the collection readin
   'app.js':['farm-learning.bundle.js'],'tone.js':['farm-learning.bundle.js'],
   'adventure-preview.html':['adventure-entry.bundle.js'],'adventure-entry.js':['adventure-play.bundle.js'],
  };
- for(const [file,imports]of Object.entries(refs))for(const name of imports)assert(source(file).includes(name+'?v='+version),file+' -> '+name);
+ for(const [file,imports]of Object.entries(refs))for(const name of imports){
+  const expected=name==='game-boot.js'?'20261022-safari1':version;
+  assert(source(file).includes(name+'?v='+expected),file+' -> '+name);
+ }
  const ipad={userAgent:'iPad CPU OS 17_0 Version/17.0 Safari/605.1',standalone:true};
  for(const classId of ['main','grade2'])for(const page of ['reading.html?farmLesson=reading&','reading-shortcut.html?farmLesson=reading&','index.html?']){
   const plan=readingLaunchPlan('https://j822925.github.io/zhuyin-game-new/'+page+'class='+classId,ipad);

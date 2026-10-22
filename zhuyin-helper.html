@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>注音小幫手｜學習廣場</title>
-  <link rel="stylesheet" href="./zhuyin-helper.css?v=20261022-common1">
+  <meta name="apple-mobile-web-app-capable" content="no">
+  <link rel="stylesheet" href="./zhuyin-helper.css?v=20261022-safari1">
 </head>
 <body>
   <header><a id="back" href="./index.html?class=main">← 學習廣場</a><h1>📖 注音小幫手</h1></header>
@@ -56,6 +57,7 @@
   </main>
   <footer>
     <button id="stop" class="stop">🔇 停止播放</button>
+    <p id="helper-return-hint" class="status" hidden>🏠 回原本遊戲：按 iPad 主畫面鍵／回主畫面，再點遊戲圖示。</p>
     <details><summary>給大人 · 使用說明</summary>
       <p>這是查詢工具，不計分、不發星星。先看完整詞語與老師核對答案，再使用已整理的常見讀音。常用音是可修正的預設，不是人工智慧判斷，仍可能不符合特殊句意或人名；其他讀音可展開查看，未涵蓋的多音會請大人協助。沒有老師錄音的音不會用其他聲音代替。</p>
       <p>麥克風須允許權限；iPad 若無法辨識，請在 Safari 開啟或改用打字。本工具不保存錄音、不將錄音送到遊戲後台；瀏覽器的語音辨識服務可能需要網路並處理語音。</p>
@@ -64,6 +66,6 @@
     </details>
   </footer>
   <details id="example-details" class="example-details"><summary>📚 常用生活例句 · 給大人</summary><p>點一句就能查注音；也可以換字造句。語音辨識後，請先確認國字是否正確。</p><div id="example-list"></div></details>
-  <script type="module" src="./zhuyin-helper.js?v=20261022-helper1"></script>
+  <script type="module" src="./helper-bootstrap.js?v=20261022-safari1"></script>
 </body>
 </html>

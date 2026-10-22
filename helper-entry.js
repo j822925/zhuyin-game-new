@@ -3,7 +3,7 @@ export function helperUrl(href=globalThis.location.href){
  const source=new URL(href),target=new URL('zhuyin-helper.html',source);
  const selected=source.searchParams.get('class');
  const grade2=selected==='grade2'||(!selected&&source.pathname.endsWith('/grade2.html'));
- target.searchParams.set('v','20261022-helper1');
+ target.searchParams.set('v','20261022-safari1');
  target.searchParams.set('class',grade2?'grade2':'main');
  if(source.searchParams.get('demo')==='1')target.searchParams.set('demo','1');
  return target.href;
