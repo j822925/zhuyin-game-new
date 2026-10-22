@@ -15,11 +15,11 @@ export function mountIslandNames(root=document){
   const heading=learning.querySelector('h2');heading.textContent='學習廣場';heading.id='learning-plaza-title';
   const eyebrow=learning.querySelector('.eyebrow');if(eyebrow)eyebrow.hidden=true;
   const worlds=home.querySelector('.worlds');worlds?.setAttribute('aria-labelledby',heading.id);
-  const destinations=[...home.querySelectorAll(':scope > .special-destinations')].filter(n=>n.id!=='classroom-home-entry');
+  const destinations=[...home.querySelectorAll(':scope > .special-destinations')].filter(n=>n.id!=='helper-home-entry');
   let anchor=learning;for(const panel of destinations){anchor.after(panel);anchor=panel;}
  }
- const classroom=home.querySelector('#classroom-home-entry');
- if(classroom){
+ const helper=home.querySelector('#helper-home-entry');
+ if(helper||root.getElementById('duo')||root.getElementById('race')){
   const challenge=make('section','island-challenge');challenge.id='island-challenge';challenge.setAttribute('aria-labelledby','challenge-title');
   const title=make('h2','island-section-title','一起挑戰');title.id='challenge-title';challenge.append(title);
   (setup||hero||nameplate).after(challenge);
@@ -34,7 +34,7 @@ export function mountIslandNames(root=document){
    challenge.append(row);
    const solo=root.getElementById('solo');if(solo?.parentElement.classList.contains('segmented'))solo.parentElement.hidden=true;
   }
-  challenge.append(classroom);
+  if(helper)challenge.append(helper);
  }
  home.classList.add('island-named-home');
 }
