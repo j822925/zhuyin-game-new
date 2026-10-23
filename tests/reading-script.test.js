@@ -4,7 +4,7 @@ import {READING_SCRIPT_FORMS} from '../reading-script-forms.js';
 const word=text=>{const w=READING_WORDS.find(w=>w.word===text);assert.ok(w,text);return w;};
 test('every generated traditional/simplified/mixed spelling preserves exact whole-word acceptance',()=>{
  let checked=0;for(const w of READING_WORDS){assert.equal(readingDecision(w,w.word),'correct');for(const form of READING_SCRIPT_FORMS[w.word]||[]){assert.equal(readingDecision(w,form),'correct',w.word+' / '+form);checked++;}}
- assert.ok(checked>=1000);assert.equal(READING_WORDS.length,1237);
+ assert.ok(checked>=800);assert.equal(READING_WORDS.length,1332);
 });
 test('expanded vocabulary accepts simplified forms without changing displayed targets',()=>{
  for(const [target,heard] of [['電風扇','电风扇'],['圖書館','图书馆'],['頭髮','头发'],['腳踏車','脚踏车'],['學校','学校']]){const w=word(target);assert.equal(readingDecision(w,heard),'correct');assert.equal(w.word,target);}

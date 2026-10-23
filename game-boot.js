@@ -3,7 +3,7 @@ import {bootPreparation} from './preparation.js?v=20261011-fastprep1';
 await import('./app.js?v=20261022-collection1');
 await import('./forest-home-entry.js?v=20261020-bo1');
 await import('./child-navigation.js?v=20260928-all1');
-await import('./reading-entry.js?v=20261022-collection1');
+await import('./reading-entry.js?v=20261023-life1');
 await import('./tone-entry.js?v=20261011-teacher1');
 await import('./teacher-hub.js?v=20261011-teacher1');
 await import('./helper-entry.js?v=20261022-audio1').catch(()=>{});
