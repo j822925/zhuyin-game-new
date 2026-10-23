@@ -2,5 +2,5 @@
 import {readingLaunchEnvironment,readingLaunchPlan,mountReadingLaunch} from './reading-launch.js?v=20261022-collection1';
 const plan=readingLaunchPlan(location.href,readingLaunchEnvironment());
 if(plan.standalone){
- mountReadingLaunch(plan);await import('./class-context.js?v=20260928-all1');
+ mountReadingLaunch(plan);await import('./class-context.js?v=20261023-exam1');
 }else await import('./reading.js?v=20261022-collection1');

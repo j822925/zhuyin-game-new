@@ -25,8 +25,8 @@ export function mountHomeDestinations(root=document){
  if(!entry){
   entry=root.createElement('a');entry.id='forest-entry';
   entry.href=classUrl('adventure-preview.html?v=20261020-bo1');
-  entry.setAttribute('aria-label','注音探險島，進入冒險遊戲');
-  entry.textContent='🌳 注音探險島　進入冒險 ▶';
+  entry.setAttribute('aria-label','池東注音探險島，進入冒險遊戲');
+  entry.textContent='🌳 池東注音探險島　進入冒險 ▶';
  }
  entry.className='forest-game-link';
  entry.removeAttribute('style');

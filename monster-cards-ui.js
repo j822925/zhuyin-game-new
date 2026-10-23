@@ -1,7 +1,7 @@
 import {mountMonsterCardImage,disposeMonsterCardImages} from './monster-card-image.js?v=20261011-battle1';
 import {monsterProgress,monsterLevel,monsterLevelLabel,MONSTER_LEVELS,monsterRequirements} from './data/monster-collection-rules.js?v=20261004-levels1';
 import {MONSTERS,randomMonster} from './data/monsters.js?v=20261004-villains1';
-import {classStorageKey} from './class-context.js?v=20260928-all1';
+import {classStorageKey} from './class-context.js?v=20261023-exam1';
 import {within} from './reward-request.js?v=20260928-all1';
 export function monsterCard(c,{locked=false,victories=0,preview=false,levels=[],requiredLevels=monsterRequirements(c)}={}){
  const card=document.createElement('article');card.className='monster-card monster-'+c.theme+(locked?' locked':'');

@@ -1,7 +1,7 @@
 import {optimizedImage} from './data/portrait-thumbnails.js?v=20261007-ipad1';
 import './asset-cache.js?v=20260928-all1';
 import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
-import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
+import {classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
 import {CHARACTER_CATALOG} from './data/character-catalog.js';
 import {STAR_SPRITES} from './data/star-sprites.js';
 import {audioSource} from './audio-source.js?v=20261020-bo1';

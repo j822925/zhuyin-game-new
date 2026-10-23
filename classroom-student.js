@@ -3,7 +3,7 @@ import {createCompletion} from './classroom-completion.js?v=20261020-bo1';
 const $=id=>document.getElementById(id),params=new URL(location.href).searchParams,normal=document.documentElement.dataset.student==='authenticated',host=!normal&&params.get('role')==='teacher',base=normal?'https://zhuyin-api.j822925.workers.dev/trial/classroom-api':'/trial/classroom-api';
 let studentSession=null,studentIdentity=null,classId='main',homeUrl='https://j822925.github.io/zhuyin-game-new/';
 if(normal){
- const [{createStudentSession},{classStorageKey,classUrl,currentClass}]=await Promise.all([import('./student-session.js?v=20261009-accounts1'),import('./class-context.js?v=20260928-all1')]);
+ const [{createStudentSession},{classStorageKey,classUrl,currentClass}]=await Promise.all([import('./student-session.js?v=20261009-accounts1'),import('./class-context.js?v=20261023-exam1')]);
  classId=currentClass;homeUrl=classUrl('./');studentSession=createStudentSession({storage:sessionStorage,key:classStorageKey('zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':live')});studentIdentity=studentSession.read();
  document.querySelector('header a.home').href=homeUrl;document.querySelector('header a.home').textContent='🏡 回首頁';
  document.querySelector('.notice').textContent='🌟 全班問答・用平常的帳號加入本班活動，不必重填座號或密碼。完成活動可依名次領星星，不計入正式小考成績。';

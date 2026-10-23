@@ -1,4 +1,4 @@
-import {classStorageKey} from './class-context.js?v=20260928-all1';
+import {classStorageKey} from './class-context.js?v=20261023-exam1';
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
 // PINs never enter storage, URLs or score payloads. Primary sessions survive same-tab navigation.
 export function loginFeedback(code,retryAfter){

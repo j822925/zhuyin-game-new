@@ -1,11 +1,11 @@
 import {bootPreparation} from './preparation.js?v=20261011-fastprep1';
 (async()=>{void bootPreparation().catch(()=>{});
-await import('./app.js?v=20261022-collection1');
-await import('./forest-home-entry.js?v=20261020-bo1');
+await import('./app.js?v=20261023-exam1');
+await import('./forest-home-entry.js?v=20261023-exam1');
 await import('./child-navigation.js?v=20260928-all1');
 await import('./reading-entry.js?v=20261022-collection1');
 await import('./tone-entry.js?v=20261011-teacher1');
 await import('./teacher-hub.js?v=20261011-teacher1');
 await import('./helper-entry.js?v=20261022-audio1').catch(()=>{});
-await import('./island-names.js?v=20261022-helper1').catch(()=>{});
+await import('./island-names.js?v=20261023-exam1').catch(()=>{});
 })().catch(()=>{document.getElementById('app').innerHTML='<p>連線暫時不穩，請重新整理再試一次。</p><button onclick="location.reload()">重新讀取 ↻</button>';});

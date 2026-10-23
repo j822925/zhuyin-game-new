@@ -1,4 +1,4 @@
-import {classUrl} from './class-context.js?v=20260928-all1';
+import {classUrl} from './class-context.js?v=20261023-exam1';
 const home=document.getElementById('home');
 if(home&&!document.getElementById('classroom-home-entry')){
  const panel=document.createElement('nav');panel.id='classroom-home-entry';panel.className='special-destinations';panel.setAttribute('aria-label','加入全班問答');

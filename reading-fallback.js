@@ -1,4 +1,4 @@
-import {classUrl} from './class-context.js?v=20260926-classes1';
+import {classUrl} from './class-context.js?v=20261023-exam1';
 import {readingLaunchEnvironment,readingLaunchPlan} from './reading-launch.js?v=20261007-ipad1';
 export function nativeReadingLink(){
  const plan=readingLaunchPlan(location.href,readingLaunchEnvironment()),url=new URL(plan.browserUrl);url.searchParams.set('speech','native');url.searchParams.set('v','20261007-ipad1');

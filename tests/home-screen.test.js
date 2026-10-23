@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 const root=new URL('../',import.meta.url),html=fs.readFileSync(new URL('index.html',root),'utf8'),manifest=JSON.parse(fs.readFileSync(new URL('manifest.webmanifest',root),'utf8'));
 test('iPad 主畫面獨立啟動 metadata、名稱與入口一致',()=>{
- assert.match(html,/name="apple-mobile-web-app-capable" content="yes"/);assert.match(html,/name="apple-mobile-web-app-title" content="注音探險島"/);assert.match(html,/rel="manifest"/);assert.match(html,/rel="apple-touch-icon"/);assert.equal(manifest.display,'standalone');assert.equal(manifest.name,'注音探險島');assert.equal(manifest.orientation,'landscape');
+ assert.match(html,/name="apple-mobile-web-app-capable" content="yes"/);assert.match(html,/name="apple-mobile-web-app-title" content="池東注音探險島"/);assert.match(html,/rel="manifest"/);assert.match(html,/rel="apple-touch-icon"/);assert.equal(manifest.display,'standalone');assert.equal(manifest.name,'池東注音探險島');assert.equal(manifest.orientation,'landscape');
  const base=new URL('https://j822925.github.io/zhuyin-game/'),start=new URL(manifest.start_url,base),scope=new URL(manifest.scope,base);assert.equal(start.origin,base.origin);assert.ok(start.pathname.startsWith(scope.pathname));assert.ok(!start.searchParams.has('demo'));assert.ok(!start.searchParams.has('seat'));assert.ok(!start.searchParams.has('pin'));assert.equal(manifest.id,'./');
 });
 test('主畫面圖示 PNG 尺寸真實正確且不透明',()=>{

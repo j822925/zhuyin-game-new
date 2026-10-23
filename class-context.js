@@ -16,10 +16,10 @@ if(typeof document!=='undefined'){
   const links=()=>{const base=new URL('.',location.href);for(const a of document.querySelectorAll('a[href]')){if(a.hasAttribute('download'))continue;const u=new URL(a.href,location.href);if(u.origin===base.origin&&u.pathname.startsWith(base.pathname)&&(!u.pathname.split('/').at(-1)||u.pathname.endsWith('.html'))){const value=classUrl(u);if(a.href!==value)a.href=value;}}};
   links();new MutationObserver(links).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['href']});
   if(currentClass==='main')return;
-  const manifest=document.querySelector('link[rel=manifest]');if(manifest&&currentClass==='grade2'&&!new URL(manifest.href).pathname.endsWith('/manifest-grade2.webmanifest'))manifest.href=new URL('manifest-grade2.webmanifest?v=20261001-class1',import.meta.url).href;
+  const manifest=document.querySelector('link[rel=manifest]');if(manifest&&currentClass==='grade2'&&!new URL(manifest.href).pathname.endsWith('/manifest-grade2.webmanifest'))manifest.href=new URL('manifest-grade2.webmanifest?v=20261023-exam1',import.meta.url).href;
   const banner=document.createElement('div');banner.id='class-banner';banner.setAttribute('role','status');banner.style.cssText='text-align:center;padding:8px;background:#e3eed7;color:#285548;font-weight:bold';banner.textContent='🏫 正在確認班級…';document.body.prepend(banner);
   const endpoint=location.hostname==='127.0.0.1'?location.origin:'https://zhuyin-api.j822925.workers.dev';
-  fetch(classUrl(endpoint+'/class-info'),{cache:'no-store'}).then(r=>r.json()).then(out=>{if(!out.class)throw Error();banner.textContent='🏫 '+out.class.name+'・注音探險島';document.title=out.class.name+'｜'+document.title;const title=document.querySelector('meta[name=apple-mobile-web-app-title]');if(title)title.content=out.class.name+'注音';}).catch(()=>{banner.textContent='⚠ 找不到這個班級，請使用老師提供的遊戲網址。';});
+  fetch(classUrl(endpoint+'/class-info'),{cache:'no-store'}).then(r=>r.json()).then(out=>{if(!out.class)throw Error();banner.textContent='🏫 '+out.class.name+'・池東注音探險島';document.title=out.class.name+'｜'+document.title;const title=document.querySelector('meta[name=apple-mobile-web-app-title]');if(title)title.content=out.class.name+'注音';}).catch(()=>{banner.textContent='⚠ 找不到這個班級，請使用老師提供的遊戲網址。';});
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 }

@@ -40,7 +40,7 @@ test('helper mounts once as a standard link and needs no account or network acce
 test('homepage removes only the classroom entry and retains its existing services and battle navigation',()=>{
  const boot=read('game-boot.js'),names=read('island-names.js'),entry=read('helper-entry.js');
  assert.match(boot,/helper-entry.js\?v=20261022-audio1/);
- assert.match(boot,/island-names.js\?v=20261022-helper1/);
+ assert.match(boot,/island-names.js\?v=20261023-exam1/);
  assert.doesNotMatch(boot,/classroom-entry/);
  assert.match(names,/if\(helper\|\|root.getElementById\('duo'\)\|\|root.getElementById\('race'\)\)/);
  assert.match(names,/row.append\(button\)/);

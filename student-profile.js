@@ -1,6 +1,6 @@
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
 import {demoMonsters} from './monster-cards-ui.js?v=20261011-battle1';
-import {classStorageKey} from './class-context.js?v=20260928-all1';
+import {classStorageKey} from './class-context.js?v=20261023-exam1';
 import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20261007-ipad1';
 import {STAR_CARDS} from './data/star-cards.js?v=20260928-all1';
 import {STAR_SPRITES} from './data/star-sprites.js?v=20260928-all1';

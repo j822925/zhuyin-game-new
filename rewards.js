@@ -1,4 +1,4 @@
-import {classStorageKey} from './class-context.js?v=20260928-all1';
+import {classStorageKey} from './class-context.js?v=20261023-exam1';
 import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20261007-ipad1';
 import {cappedRoundAward,rewardParticipants,taipeiDay,rewardBucket} from './learning-rewards.js?v=20261007-ipad1';
 import {startGachaAnimation} from './gacha-animation.js?v=20260928-all1';

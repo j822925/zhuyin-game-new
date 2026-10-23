@@ -5,7 +5,7 @@ export function mountIslandNames(root=document){
  const make=(tag,className,text)=>{const node=root.createElement(tag);node.className=className;if(text)node.textContent=text;return node;};
  const nameplate=make('div','island-nameplate');nameplate.id='island-nameplate';
  const icon=make('span','island-name-icon','🌳');icon.setAttribute('aria-hidden','true');
- nameplate.append(icon,make('h1','island-name-title','注音探險島'));home.prepend(nameplate);
+ nameplate.append(icon,make('h1','island-name-title','池東注音探險島'));home.prepend(nameplate);
  const hero=home.querySelector('.hero'),setup=home.querySelector('.setup');
  if(hero)nameplate.after(hero);
  if(setup&&hero)hero.after(setup);

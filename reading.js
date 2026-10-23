@@ -9,7 +9,7 @@ import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
 import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic4';
 import {createMicCheck,clearMicPlayback} from './reading-mic-check.js?v=20260928-mic3';
 import {createMicPreference} from './reading-mic-preference.js?v=20260928-all1';
-import {classStorageKey,classUrl} from './class-context.js?v=20260928-all1';
+import {classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
 import {createStudentAuth} from './student-auth.js?v=20261009-accounts1';
 const $=id=>document.getElementById(id),demo=new URLSearchParams(location.search).get('demo')==='1';
