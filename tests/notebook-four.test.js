@@ -1,0 +1,14 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import {readingNotebookLaunchPlan} from '../notebook-launch.js';
+const read=f=>fs.readFileSync(new URL('../'+f,import.meta.url),'utf8');
+test('reading notebook Safari handoff carries only class and cache version',()=>{for(const cls of ['main','grade2']){const p=readingNotebookLaunchPlan('https://example.test/game/notebook.html?class='+cls+'&seat=990901&token=secret&farmLesson=tone#private',{userAgent:'iPad CPU OS 18_0',standalone:true});assert(p.standalone);assert(p.safariUrl.startsWith('x-safari-https:'));const u=new URL(p.browserUrl);assert.equal(u.pathname,'/game/reading-notebook.html');assert.equal(u.hash,'');assert.equal(u.searchParams.get('class'),cls);assert.deepEqual([...u.searchParams.keys()],['v','class']);}assert.equal(readingNotebookLaunchPlan('https://example.test/',{userAgent:'iPad CPU OS 16_0',standalone:true}).safariUrl,null);assert.equal(readingNotebookLaunchPlan('https://example.test/',{}).standalone,false);});
+test('notebooks isolate reading page, compact choices, pending per class/student, no award writes',()=>{const s=read('notebook.js'),h=read('notebook.html'),r=read('reading-notebook.html');for(const mode of ['single','spelling','tone'])assert(h.includes('data-mode="'+mode+'"'));assert(r.includes('class="reading-page"'));assert(!r.includes('data-mode="tone"'));assert(s.includes("classStorageKey('notebook-pending-v1:'+seat)"));assert(s.includes('savePending();run(sendPending)'));assert(s.includes("import('./exam-reading-input.js"));assert(s.includes('readingInput?.cancel()'));assert(!/kind:'round'|kind:'record'|kind:'forest-save'/.test(s));assert(read('notebook.css').includes('.spelling-head button[data-active=true]'));});
+
+test('spelling keeps both labelled choice groups visible when selecting either slot',()=>{
+ const source=read('notebook.js'),body=source.match(/function part\(kind\)\{([\s\S]*?)\nfunction options/)[1];
+ assert(!body.includes('.hidden'));
+ const slots={'initial-slot':{dataset:{}},'final-slot':{dataset:{}}};
+ const part=new Function('$','return function part(kind){'+body) (id=>slots[id]);
+ for(const kind of ['initial','final','initial']){part(kind);assert.equal(slots[kind+'-slot'].dataset.active,'true');assert.equal(slots[(kind==='initial'?'final':'initial')+'-slot'].dataset.active,'false');}
+ for(const file of ['notebook.html','reading-notebook.html']){const html=read(file);for(const kind of ['initial','final']){const group=html.match(new RegExp('<div id="'+kind+'-choices"[^>]*>'))[0];assert(!group.includes('hidden'));assert(group.includes('role="group"'));assert(group.includes('aria-labelledby="'+kind+'-label"'));}}
+ assert(read('notebook.css').includes('.spelling-group .tiles{grid-template-columns:repeat(4,minmax(0,1fr))'));
+});
