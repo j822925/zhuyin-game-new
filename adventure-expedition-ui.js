@@ -30,7 +30,7 @@ export function createExpedition(api){
  const layoutObserver=new ResizeObserver(fitBattle);layoutObserver.observe(dialog);
  let releaseQuestionMusic=null,releaseSpeechMusic=null;
  function stopAudio(){audio?.pause();audio=null;releaseQuestionMusic?.();releaseQuestionMusic=null;releaseSpeechMusic?.();releaseSpeechMusic=null;if(globalThis.speechSynthesis?.speaking)speechSynthesis.cancel();}
- function close(){forestMusic.setBattle(false);motion?.dispose();motion=null;fieldMotion?.dispose();fieldMotion=null;resolving=false;generation++;loading=false;keys.clear();joystick=null;stopAudio();cancelAnimationFrame(raf);dialog.close();if(local&&api.scene())api.scene().castAt=0;api.stop();}
+ function close(){forestMusic.setBattle(false);forestMusic.setArea(api.scene()?.area||null);motion?.dispose();motion=null;fieldMotion?.dispose();fieldMotion=null;resolving=false;generation++;loading=false;keys.clear();joystick=null;stopAudio();cancelAnimationFrame(raf);dialog.close();if(local&&api.scene())api.scene().castAt=0;api.stop();}
  function depart(suspend=false){if(resolving)return;if(!local&&run()&&!transaction(()=>leaveExpedition(state(),{suspend}))){api.toast('💾 還沒存好，請再試一次');return;}close();if(suspend)completeAction('saved');}
  dialog.addEventListener('cancel',e=>{e.preventDefault();depart();});
  function button(label,action,cls=''){const b=document.createElement('button');b.textContent=label;b.className=cls;b.onclick=action;return b;}
@@ -54,6 +54,8 @@ export function createExpedition(api){
   raf=requestAnimationFrame(drawPlayer);
  }
  function shell(){
+  // Expeditions and their shops are overlays; the underlying scene stays on the island map.
+  forestMusic.setArea(local?api.scene()?.area:z.id);
   forestMusic.setBattle(!!run()?.battle);
   motion?.dispose();motion=null;fieldMotion?.dispose();fieldMotion=null;dialog.dataset.resolving=String(resolving);stopAudio();dialog.setAttribute('aria-label',local?'原地挑戰':'區域遠征');dialog.classList.toggle('exp-local',local);dialog.dataset.view=view;dialog.innerHTML='<header class="exp-header"><div></div><nav></nav></header><main class="exp-field"><div class="exp-world"><canvas class="exp-player" width="180" height="200" aria-label="我的角色"></canvas><div class="exp-monsters"></div></div></main><section class="exp-panel" aria-live="polite"></section>';
   layoutObserver.disconnect();layoutObserver.observe(dialog);layoutObserver.observe(dialog.querySelector('.exp-panel'));layoutObserver.observe(dialog.querySelector('.exp-header'));

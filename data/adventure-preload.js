@@ -1,6 +1,6 @@
 // Approved, published adventure media only. No student data, APIs or answers.
-export const ADVENTURE_PRELOAD_VERSION='20261011-fastprep1';
-export const ADVENTURE_PRELOAD_BYTES=85494375;
+export const ADVENTURE_PRELOAD_VERSION='20261023-zonemusic1';
+export const ADVENTURE_PRELOAD_BYTES=107013874;
 export const ADVENTURE_PRELOAD=[
   "assets/exploration/grove-v1.webp",
   "assets/exploration/acorn-v1.webp",
@@ -97,6 +97,16 @@ export const ADVENTURE_PRELOAD=[
   "assets/music/horizon-v1.m4a",
   "assets/music/starlight-forest-v1.m4a",
   "assets/music/sunny-village-v1.m4a",
+  "assets/music/zone-bud-v1.m4a",
+  "assets/music/zone-stone-v1.m4a",
+  "assets/music/zone-sand-v1.m4a",
+  "assets/music/zone-sail-v1.m4a",
+  "assets/music/zone-shell-v1.m4a",
+  "assets/music/zone-whale-v1.m4a",
+  "assets/music/zone-watch-v1.m4a",
+  "assets/music/zone-port-v1.m4a",
+  "assets/music/zone-bridge-v1.m4a",
+  "assets/music/zone-deep-v1.m4a",
   "assets/optimized/bear-v1.7556a6a0f880.webp",
   "assets/optimized/bear.2c324cd850dc.webp",
   "assets/optimized/forest.a93e8c34366f.webp",

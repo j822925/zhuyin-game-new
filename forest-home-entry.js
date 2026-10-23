@@ -24,7 +24,7 @@ export function mountHomeDestinations(root=document){
  let entry=root.getElementById('forest-entry');
  if(!entry){
   entry=root.createElement('a');entry.id='forest-entry';
-  entry.href=classUrl('adventure-preview.html?v=20261020-bo1');
+  entry.href=classUrl('adventure-preview.html?v=20261023-zonemusic1');
   entry.setAttribute('aria-label','池東注音探險島，進入冒險遊戲');
   entry.textContent='🌳 池東注音探險島　進入冒險 ▶';
  }

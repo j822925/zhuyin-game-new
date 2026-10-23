@@ -1,6 +1,9 @@
 // Forest-only background music. Question audio never goes through this gain node.
-export const MUSIC_TRACKS={village:'assets/music/sunny-village-v1.m4a',grove:'assets/music/starlight-forest-v1.m4a',map:'assets/music/horizon-v1.m4a'};
-export function musicForArea(area){return area==='grove'?'grove':['forest','room','bedroom','kitchen','bathroom','farm'].includes(area)?'village':area?'map':null;}
+export const ZONE_MUSIC_TRACKS=Object.freeze(Object.fromEntries(
+ ['bud','stone','sand','sail','shell','whale','watch','port','bridge','deep'].map(id=>[id,`assets/music/zone-${id}-v1.m4a`])
+));
+export const MUSIC_TRACKS={village:'assets/music/sunny-village-v1.m4a',grove:'assets/music/starlight-forest-v1.m4a',map:'assets/music/horizon-v1.m4a',...ZONE_MUSIC_TRACKS};
+export function musicForArea(area){return Object.prototype.hasOwnProperty.call(ZONE_MUSIC_TRACKS,area)?area:area==='grove'?'grove':['forest','room','bedroom','kitchen','bathroom','farm'].includes(area)?'village':area?'map':null;}
 export function createForestMusic({makeAudio=()=>new Audio(),makeContext=()=>new (globalThis.AudioContext||globalThis.webkitAudioContext)(),changed=()=>{}}={}){
  let audio,context,gain,source,area=null,track=null,enabled=true,unlocked=false,battle=false,hidden=false,disposed=false,ticket=0,failed=false;
  const holds=new Set();
