@@ -32,7 +32,7 @@ async function loadQuestion(){
  $('count').textContent='待複習 '+out.count+' 題';$('mode-label').textContent=names[question.mode];for(const [id,m] of [['choices','single'],['spelling','spelling'],['tone-input','tone'],['reading-input','reading']])$(id).hidden=question.mode!==m;
  $('submit').hidden=question.mode==='reading';$('listen').hidden=question.mode==='reading';$('audio-status').textContent='';
  if(question.mode==='single')options('choices',question.choices,'answer');
- else if(question.mode==='spelling'){for(const kind of ['initial','final']){$(kind+'-slot').textContent=kind==='initial'?'選聲符':'選韻符';options(kind+'-choices',question.choices[kind],kind);}part('initial');$('tone').textContent=question.toneMark;}
+ else if(question.mode==='spelling'){for(const kind of ['initial','final']){$(kind+'-slot').textContent=kind==='initial'?'選聲符':'選韻符';options(kind+'-choices',question.choices[kind],kind);}part('initial');$('tone').textContent=question.toneMark;$('tone').parentElement.dataset.neutral=String(question.toneMark==='˙');}
  else if(question.mode==='tone')toneInput.show(question.text);
  else{
   if(!readingInput){const {createReadingExamInput}=await import('./exam-reading-input.js?v=20261023-readingexam1');if(render!==view)return;readingInput=createReadingExamInput($('reading-input'),answer=>submit(answer));}
