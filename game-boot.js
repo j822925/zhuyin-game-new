@@ -1,6 +1,6 @@
 import {bootPreparation} from './preparation.js?v=20261011-fastprep1';
 (async()=>{void bootPreparation().catch(()=>{});
-await import('./app.js?v=20261023-exam1');
+await import('./app.js?v=20261023-readingexam1');
 await import('./forest-home-entry.js?v=20261023-exam1');
 await import('./child-navigation.js?v=20260928-all1');
 await import('./reading-entry.js?v=20261023-life1');

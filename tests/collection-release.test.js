@@ -32,7 +32,7 @@ test('home, farm, Safari and shortcut entry chains refresh the collection readin
   'adventure-preview.html':['adventure-entry.bundle.js'],'adventure-entry.js':['adventure-play.bundle.js'],
  };
  for(const [file,imports]of Object.entries(refs))for(const name of imports){
-  const expected=['adventure-entry.bundle.js','adventure-play.bundle.js'].includes(name)?'20261023-harvest6':['game-boot.js','app.js'].includes(name)?'20261023-exam1':['reading-entry.js','reading-launch.js','reading-bootstrap.js','reading.js'].includes(name)?'20261023-life1':version;
+  const expected=['adventure-entry.bundle.js','adventure-play.bundle.js'].includes(name)?'20261023-harvest6':['game-boot.js','app.js'].includes(name)?'20261023-readingexam1':['reading-entry.js','reading-launch.js','reading-bootstrap.js','reading.js'].includes(name)?'20261023-life1':version;
   assert(source(file).includes(name+'?v='+expected),file+' -> '+name);
  }
  const ipad={userAgent:'iPad CPU OS 17_0 Version/17.0 Safari/605.1',standalone:true};
