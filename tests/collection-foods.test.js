@@ -15,7 +15,7 @@ test('twelve paid crops survive reload, grow only from their matching planted ba
   modes[crop.lesson]=(modes[crop.lesson]||0)+1;const s=freshState();s.world.visited=true;s.life.farmUnlocked=true;s.stars=10;
   assert(buySeed(s,id));assert.equal(s.stars,10-COLLECTION_SEEDS[id].price);assert(plantCrop(s,0,id));assert.equal(s.life.seeds[id],0);assert(waterCrop(s,0));
   const ticket=beginFarmRound(s,{owner:'test-only-owner',mode:crop.lesson,roundId:id,allowClaim:true}),loaded=sanitizeState(s);assert(ticket);
-  assert.equal(settleFarmRound(loaded,ticket,round(crop.lesson,id)),1);assert.equal(harvestCrop(loaded,0),id);assert.equal(settleFarmRound(loaded,ticket,round(crop.lesson,id)),0);assert.equal(sanitizeState(loaded).life.harvest[id],1);
+  assert.equal(settleFarmRound(loaded,ticket,round(crop.lesson,id)),1);assert.equal(harvestCrop(loaded,0),id);assert.equal(settleFarmRound(loaded,ticket,round(crop.lesson,id)),0);assert.equal(sanitizeState(loaded).life.harvest[id],6);
  }assert.deepEqual(modes,{single:3,spelling:3,tone:3,reading:3});
 });
 test('all fifteen pond fish can be caught once using the same bait and no energy, with stable persisted discoveries',()=>{

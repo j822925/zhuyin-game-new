@@ -5,7 +5,7 @@ import {fishingEffect,fishingStage} from './adventure-fishing-feedback.js';
 import {hasEnergy} from './adventure-food-model.js';
 import {drawFieldDetail} from './adventure-terrain.js';
 import {departForIslandLesson} from './farm-learning-bridge.js';
-import {ACTIVITY_PRICES,CROPS,CROP_LESSONS,CROP_ACCURACY,FISH,FARM_GATE,POND_BANK,FARM_PLOTS,unlockActivity,plotStage,plantCrop,waterCrop,harvestCrop,castLine,reelFish} from './adventure-life-model.js';
+import {ACTIVITY_PRICES,CROPS,CROP_LESSONS,CROP_ACCURACY,CROP_HARVEST_YIELD,FISH,FARM_GATE,POND_BANK,FARM_PLOTS,unlockActivity,plotStage,plantCrop,waterCrop,harvestCrop,castLine,reelFish} from './adventure-life-model.js';
 import {lifeStamp,drawFish,drawFishItem,drawSeedling} from './adventure-life-art.js';
 import {farmEffect,farmProgress} from './adventure-farm-feedback.js';
 const $=id=>document.getElementById(id);
@@ -35,7 +35,7 @@ export function createLife(api){
  function plot(index){if(api.blocked()||scene().area!=='farm'||!state().life.farmUnlocked)return;const field=FARM_PLOTS[index];api.walkTo({x:field.x+135,y:field.y+100},()=>{
   plotId=index;scene().player.direction=2;const p=state().life.plots[index],stage=plotStage(p);scene().farmFocus={x:field.x,y:field.y};
   if(stage==='seed'){if(waterCrop(state(),index)){save();farmEffect(scene(),'water',field,p.crop,p.plantId);api.toast('澆好水了，小芽冒出來囉！再玩一次'+CROP_LESSONS[CROPS[p.crop].lesson].name+'，達到 70% 就會長大。');}}
-  else if(stage==='ready'){const crop=harvestCrop(state(),index);if(crop){save();farmEffect(scene(),'harvest',field,crop,p.plantId);chime();api.toast('拔起來了！'+CROPS[crop].name+' +1，放進小竹籃。');}}
+  else if(stage==='ready'){const crop=harvestCrop(state(),index);if(crop){save();farmEffect(scene(),'harvest',field,crop,p.plantId);chime();api.toast('拔起來了！'+CROPS[crop].name+' +'+CROP_HARVEST_YIELD+'，放進小竹籃。');}else api.toast('這種作物的籃子快滿了，先使用一些，再回來採收。');}
   else show('plot');
  });}
  function enterFarm(){const ready=state().life.plots.map((p,i)=>({p,i})).filter(({p})=>p?.ready&&!p.growthSeen);for(const {p,i}of ready)farmEffect(scene(),'grow',FARM_PLOTS[i],p.crop,p.plantId,performance.now(),350+i*100);if(ready.length){scene().farmFocus=null;api.toast('練習完成！看，這批作物正在長大。');}}
@@ -74,7 +74,7 @@ export function createLife(api){
  $('life-message').textContent=`這批已有 ${batch} 處${CROPS[p.crop].name}澆好水。直接去玩平常的「${task.name}」，第一次答對至少 ${Math.ceil(task.questions*CROP_ACCURACY/100)}／${task.questions} 題，回來就能一起採收。不用老師另外指派。`;
  let leaving=false;const go=async trial=>{if(leaving)return;leaving=true;try{if(!save()||!await departForIslandLesson(mode,{demo:trial}))api.toast('暫時無法保存往返進度，請再試一次。');}finally{leaving=false;}};
  btn('去玩'+task.name+(demo?'（試玩）':''),()=>go(demo),{primary:true,id:'life-study'});
- }else{$('life-message').textContent=CROPS[p.crop].name+'長好了！收下來放進小竹籃吧。';btn('採收'+CROPS[p.crop].name,()=>{const crop=harvestCrop(state(),plotId);if(crop){save();close();farmEffect(scene(),'harvest',FARM_PLOTS[plotId],crop,p.plantId);chime();}},{primary:true,id:'life-harvest'});}
+ }else{$('life-message').textContent=CROPS[p.crop].name+'長好了！可以採收 '+CROP_HARVEST_YIELD+' 個，放進小竹籃。';btn('採收'+CROPS[p.crop].name,()=>{const crop=harvestCrop(state(),plotId);if(crop){save();close();farmEffect(scene(),'harvest',FARM_PLOTS[plotId],crop,p.plantId);chime();api.toast('採收完成！'+CROPS[crop].name+' +'+CROP_HARVEST_YIELD+'。');}else api.toast('這種作物的籃子快滿了，先使用一些，再回來採收。');},{primary:true,id:'life-harvest'});}
  $('life-note').textContent='完成原有關卡，第一次作答達到 70%，回來就能收成。';
  const steps=document.createElement('div');steps.className='farm-steps';const current=['empty','seed','growing','ready'].indexOf(stage);['播種','澆水','玩注音','收成'].forEach((label,i)=>{const step=document.createElement('span');step.textContent=(i<current?'✓ ':i===current?'現在：':'')+label;if(i===current)step.setAttribute('aria-current','step');steps.append(step);});$('life-picture').before(steps);
  }else if(mode==='harvest'){
