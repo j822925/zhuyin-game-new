@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {READING_WORDS,readingDecision,matchesReading} from '../reading-core.js';
+import {ALL_READING_WORDS as READING_WORDS,readingDecision,matchesReading} from '../reading-core.js';
 import {pronunciationDecision,similarReadingSyllable} from '../reading-pronunciation.js';
 import {PRONUNCIATIONS,PRONUNCIATION_SYLLABLES,PRONUNCIATION_METADATA} from '../reading-pronunciation-data.js';
 const word=text=>{const w=READING_WORDS.find(w=>w.word===text);assert.ok(w,text);return w;};

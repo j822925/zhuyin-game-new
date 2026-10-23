@@ -34,8 +34,8 @@ test('current lesson and class changes rebuild pools without leaking words from 
  for(let i=0;i<30;i++){const d=readingLessonDeck(a);assert.equal(d.length,5);assert.ok(d.every(w=>readingRequirements(w).every(s=>main.symbols.includes(s))));assert.ok(validReadingRound({mode:'reading',total:5,mistakes:0,results:d.map(w=>({wordId:w.id,target:w.zhuyin,firstCorrect:true}))}));}
  const changed=readingPool({symbols:['ㄅ','ㄚ'],compounds:[]});assert.ok(changed.length<a.length);assert.ok(changed.every(w=>readingRequirements(w).every(s=>['ㄅ','ㄚ'].includes(s))));
 });
-test('full taught set preserves 2/2/1 distribution with distinct phonetic questions',()=>{
+test('full taught set offers three two-character and two three-character everyday words',()=>{
  const pool=readingPool({symbols:BASE,compounds:COMPOUNDS});
  assert.equal(pool.length,new Set(READING_WORDS.map(w=>w.zhuyin)).size);
- for(let i=0;i<30;i++){const d=readingLessonDeck(pool);assert.deepEqual([2,3,4].map(n=>d.filter(w=>w.word.length===n).length),[2,2,1]);assert.equal(new Set(d.map(w=>w.zhuyin)).size,5);}
+ for(let i=0;i<30;i++){const d=readingLessonDeck(pool);assert.deepEqual([2,3,4].map(n=>d.filter(w=>w.word.length===n).length),[3,2,0]);assert.equal(new Set(d.map(w=>w.zhuyin)).size,5);}
 });

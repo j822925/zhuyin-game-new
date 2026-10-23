@@ -2,9 +2,9 @@ import {createQuestionReport} from './question-report.js?v=20261011-reports2';
 import {createReadingFarm,renderReadingFarm} from './reading-farm.bundle.js?v=20261022-collection1';
 import {createReadingBattle} from './reading-battle.js?v=20261011-battle1';
 import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261011-battle1';
-import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20261009-accounts1';
+import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20261023-life1';
 import './asset-cache.js?v=20260928-all1';
-import {readingStars,readingAttemptDecision,READING_WORDS} from './reading-core.js?v=20261008-safari2';
+import {readingStars,readingAttemptDecision,READING_WORDS} from './reading-core.js?v=20261023-life1';
 import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
 import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20260928-mic4';
 import {createMicCheck,clearMicPlayback} from './reading-mic-check.js?v=20260928-mic3';
@@ -199,7 +199,7 @@ async function flushPending(){
  finally{saving=false;$('retry-save').disabled=false;$('retry-save').hidden=!pending.some(p=>p.seat===seat);$('recover-pending')?.remove();if(pending.some(p=>p.seat===seat)&&!currentPayload){const b=document.createElement('button');b.id='recover-pending';b.className='secondary';b.textContent='儲存先前的朗讀紀錄';b.onclick=flushPending;$('home-message').after(b);}}
 }
 async function load(){
- $('wordbank-count').textContent=`題庫共有 ${READING_WORDS.length.toLocaleString('zh-TW')} 個詞語，每回合隨機抽 5 題。`;
+ $('wordbank-count').textContent=`題庫共有 ${READING_WORDS.length.toLocaleString('zh-TW')} 個生活常用兩至三字詞語，每回合隨機抽 5 題。`;
  $('reload').hidden=true;$('reload').disabled=true;$('start').disabled=true;lessonReady=false;
  if(demo){$('home-message').textContent='請從正式遊戲選座號並登入，再開始朗讀。';return;}
  if(!supported){$('home-message').textContent=globalThis.isSecureContext?'這個瀏覽器不支援語音辨識。iPad 請用 Safari，電腦請用 Chrome 或 Edge，並允許麥克風。':'錄音需要安全連線，請以 HTTPS 遊戲網址開啟。';return;}

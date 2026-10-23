@@ -1,6 +1,6 @@
 import {prepareLocalAudio,createLocalRecorder} from './reading-local-core.js?v=20260928-local1';
-import {matchesReading,READING_WORDS} from './reading-core.js?v=20260928-all1';
-const $=id=>document.getElementById(id),words=['apple','school','giraffe','happy','colorful'].map(id=>READING_WORDS.find(w=>w.id===id));
+import {matchesReading,READING_WORDS} from './reading-core.js?v=20261023-life1';
+const $=id=>document.getElementById(id),words=['apple','school','giraffe','tomato','bicycle'].map(id=>READING_WORDS.find(w=>w.id===id));
 let worker,pending,requestId=0,epoch=0,ready=false,busy=false,index=0,recordState='idle';
 const standalone=navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
 $('context').textContent=standalone?'目前：主畫面模式（正是這次要測的模式）':'目前：瀏覽器分頁。要確認主畫面可用，請按下方說明加入主畫面再試。';
