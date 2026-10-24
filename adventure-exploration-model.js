@@ -37,7 +37,7 @@ export function freshWorld(){return {visited:false,shops:[]};}
 export function sanitizeWorld(raw){return {visited:raw?.visited===true,shops:[...new Set((Array.isArray(raw?.shops)?raw.shops:[]).filter(id=>DESTINATIONS.some(d=>d.id===id&&d.kind==='shop'&&d.price>0)))]};}
 export function destinationOpen(state,id){const d=DESTINATIONS.find(d=>d.id===id);return !!d&&d.ready&&(d.price===0||state.world?.shops.includes(id));}
 export function unlockDestination(state,id){const d=DESTINATIONS.find(d=>d.id===id);if(!hasEnergy(state)||!state.world?.visited||!d?.ready||d.kind!=='shop'||!d.price||destinationOpen(state,id)||!Number.isInteger(state.stars)||state.stars<d.price)return false;state.stars-=d.price;state.world.shops.push(id);return true;}
-export function buySeed(state,id){const seed=Object.hasOwn(SEEDS,id)&&SEEDS[id];if(!seed||!hasEnergy(state)||!state.world?.visited||!Number.isInteger(state.stars)||state.stars<seed.price||(state.life.seeds?.[id]||0)>=9999)return false;state.stars-=seed.price;(state.life.seeds??={})[id]=(state.life.seeds[id]||0)+1;return true;}
+export function buySeed(state,id){const seed=Object.hasOwn(SEEDS,id)&&SEEDS[id];if(!seed||!state.world?.visited||!Number.isInteger(state.stars)||state.stars<seed.price||(state.life.seeds?.[id]||0)>=9999)return false;state.stars-=seed.price;(state.life.seeds??={})[id]=(state.life.seeds[id]||0)+1;return true;}
 export function segmentDistance(p,a,b){const dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy||1)));return Math.hypot(p.x-a.x-t*dx,p.y-a.y-t*dy);}
 export const GROVE_ROUTES=[GROVE_PATH,...[
  [[.26,.73],[.18,.74],[.13,.67],[.15,.60],[.19,.54]],

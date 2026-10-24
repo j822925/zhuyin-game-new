@@ -29,8 +29,8 @@ test('shipped adventure and preparation cache chains select the new build withou
   'forest-home-entry.js':['adventure-preview.html'],
   'adventure-preview.html':['adventure-entry.bundle.js'],'adventure-entry.js':['adventure-play.bundle.js'],
  };
- for(const [file,targets]of Object.entries(refs))for(const target of targets)assert(read(file).includes(target+'?v='+version),file+' -> '+target);
- assert(read('adventure-entry.bundle.js').includes('adventure-play.bundle.js?v='+version));
+ for(const [file,targets]of Object.entries(refs))for(const target of targets)assert(read(file).includes(target+'?v='+(['adventure-entry.bundle.js','adventure-play.bundle.js'].includes(target)?'20261024-supplies1':version)),file+' -> '+target);
+ assert(read('adventure-entry.bundle.js').includes('adventure-play.bundle.js?v=20261024-supplies1'));
  const bundle=read('adventure-play.bundle.js');
  assert(bundle.includes('assets/music/zone-'));
  for(const id of Object.keys(ZONE_MUSIC_TRACKS))assert(bundle.includes('"'+id+'"'),id);

@@ -8,13 +8,14 @@ import {zoneShop,regionalProductAllowed} from './data/zone-shops.js';
 export function cartItem(kind,id){const item=kind==='bait'?BAITS[id]:kind==='furniture'?FURNITURE.find(x=>x.id===id):kind==='wallpaper'?WALLPAPERS.find(x=>x.id===id):kind==='clothes'?OUTFITS.find(x=>x.id===id):kind==='seeds'?SEEDS[id]:kind==='meal'?SHOP_FOODS[id]:null;return item&&item.price>0&&!item.giftOnly?{...item,id,kind}:null;}
 export const shopIsOpen=(state,id)=>!!zoneShop(id)||destinationOpen(state,id);
 export function quoteCart(state,shop,lines){
- if(!hasEnergy(state))return {ok:false,reason:'🥄 先吃點東西'};
+ const energized=hasEnergy(state);
  if(!shopIsOpen(state,shop))return {ok:false,reason:'🔒 商店尚未開放'};
  if(!Array.isArray(lines)||!lines.length)return {ok:false,reason:'🧺 購物籃還是空的'};
  const seen=new Set();let total=0;
  for(const l of lines){const item=cartItem(l.kind,l.id),key=l.kind+':'+l.id;
   const allowed=zoneShop(shop)?regionalProductAllowed(shop,l.kind,l.id):!item?.zoneShop&&({furniture:['furniture','wallpaper'],clothes:['clothes'],seeds:['seeds','bait']}[shop]||[]).includes(l.kind);
   if(!item||!allowed||seen.has(key)||!Number.isInteger(l.quantity)||l.quantity<1||l.quantity>99||(!['seeds','meal','bait'].includes(l.kind)&&l.quantity!==1))return {ok:false,reason:'商品資料需要重新選擇'};
+  if(!energized&&!['seeds','bait'].includes(l.kind))return {ok:false,reason:'🥄 先吃點東西；體力歸零時仍可購買種子和魚餌'};
   seen.add(key);if(l.kind==='furniture'&&state.furnitureOwned.includes(l.id)||l.kind==='wallpaper'&&state.wallpaperOwned.includes(l.id)||l.kind==='clothes'&&!['available','insufficient'].includes(eligibility(state,l.id)))return {ok:false,reason:'✓ 已擁有，或還不能使用'};
   if(l.kind==='seeds'&&(state.life.seeds[l.id]||0)+l.quantity>9999)return {ok:false,reason:'🎒 種子已滿'};
   if(l.kind==='bait'&&(state.life.bait?.[l.id]||0)+l.quantity>9999)return {ok:false,reason:'🎒 魚餌已滿'};
