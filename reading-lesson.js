@@ -1,5 +1,5 @@
 import {BASE,COMPOUNDS,cleanSymbols,shuffle} from './core.js?v=20261009-accounts1';
-import {READING_WORDS,READING_TOTAL,readingDeck} from './reading-core.js?v=20261023-life1';
+import {READING_WORDS,READING_TOTAL,readingDeck} from './reading-core.js?v=20261024-retire1';
 const INITIALS=new Set(BASE.slice(0,21));
 const FINALS=new Set([...BASE.slice(21),...COMPOUNDS]);
 export function readingTaughtSymbols(config){

@@ -2,7 +2,7 @@
 // tones and listed near-sounds may pass; no substring, missing or extra syllables.
 import {EXTRA_READING_WORDS} from './reading-words.js?v=20260928-all1';
 import {LIFE_READING_WORDS} from './reading-life-words.js?v=20261023-life1';
-import {RETIRED_READING_WORDS} from './reading-retired-words.js?v=20261023-life1';
+import {RETIRED_READING_WORDS} from './reading-retired-words.js?v=20261024-retire1';
 import {READING_SCRIPT_FORMS} from './reading-script-forms.js?v=20260930-script1';
 import {pronunciationDecision} from './reading-pronunciation.js?v=20261008-safari2';
 export const LEGACY_READING_WORDS = [

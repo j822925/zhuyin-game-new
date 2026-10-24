@@ -1,6 +1,6 @@
 import {classUrl} from './class-context.js?v=20261023-exam1';
 import {createApiClient} from './api-client.js?v=20260926-classes1';
-import {readingLaunchEnvironment,readingLaunchPlan} from './reading-launch.js?v=20261023-life1';
+import {readingLaunchEnvironment,readingLaunchPlan} from './reading-launch.js?v=20261024-retire1';
 // Independent entry: does not register as data-mode in the other levels' controller.
 function attach(){const worlds=document.querySelector('#home .worlds');if(!worlds||document.getElementById('reading-entry'))return;
  const plan=readingLaunchPlan(location.href,readingLaunchEnvironment());
