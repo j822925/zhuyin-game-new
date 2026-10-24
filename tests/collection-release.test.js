@@ -12,7 +12,8 @@ import {tutorClips} from '../little-teacher.js';
 const source=file=>readFileSync(new URL('../'+file,import.meta.url),'utf8');
 const decode=text=>text.replace(/\\u\{([0-9a-f]+)\}|\\u([0-9a-f]{4})/gi,(_,a,b)=>String.fromCodePoint(parseInt(a||b,16)));
 const memory=()=>{const map=new Map();return {getItem:key=>map.get(key)||null,setItem:(key,value)=>map.set(key,value)};};
-const version='20261022-collection1';
+const version='20261025-home1';
+const directionalLayout=[{id:'spatial-moon-corner-kitchen',x:920,y:465,facing:'right',mount:'corner-right'},{id:'collection-moon-dining-chair',x:650,y:560,facing:'back'}];
 
 test('all four shipped bundles carry the complete new crop, fish and food catalogs',()=>{
  for(const file of ['adventure-entry.bundle.js','adventure-play.bundle.js','farm-learning.bundle.js','reading-farm.bundle.js']){
@@ -32,20 +33,20 @@ test('home, farm, Safari and shortcut entry chains refresh the collection readin
   'adventure-preview.html':['adventure-entry.bundle.js'],'adventure-entry.js':['adventure-play.bundle.js'],
  };
  for(const [file,imports]of Object.entries(refs))for(const name of imports){
-  const expected=['adventure-entry.bundle.js','adventure-play.bundle.js'].includes(name)?'20261025-observer1':name==='app.js'?'20261023-zonemusic1':['game-boot.js','reading-entry.js','reading-launch.js','reading-bootstrap.js','reading.js'].includes(name)?'20261024-retire1':version;
+  const expected=version;
   assert(source(file).includes(name+'?v='+expected),file+' -> '+name);
  }
  const ipad={userAgent:'iPad CPU OS 17_0 Version/17.0 Safari/605.1',standalone:true};
  for(const classId of ['main','grade2'])for(const page of ['reading.html?farmLesson=reading&','reading-shortcut.html?farmLesson=reading&','index.html?']){
   const plan=readingLaunchPlan('https://j822925.github.io/zhuyin-game-new/'+page+'class='+classId,ipad);
-  for(const link of [plan.browserUrl,plan.safariUrl,plan.shortcutUrl]){const url=new URL(link);assert.equal(url.searchParams.get('v'),'20261024-retire1');assert.equal(url.searchParams.get('class'),classId);assert.equal(url.searchParams.get('farmLesson'),page.includes('farmLesson')?'reading':null);}
+  for(const link of [plan.browserUrl,plan.safariUrl,plan.shortcutUrl]){const url=new URL(link);assert.equal(url.searchParams.get('v'),'20261025-home1');assert.equal(url.searchParams.get('class'),classId);assert.equal(url.searchParams.get('farmLesson'),page.includes('farmLesson')?'reading':null);}
  }
 });
 
 test('shipped farm bundle preserves new crops and only counts original questions when the helper adds review',()=>{
  const pool=createCatalog([['ㄅ','ㄠ','包'],['ㄇ','ㄧ','咪']]);
  for(const correct of [6,7]){
-  const state=freshState();state.life.farmUnlocked=true;state.life.plots[0]={crop:'wheat',plantId:'release-wheat',watered:true,ready:false};
+  const state=freshState();state.furnitureOwned.push(...directionalLayout.map(p=>p.id));state.kitchenLayout=structuredClone(directionalLayout);state.life.farmUnlocked=true;state.life.plots[0]={crop:'wheat',plantId:'release-wheat',watered:true,ready:false};
   const storage=memory(),tabStorage=memory();storage.setItem(SAVE_KEY,JSON.stringify(state));
   const bridge=createFarmLearningBridge({storage,tabStorage,href:'http://127.0.0.1/adventure-preview.html?class=main'});bridge.depart('spelling',{demo:true});
   const payload={seat:'115901',mode:'spelling',roundId:'release-helper-'+correct};assert(bridge.begin(payload,{demo:true,verified:true}));
@@ -53,12 +54,13 @@ test('shipped farm bundle preserves new crops and only counts original questions
   while(round.current){if(!round.current.tutorReviewOf&&!round.current.tutorSpacer&&originals++>=correct)round.answer('錯');round.answer(round.current.label);round.next();}
   const result=bridge.complete({...payload,total:round.deck.length,results:round.rows},{demo:true,confirmed:true});
   assert.equal(result.correct,correct);assert.equal(result.total,10);assert.equal(result.grown,correct===7?1:0);assert.equal(JSON.parse(storage.getItem(SAVE_KEY)).life.plots[0].ready,correct===7);
+  assert.deepEqual(JSON.parse(storage.getItem(SAVE_KEY)).kitchenLayout,directionalLayout);
  }
 });
 
 test('shipped reading bundle matures all new reading crops across both isolated class routes',async()=>{
  for(const classId of ['main','grade2']){
-  const state=freshState();state.life.farmUnlocked=true;state.life.learningOwner=JSON.stringify([classId,'live','115901']);
+  const state=freshState();state.furnitureOwned.push(...directionalLayout.map(p=>p.id));state.kitchenLayout=structuredClone(directionalLayout);state.life.farmUnlocked=true;state.life.learningOwner=JSON.stringify([classId,'live','115901']);
   const ids=Object.entries(COLLECTION_CROPS).filter(([,crop])=>crop.lesson==='reading').map(([id])=>id);
   ids.forEach((crop,i)=>state.life.plots[i]={crop,plantId:'release-'+crop,watered:true,ready:false});
   let remote={state,stars:77,revision:1,enabled:true};const calls=[];
@@ -66,6 +68,7 @@ test('shipped reading bundle matures all new reading crops across both isolated 
   const payload={seat:'115901',mode:'reading',roundId:'release-reading-'+classId,total:5,results:Array.from({length:5},(_,i)=>({firstCorrect:i<4}))};
   assert(await farm.begin(payload));assert.equal((await farm.complete(payload,{confirmed:true})).grown,3);assert(remote.state.life.plots.slice(0,3).every(p=>p.ready));assert.equal(remote.stars,77);assert.equal(calls.filter(c=>c.kind==='forest-save').length,1);
   await farm.complete(payload,{confirmed:true});assert.equal(calls.filter(c=>c.kind==='forest-save').length,1);
+  assert.deepEqual(remote.state.kitchenLayout,directionalLayout);
  }
  assert(decode(source('reading-farm.bundle.js')).includes('作物長大了！'));assert(!decode(source('reading-farm.bundle.js')).includes('萵苣長大了！'));
 });

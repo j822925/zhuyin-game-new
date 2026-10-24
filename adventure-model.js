@@ -1,5 +1,6 @@
 import {freshRest,sanitizeRest} from './adventure-rest-model.js';
 import {attachedPosition} from './furniture-surfaces.js';
+import {spatialFields,spatialFootprint,spatialFloorValid,floorPosition} from './home-spatial-model.js';
 import {WALK_OUTFITS} from './data/walk-outfits.js';
 import {wallPosition,wallPlacementValid} from './data/home-wall-furniture.js';
 import {freshExpedition,sanitizeExpedition} from './adventure-expedition-model.js';
@@ -100,11 +101,11 @@ export function sanitizeState(raw){
   s.furnitureOwned=[...new Set([...STARTER_FURNITURE,...(Array.isArray(raw.furnitureOwned)?raw.furnitureOwned.filter(id=>FURNITURE.some(f=>f.id===id)):[])])];
   if(Array.isArray(raw.layout)){
     s.layout=[];
-    for(const item of raw.layout)if(item&&!item.on&&FURNITURE.some(f=>f.id===item.id)&&!s.layout.some(f=>f.id===item.id)&&canPlaceFurniture(s,item.id,item))s.layout.push({id:item.id,x:item.x,y:item.y});
+    for(const item of raw.layout)if(item&&!item.on&&FURNITURE.some(f=>f.id===item.id)&&!s.layout.some(f=>f.id===item.id)&&canPlaceFurniture(s,item.id,item))s.layout.push({id:item.id,x:item.x,y:item.y,...spatialFields(item)});
   }
   s.kitchenLayout=[];s.bedroomLayout=[];s.bathroomLayout=[];
   for(const area of ['kitchen','bedroom','bathroom'])for(const item of Array.isArray(raw[layoutKeyFor(area)])?raw[layoutKeyFor(area)]:[]){
-    if(item&&!item.on&&!INTERIOR_AREAS.some(a=>layoutFor(s,a).some(f=>f.id===item.id))&&canPlaceFurniture(s,item.id,item,area))s[layoutKeyFor(area)].push({id:item.id,x:item.x,y:item.y});
+    if(item&&!item.on&&!INTERIOR_AREAS.some(a=>layoutFor(s,a).some(f=>f.id===item.id))&&canPlaceFurniture(s,item.id,item,area))s[layoutKeyFor(area)].push({id:item.id,x:item.x,y:item.y,...spatialFields(item)});
   }
   // Hosts first, then their small objects, independent of save array ordering.
   for(const area of INTERIOR_AREAS)for(const item of Array.isArray(raw[layoutKeyFor(area)])?raw[layoutKeyFor(area)]:[]){
@@ -191,7 +192,7 @@ export function findPath(start,target,checker=walkable,bounds=WORLD){
   }return null;
 }
 
-export function furnitureRect(item){const f=FURNITURE.find(f=>f.id===item.id);return f?{x:item.x-f.fw/2,y:item.y-f.fh,w:f.fw,h:f.fh}:null;}
+export function furnitureRect(item){const f=FURNITURE.find(f=>f.id===item.id);return f?spatialFootprint(f,item):null;}
 function overlaps(a,b,pad=0){return a.x<b.x+b.w+pad&&a.x+a.w>b.x-pad&&a.y<b.y+b.h+pad&&a.y+a.h>b.y-pad;}
 function contains(r,x,y,pad=0){return x>r.x-pad&&x<r.x+r.w+pad&&y>r.y-pad&&y<r.y+r.h+pad;}
 export function buyFurniture(state,id){if(!hasEnergy(state))return false;
@@ -215,8 +216,7 @@ export function canPlaceFurniture(state,id,pos,area='room'){
  const f=FURNITURE.find(f=>f.id===id);if(!f||!isInterior(area)||!state.furnitureOwned?.includes(id)||(f.areas&&!f.areas.includes(area))||!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))return false;
  if(f.wall)return wallPlacementValid(f,pos,area);
  if(pos.on){const p=attachedPosition({id,...pos},layoutFor(state,area),FURNITURE);return !!p&&p.x>=158&&p.x<=1122&&p.y>=150&&p.y<=728;}
- const r=furnitureRect({id,...pos});
- return r.x>=158&&r.x+r.w<=1122&&r.y>=280&&r.y+r.h<=728;
+ return spatialFloorValid(f,pos);
 }
 export function hasFurnitureOverlap(state,id,pos,area='room'){
  const f=FURNITURE.find(f=>f.id===id);if(!f||f.flat)return false;
@@ -232,7 +232,7 @@ export function canUseStove(state,id,area){return area==='kitchen'&&state.furnit
 export function placementState(state,id,pos,area='room'){
  const next={...state},children=INTERIOR_AREAS.flatMap(a=>layoutFor(state,a).filter(x=>x.on===id));for(const a of INTERIOR_AREAS)next[layoutKeyFor(a)]=layoutFor(state,a).filter(x=>x.id!==id&&x.on!==id).map(x=>({...x}));
  const attached=pos.on?attachedPosition({id,...pos},next[layoutKeyFor(area)],FURNITURE):null;
- next[layoutKeyFor(area)].push({id,...(attached||{x:Math.round(pos.x/10)*10,y:Math.round(pos.y/10)*10})});
+ next[layoutKeyFor(area)].push({id,...(attached||{x:Math.round(pos.x/5)*5,y:Math.round(pos.y/5)*5}),...spatialFields(pos)});
  for(const item of children){const p=attachedPosition(item,next[layoutKeyFor(area)],FURNITURE);if(p&&canPlaceFurniture(next,item.id,p,area))next[layoutKeyFor(area)].push({id:item.id,...p});}return next;
 }
 export function canReachInterior(state,player,area='room'){
@@ -245,7 +245,8 @@ export function canReachInterior(state,player,area='room'){
 export function placeFurniture(state,id,pos,player=ROOM_ENTRY,area='room'){if(!hasEnergy(state))return false;
  if(!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))return false;
  const furniture=FURNITURE.find(f=>f.id===id);
- const snapped=pos.on?attachedPosition({id,...pos},layoutFor(state,area),FURNITURE):furniture?.wall?wallPosition(pos,furniture):{x:Math.round(pos.x/10)*10,y:Math.round(pos.y/10)*10};
+ if(!furniture)return false;
+ const snapped=pos.on?attachedPosition({id,...pos},layoutFor(state,area),FURNITURE):furniture?.wall?wallPosition(pos,furniture):floorPosition(pos,furniture,{auto:false});
  if(!canPlaceFurniture(state,id,snapped,area))return false;
  const next=placementState(state,id,snapped,area);
  if(!canReachInterior(next,player,area))return false;

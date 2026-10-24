@@ -9,6 +9,7 @@ import {isInterior,layoutFor} from './adventure-model.js';
 import {adventureMediaUrl as mediaUrl} from './adventure-media.js';
 import {WORLD,TREES,GROVE_TREES,SPAWN,MONSTER_HOME,FURNITURE} from './adventure-model.js';
 import {createRoomGround,drawPaintedRoomShell,drawRoomWardrobe,drawFurniture,drawInteriorDoors} from './adventure-room.js';
+import {decorCamera} from './home-spatial-model.js';
 import {attachedPosition} from './furniture-surfaces.js';
 import {walkFrame,walkPosture} from './adventure-animation.js';
 import {drawVillageLife,drawFarm} from './adventure-life-art.js';
@@ -186,9 +187,7 @@ export class ForestScene{
     }
     if(isInterior(this.area)){
       if(this.editing){
-        const mobile=this.width<601,panel=mobile?0:380,availableH=this.height-(mobile?350:160);
-        scale=Math.max(.22,Math.min((this.width-panel-30)/1060,availableH/650));
-        desired={x:640-(this.width-panel)/2/scale,y:440-(this.height-(mobile?220:0))/2/scale};
+        const view=decorCamera(this.width,this.height,this.decorInsets||{right:340});scale=view.scale;desired={x:view.x,y:view.y};
       }else{
         scale=Math.max(this.width/1270,this.height/1040);viewW=this.width/scale;viewH=this.height/scale;
         desired={x:Math.max(0,Math.min(WORLD.width-viewW,p.x-viewW/2)),y:Math.max(-60,Math.min(800-viewH,p.y-viewH*.64))};
@@ -264,10 +263,10 @@ export class ForestScene{
     for(const item of visible){const pos=attachedPosition(item,visible,FURNITURE);if(pos)Object.assign(item,pos);}
     const paintItem=item=>drawFurniture(c,this.art,item,item===this.placement?{alpha:.9,outline:item.valid?'#658a50':'#bd795e'}:{});
     for(const item of visible.filter(item=>FURNITURE.find(f=>f.id===item.id).wall))paintItem(item);
-    drawInteriorDoors(c,this.art,this.area);
+    drawInteriorDoors(c,this.art,this.area,wall);
     for(const item of visible.filter(item=>FURNITURE.find(f=>f.id===item.id).flat))paintItem(item);
     const things=[...(this.area==='bedroom'?[{y:332,paint:()=>drawRoomWardrobe(c,wall,this.art)}]:[]),...visible.filter(item=>!FURNITURE.find(f=>f.id===item.id).flat&&!FURNITURE.find(f=>f.id===item.id).wall).map(item=>({y:item.on?(visible.find(p=>p.id===item.on)?.y??item.y)+.1:item.y,paint:()=>paintItem(item)})),{y:p.y,paint:()=>{
-      if(this.homeRest)return;
+      if(this.homeRest||this.editing)return;
       c.save();if(this.dining){c.translate(p.x,p.y);c.rotate(diningFrame(this.dining,now,this.reduced.matches).lean);c.translate(-p.x,-p.y);}
       this.drawPlayer(c,this.art,{x:p.x,y:p.y,height:116,outfit:state.outfit,direction:p.direction,walking:p.moving&&!this.reduced.matches,phase:p.phase,wand:state.wand&&!this.dining});c.restore();
     }}];

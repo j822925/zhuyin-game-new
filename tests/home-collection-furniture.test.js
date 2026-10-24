@@ -38,7 +38,7 @@ test('small decorations attach to TV stands and three shelf levels; moving and s
  }
 });
 test('kitchen and bathroom pieces respect room restrictions; shower shares the existing daily bath allowance',()=>{
- const now=Date.UTC(2026,9,22,1);
+ const now=Date.now();
  for(const style of styles){
   const s=freshState();s.furnitureOwned.push(...COLLECTION_FURNITURE.filter(f=>f.style===style).map(f=>f.id));s.life.nutrition.energy=50;s.life.nutrition.updatedAt=now;
   assert(!canPlaceFurniture(s,id(style,'kitchen-base'),{x:650,y:500},'bedroom'));
@@ -88,7 +88,7 @@ test('new furniture art uses lazy deduplicated loading and retains retry on a fa
  const original=globalThis.Image,loaded=[];let fail=true;
  globalThis.Image=class{async decode(){loaded.push(this.src);if(this.src.includes('collectionFox')&&fail)throw new Error('offline');}};
  try{
-  const art={};await Promise.all([ensureHomeArt(art,['collectionDaisy']),ensureHomeArt(art,['collectionDaisy'])]);assert.equal(loaded.length,1);assert.equal(art.collectionDaisy.cells.length,12);
+  const art={};await Promise.all([ensureHomeArt(art,['collectionDaisy']),ensureHomeArt(art,['collectionDaisy'])]);assert.equal(new Set(loaded).size,loaded.length);assert.equal(loaded.filter(src=>src.includes('collectionDaisy')).length,1);assert(art.spatial.daisy);assert.equal(art.collectionDaisy.cells.length,12);
   await assert.rejects(ensureHomeArt(art,['collectionFox']));assert(!art.collectionFox);fail=false;await ensureHomeArt(art,['collectionFox']);assert(art.collectionFox);
  }finally{globalThis.Image=original;}
 });

@@ -3,7 +3,7 @@ const basic={ 'daisy-fridge':20,'daisy-sink':15,'daisy-stool':10,'daisy-complete
 export function priceFurniture(item){
  if(item.starter||item.giftOnly||!item.price)return item;
  // New collections carry reviewed final shelf prices; legacy catalog pricing stays unchanged.
- if(item.priceVersion==='20261022')return {...item,resaleBase:item.price};
+ if(['20261022','20261025'].includes(item.priceVersion))return {...item,resaleBase:item.price};
  const old=item.price,large=item.height>=150||item.fw>=160;
  const price=basic[item.id]??(item.zoneShop?Math.min(120,Math.max(35,Math.ceil(old*2/5)*5)):item.style==='moon'?Math.min(120,Math.max(45,Math.ceil(old*2/5)*5)):large?Math.min(100,Math.max(60,Math.ceil(old*1.8/5)*5)):Math.min(60,Math.max(25,Math.ceil(old*1.8/5)*5)));
  return {...item,price,resaleBase:Math.min(price,old)};

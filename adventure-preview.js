@@ -3,7 +3,8 @@ import {installMapZoom} from './adventure-map-zoom.js';
 import {forestMusic,installForestMusic} from './adventure-music.js';
 import {installAdventureControls} from './adventure-controls.js';
 installForestMusic();
-import {interiorDoorGeometry} from './adventure-room.js';
+import {interiorDoorGeometry,paintedDoorGeometry} from './adventure-room.js';
+import {furnitureVisualBounds} from './home-spatial-art.js';
 import {equippedOutfit,outfitCharacter,defaultOutfit} from './adventure-model.js';
 import {clothingCharacter,ensureClothingArt,drawClothing} from './adventure-clothing.js';
 import {ensureBathroom} from './adventure-bathroom.js';
@@ -161,7 +162,7 @@ function positionHotspots(){
   const returnDoor=scene.area==='kitchen'?ROOM_BEDROOM_DOOR:ROOM_KITCHEN_DOOR;
   $('room-wardrobe').style.width=Math.max(64,145*s)+'px';$('room-wardrobe').style.height=Math.max(70,205*s)+'px';
   for(const [id,x,y] of [['room-wardrobe',ROOM_WARDROBE.x,ROOM_WARDROBE.y],['room-exit',scene.area==='room'?640:returnDoor.x,scene.area==='room'?746:returnDoor.y]]){const at=scene.toScreen(x,y),el=$(id);el.style.left=at.x+'px';el.style.top=at.y+'px';el.hidden=(id==='room-wardrobe'?scene.area!=='bedroom':!indoors)||scene.editing;}
-  function wallDoorTarget(id,point){const p=interiorDoorGeometry(scene.area,point.x<640?-1:1),door=p,topRise=door.rise-door.flare;const at=scene.toScreen(p.x,p.y+door.rise/2),el=$(id);el.style.left=at.x+'px';el.style.top=at.y+'px';el.style.width=Math.max(48,(door.width+12)*s)+'px';el.style.height=(door.height+door.rise)*s+'px';el.style.setProperty('--door-sign-inset',(p.x<640?-8:8)*s+'px');el.style.setProperty('--door-sign-top',(door.rise/2-40+8*topRise/door.width)*s+'px');el.style.setProperty('--door-sign-width',72*s+'px');el.style.setProperty('--door-sign-height',56*s+'px');el.style.setProperty('--door-sign-shear',String((p.x<640?-1:1)*.55*topRise/door.width));}
+  function wallDoorTarget(id,point){const p=(art.spatial?.doors?paintedDoorGeometry:interiorDoorGeometry)(scene.area,point.x<640?-1:1),door=p,topRise=door.rise-door.flare;const at=scene.toScreen(p.x,p.y+door.rise/2),el=$(id);el.style.left=at.x+'px';el.style.top=at.y+'px';el.style.width=Math.max(48,(door.width+12)*s)+'px';el.style.height=(door.height+door.rise)*s+'px';el.style.setProperty('--door-sign-inset',(p.x<640?-8:8)*s+'px');el.style.setProperty('--door-sign-top',(door.rise/2-40+8*topRise/door.width)*s+'px');el.style.setProperty('--door-sign-width',72*s+'px');el.style.setProperty('--door-sign-height',56*s+'px');el.style.setProperty('--door-sign-shear',String((p.x<640?-1:1)*.55*topRise/door.width));}
   wallDoorTarget('room-bathroom',ROOM_BEDROOM_DOOR);$('room-bathroom').hidden=scene.area!=='bedroom'||scene.editing;
   wallDoorTarget('room-kitchen',ROOM_KITCHEN_DOOR);wallDoorTarget('room-bedroom',ROOM_BEDROOM_DOOR);
   for(const id of ['room-kitchen','room-bedroom'])$(id).hidden=scene.area!=='room'||scene.editing;
@@ -201,7 +202,7 @@ canvas.addEventListener('pointerdown',e=>{
   const at=scene.toWorld(e.clientX,e.clientY);
   if(scene.area==='grove'){const hit=[...(scene.encounters||[])].reverse().find(m=>m.visible&&Math.abs(at.x-m.x)<48&&at.y<m.y+12&&at.y>m.y-(m.level===2?120:100));if(hit){startBattle(hit);return;}}
   if(scene.editing){
-    if(!scene.placement){const hit=[...layoutFor(state,scene.area)].sort((a,b)=>b.y-a.y).find(item=>{const f=FURNITURE.find(f=>f.id===item.id);return Math.abs(at.x-item.x)<f.fw/2&&at.y<=item.y&&at.y>item.y-f.height;});if(hit)selectFurniture(hit.id);return;}
+    if(!scene.placement){const hit=[...layoutFor(state,scene.area)].sort((a,b)=>b.y-a.y).find(item=>{const f=FURNITURE.find(f=>f.id===item.id),r=furnitureVisualBounds(art,f,item);return at.x>=r.x&&at.x<=r.x+r.w&&at.y>=r.y&&at.y<=r.y+r.h;});if(hit)selectFurniture(hit.id);return;}
     decorPointer=e.pointerId;canvas.setPointerCapture(e.pointerId);moveFurniture(at);return;
   }
   walkTo(at);
@@ -292,7 +293,7 @@ $('grove-unlock').addEventListener('click',()=>{
 });
 
 rest=createHomeRest({dine:id=>kitchen.eatAtHome(id),state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,walkTo,toast,blocked:()=>!scene||switching||scene.editing||!!round||wardrobe.open||trail.open||life.busy||kitchen.busy||shop?.busy||expedition?.busy||companions?.busy});
-const decor=createHomeDecor({useInventory:(kind)=>{if(kind==='clothes')document.getElementById('wardrobe-open').click();else if(kind==='seeds')life.visit('farm');else if(kind==='fish')kitchen.cookAtHome();else kitchen.eatAtHome();},state:()=>state,scene:()=>scene,art:()=>art,stopMoving,save,renderState,toast,changed:()=>renderArea(),blocked:()=>!scene||!!round||switching||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)});
+const decor=createHomeDecor({switchArea,useInventory:(kind)=>{if(kind==='clothes')document.getElementById('wardrobe-open').click();else if(kind==='seeds')life.visit('farm');else if(kind==='fish')kitchen.cookAtHome();else kitchen.eatAtHome();},state:()=>state,scene:()=>scene,art:()=>art,stopMoving,save,renderState,toast,changed:()=>renderArea(),blocked:()=>!scene||!!round||switching||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)});
 expedition=createExpedition({openShop:(id,onReturn)=>shop.openRegion(id,onReturn),state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,toast,defeated:()=>switchArea('forest',()=>completeAction('lose',{detail:'🥄 吃點東西，補充體力'})),blocked:()=>!scene||!!round||switching||wardrobe.open||shop?.busy||companions?.busy||life.busy||(kitchen.busy||rest?.busy)});
 shop=createShop({state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,toast,blocked:()=>!scene||!!round||switching||wardrobe.open||companions?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||visits?.busy||exploration?.busy});
 visits=createIslandVisits({state:()=>state,art:()=>art,save,stop:stopMoving,toast,apply:next=>{state=sanitizeState(next);renderState();}});

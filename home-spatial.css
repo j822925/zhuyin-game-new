@@ -1,0 +1,50 @@
+/* The room is the workspace. Keep controls outside the fitted room camera. */
+body.decorating .topbar,body.decorating .world-top,body.decorating .world-bottom,
+body.decorating .joystick,body.decorating .energy-hud,body.decorating #energy-hud,
+body.decorating #forest-music-toggle,body.decorating .home-hotspot,body.decorating .action-feedback,
+body.decorating .stove-hotspot,body.decorating .home-action,body.decorating .map-note{visibility:hidden!important;pointer-events:none!important}
+body.decorating #decor-panel{position:fixed;inset:12px 12px 12px auto;width:320px;max-width:calc(100vw - 24px);max-height:none;box-sizing:border-box;padding:14px;display:flex;gap:7px;z-index:80;border:1px solid #cbbd98;background:#fffbedf7;box-shadow:0 4px 20px #493b2824;border-radius:20px;overflow:hidden}
+body.decorating #decor-panel[hidden]{display:none}
+body.decorating #decor-panel header{margin:0;min-height:44px;flex-shrink:0}
+body.decorating #decor-panel h2{font-size:16px;letter-spacing:0}
+body.decorating #decor-panel button{min-height:44px;font-size:13px;line-height:1.3;letter-spacing:0;padding:6px 9px;touch-action:manipulation}
+body.decorating #decor-panel button::before,body.decorating #decor-panel button::after{display:none!important}
+body.decorating #decor-panel button span,body.decorating #decor-panel button small{font-size:12px;letter-spacing:0;overflow-wrap:anywhere;white-space:normal}
+body.decorating #decor-rooms{display:flex;gap:4px;flex-shrink:0}
+body.decorating #decor-rooms button{flex:1}
+body.decorating #decor-panel button[aria-pressed=true]{background:#3c604c;color:#fffbed}
+body.decorating #decor-styles{display:flex;flex-wrap:wrap;gap:4px;margin:0;flex-shrink:0}
+body.decorating #decor-styles button{flex:1 0 21%;white-space:normal}
+body.decorating #decor-categories{gap:4px;margin:0}
+body.decorating #furniture-palette{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-height:none;min-height:80px;gap:7px;overflow:auto;flex:1}
+body.decorating #furniture-palette button{display:flex;flex-direction:column;align-items:center;min-height:135px;justify-content:flex-start}
+body.decorating #furniture-palette canvas{width:110px;height:92px;object-fit:contain}
+body.decorating #decor-hint{min-height:0;font-size:12px;line-height:1.4;margin:0}
+body.decorating #decor-position-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+body.decorating #decor-position-tools strong{font-size:15px;flex:1 0 100%;text-align:center}
+body.decorating #decor-position-tools button{flex:1;white-space:nowrap}
+body.decorating #decor-choose{align-self:flex-start}
+body.decorating #decor-supports{max-height:92px;overflow:auto;flex-shrink:0}
+body.decorating .decor-actions{display:flex;gap:8px;margin:0}
+body.decorating .decor-actions button{flex:1}
+body.decorating #decor-panel [hidden]{display:none!important}
+body.decor-placing #decor-panel{inset:auto auto 12px 50%;transform:translateX(-50%);width:min(960px,calc(100vw - 24px));max-height:45dvh;padding:10px 14px;gap:5px}
+body.decor-placing #decor-panel header,body.decor-placing #decor-categories,body.decor-placing #decor-styles,body.decor-placing #decor-style-note,body.decor-placing #furniture-palette{display:none!important}
+body.decor-placing #decor-choose{position:absolute;left:14px;top:8px;min-height:34px}
+body.decor-placing #decor-position-tools strong{min-height:34px;padding:5px 100px;box-sizing:border-box}
+body.decor-placing #decor-hint{text-align:center}
+@media(max-width:700px),(orientation:portrait){
+ body.decorating #decor-panel{inset:auto 12px 12px;width:calc(100vw - 24px);height:46dvh;padding:10px;gap:4px}
+ body.decorating #decor-panel header{min-height:32px}
+ body.decorating #decor-wallet,body.decorating #decor-style-note{display:none}
+ body.decorating #decor-categories{flex-wrap:nowrap;overflow-x:auto;min-height:44px}
+ body.decorating #decor-categories button{flex:0 0 auto}
+ body.decorating #decor-styles{flex-wrap:nowrap;overflow-x:auto;min-height:44px}
+ body.decorating #decor-styles button{flex:0 0 auto}
+ body.decorating #furniture-palette{grid-template-columns:repeat(3,minmax(0,1fr))}
+ body.decorating #furniture-palette canvas{width:85px;height:70px}
+ body.decorating #furniture-palette button{min-height:116px}
+ body.decor-placing #decor-panel{left:50%;right:auto;height:auto;max-height:44dvh}
+ body.decor-placing #decor-position-tools strong{font-size:13px;padding:5px 75px}
+ body.decor-placing #decor-position-tools button{flex:1 0 21%;font-size:12px;padding:5px}
+}

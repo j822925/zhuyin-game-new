@@ -1,5 +1,6 @@
 import {FURNITURE,ROOM_WARDROBE,ROOM_KITCHEN_DOOR,ROOM_BEDROOM_DOOR,WALL_DOOR,furnitureRect} from './adventure-model.js';
 import {wallSide} from './data/home-wall-furniture.js';
+import {drawSpatialFurniture,drawSpatialThumb,drawSpatialDoor,furnitureVisualBounds} from './home-spatial-art.js';
 const TAU=Math.PI*2;
 function rect(c,x,y,w,h,fill,r=0){c.fillStyle=fill;c.beginPath();c.roundRect(x,y,w,h,r);c.fill();}
 function ellipse(c,x,y,rx,ry,color){c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,TAU);c.fill();}
@@ -59,14 +60,21 @@ export function drawRoomWardrobe(c,style='original',art){
 export function drawFurniture(c,art,item,{alpha=1,outline=null}={}){
   const f=FURNITURE.find(x=>x.id===item.id),atlas=art[f.atlas||'furniture'];if(!atlas)return;const s=atlas.cells[f.index],height=f.height,width=s.w/s.h*height;
   c.save();c.globalAlpha=alpha;
-  if(f.wall){const side=f.ceiling?0:wallSide(item);c.translate(item.x,item.y);if(side)c.transform(.5,side*1.15,0,1,0,0);c.drawImage(atlas.image,s.x,s.y,s.w,s.h,-width/2,-height,width,height);if(outline){c.strokeStyle=outline;c.lineWidth=3;c.setLineDash([7,5]);c.strokeRect(-width/2,-height,width,height);}c.restore();return;}
+  if(drawSpatialFurniture(c,art,f,item)){if(outline){const r=furnitureVisualBounds(art,f,item);c.strokeStyle=outline;c.lineWidth=3;c.setLineDash([7,5]);c.strokeRect(r.x,r.y,r.w,r.h);}c.restore();return;}
+  if(f.wall){const side=f.ceiling?0:wallSide(item);c.translate(item.x,item.y);if(side)c.transform(.8,side*.72,0,1,0,0);if(side>0)c.scale(-1,1);c.drawImage(atlas.image,s.x,s.y,s.w,s.h,-width/2,-height,width,height);if(outline){c.strokeStyle=outline;c.lineWidth=3;c.setLineDash([7,5]);c.strokeRect(-width/2,-height,width,height);}c.restore();return;}
   if(!f.flat)ellipse(c,item.x,item.y+1,f.fw*.51,f.fh*(item.on?.07:.17),'#654d322d');
-  c.drawImage(atlas.image,s.x,s.y,s.w,s.h,item.x-width/2,item.y-height,width,height);
+  c.save();c.translate(item.x,item.y);
+  if(item.mount==='left'||item.mount==='right')c.transform(.82,item.mount==='left'?-.46:.46,0,1,0,0);
+  else if(!f.flat&&['left','right'].includes(item.facing))c.transform(.9,item.facing==='left'?-.14:.14,0,1,0,0);
+  if(item.facing==='left')c.scale(-1,1);
+  if(f.flat&&['left','right'].includes(item.facing)){c.translate(0,-height/2);c.transform(0,.58,-1.72,0,0,0);c.translate(0,height/2);}
+  c.drawImage(atlas.image,s.x,s.y,s.w,s.h,-width/2,-height,width,height);c.restore();
   if(outline){const r=furnitureRect(item);c.strokeStyle=outline;c.lineWidth=3;c.setLineDash([7,5]);c.beginPath();c.roundRect(r.x,r.y,r.w,r.h,9);c.stroke();c.setLineDash([]);}
   c.restore();
 }
 export function drawFurnitureThumb(canvas,art,id){
   const f=FURNITURE.find(x=>x.id===id),atlas=art[f.atlas||'furniture'],c=canvas.getContext('2d');c.clearRect(0,0,canvas.width,canvas.height);if(!atlas)return;const s=atlas.cells[f.index];
+  if(drawSpatialThumb(c,art,f,canvas.width,canvas.height))return;
   const scale=Math.min((canvas.width-12)/s.w,(canvas.height-10)/s.h);c.drawImage(atlas.image,s.x,s.y,s.w,s.h,(canvas.width-s.w*scale)/2,canvas.height-s.h*scale-4,s.w*scale,s.h*scale);
 }
 
@@ -76,6 +84,7 @@ export function interiorDoorGeometry(area,side){
  // The nearer jamb is taller, while the threshold follows the wooden skirting.
  return area==='bathroom'?{x:1181.5,y:536,width:80,height:245,rise:120,flare:62}:{...p,...WALL_DOOR,flare:0};
 }
+export function paintedDoorGeometry(area,side){const p=interiorDoorGeometry(area,side);return {...p,y:p.y+38,width:92,height:275,rise:96.6,flare:0};}
 const bathroomDoors=new WeakMap();
 function bathroomDoorSprite(atlas,s,g){
  let sprite=bathroomDoors.get(atlas.image);if(sprite)return sprite;
@@ -89,10 +98,11 @@ function bathroomDoorSprite(atlas,s,g){
  }
  sprite={image:cv,top,height:cv.height/scale};bathroomDoors.set(atlas.image,sprite);return sprite;
 }
-export function drawInteriorDoors(c,art,area){
+export function drawInteriorDoors(c,art,area,style='daisy'){
  const atlas=art.daisyHome;if(!atlas)return;const s=atlas.cells[2];
  for(const side of area==='room'||area==='bedroom'?[-1,1]:area==='kitchen'?[-1]:[1]){
   const p=interiorDoorGeometry(area,side);
+  if(drawSpatialDoor(c,art,style==='original'?'daisy':style,side,{...p,width:92,height:275}))continue;
   if(area==='bathroom'){const sprite=bathroomDoorSprite(atlas,s,p);c.drawImage(sprite.image,p.x-p.width/2,p.y+sprite.top,p.width,sprite.height);continue;}
   // Project the existing painted doorway into the wall's plane. Vertical jambs
   // remain vertical; the threshold rises toward the back corner of the room.
