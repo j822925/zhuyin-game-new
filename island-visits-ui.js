@@ -78,8 +78,8 @@ export function createIslandVisits(api){
   rooms.append(...Object.entries(names).map(([id,label])=>button(label,()=>room(id))));
   actions.append(...Object.entries(SOCIAL_ACTIONS).map(([id,a])=>button(a.label,()=>socialAction(id))));
   nav.replaceChildren(rooms,actions);
-  if(!hosting)rooms.append(button('🎁 送禮',showGifts),button('👋 申請一起玩',()=>connect(false)));
-  message(hosting?'正在準備接待…':'島主不在這裡。可以自在參觀，喜歡的布置也能仔細看看！');
+  if(!hosting&&!result.readOnly)rooms.append(button('🎁 送禮',showGifts),button('👋 申請一起玩',()=>connect(false)));
+  message(hosting?'正在準備接待…':result.readOnly?'正在參觀同學的小島。可以自由走走，看看各個房間的布置！':'島主不在這裡。可以自在參觀，喜歡的布置也能仔細看看！');
   if(hosting)await connect(true);
  }
  async function prepareAppearance(p){

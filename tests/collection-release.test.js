@@ -32,13 +32,13 @@ test('home, farm, Safari and shortcut entry chains refresh the collection readin
   'adventure-preview.html':['adventure-entry.bundle.js'],'adventure-entry.js':['adventure-play.bundle.js'],
  };
  for(const [file,imports]of Object.entries(refs))for(const name of imports){
-  const expected=['adventure-entry.bundle.js','adventure-play.bundle.js'].includes(name)?'20261024-musicfade1':['game-boot.js','app.js'].includes(name)?'20261023-zonemusic1':['reading-entry.js','reading-launch.js','reading-bootstrap.js','reading.js'].includes(name)?'20261023-life1':version;
+  const expected=['adventure-entry.bundle.js','adventure-play.bundle.js'].includes(name)?'20261025-observer1':name==='app.js'?'20261023-zonemusic1':['game-boot.js','reading-entry.js','reading-launch.js','reading-bootstrap.js','reading.js'].includes(name)?'20261024-retire1':version;
   assert(source(file).includes(name+'?v='+expected),file+' -> '+name);
  }
  const ipad={userAgent:'iPad CPU OS 17_0 Version/17.0 Safari/605.1',standalone:true};
  for(const classId of ['main','grade2'])for(const page of ['reading.html?farmLesson=reading&','reading-shortcut.html?farmLesson=reading&','index.html?']){
   const plan=readingLaunchPlan('https://j822925.github.io/zhuyin-game-new/'+page+'class='+classId,ipad);
-  for(const link of [plan.browserUrl,plan.safariUrl,plan.shortcutUrl]){const url=new URL(link);assert.equal(url.searchParams.get('v'),'20261023-life1');assert.equal(url.searchParams.get('class'),classId);assert.equal(url.searchParams.get('farmLesson'),page.includes('farmLesson')?'reading':null);}
+  for(const link of [plan.browserUrl,plan.safariUrl,plan.shortcutUrl]){const url=new URL(link);assert.equal(url.searchParams.get('v'),'20261024-retire1');assert.equal(url.searchParams.get('class'),classId);assert.equal(url.searchParams.get('farmLesson'),page.includes('farmLesson')?'reading':null);}
  }
 });
 
