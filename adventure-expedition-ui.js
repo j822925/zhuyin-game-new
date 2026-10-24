@@ -30,7 +30,7 @@ export function createExpedition(api){
  const layoutObserver=new ResizeObserver(fitBattle);layoutObserver.observe(dialog);
  let releaseQuestionMusic=null,releaseSpeechMusic=null;
  function stopAudio(){audio?.pause();audio=null;releaseQuestionMusic?.();releaseQuestionMusic=null;releaseSpeechMusic?.();releaseSpeechMusic=null;if(globalThis.speechSynthesis?.speaking)speechSynthesis.cancel();}
- function close(){forestMusic.setBattle(false);forestMusic.setArea(api.scene()?.area||null);motion?.dispose();motion=null;fieldMotion?.dispose();fieldMotion=null;resolving=false;generation++;loading=false;keys.clear();joystick=null;stopAudio();cancelAnimationFrame(raf);dialog.close();if(local&&api.scene())api.scene().castAt=0;api.stop();}
+ function close(){forestMusic.setArea(api.scene()?.area||null);forestMusic.setBattle(false);motion?.dispose();motion=null;fieldMotion?.dispose();fieldMotion=null;resolving=false;generation++;loading=false;keys.clear();joystick=null;stopAudio();cancelAnimationFrame(raf);dialog.close();if(local&&api.scene())api.scene().castAt=0;api.stop();}
  function depart(suspend=false){if(resolving)return;if(!local&&run()&&!transaction(()=>leaveExpedition(state(),{suspend}))){api.toast('💾 還沒存好，請再試一次');return;}close();if(suspend)completeAction('saved');}
  dialog.addEventListener('cancel',e=>{e.preventDefault();depart();});
  function button(label,action,cls=''){const b=document.createElement('button');b.textContent=label;b.className=cls;b.onclick=action;return b;}
