@@ -8,6 +8,7 @@ import {freshExpedition,sanitizeExpedition} from './adventure-expedition-model.j
 import {freshWorld,sanitizeWorld,deepGroveWalkable} from './adventure-exploration-model.js';
 import {hasEnergy} from './adventure-food-model.js';
 import {freshCompanions,sanitizeCompanions} from './adventure-companions-model.js';
+import {BASIC_TOILET} from './data/bathroom-fixtures.js';
 import {FURNITURE,STARTER_FURNITURE} from './data/home-furniture.js';
 import {WALLPAPERS} from './data/home-wallpapers.js';
 export {FURNITURE} from './data/home-furniture.js';
@@ -80,7 +81,7 @@ export const DEFAULT_LAYOUT=[{id:'sofa',x:830,y:450},{id:'rug',x:610,y:558},{id:
 export const DEFAULT_BEDROOM_LAYOUT=[{id:'bed',x:320,y:434},{id:'lamp',x:234,y:612}];
 const RECT_WARDROBE={x:ROOM_WARDROBE.x-74,y:ROOM_WARDROBE.y-55,w:142,h:63};
 const DOOR_CLEARANCE={x:550,y:628,w:180,h:116};
-export function freshState(){return {version:1,homeRest:freshRest(),bathroomLayout:[],expedition:freshExpedition(),world:freshWorld(),companions:freshCompanions(),homeRoomsVersion:1,starterKitchenVersion:1,stars:12,roles:['rabbit'],owned:['daisy'],outfit:'daisy',wand:true,wins:0,settled:[],visited:false,groveUnlocked:false,life:freshLife(),wallpaper:'original',wallpaperOwned:['original'],furnitureOwned:[...STARTER_FURNITURE],kitchenLayout:[{id:'daisy-stove',x:800,y:410}],bedroomLayout:DEFAULT_BEDROOM_LAYOUT.map(x=>({...x})),layout:DEFAULT_LAYOUT.map(x=>({...x}))};}
+export function freshState(){return {version:1,homeRest:freshRest(),bathroomLayout:[{...BASIC_TOILET}],expedition:freshExpedition(),world:freshWorld(),companions:freshCompanions(),homeRoomsVersion:1,starterKitchenVersion:1,stars:12,roles:['rabbit'],owned:['daisy'],outfit:'daisy',wand:true,wins:0,settled:[],visited:false,groveUnlocked:false,life:freshLife(),wallpaper:'original',wallpaperOwned:['original'],furnitureOwned:[...STARTER_FURNITURE],kitchenLayout:[{id:'daisy-stove',x:800,y:410}],bedroomLayout:DEFAULT_BEDROOM_LAYOUT.map(x=>({...x})),layout:DEFAULT_LAYOUT.map(x=>({...x}))};}
 export function sanitizeState(raw){
   const s=freshState();if(!raw||raw.version!==1)return s;
   raw=decodeHomeSurfaceState(raw,FURNITURE);
@@ -162,6 +163,11 @@ export function sanitizeState(raw){
     const sleeping=id=>id==='bed'||id==='lamp'||id.endsWith('-bed')||id.endsWith('-lamp');
     const moved=s.layout.filter(p=>sleeping(p.id));s.layout=s.layout.filter(p=>!sleeping(p.id));s.bedroomLayout.push(...moved);
     if(!Array.isArray(raw.layout))s.bedroomLayout.push(...DEFAULT_BEDROOM_LAYOUT.filter(p=>!INTERIOR_AREAS.some(a=>layoutFor(s,a).some(f=>f.id===p.id))).map(p=>({...p})));
+  }
+  // Catalog ownership survives old farm bundles and marks this conversion once.
+  // Already-owned (including previously purchased) toilets keep their storage choice.
+  if(!raw.furnitureOwned?.includes(BASIC_TOILET.id)&&!s.bathroomLayout.some(p=>FURNITURE.find(f=>f.id===p.id)?.rest==='toilet'||p.id.endsWith('-toilet'))){
+    if(canPlaceFurniture(s,BASIC_TOILET.id,BASIC_TOILET,'bathroom')&&!hasFurnitureOverlap(s,BASIC_TOILET.id,BASIC_TOILET,'bathroom'))s.bathroomLayout.push({...BASIC_TOILET});
   }
   // One-time starter gift. Keep existing kitchens and later storage choices intact.
   if(raw.starterKitchenVersion!==1&&!s.kitchenLayout.some(p=>FURNITURE.find(f=>f.id===p.id)?.cooking)){

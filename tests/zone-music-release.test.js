@@ -29,8 +29,8 @@ test('shipped adventure and preparation cache chains select the new build withou
   'forest-home-entry.js':['adventure-preview.html'],
   'adventure-preview.html':['adventure-entry.bundle.js'],'adventure-entry.js':['adventure-play.bundle.js'],
  };
- for(const [file,targets]of Object.entries(refs))for(const target of targets){const expected=['adventure-entry.bundle.js','adventure-play.bundle.js'].includes(target)?'20261025-cards1':['adventure-entry.bundle.js','adventure-play.bundle.js','game-boot.js','app.js'].includes(target)?'20261025-homegallery1':version;assert(read(file).includes(target+'?v='+expected),file+' -> '+target);}
- assert(read('adventure-entry.bundle.js').includes('adventure-play.bundle.js?v=20261025-cards1'));
+ for(const [file,targets]of Object.entries(refs))for(const target of targets){const expected=['adventure-entry.bundle.js','adventure-play.bundle.js'].includes(target)?'20261025-toilet1':['adventure-entry.bundle.js','adventure-play.bundle.js','game-boot.js','app.js'].includes(target)?'20261025-homegallery1':version;assert(read(file).includes(target+'?v='+expected),file+' -> '+target);}
+ assert(read('adventure-entry.bundle.js').includes('adventure-play.bundle.js?v=20261025-toilet1'));
  const bundle=read('adventure-play.bundle.js');
  assert(bundle.includes('assets/music/zone-'));
  for(const id of Object.keys(ZONE_MUSIC_TRACKS))assert(bundle.includes('"'+id+'"'),id);

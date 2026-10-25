@@ -65,5 +65,5 @@ export const FURNITURE=[
  ...COLLECTION_FURNITURE,
  ...SPATIAL_FURNITURE,
  ...COLLECTION_ZONE_FURNITURE,
-]).map(priceFurniture).map(scaleHomeFurniture);
+]).map(priceFurniture).map(f=>f.id==='daisy-complete-toilet'?{...f,starter:true,price:0}:f).map(scaleHomeFurniture);
 export const STARTER_FURNITURE=FURNITURE.filter(f=>f.starter).map(f=>f.id);

@@ -10,7 +10,6 @@ import {adventureMediaUrl as mediaUrl} from './adventure-media.js';
 import {WORLD,TREES,GROVE_TREES,SPAWN,MONSTER_HOME,FURNITURE,ROOM_WARDROBE} from './adventure-model.js';
 import {createRoomGround,drawPaintedRoomShell,drawRoomWardrobe,drawFurniture,drawInteriorDoors} from './adventure-room.js';
 import {drawRoomShell} from './home-room-shells.js';
-import {BASIC_TOILET} from './data/bathroom-fixtures.js';
 import {decorCamera} from './home-spatial-model.js';
 import {attachedPosition} from './furniture-surfaces.js';
 import {walkFrame,walkPosture} from './adventure-animation.js';
@@ -268,7 +267,7 @@ export class ForestScene{
     for(const item of visible.filter(item=>FURNITURE.find(f=>f.id===item.id).wall))paintItem(item);
     if(!integratedShell)drawInteriorDoors(c,this.art,this.area,wall);
     for(const item of visible.filter(item=>FURNITURE.find(f=>f.id===item.id).flat))paintItem(item);
-    const things=[...(this.area==='bedroom'?[{y:ROOM_WARDROBE.y,paint:()=>drawRoomWardrobe(c,wall,this.art)}]:[]),...(integratedShell&&this.area==='bathroom'?[{y:BASIC_TOILET.y,paint:()=>drawFurniture(c,this.art,{...BASIC_TOILET,id:'daisy-complete-toilet'})}]:[]),...visible.filter(item=>!FURNITURE.find(f=>f.id===item.id).flat&&!FURNITURE.find(f=>f.id===item.id).wall).map(item=>({y:item.on?(visible.find(p=>p.id===item.on)?.y??item.y)+.1:item.y,paint:()=>paintItem(item)})),{y:p.y,paint:()=>{
+    const things=[...(this.area==='bedroom'?[{y:ROOM_WARDROBE.y,paint:()=>drawRoomWardrobe(c,wall,this.art)}]:[]),...visible.filter(item=>!FURNITURE.find(f=>f.id===item.id).flat&&!FURNITURE.find(f=>f.id===item.id).wall).map(item=>({y:item.on?(visible.find(p=>p.id===item.on)?.y??item.y)+.1:item.y,paint:()=>paintItem(item)})),{y:p.y,paint:()=>{
       if(this.homeRest||this.editing)return;
       c.save();if(this.dining){c.translate(p.x,p.y);c.rotate(diningFrame(this.dining,now,this.reduced.matches).lean);c.translate(-p.x,-p.y);}
       this.drawPlayer(c,this.art,{x:p.x,y:p.y,height:116,outfit:state.outfit,direction:p.direction,walking:p.moving&&!this.reduced.matches,phase:p.phase,wand:state.wand&&!this.dining});c.restore();
