@@ -1,12 +1,12 @@
 import {inventoryItems,TRADE_KINDS} from './adventure-trade-inventory.js';
 import {installHomeInputGuard} from './home-input-guard.js';
 import {floorPosition,facingOptions} from './home-spatial-model.js';
-import {furnitureSurfaces,freeSurfacePosition,surfaceDistance} from './furniture-surfaces.js';
+import {furnitureSurfaces,planSurfacePlacement,surfaceCapacityText,surfaceDistance} from './furniture-surfaces.js';
 import {drawDoll} from './adventure-art.js';
 import {wallPosition} from './data/home-wall-furniture.js';
 import {completeAction} from './adventure-action-feedback.js';
 import {hasEnergy} from './adventure-food-model.js';
-import {FURNITURE,layoutFor,isInterior,hasFurnitureOverlap,canPlaceFurniture,placementState,canReachInterior,placeFurniture,storeFurniture} from './adventure-model.js';
+import {FURNITURE,layoutFor,isInterior,hasFurnitureOverlap,canPlaceFurniture,placementState,furnitureSurfacePlan,canReachInterior,placeFurniture,storeFurniture} from './adventure-model.js';
 import {HOME_STYLES} from './data/home-furniture.js';
 import {ensureHomeArt} from './adventure-home-art.js?v=20261010-light2';
 import {ensureWardrobeArt} from './adventure-wardrobe-art.js';
@@ -14,8 +14,8 @@ import {ensureRoomShell} from './home-room-shells.js';
 import {drawFurnitureThumb} from './adventure-room.js';
 import {WALLPAPERS,ensureWallpaperThumbs,applyWallpaper} from './adventure-wallpaper.js';
 export function createHomeDecor(api){
- const $=id=>document.getElementById(id);let style='all',version=0,wallpaperChoice=0,loading=false,category='furniture',wallpaper=null,autoOrient=true;
- const stylesheet=document.createElement('link');stylesheet.rel='stylesheet';stylesheet.href=new URL('./home-spatial.css?v=20261025-homefix2',import.meta.url).href;document.head.append(stylesheet);
+ const $=id=>document.getElementById(id);let style='all',version=0,wallpaperChoice=0,loading=false,category='furniture',wallpaper=null,autoOrient=true,autoSurfaceFacing=true,placementSnapshot=null;
+ const stylesheet=document.createElement('link');stylesheet.rel='stylesheet';stylesheet.href=new URL('./home-spatial.css?v=20261025-homegallery1',import.meta.url).href;document.head.append(stylesheet);
  const exit=$('decor-close');exit.textContent='完成布置';exit.setAttribute('aria-label','完成布置，回到房間');
  const resetView=document.createElement('button');resetView.type='button';resetView.id='decor-reset-view';resetView.textContent='↺ 重整畫面';resetView.onclick=()=>{api.stopMoving();inputGuard.reset();scene().marker=null;scene().resize();resize();window.scrollTo(0,0);};exit.before(resetView);
  const controls=document.createElement('div');controls.id='decor-position-tools';$('decor-hint').before(controls);
@@ -25,6 +25,7 @@ export function createHomeDecor(api){
  const resize=()=>{if(!scene()?.editing)return;const r=$('decor-panel').getBoundingClientRect(),screen=$('world').getBoundingClientRect(),bottom=r.width>screen.width*.7;scene().decorInsets=bottom?{top:12,bottom:screen.bottom-r.top+12}:{top:12,right:screen.right-r.left+12};};
  const observer=new ResizeObserver(resize);observer.observe($('decor-panel'));window.addEventListener('resize',resize);
  const state=()=>api.state(),scene=()=>api.scene(),area=()=>scene().area;
+ const layoutSnapshot=()=>JSON.stringify(['room','kitchen','bedroom','bathroom'].map(a=>layoutFor(state(),a)));
  const inputGuard=installHomeInputGuard({stage:$('map-stage'),panel:$('decor-panel'),enabled:()=>!!scene()?.editing});
  $('decor-styles').innerHTML=[{id:'all',name:'全部家具'},{id:'special',name:'特色商品'},...HOME_STYLES].map(s=>`<button type="button" data-home-style="${s.id}" aria-label="${s.name}" data-child-icon="${({all:"📦",special:"🎁",honey:"🍯",ocean:"🐚",berry:"🍓",daisy:"🌼",fox:"🦊",moon:"🌙"})[s.id]}">${s.name}</button>`).join('');
  $('decor-styles').querySelectorAll('button').forEach(b=>b.onclick=()=>{style=b.dataset.homeStyle;scene().placement=null;void palette();update();});
@@ -54,6 +55,9 @@ export function createHomeDecor(api){
  function select(id){
   if(loading||category!=='furniture')return;if(!hasEnergy(state())){api.toast('🥄 先吃點東西，再布置');return;}const f=FURNITURE.find(f=>f.id===id);if(!f||!state().furnitureOwned.includes(id)||!api.art()[f.atlas||'furniture'])return;autoOrient=true;
   let pos=layoutFor(state(),area()).find(p=>p.id===id);
+  // A saved direction is the child's choice. Only a new item follows its host
+  // automatically; attaching it must never overwrite an explicit rotation.
+  autoSurfaceFacing=!pos?.facing;
   const preview={...state(),furnitureOwned:[...state().furnitureOwned,id]};
   if(!pos&&f.wall)pos=f.ceiling?{x:640,y:160}:{x:850,y:area()==='bathroom'?260:220};
   if(!pos){outer:for(let y=area()==='bathroom'?530:410;y<=650;y+=60)for(let x=330;x<=950;x+=75)if(!hasFurnitureOverlap(preview,id,{x,y},area())&&canPlaceFurniture(preview,id,{x,y},area())&&canReachInterior(placementState(preview,id,{x,y},area()),scene().player,area())){pos={x,y};break outer;}}
@@ -61,16 +65,22 @@ export function createHomeDecor(api){
   $('furniture-palette').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.furniture===id)));
  }
  function move(at){const p=scene().placement;if(!p)return;const f=FURNITURE.find(f=>f.id===p.id),layout=layoutFor(state(),area());let snapped=null,best=Infinity;
-  if(f.small)for(const host of layout.filter(x=>x.id!==p.id))for(const [i,s]of furnitureSurfaces(FURNITURE.find(f=>f.id===host.id)).entries()){const distance=surfaceDistance(host,s,at),spot=freeSurfacePosition(p.id,host,i,layout,FURNITURE,at);if(spot&&distance<45&&distance<best){best=distance;snapped=spot;}}
-  delete p.on;delete p.surface;delete p.offsetX;const next=snapped||(f.wall?wallPosition(at,f):floorPosition({...p,...at},f,{auto:autoOrient,area:area()}));delete p.mount;Object.assign(p,next);update();}
+  if(f.small)for(const host of layout.filter(x=>x.id!==p.id))for(const [i,s]of furnitureSurfaces(FURNITURE.find(f=>f.id===host.id)).entries()){const distance=surfaceDistance(host,s,at),facing=surfacePlacement(p,{on:host.id,surface:i}).facing,plan=planSurfacePlacement(p.id,host,i,layout,FURNITURE,at,{facing});if(plan.position&&distance<45&&distance<best){best=distance;snapped=plan.position;}}
+  delete p.on;delete p.surface;delete p.offsetX;const next=snapped?surfacePlacement(p,snapped):(f.wall?wallPosition(at,f,area()):floorPosition({...p,...at},f,{auto:autoOrient,area:area()}));delete p.mount;Object.assign(p,next);update();}
+ function surfacePlacement(p,spot){
+  if(!autoSurfaceFacing)return {...spot,facing:p.facing||'front'};
+  const host=layoutFor(state(),area()).find(item=>item.id===spot.on),surface=furnitureSurfaces(FURNITURE.find(f=>f.id===host?.id))[spot.surface];
+  const facing=surface?.wing?(host.mount==='corner-right'?'right':'left'):host?.mount?.startsWith('corner-')?'front':['left','right'].includes(host?.mount)?host.mount:host?.facing||'front';
+  return {...spot,facing};
+ }
  function supportChoices(p,f){let box=$('decor-supports');if(!box){box=document.createElement('div');box.id='decor-supports';box.style.cssText='display:flex;gap:6px;flex-wrap:wrap;margin:8px 0';$('decor-hint').before(box);}box.replaceChildren();box.hidden=!f?.small;if(!f?.small)return;
-  for(const host of layoutFor(state(),area()).filter(x=>x.id!==p.id)){const base=FURNITURE.find(f=>f.id===host.id);furnitureSurfaces(base).forEach((surface,i)=>{const spot=freeSurfacePosition(p.id,host,i,layoutFor(state(),area()),FURNITURE);const b=document.createElement('button');b.type='button';b.textContent=base.name+'・'+surface.name;b.disabled=!spot;b.style.cssText='font-size:13px;min-height:44px;padding:5px 9px';b.onclick=()=>{Object.assign(p,spot);update();};box.append(b);});}
+  for(const host of layoutFor(state(),area()).filter(x=>x.id!==p.id)){const base=FURNITURE.find(f=>f.id===host.id);furnitureSurfaces(base).forEach((surface,i)=>{const facing=surfacePlacement(p,{on:host.id,surface:i}).facing,plan=planSurfacePlacement(p.id,host,i,layoutFor(state(),area()),FURNITURE,undefined,{facing});const b=document.createElement('button');b.type='button';b.textContent=base.name+'・'+surface.name+'・'+(plan.ok?(plan.moved?'整理後可放':'可放'):plan.reason==='item-too-wide'?'物品太寬':'空間不足');b.title=surfaceCapacityText(plan);b.disabled=!plan.ok;b.style.cssText='font-size:13px;min-height:44px;padding:5px 9px';b.onclick=()=>{if(!plan.ok)return;delete p.mount;Object.assign(p,surfacePlacement(p,plan.position));update();};box.append(b);});}
  }
  function update(){
   const placing=!!scene()?.placement&&category==='furniture';document.body.classList.toggle('decor-placing',placing);choose.hidden=!placing;controls.hidden=!placing;rooms.hidden=placing;rooms.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.room===area())));controls.replaceChildren();
   if(placing){const p=scene().placement,f=FURNITURE.find(f=>f.id===p.id);const label=document.createElement('strong');label.textContent=f.name;controls.append(label);
-   for(const direction of (f.wall?[]:facingOptions(f))){const b=document.createElement('button');b.type='button';b.textContent=({front:'↓ 正面',right:'→ 向右',back:'↑ 背面',left:'← 向左'})[direction];b.setAttribute('aria-pressed',String((p.facing||'front')===direction));b.onclick=()=>{autoOrient=false;p.facing=direction;if(!f.corner)delete p.mount;if(f.corner)Object.assign(p,floorPosition({...p,x:direction==='left'?360:920},f));update();};controls.append(b);}
-   if(!f.wall&&!f.corner){const b=document.createElement('button');b.type='button';b.textContent=autoOrient?'🧲 自動靠牆':'🧲 自由放置';b.setAttribute('aria-pressed',String(autoOrient));b.onclick=()=>{autoOrient=!autoOrient;delete p.mount;if(autoOrient)Object.assign(p,floorPosition(p,f,{auto:true,area:area()}));update();};controls.append(b);}
+   for(const direction of (f.wall?[]:facingOptions(f))){const b=document.createElement('button');b.type='button';b.textContent=({front:'↓ 正面',right:'→ 向右',back:'↑ 背面',left:'← 向左'})[direction];b.setAttribute('aria-pressed',String((p.facing||'front')===direction));b.onclick=()=>{autoOrient=false;autoSurfaceFacing=false;p.facing=direction;if(!f.corner)delete p.mount;if(f.corner)Object.assign(p,floorPosition({...p,x:direction==='left'?360:920},f));update();};controls.append(b);}
+   if(!f.wall&&!f.corner){const b=document.createElement('button');b.type='button';b.textContent=f.small?(autoSurfaceFacing?'🧲 跟隨檯面':'🧭 自選方向'):autoOrient?'🧲 自動靠牆':'🧲 自由放置';b.setAttribute('aria-pressed',String(f.small?autoSurfaceFacing:autoOrient));b.onclick=()=>{delete p.mount;if(f.small){autoSurfaceFacing=!autoSurfaceFacing;if(autoSurfaceFacing&&p.on)Object.assign(p,surfacePlacement(p,p));}else{autoOrient=!autoOrient;if(autoOrient)Object.assign(p,floorPosition(p,f,{auto:true,area:area()}));}update();};controls.append(b);}
   }requestAnimationFrame(resize);
   if(!['furniture','wallpaper'].includes(category)){$('decor-hint').textContent='';$('decor-supports')?.replaceChildren();return;}
   if(category==='wallpaper'){
@@ -82,18 +92,21 @@ export function createHomeDecor(api){
   }
   const p=scene()?.placement,f=FURNITURE.find(f=>f.id===p?.id),owned=!!f&&state().furnitureOwned.includes(f.id);let valid=false;
   supportChoices(p,f);
-  if(p&&owned){valid=canPlaceFurniture(state(),p.id,p,area())&&canReachInterior(placementState(state(),p.id,p,area()),scene().player,area());p.valid=valid;}
+  const surfacePlan=p?.on?furnitureSurfacePlan(state(),p.id,p,area()):null;
+  if(p&&owned){const preview=placementState(state(),p.id,p,area());valid=(!p.on||surfacePlan?.ok)&&preview!==state()&&canPlaceFurniture(state(),p.id,surfacePlan?.position||p,area())&&canReachInterior(preview,scene().player,area());p.valid=valid;}
   $('decor-buy').hidden=true;$('decor-buy').disabled=!f||owned||state().stars<f.price;$('decor-buy').textContent=f?`用 ${f.price} 星幣買${f.name}`:'';
   $('decor-place').disabled=!valid;$('decor-cancel').disabled=!p;$('decor-store').disabled=!p||!layoutFor(state(),area()).some(x=>x.id===p.id);
   $('decor-hint').classList.toggle('invalid',!!p&&owned&&!valid);
   $('decor-hint').textContent=!p?(area()==='kitchen'?'擺好已擁有的料理爐，再點它做料理。新家具在島上的家具行。':'挑已擁有的家具來布置。新家具在島上的家具行。'):!owned?(state().stars<f.price?`還差 ${f.price-state().stars} 星幣。已擁有的家具仍能自由布置。`:`${f.name}・${f.price} 星幣。買下就會擺好，之後也能重新移動。`):valid?(hasFurnitureOverlap(state(),p.id,p,area())?'可以放！家具會依前後位置互相遮擋。':'點地板或拖曳選位置，再按 ✓。可靠牆或與家具重疊。'):'請把家具底部放在房間的地板範圍內。';
   if(f?.wall)$('decor-hint').textContent=valid?'🖼️ 可以掛！點牆面選位置，再按 ✓。左右牆會自動轉成側面。':'🖼️ 請點房間後方或左右兩側的牆面。';
   if(f?.ceiling)$('decor-hint').textContent='選房間上方的位置掛好吊扇，再按 ✓。';
-  if(f?.small)$('decor-hint').textContent=!valid?'請放在地板上，或選擇可擺放的檯面。':p.on?'放好了位置，再按「放好了」確認。':'選上面的家具放上去，或點地板擺放。';
+  if(f?.small)$('decor-hint').textContent=p.on?surfaceCapacityText(surfacePlan):!valid?'請放在地板上，或選擇可擺放的檯面。':'選上面的家具放上去，或點地板擺放。';
+  else if(p&&layoutFor(state(),area()).some(item=>item.on===p.id)&&!valid)$('decor-hint').textContent='這個方向放不下檯面上的物品，請先移走一件，原本的擺設會保留。';
   $('world').dataset.placement=p?.id||'';$('world').dataset.placementValid=String(valid);
+  placementSnapshot=p?layoutSnapshot():null;
  }
  $('decor-buy').onclick=null;
- $('decor-place').onclick=()=>{if(!hasEnergy(state())){close();api.toast('🥄 先吃點東西');return;}if(category==='wallpaper'){if(loading||!isInterior(area())||!applyWallpaper(state(),wallpaper))return;scene().wallpaperPreview=null;api.save();void palette();update();completeAction('wallpaper');return;}const p=scene().placement;if(!p||!placeFurniture(state(),p.id,p,scene().player,area())){update();return;}api.save();scene().placement=null;void palette();update();api.changed();$('decor-hint').textContent='放好了，也幫你記住位置囉！';completeAction('place');};
+ $('decor-place').onclick=()=>{if(!hasEnergy(state())){close();api.toast('🥄 先吃點東西');return;}if(category==='wallpaper'){if(loading||!isInterior(area())||!applyWallpaper(state(),wallpaper))return;scene().wallpaperPreview=null;api.save();void palette();update();completeAction('wallpaper');return;}const p=scene().placement;if(p&&placementSnapshot!==layoutSnapshot()){update();api.toast('擺設有更新，請看看預覽再確認。');return;}if(!p||!placeFurniture(state(),p.id,p,scene().player,area())){update();return;}api.save();scene().placement=null;void palette();update();api.changed();$('decor-hint').textContent='放好了，也幫你記住位置囉！';completeAction('place');};
  $('decor-store').onclick=()=>{if(!hasEnergy(state())){close();api.toast('🥄 先吃點東西');return;}if(!scene().placement)return;storeFurniture(state(),scene().placement.id,area());api.save();scene().placement=null;void palette();update();api.changed();$('decor-hint').textContent='已放進收納，不用再花星幣購買。';completeAction('store');};
  $('decor-cancel').onclick=()=>{scene().placement=null;scene().wallpaperPreview=null;wallpaper=null;void palette();update();};
  $('decor-open').onclick=open;$('decor-close').onclick=close;

@@ -1,5 +1,6 @@
 import {forestSaveKey} from './adventure-sync.js';
-import {SAVE_KEY,sanitizeState} from './adventure-model.js';
+import {SAVE_KEY,sanitizeState,FURNITURE} from './adventure-model.js';
+import {encodeHomeSurfaceState} from './home-surface-storage.js';
 import {CROPS,CROP_LESSONS,CROP_ACCURACY,beginFarmRound,settleFarmRound,farmRoundScore} from './adventure-life-model.js';
 
 const TICKETS='zhuyin.farm-learning-rounds.v1',TRIP='zhuyin.farm-learning-trip.v1';
@@ -24,7 +25,7 @@ export function createFarmLearningBridge({storage,tabStorage,href}){
   if(explicitTrip&&isLegacyFarmUpgrade(state.life.learningOwner,identity)&&confirmLegacyUpgrade()===true)state.life.learningOwner=identity;
   const ticket=beginFarmRound(state,{...payload,owner:identity,allowClaim:intent?.classId===classId&&intent?.demo===demo});
   if(!ticket)return false;
-  try{storage.setItem(recordKey,JSON.stringify(demo?state:{...record,state,dirty:true}));storage.setItem(TICKETS,JSON.stringify(Object.fromEntries([...Object.entries(tickets),[key,ticket]].slice(-200))));return true;}catch{return false;}
+  try{const stored=encodeHomeSurfaceState(state,FURNITURE);storage.setItem(recordKey,JSON.stringify(demo?stored:{...record,state:stored,dirty:true}));storage.setItem(TICKETS,JSON.stringify(Object.fromEntries([...Object.entries(tickets),[key,ticket]].slice(-200))));return true;}catch{return false;}
  }
  function complete(payload,{demo=false,confirmed=false}={}){
   if(!confirmed)return {grown:0,status:'pending'};
@@ -34,7 +35,7 @@ export function createFarmLearningBridge({storage,tabStorage,href}){
   const state=sanitizeState(raw),score=farmRoundScore(payload);if(!score)return {grown:0,status:'incomplete'};
   const cropIds=[...new Set(state.life.plots.filter(p=>p&&!p.ready&&ticket.plantIds.includes(p.plantId)).map(p=>p.crop))];
   const grown=settleFarmRound(state,ticket,payload);
-  if(grown)try{storage.setItem(recordKey,JSON.stringify(demo?state:{...record,state,dirty:true}));}catch{return {grown:0,status:'storage-error'};}
+  if(grown)try{const stored=encodeHomeSurfaceState(state,FURNITURE);storage.setItem(recordKey,JSON.stringify(demo?stored:{...record,state:stored,dirty:true}));}catch{return {grown:0,status:'storage-error'};}
   return {grown,crops:grown?cropIds:[],status:score.correct*100>=score.total*CROP_ACCURACY?'qualified':'practice',...score};
  }
  function depart(mode,{demo=false}={}){

@@ -13,14 +13,23 @@ export function spatialRole(f){
 export function fixtureRole(f){if(!f||f.small||f.wall||f.corner)return null;return f.cooking?'stove':/fridge/.test(f.id)?'fridge':/sink|vanity/.test(f.id)?'sink':f.rest==='bath'?'tub':null;}
 export function facingOptions(f){return f?.corner?['left','right']:spatialRole(f)==='chair'?HOME_FACINGS:['front','left','right'];}
 export function surfaceVector(host={}){
- if(host.mount==='left')return {x:.42,y:-1};
- if(host.mount==='right')return {x:-.42,y:-1};
+ if(host.mount==='left')return {x:HOME_FLOOR.sideSlope,y:-1};
+ if(host.mount==='right')return {x:-HOME_FLOOR.sideSlope,y:-1};
  return {x:host.facing==='left'?-1:1,y:0};
 }
 // New rooms share one painted floor plan, including the bathroom. A wall snap
 // aligns the furniture's BACK contact, never its variable collision-box width.
-export const HOME_FLOOR={back:360,left:220,right:1060,front:730,sideSlope:.42};
-export function floorWallX(y){return Math.max(65,HOME_FLOOR.left-(y-HOME_FLOOR.back)*HOME_FLOOR.sideSlope);}
+export const HOME_FLOOR={back:385,left:175,right:1105,front:730,leftFront:60,rightFront:1220,sideSlope:.34};
+export const HOME_DOOR_SPACE={start:590,end:735,margin:8,wallMargin:20,innerLeft:320,innerRight:960,anchorY:640,approachY:680};
+export const HOME_CORNER_SPACE={leftX:325,rightX:955,bottom:500,width:400,depth:115};
+export const HOME_SIDE_DOORS={room:['left','right'],bedroom:['left','right'],kitchen:['left'],bathroom:['right']};
+export function floorWallX(y){return Math.max(HOME_FLOOR.leftFront,HOME_FLOOR.left-(y-HOME_FLOOR.back)*HOME_FLOOR.sideSlope);}
+export function floorWallRightX(y){return Math.min(HOME_FLOOR.rightFront,HOME_FLOOR.right+(y-HOME_FLOOR.back)*HOME_FLOOR.sideSlope);}
+export function sideHasDoor(area,side){return (HOME_SIDE_DOORS[area]||[]).includes(side);}
+export function sideFurnitureRange(f,side,area='room',hangHeight=0){
+ const half=(f.surfaceWidth||f.fw)/2,farEnd=sideHasDoor(area,side)?HOME_DOOR_SPACE.start-HOME_DOOR_SPACE.margin-(hangHeight?HOME_DOOR_SPACE.wallMargin:0):HOME_FLOOR.front-5;
+ return {min:Math.ceil((HOME_FLOOR.back+half+5-hangHeight)/5)*5,max:Math.floor((farEnd-half-hangHeight)/5)*5};
+}
 export function furnitureWallDepth(f){
  if(!f)return 0;
  if(f.wall)return 0;
@@ -35,30 +44,39 @@ export function furnitureWallAnchor(f,p){
 }
 // Absolute, idempotent placement: safe even if a server omits version flags.
 // Wall hangings and free floor objects are intentionally not migrated.
-export function canonicalMountedPosition(p,f){
+export function canonicalMountedPosition(p,f,area='room'){
  if(!f||f.wall||f.ceiling||f.flat||f.small||!HOME_MOUNTS.includes(p.mount)||!Number.isFinite(p.x)||!Number.isFinite(p.y))return null;
- if(f.corner){if(!['corner-left','corner-right'].includes(p.mount))return null;const side=p.mount==='corner-left'?'left':'right';return {x:side==='left'?380:900,y:545,facing:side,mount:'corner-'+side};}
+ if(f.corner){if(!['corner-left','corner-right'].includes(p.mount))return null;const side=p.mount==='corner-left'?'left':'right';return {x:side==='left'?HOME_CORNER_SPACE.leftX:HOME_CORNER_SPACE.rightX,y:HOME_CORNER_SPACE.bottom,facing:side,mount:'corner-'+side};}
  const depth=furnitureWallDepth(f);
- if(p.mount==='back')return {x:Math.max(Math.ceil((220+f.fw/2)/5)*5,Math.min(Math.floor((1060-f.fw/2)/5)*5,Math.round(p.x/5)*5)),y:HOME_FLOOR.back+depth,facing:'front',mount:'back'};
- if(p.mount==='left'||p.mount==='right'){const half=(f.surfaceWidth||f.fw)/2,minY=Math.ceil((HOME_FLOOR.back+half+5)/5)*5,maxY=Math.floor((HOME_FLOOR.front-half-5)/5)*5,y=Math.max(minY,Math.min(maxY,Math.round(p.y/5)*5)),left=Math.round((floorWallX(y)+depth)/5)*5;return {x:p.mount==='left'?left:1280-left,y,facing:p.mount,mount:p.mount};}
+ if(p.mount==='back')return {x:Math.max(Math.ceil((HOME_FLOOR.left+f.fw/2)/5)*5,Math.min(Math.floor((HOME_FLOOR.right-f.fw/2)/5)*5,Math.round(p.x/5)*5)),y:HOME_FLOOR.back+depth,facing:'front',mount:'back'};
+ if(p.mount==='left'||p.mount==='right'){const range=sideFurnitureRange(f,p.mount,area),y=Math.max(range.min,Math.min(range.max,Math.round(p.y/5)*5)),x=p.mount==='left'?floorWallX(y)+depth:floorWallRightX(y)-depth;return {x:Math.round(x/5)*5,y,facing:p.mount,mount:p.mount};}
  return null;
 }
 export function spatialFootprint(f,p){
- if(f.corner)return {x:p.x-f.fw/2,y:p.y-f.fh,w:f.fw,h:f.fh};
+ if(f.corner)return {x:p.x-HOME_CORNER_SPACE.width/2,y:p.y-HOME_CORNER_SPACE.depth,w:HOME_CORNER_SPACE.width,h:HOME_CORNER_SPACE.depth};
  const side=p.mount==='left'||p.mount==='right';const w=side?Math.max(50,f.fw*.62):f.fw,h=side?f.fh+f.fw*.4:f.fh;
  return {x:p.x-w/2,y:p.y-h,w,h};
 }
 export function floorPosition(at,f,{auto=true,area='room'}={}){
  let p={x:Math.round(at.x/5)*5,y:Math.round(at.y/5)*5,...spatialFields(at)};
- if(f.corner){if(!auto&&['corner-left','corner-right'].includes(at.mount))return p;const side=at.x<640?'left':'right';return {x:side==='left'?380:900,y:545,facing:side,mount:'corner-'+side};}
+ if(f.corner){if(!auto&&['corner-left','corner-right'].includes(at.mount))return p;const side=at.x<640?'left':'right';return {x:side==='left'?HOME_CORNER_SPACE.leftX:HOME_CORNER_SPACE.rightX,y:HOME_CORNER_SPACE.bottom,facing:side,mount:'corner-'+side};}
  if(!auto||f.flat||f.small)return p;
  // The child's pointer chooses a wall; rotation can also be chosen explicitly.
  const wallSuitable=f.cooking||f.areas?.includes('kitchen')||/cabinet|bookcase|shelf|fridge|sink|pantry|stand|desk|vanity|glass-door|bed|sofa|tub|toilet/.test(f.id);
- if(wallSuitable&&at.x<300){p.mount='left';Object.assign(p,canonicalMountedPosition(p,f));}
- else if(wallSuitable&&at.x>980){p.mount='right';Object.assign(p,canonicalMountedPosition(p,f));}
- else if(wallSuitable&&at.y<450){p.mount='back';Object.assign(p,canonicalMountedPosition(p,f));}
+ if(wallSuitable&&at.x<300){p.mount='left';Object.assign(p,canonicalMountedPosition(p,f,area));}
+ else if(wallSuitable&&at.x>980){p.mount='right';Object.assign(p,canonicalMountedPosition(p,f,area));}
+ else if(wallSuitable&&at.y<HOME_FLOOR.back+90){p.mount='back';Object.assign(p,canonicalMountedPosition(p,f,area));}
  else delete p.mount;
  return p;
+}
+export function placementBlocksDoor(f,p,area='room'){
+ if(!f||!p||f.small||f.flat||f.ceiling||p.on)return false;
+ const sides=HOME_SIDE_DOORS[area]||[];
+ if(f.wall){const side=p.mount==='left'||p.mount==='right'?p.mount:null;if(!sides.includes(side))return false;const half=(f.surfaceWidth||f.fw)/2,near=p.y+180+half;return near>HOME_DOOR_SPACE.start-HOME_DOOR_SPACE.margin-HOME_DOOR_SPACE.wallMargin;}
+ if(sides.includes(p.mount)){const near=p.y+(f.surfaceWidth||f.fw)/2;return near>HOME_DOOR_SPACE.start-HOME_DOOR_SPACE.margin;}
+ const r=spatialFootprint(f,p);
+ if(r.y+r.h<=HOME_DOOR_SPACE.start||r.y>=HOME_DOOR_SPACE.end)return false;
+ return sides.some(side=>side==='left'?r.x<HOME_DOOR_SPACE.innerLeft&&r.x+r.w>HOME_FLOOR.leftFront:r.x+r.w>HOME_DOOR_SPACE.innerRight&&r.x<HOME_FLOOR.rightFront);
 }
 export function spatialFloorValid(f,p){
  if(f.corner)return ['corner-left','corner-right'].includes(p.mount)&&p.x>=300&&p.x<=980&&p.y>=400&&p.y<=600;

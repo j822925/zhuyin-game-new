@@ -5,7 +5,7 @@ import {drawExploration} from './adventure-exploration-art.js';
 import {drawFishing} from './adventure-fishing-feedback.js';
 import {drawDining,diningFrame} from './adventure-dining.js';
 import {HOME_CELLS} from './data/home-atlas-cells.js';
-import {isInterior,layoutFor} from './adventure-model.js';
+import {isInterior,layoutFor,furniturePreviewLayout} from './adventure-model.js';
 import {adventureMediaUrl as mediaUrl} from './adventure-media.js';
 import {WORLD,TREES,GROVE_TREES,SPAWN,MONSTER_HOME,FURNITURE,ROOM_WARDROBE} from './adventure-model.js';
 import {createRoomGround,drawPaintedRoomShell,drawRoomWardrobe,drawFurniture,drawInteriorDoors} from './adventure-room.js';
@@ -262,10 +262,9 @@ export class ForestScene{
     else if(this.area!=='room'){if(!this.sideRoomGround)this.sideRoomGround=createRoomGround(null,false);c.drawImage(this.sideRoomGround,0,0);}
     else{if(!this.originalRoomGround)this.originalRoomGround=createRoomGround();c.drawImage(this.originalRoomGround,0,0);}
     const p=this.player;
-    const visible=layoutFor(state,this.area).filter(item=>item.id!==this.placement?.id).map(item=>({...item}));
-    if(this.placement)visible.push(this.placement);
+    const visible=furniturePreviewLayout(state,this.placement,this.area);
     for(const item of visible){const pos=attachedPosition(item,visible,FURNITURE);if(pos)Object.assign(item,pos);}
-    const paintItem=item=>drawFurniture(c,this.art,item,item===this.placement?{alpha:.9,outline:item.valid?'#658a50':'#bd795e'}:{});
+    const paintItem=item=>drawFurniture(c,this.art,item,item.id===this.placement?.id?{alpha:.9,outline:item.valid?'#658a50':'#bd795e'}:{});
     for(const item of visible.filter(item=>FURNITURE.find(f=>f.id===item.id).wall))paintItem(item);
     if(!integratedShell)drawInteriorDoors(c,this.art,this.area,wall);
     for(const item of visible.filter(item=>FURNITURE.find(f=>f.id===item.id).flat))paintItem(item);

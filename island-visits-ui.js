@@ -8,6 +8,7 @@ import {ensureRoomShell} from './home-room-shells.js';
 import {canonicalMountedPosition,spatialFloorValid} from './home-spatial-model.js';
 import {wallSide,wallPosition,wallPlacementValid} from './data/home-wall-furniture.js';
 import {attachedPosition} from './furniture-surfaces.js';
+import {decodeHomeSurfaceState} from './home-surface-storage.js';
 import {ensureClothingArt,drawClothing} from './adventure-clothing.js';
 import {loadWalker,drawWalker} from './adventure-characters.js';
 import {companionById,companionReady} from './adventure-companions-model.js';
@@ -25,12 +26,13 @@ const errors={visit_closed:'島主暫時不開放參觀。',visit_not_ready:'這
 // Do not run the owner/save sanitizer here: it can grant starter furnishings or
 // migrate ownership. Nothing from this display copy is written to either player.
 export function normalizeVisitRoomLayouts(snapshot){
+ snapshot=decodeHomeSurfaceState(snapshot,FURNITURE);
  const next={...snapshot},areas=['room','bedroom','kitchen','bathroom'];
  for(let index=0;index<VISIT_LAYOUTS.length;index++){
   const key=VISIT_LAYOUTS[index],area=areas[index];
   const layout=(Array.isArray(snapshot[key])?snapshot[key]:[]).filter(item=>item&&Number.isFinite(item.x)&&Number.isFinite(item.y)&&FURNITURE.some(f=>f.id===item.id)).map(item=>{
    if(item.on)return {...item};
-   const f=FURNITURE.find(f=>f.id===item.id),aligned=f.wall&&!f.ceiling&&wallSide(item)!==0?wallPosition(item,f):canonicalMountedPosition(item,f);
+   const f=FURNITURE.find(f=>f.id===item.id),aligned=f.wall&&!f.ceiling&&wallSide(item)!==0?wallPosition(item,f,area):canonicalMountedPosition(item,f,area);
    const valid=aligned&&(!f.areas||f.areas.includes(area))&&(f.wall?wallPlacementValid(f,aligned,area):spatialFloorValid(f,aligned));
    return valid?{...item,...aligned}:{...item};
   });

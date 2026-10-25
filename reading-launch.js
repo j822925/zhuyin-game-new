@@ -8,10 +8,10 @@ export function readingLaunchPlan(href,env={}){
  const standalone=apple&&!!(env.standalone||env.displayStandalone);
  const major=Number((env.userAgent||'').match(/(?:CPU(?: iPhone)? OS|iPhone OS) (\d+)/)?.[1]||(env.userAgent||'').match(/Version\/(\d+)/)?.[1]||0);
  const make=file=>{const out=new URL(file,base),classId=base.searchParams.get('class')||(base.pathname.endsWith('/grade2.html')?'grade2':null);if(classId)out.searchParams.set('class',classId);return out;};
- const browser=make('reading.html');browser.searchParams.set('v','20261025-homefix2');browser.searchParams.set('speech','native');
+ const browser=make('reading.html');browser.searchParams.set('v','20261025-homegallery1');browser.searchParams.set('speech','native');
  const farm=base.searchParams.get('farmLesson')==='reading';
  if(farm)browser.searchParams.set('farmLesson','reading');
- const shortcut=make('reading-shortcut.html?v=20261025-homefix2');
+ const shortcut=make('reading-shortcut.html?v=20261025-homegallery1');
  if(farm)shortcut.searchParams.set('farmLesson','reading');
  const local=['localhost','127.0.0.1','[::1]'].includes(base.hostname);
  if(local&&base.searchParams.get('demo')==='1')browser.searchParams.set('demo','1');

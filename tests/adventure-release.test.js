@@ -18,9 +18,10 @@ function fakeDocument({styleError=false}={}){
 }
 
 test('release remains stable until an explicit candidate is configured',async()=>{
-  assert.equal(await select({policy:ADVENTURE_RELEASE_POLICY}),null);
+  const disabledPolicy={...ADVENTURE_RELEASE_POLICY,candidate:null};
+  assert.equal(await select({policy:disabledPolicy}),null);
   let stable=0;
-  assert.equal(await startAdventureRelease({student,policy:ADVENTURE_RELEASE_POLICY,loadStable:()=>{stable++;},loadCandidate:()=>assert.fail('disabled candidate loaded')}),'stable');
+  assert.equal(await startAdventureRelease({student,policy:disabledPolicy,loadStable:()=>{stable++;},loadCandidate:()=>assert.fail('disabled candidate loaded')}),'stable');
   assert.equal(stable,1);
 });
 

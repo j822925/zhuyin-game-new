@@ -1,4 +1,5 @@
 import {createIslandVisits} from './island-visits-ui.js';
+import {encodeHomeSurfaceState} from './home-surface-storage.js';
 import {installMapZoom} from './adventure-map-zoom.js';
 import {forestMusic,installForestMusic} from './adventure-music.js';
 import {installAdventureControls} from './adventure-controls.js';
@@ -75,7 +76,7 @@ async function restoreCompanion(requested=null){
 
 
 function load(){if(globalThis.ForestStudent)return sanitizeState(globalThis.ForestStudent.state);try{return sanitizeState(JSON.parse(localStorage.getItem(SAVE_KEY)));}catch{return freshState();}}
-function save(){if(globalThis.ForestStudent)return globalThis.ForestStudent.save(state);try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));$('save-note').textContent='已自動儲存 · 下次用這個瀏覽器繼續冒險';return true;}catch{$('save-note').textContent='目前無法儲存，關閉頁面後試玩進度可能遺失';toast('瀏覽器目前無法儲存，關閉後可能遺失這次進度。');return false;}}
+function save(){const stored=encodeHomeSurfaceState(state,FURNITURE);if(globalThis.ForestStudent)return globalThis.ForestStudent.save(stored);try{localStorage.setItem(SAVE_KEY,JSON.stringify(stored));$('save-note').textContent='已自動儲存 · 下次用這個瀏覽器繼續冒險';return true;}catch{$('save-note').textContent='目前無法儲存，關閉頁面後試玩進度可能遺失';toast('瀏覽器目前無法儲存，關閉後可能遺失這次進度。');return false;}}
 function toast(text){clearTimeout(toastTimer);$('map-toast').textContent=text;$('map-toast').hidden=false;toastTimer=setTimeout(()=>$('map-toast').hidden=true,3200);}
 function journal(id,done){$(id).classList.toggle('done',done);$(id).querySelector('i').textContent=done?'✓':'○';}
 function renderState(){

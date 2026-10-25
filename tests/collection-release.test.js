@@ -12,8 +12,8 @@ import {tutorClips} from '../little-teacher.js';
 const source=file=>readFileSync(new URL('../'+file,import.meta.url),'utf8');
 const decode=text=>text.replace(/\\u\{([0-9a-f]+)\}|\\u([0-9a-f]{4})/gi,(_,a,b)=>String.fromCodePoint(parseInt(a||b,16)));
 const memory=()=>{const map=new Map();return {getItem:key=>map.get(key)||null,setItem:(key,value)=>map.set(key,value)};};
-const version='20261025-homefix2';
-const directionalLayout=[{id:'spatial-moon-corner-kitchen',x:900,y:545,facing:'right',mount:'corner-right'},{id:'collection-moon-dining-chair',x:650,y:560,facing:'back'}];
+const version='20261025-homegallery1';
+const directionalLayout=[{id:'spatial-moon-corner-kitchen',x:955,y:500,facing:'right',mount:'corner-right'},{id:'collection-moon-dining-chair',x:650,y:560,facing:'back'}];
 
 test('all four shipped bundles carry the complete new crop, fish and food catalogs',()=>{
  for(const file of ['adventure-entry.bundle.js','adventure-play.bundle.js','farm-learning.bundle.js','reading-farm.bundle.js']){
@@ -39,7 +39,7 @@ test('home, farm, Safari and shortcut entry chains refresh the collection readin
  const ipad={userAgent:'iPad CPU OS 17_0 Version/17.0 Safari/605.1',standalone:true};
  for(const classId of ['main','grade2'])for(const page of ['reading.html?farmLesson=reading&','reading-shortcut.html?farmLesson=reading&','index.html?']){
   const plan=readingLaunchPlan('https://j822925.github.io/zhuyin-game-new/'+page+'class='+classId,ipad);
-  for(const link of [plan.browserUrl,plan.safariUrl,plan.shortcutUrl]){const url=new URL(link);assert.equal(url.searchParams.get('v'),'20261025-homefix2');assert.equal(url.searchParams.get('class'),classId);assert.equal(url.searchParams.get('farmLesson'),page.includes('farmLesson')?'reading':null);}
+  for(const link of [plan.browserUrl,plan.safariUrl,plan.shortcutUrl]){const url=new URL(link);assert.equal(url.searchParams.get('v'),'20261025-homegallery1');assert.equal(url.searchParams.get('class'),classId);assert.equal(url.searchParams.get('farmLesson'),page.includes('farmLesson')?'reading':null);}
  }
 });
 

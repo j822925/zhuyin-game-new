@@ -1,183 +1,159 @@
-// Six built-in imagegen room collections; one compressed room is loaded at a time.
+// Single-image room skins share one camera; only the current room is loaded.
 export const HOME_ROOM_SHELLS={
   "moon": {
     "room": {
-      "src": "assets/home-rooms-v2/moon-room-01729ec58498.webp",
-      "width": 793,
-      "height": 482,
-      "backY": 226,
-      "bytes": 55640
+      "src": "assets/home-rooms-v3/moon-room-1a82138d611e.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 94942
     },
     "kitchen": {
-      "src": "assets/home-rooms-v2/moon-kitchen-aee8bb09e8d8.webp",
-      "width": 793,
-      "height": 482,
-      "backY": 227,
-      "bytes": 55542
+      "src": "assets/home-rooms-v3/moon-kitchen-ce9510a082c1.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 87170
     },
     "bedroom": {
-      "src": "assets/home-rooms-v2/moon-bedroom-8a8dc4bb30fa.webp",
-      "width": 793,
-      "height": 486,
-      "backY": 231,
-      "bytes": 56022
+      "src": "assets/home-rooms-v3/moon-bedroom-c4664d1e35b1.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 93360
     },
     "bathroom": {
-      "src": "assets/home-rooms-v2/moon-bathroom-97704456f5ae.webp",
-      "width": 793,
-      "height": 486,
-      "backY": 242,
-      "bytes": 60306
+      "src": "assets/home-rooms-v3/moon-bathroom-9489e34be4ce.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 97768
     }
   },
   "daisy": {
     "room": {
-      "src": "assets/home-rooms-v2/daisy-room-78f261f7ebf4.webp",
-      "width": 778,
-      "height": 473,
-      "backY": 221,
-      "bytes": 62034
+      "src": "assets/home-rooms-v3/daisy-room-fcc2413a3f71.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 129784
     },
     "kitchen": {
-      "src": "assets/home-rooms-v2/daisy-kitchen-33c0599d382e.webp",
-      "width": 807,
-      "height": 473,
-      "backY": 222,
-      "bytes": 64012
+      "src": "assets/home-rooms-v3/daisy-kitchen-698a85fac1a9.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 118058
     },
     "bedroom": {
-      "src": "assets/home-rooms-v2/daisy-bedroom-27ad6276b511.webp",
-      "width": 778,
-      "height": 477,
-      "backY": 228,
-      "bytes": 61960
+      "src": "assets/home-rooms-v3/daisy-bedroom-67e82f33abb0.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 144218
     },
     "bathroom": {
-      "src": "assets/home-rooms-v2/daisy-bathroom-63bff7502ed1.webp",
-      "width": 807,
-      "height": 477,
-      "backY": 240,
-      "bytes": 66270
+      "src": "assets/home-rooms-v3/daisy-bathroom-e50841347e25.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 99204
     }
   },
   "fox": {
     "room": {
-      "src": "assets/home-rooms-v2/fox-room-d57a4768246b.webp",
-      "width": 778,
-      "height": 473,
-      "backY": 222,
-      "bytes": 67100
+      "src": "assets/home-rooms-v3/fox-room-5146f5ffa3d7.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 127724
     },
     "kitchen": {
-      "src": "assets/home-rooms-v2/fox-kitchen-fe1aa90c6e51.webp",
-      "width": 808,
-      "height": 473,
-      "backY": 222,
-      "bytes": 66990
+      "src": "assets/home-rooms-v3/fox-kitchen-dacaa4bb7dd3.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 146166
     },
     "bedroom": {
-      "src": "assets/home-rooms-v2/fox-bedroom-0c51b39821f6.webp",
-      "width": 778,
-      "height": 481,
-      "backY": 228,
-      "bytes": 66934
+      "src": "assets/home-rooms-v3/fox-bedroom-c518c95b86ef.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 123874
     },
     "bathroom": {
-      "src": "assets/home-rooms-v2/fox-bathroom-db8520e08241.webp",
-      "width": 808,
-      "height": 481,
-      "backY": 237,
-      "bytes": 69022
+      "src": "assets/home-rooms-v3/fox-bathroom-8c5c85c3a9bf.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 110714
     }
   },
   "honey": {
     "room": {
-      "src": "assets/home-rooms-v2/honey-room-1250ede63ec1.webp",
-      "width": 778,
-      "height": 473,
-      "backY": 223,
-      "bytes": 61644
+      "src": "assets/home-rooms-v3/honey-room-29a5d35c92e0.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 115294
     },
     "kitchen": {
-      "src": "assets/home-rooms-v2/honey-kitchen-57e637b43ca9.webp",
-      "width": 808,
-      "height": 473,
-      "backY": 223,
-      "bytes": 62814
+      "src": "assets/home-rooms-v3/honey-kitchen-7bdf54c30013.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 103470
     },
     "bedroom": {
-      "src": "assets/home-rooms-v2/honey-bedroom-6367ad553ef5.webp",
-      "width": 778,
-      "height": 478,
-      "backY": 228,
-      "bytes": 62594
+      "src": "assets/home-rooms-v3/honey-bedroom-2bb3b65dcaa6.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 105110
     },
     "bathroom": {
-      "src": "assets/home-rooms-v2/honey-bathroom-8e470f826965.webp",
-      "width": 808,
-      "height": 478,
-      "backY": 239,
-      "bytes": 68072
+      "src": "assets/home-rooms-v3/honey-bathroom-b8dfbc2d5a63.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 108322
     }
   },
   "ocean": {
     "room": {
-      "src": "assets/home-rooms-v2/ocean-room-19fc4e402019.webp",
-      "width": 794,
-      "height": 481,
-      "backY": 228,
-      "bytes": 59934
+      "src": "assets/home-rooms-v3/ocean-room-f01fce84a1d4.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 107324
     },
     "kitchen": {
-      "src": "assets/home-rooms-v2/ocean-kitchen-61225979388f.webp",
-      "width": 791,
-      "height": 481,
-      "backY": 228,
-      "bytes": 59006
+      "src": "assets/home-rooms-v3/ocean-kitchen-a136e7215203.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 101184
     },
     "bedroom": {
-      "src": "assets/home-rooms-v2/ocean-bedroom-a10a6145ccb5.webp",
-      "width": 794,
-      "height": 487,
-      "backY": 232,
-      "bytes": 61386
+      "src": "assets/home-rooms-v3/ocean-bedroom-bbd91eb6ad40.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 106778
     },
     "bathroom": {
-      "src": "assets/home-rooms-v2/ocean-bathroom-9ead152da032.webp",
-      "width": 791,
-      "height": 487,
-      "backY": 243,
-      "bytes": 66632
+      "src": "assets/home-rooms-v3/ocean-bathroom-e3772b2751f7.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 119702
     }
   },
   "berry": {
     "room": {
-      "src": "assets/home-rooms-v2/berry-room-c83a4281812b.webp",
-      "width": 778,
-      "height": 472,
-      "backY": 224,
-      "bytes": 57264
+      "src": "assets/home-rooms-v3/berry-room-29364be7ca7e.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 116532
     },
     "kitchen": {
-      "src": "assets/home-rooms-v2/berry-kitchen-4343e1ae0f4e.webp",
-      "width": 807,
-      "height": 472,
-      "backY": 224,
-      "bytes": 57844
+      "src": "assets/home-rooms-v3/berry-kitchen-1c7291f3bea4.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 113590
     },
     "bedroom": {
-      "src": "assets/home-rooms-v2/berry-bedroom-8e6a49337884.webp",
-      "width": 778,
-      "height": 478,
-      "backY": 232,
-      "bytes": 56558
+      "src": "assets/home-rooms-v3/berry-bedroom-01848eb762ae.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 121834
     },
     "bathroom": {
-      "src": "assets/home-rooms-v2/berry-bathroom-8f52a9c946fb.webp",
-      "width": 807,
-      "height": 478,
-      "backY": 245,
-      "bytes": 58642
+      "src": "assets/home-rooms-v3/berry-bathroom-32ef54ab0e93.webp",
+      "width": 1280,
+      "height": 800,
+      "bytes": 99148
     }
   }
 };
