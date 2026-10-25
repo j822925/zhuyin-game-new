@@ -8,7 +8,8 @@ test('all six themes have four distinct compressed, room-sized shells',()=>{
   const sources=[];
   for(const style of ['daisy','fox','moon','honey','ocean','berry'])for(const area of ['room','kitchen','bedroom','bathroom']){
     const meta=HOME_ROOM_SHELLS[style][area],file=new URL('../'+meta.src,import.meta.url),buffer=readFileSync(file);
-    assert(meta.width>=775&&meta.width<=810);assert(meta.height>=470&&meta.height<=490);assert(meta.backY>200&&meta.backY<260);assert.equal(statSync(file).size,meta.bytes);
+    assert.equal(meta.width,1280);assert.equal(meta.height,800);assert.equal(meta.backY,undefined);assert.equal(statSync(file).size,meta.bytes);
+    assert.match(meta.src,/^assets\/home-rooms-v3\/[a-z]+-[a-z]+-[a-f0-9]{12}\.webp$/);
     assert.equal(buffer.toString('ascii',0,4),'RIFF');assert.equal(buffer.toString('ascii',8,12),'WEBP');sources.push(meta.src);
   }
   assert.equal(new Set(sources).size,24);
@@ -33,10 +34,10 @@ test('drawing has a safe fallback and painted door hotspots only exist at actual
   const args=[],ctx={drawImage(...value){args.push(value);}},image={};
   assert.equal(drawRoomShell(ctx,{},'moon','kitchen'),false);assert.equal(args.length,0);
   assert.equal(drawRoomShell(ctx,{roomShells:{'moon:kitchen':image}},'moon','kitchen'),true);
-  const meta=HOME_ROOM_SHELLS.moon.kitchen;
-  assert.deepEqual(args,[[image,0,0,meta.width,meta.backY,0,0,1280,360],[image,0,meta.backY,meta.width,meta.height-meta.backY,0,360,1280,440]]);
+  assert.deepEqual(args,[[image,0,0,1280,800]]);
   for(const area of ['room','bedroom'])for(const side of [-1,1])assert(roomShellDoorGeometry(area,side));
   assert.equal(roomShellDoorGeometry('kitchen',1),null);assert.equal(roomShellDoorGeometry('bathroom',-1),null);assert.equal(roomShellDoorGeometry('forest',-1),null);
   const left=roomShellDoorGeometry('kitchen',-1),right=roomShellDoorGeometry('bathroom',1);
-  assert.equal(left.x-left.width/2,70);assert.equal(right.x+right.width/2,1210);assert.equal(left.y-left.height,200);assert.equal(left.entryY,550);
+  assert.equal(left.x,80);assert.equal(right.x,1200);assert.equal(left.y,680);assert.equal(left.y-left.height,270);assert.equal(left.entryY,650);
+  assert.equal(left.x+right.x,1280);assert.equal(left.width,right.width);assert.equal(left.height,right.height);
 });

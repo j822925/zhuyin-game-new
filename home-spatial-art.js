@@ -1,10 +1,11 @@
 import {HOME_SPATIAL_ART} from './data/home-spatial-art.js';
 import {spatialRole,fixtureRole} from './home-spatial-model.js';
 import {adventureMediaUrl} from './adventure-media.js';
-import {mountedSolidGeometry,drawMountedSolid} from './home-furniture-projection.js';
+import {ensurePaintedFurniture,drawPaintedFurniture,paintedFurnitureBounds,paintedFurnitureSprite} from './home-painted-furniture.js';
 const jobs=new WeakMap();
 export async function ensureSpatialArt(art,styles=[]){
  let cache=jobs.get(art);if(!cache){cache=new Map();jobs.set(art,cache);}art.spatial??={};
+ await ensurePaintedFurniture(art,styles);
  await Promise.all([...new Set([...styles,'doors','fixturesFront','fixturesSide'])].filter(key=>HOME_SPATIAL_ART[key]).map(key=>{
   if(art.spatial[key])return; if(cache.has(key))return cache.get(key);
   const task=(async()=>{const meta=HOME_SPATIAL_ART[key],image=new Image();image.src=adventureMediaUrl(meta.src);await image.decode();art.spatial[key]={image,cells:meta.cells};})();cache.set(key,task);task.catch(()=>cache.delete(key));return task;
@@ -19,42 +20,24 @@ export function spatialSprite(art,f,item={}){
  const cell=atlas.cells[index];return {atlas,cell,mirror:role!=='chair'&&role!=='corner'&&mirror,role};
 }
 export function furnitureVisualBounds(art,f,item){
- if(f.corner)return {x:item.facing==='right'?648:118,y:item.y-245,w:514,h:315};
- const solid=mountedSolidGeometry(f,item);if(solid)return solid.bounds;
+ const painted=paintedFurnitureBounds(art,f,item);if(painted)return painted;
  const sprite=spatialSprite(art,f,item),cell=sprite?.cell||art[f.atlas||'furniture']?.cells[f.index];if(!cell)return {x:item.x-f.fw/2,y:item.y-f.height,w:f.fw,h:f.height};
- let w=f.corner?f.fw:f.height*cell.w/cell.h,h=f.height;
+ const height=item.mount==='back'&&['stove','sink'].includes(fixtureRole(f))?145:f.height;
+ let w=f.corner?f.fw:height*cell.w/cell.h,h=height;
  if(f.wall&&['left','right'].includes(item.mount)){h+=w;w*=.42;}
  return {x:item.x-w/2,y:item.y-h+(h-f.height)/2,w,h};
 }
 export function drawSpatialFurniture(c,art,f,item){
+ if(drawPaintedFurniture(c,art,f,item))return true;
  const sprite=spatialSprite(art,f,item);if(!sprite)return false;
- if(f.corner){drawFittedCorner(c,art,f,item);return true;}
- if(drawMountedSolid(c,spatialSprite(art,f,{facing:'front'}),spatialSprite(art,f,{facing:'left'}),f,item))return true;
- const {atlas,cell:s,role,mirror}=sprite,side=item.mount==='left'||item.mount==='right',height=item.mount==='back'&&['stove','sink'].includes(fixtureRole(f))?125:f.height,width=role==='corner'?f.fw:height*s.w/s.h;
+
+ const {atlas,cell:s,role,mirror}=sprite,height=item.mount==='back'&&['stove','sink'].includes(fixtureRole(f))?145:f.height,width=role==='corner'?f.fw:height*s.w/s.h;
  c.save();c.translate(item.x,item.y);
- // Side artwork already contains its top/side faces; project the whole solid
- // together, keeping its thickness. Never squash a front-only wall sprite.
- // True side solids are projected above; other cutouts retain their drawn depth.
+ // Remaining cutouts retain their painted proportions and depth.
  if(mirror)c.scale(-1,1);
  c.drawImage(atlas.image,s.x,s.y,s.w,s.h,-width/2,-height,width,height);c.restore();return true;
 }
-function drawFittedCorner(c,art,f,item){
- const right=item.facing==='right',sign=right?-1:1;
- const base={...f,id:'corner-base',corner:false,role:'kitchen-base',height:125,fw:160,fh:65,surfaceWidth:160};
- const front=spatialSprite(art,base,{facing:'front'}),side=spatialSprite(art,base,{facing:'left'});
- if(!front)return;const {atlas,cell:s}=front;
- // The back run and return share the same endpoint and counter height.
- const backX=item.x+65*sign,backY=item.y-120;
- c.save();c.translate(backX,backY);if(right)c.scale(-1,1);
- // Fill the join behind the cutout's transparent border so the return is a
- // continuous cabinet, not two free-standing pieces separated by wallpaper.
- c.fillStyle='#e7dbc2';c.fillRect(-188,-105,376,104);
- c.drawImage(atlas.image,s.x,s.y,s.w,s.h,-187,-125,374,125);c.restore();
- drawMountedSolid(c,front,side,base,{x:item.x-156*sign,y:item.y-40,mount:right?'right':'left'});
- const sink={...f,corner:false,small:false,wall:false,role:null,id:'sink'},sinkSprite=spatialSprite(art,sink,{facing:'front'});
- if(sinkSprite){const q=sinkSprite.cell;c.drawImage(sinkSprite.atlas.image,q.x,q.y,q.w,q.h,backX-64,backY-126,128,126);}
-}
-export function drawSpatialThumb(c,art,f,width,height){const sprite=spatialSprite(art,f,f.corner?{facing:'left'}:{});if(!sprite)return false;const {atlas,cell:s}=sprite,scale=Math.min((width-12)/s.w,(height-10)/s.h);c.drawImage(atlas.image,s.x,s.y,s.w,s.h,(width-s.w*scale)/2,height-s.h*scale-4,s.w*scale,s.h*scale);return true;}
+export function drawSpatialThumb(c,art,f,width,height){const p=f.corner?{facing:'left'}:{},sprite=paintedFurnitureSprite(art,f,p)||spatialSprite(art,f,p);if(!sprite)return false;const {atlas,cell:s}=sprite,scale=Math.min((width-12)/s.w,(height-10)/s.h);c.drawImage(atlas.image,s.x,s.y,s.w,s.h,(width-s.w*scale)/2,height-s.h*scale-4,s.w*scale,s.h*scale);return true;}
 export function drawSpatialDoor(c,art,style,side,geometry){
  const atlas=art.spatial?.doors;if(!atlas)return false;
  const index=['daisy','fox','moon','honey','ocean','berry'].indexOf(style),s=atlas.cells[Math.max(0,index)],{x,y,width,height}=geometry;

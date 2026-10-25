@@ -24,10 +24,9 @@ export function ensureRoomShell(art,style,area){
 export function drawRoomShell(ctx,art,style,area){
   const image=roomShell(art,style,area);if(!image)return false;
   const meta=HOME_ROOM_SHELLS[normalizeStyle(style)]?.[area];if(!meta)return false;
-  // Generated collections vary slightly in wall height. Project the measured
-  // skirting line to the shared floor plane so every cabinet uses the same wall.
-  ctx.drawImage(image,0,0,meta.width,meta.backY,0,0,1280,360);
-  ctx.drawImage(image,0,meta.backY,meta.width,meta.height-meta.backY,0,360,1280,440);return true;
+  // All skins preserve the same camera and wall corners. Draw one complete
+  // image; splitting the wall and floor introduced a visible perspective seam.
+  ctx.drawImage(image,0,0,1280,800);return true;
 }
 
 // Door frames are painted into these backgrounds. These bounds are interaction
@@ -35,5 +34,5 @@ export function drawRoomShell(ctx,art,style,area){
 export function roomShellDoorGeometry(area,side){
   const visible=area==='room'||area==='bedroom'?[-1,1]:area==='kitchen'?[-1]:area==='bathroom'?[1]:[];
   if(!visible.includes(side))return null;
-  return {x:side<0?115:1165,y:650,width:90,height:450,rise:0,flare:0,entryY:550};
+  return {x:side<0?80:1200,y:680,width:75,height:410,rise:0,flare:0,entryY:650};
 }

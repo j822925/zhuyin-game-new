@@ -1,6 +1,6 @@
 import {freshRest,sanitizeRest} from './adventure-rest-model.js';
-import {attachedPosition} from './furniture-surfaces.js';
-import {spatialFields,spatialFootprint,spatialFloorValid,floorPosition,canonicalMountedPosition} from './home-spatial-model.js';
+import {attachedPosition,freeSurfacePosition,surfaceAnchor,furnitureSurfaces,surfaceItemWidth} from './furniture-surfaces.js';
+import {spatialFields,spatialFootprint,spatialFloorValid,floorPosition,canonicalMountedPosition,placementBlocksDoor,HOME_FLOOR,HOME_DOOR_SPACE} from './home-spatial-model.js';
 import {WALK_OUTFITS} from './data/walk-outfits.js';
 import {wallPosition,wallPlacementValid,wallSide} from './data/home-wall-furniture.js';
 import {freshExpedition,sanitizeExpedition} from './adventure-expedition-model.js';
@@ -62,14 +62,14 @@ function legacyGroveWalkable(x,y,padding=13){
   return !GROVE_TREES.some(t=>((x-t.x)/(23+padding))**2+((y-(t.y-8))/(17+padding))**2<1);
 }
 export const ROOM_ENTRY={x:640,y:684};
-export const ROOM_WARDROBE={x:1030,y:425};
+export const ROOM_WARDROBE={x:1030,y:HOME_FLOOR.back+65};
 export const ROOM_WARDROBE_APPROACH={x:ROOM_WARDROBE.x,y:ROOM_WARDROBE.y+53};
 // Door thresholds follow the painted side-wall skirting, not the floor plane.
 export const WALL_DOOR={width:53,height:210,rise:127};
-export const ROOM_KITCHEN_DOOR={x:1165,y:550};
-export const ROOM_KITCHEN_APPROACH={x:1050,y:570};
-export const ROOM_BEDROOM_DOOR={x:115,y:550};
-export const ROOM_BEDROOM_APPROACH={x:230,y:570};
+export const ROOM_KITCHEN_DOOR={x:1165,y:HOME_DOOR_SPACE.anchorY};
+export const ROOM_KITCHEN_APPROACH={x:1050,y:HOME_DOOR_SPACE.approachY};
+export const ROOM_BEDROOM_DOOR={x:115,y:HOME_DOOR_SPACE.anchorY};
+export const ROOM_BEDROOM_APPROACH={x:230,y:HOME_DOOR_SPACE.approachY};
 export const KITCHEN_ENTRY={x:640,y:684};
 export const INTERIOR_AREAS=['room','kitchen','bedroom','bathroom'];
 export const layoutKeyFor=(area='room')=>({room:'layout',kitchen:'kitchenLayout',bedroom:'bedroomLayout',bathroom:'bathroomLayout'})[area];
@@ -106,8 +106,8 @@ export function sanitizeState(raw){
   const restoreHost=(item,area)=>{
     if(!item||item.on||!Number.isFinite(item.x)||!Number.isFinite(item.y))return null;
     const f=FURNITURE.find(f=>f.id===item.id);if(!f)return null;
-    const aligned=f.wall&&!f.ceiling&&wallSide(item)!==0?wallPosition(item,f):canonicalMountedPosition(item,f),pos=aligned&&canPlaceFurniture(s,item.id,aligned,area)?aligned:item;
-    return canPlaceFurniture(s,item.id,pos,area)?{id:item.id,x:pos.x,y:pos.y,...spatialFields(pos)}:null;
+    const legacy={allowDoorOverlap:true},aligned=f.wall&&!f.ceiling&&wallSide(item)!==0?wallPosition(item,f,area):canonicalMountedPosition(item,f,area),pos=aligned&&canPlaceFurniture(s,item.id,aligned,area)?aligned:item;
+    return canPlaceFurniture(s,item.id,pos,area,legacy)?{id:item.id,x:pos.x,y:pos.y,...spatialFields(pos)}:null;
   };
   if(Array.isArray(raw.layout)){
     s.layout=[];
@@ -117,10 +117,42 @@ export function sanitizeState(raw){
   for(const area of ['kitchen','bedroom','bathroom'])for(const item of Array.isArray(raw[layoutKeyFor(area)])?raw[layoutKeyFor(area)]:[]){
     const restored=restoreHost(item,area);if(restored&&!INTERIOR_AREAS.some(a=>layoutFor(s,a).some(f=>f.id===restored.id)))s[layoutKeyFor(area)].push(restored);
   }
+  // A native side worktop is shorter than the old rectangular placeholder.
+  // Reflow a complete legacy row together so an unchanged middle appliance
+  // cannot strand its neighbours. Already-valid native rows never move again.
+  const adjustedAttachments=new Map();
+  for(const area of INTERIOR_AREAS)for(const host of layoutFor(s,area)){
+    const base=FURNITURE.find(f=>f.id===host.id),surfaces=furnitureSurfaces(base,host);
+    surfaces.forEach((surface,index)=>{
+      if(!surface.nativeSideSurface)return;
+      const oldWidth=furnitureSurfaces(base)[index].width,items=(Array.isArray(raw[layoutKeyFor(area)])?raw[layoutKeyFor(area)]:[]).filter(p=>p?.on===host.id&&p.surface===index&&Number.isFinite(p.offsetX)&&s.furnitureOwned.includes(p.id)&&FURNITURE.some(f=>f.id===p.id&&f.small&&Math.abs(p.offsetX)+f.fw/2<=oldWidth/2+1));
+      if(!items.some(p=>!attachedPosition(p,layoutFor(s,area),FURNITURE)))return;
+      items.sort((a,b)=>a.offsetX-b.offsetX);const widths=items.map(p=>surfaceItemWidth(FURNITURE.find(f=>f.id===p.id),p,host,surface)),total=widths.reduce((sum,n)=>sum+n,0)+3*(items.length-1);
+      if(total>surface.width)return;
+      let edge=-total/2;items.forEach((item,i)=>{const pos=attachedPosition({...item,offsetX:edge+widths[i]/2},layoutFor(s,area),FURNITURE);if(pos)adjustedAttachments.set(area+':'+item.id,pos);edge+=widths[i]+3;});
+    });
+  }
   // Hosts first, then their small objects, independent of save array ordering.
   for(const area of INTERIOR_AREAS)for(const item of Array.isArray(raw[layoutKeyFor(area)])?raw[layoutKeyFor(area)]:[]){
     if(!item?.on||INTERIOR_AREAS.some(a=>layoutFor(s,a).some(p=>p.id===item.id)))continue;
-    const pos=attachedPosition(item,layoutFor(s,area),FURNITURE);if(pos&&canPlaceFurniture(s,item.id,pos,area))s[layoutKeyFor(area)].push({id:item.id,...pos});
+    const pos=adjustedAttachments.get(area+':'+item.id)||attachedPosition(item,layoutFor(s,area),FURNITURE);if(pos&&canPlaceFurniture(s,item.id,pos,area))s[layoutKeyFor(area)].push({id:item.id,...pos});
+  }
+  // The old L return had 120 units of pretend worktop. Its replacement is a
+  // genuinely shorter painted return, so relocate only former valid overflows
+  // after every still-valid attachment has claimed its space. Never remove an
+  // owned object or silently overlap another appliance to make the save fit.
+  for(const area of INTERIOR_AREAS)for(const item of Array.isArray(raw[layoutKeyFor(area)])?raw[layoutKeyFor(area)]:[]){
+    if(!item?.on||!Number.isFinite(item.offsetX)||INTERIOR_AREAS.some(a=>layoutFor(s,a).some(p=>p.id===item.id)))continue;
+    const f=FURNITURE.find(f=>f.id===item.id),host=layoutFor(s,area).find(p=>p.id===item.on),base=FURNITURE.find(f=>f.id===host?.id);
+    const effective=host&&furnitureSurfaces(base,host)[item.surface],oldWidth=base?.corner&&item.surface===1?120:effective?.nativeSideSurface?furnitureSurfaces(base)[item.surface].width:0;
+    if(!f?.small||!oldWidth||!s.furnitureOwned.includes(item.id)||Math.abs(item.offsetX)+f.fw/2>oldWidth/2+1)continue;
+    let pos=null;
+    for(const index of base.corner?[1,0]:[item.surface]){
+      const surface=furnitureSurfaces(base,host)[index],at=surfaceAnchor(host,surface),candidate=freeSurfacePosition(item.id,host,index,layoutFor(s,area),FURNITURE,at,{facing:item.facing});
+      if(candidate&&canPlaceFurniture(s,item.id,candidate,area)){pos=candidate;break;}
+    }
+    if(!pos)for(let y=550;y<=700&&!pos;y+=50)for(let x=400;x<=900;x+=70){const candidate={x,y};if(canPlaceFurniture(s,item.id,candidate,area)&&!hasFurnitureOverlap(s,item.id,candidate,area)){pos=candidate;break;}}
+    if(pos){const layout=layoutFor(s,area),restored={id:item.id,...pos,...spatialFields(item)},firstAttachment=layout.findIndex(p=>p.on);if(!pos.on&&firstAttachment>=0)layout.splice(firstAttachment,0,restored);else layout.push(restored);}
   }
   // Move only currently placed beds/lamps once. Later personal arrangements stay put.
   if(raw.homeRoomsVersion!==1){
@@ -217,13 +249,14 @@ export function buyAndPlaceFurniture(state,id,pos,player,area){
 const KITCHEN_DOOR_CLEARANCE={x:410,y:288,w:90,h:118};
 export function roomWalkable(x,y,state,area='room'){
  if(!Number.isFinite(x)||!Number.isFinite(y)||x<180||x>1100||y<288||y>725)return false;
- if(area==='bathroom'&&y<360)return false;
+ if(area==='bathroom'&&y<HOME_FLOOR.back)return false;
  if(area==='bedroom'&&contains(RECT_WARDROBE,x,y,14))return false;
  // Furnishings are depth-sorted scenery, so dense decorations never trap a child.
  return true;
 }
-export function canPlaceFurniture(state,id,pos,area='room'){
+export function canPlaceFurniture(state,id,pos,area='room',{allowDoorOverlap=false}={}){
  const f=FURNITURE.find(f=>f.id===id);if(!f||!isInterior(area)||!state.furnitureOwned?.includes(id)||(f.areas&&!f.areas.includes(area))||!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))return false;
+ if(!allowDoorOverlap&&placementBlocksDoor(f,pos,area))return false;
  if(f.wall)return wallPlacementValid(f,pos,area);
  if(pos.on){const p=attachedPosition({id,...pos},layoutFor(state,area),FURNITURE);return !!p&&p.x>=60&&p.x<=1220&&p.y>=50&&p.y<=728;}
  return spatialFloorValid(f,pos);
@@ -235,7 +268,10 @@ export function hasFurnitureOverlap(state,id,pos,area='room'){
 }
 export function stoveApproach(state,item){
  const f=FURNITURE.find(f=>f.id===item?.id);if(!f?.cooking)return null;
- const points=[{x:item.x,y:item.y+40},{x:item.x-f.fw/2-35,y:item.y},{x:item.x+f.fw/2+35,y:item.y}];
+ // A countertop appliance is approached from the cabinet's floor position,
+ // not from its elevated sprite (which can be outside the walking corridor).
+ const host=item.on&&layoutFor(state,'kitchen').find(p=>p.id===item.on),base=host&&FURNITURE.find(f=>f.id===host.id);
+ const points=[...(host&&base?[{x:host.x+(host.mount==='left'?1:host.mount==='right'?-1:0)*(base.fw/2+35),y:host.y+(host.mount==='left'||host.mount==='right'?0:40)}]:[]),{x:item.x,y:item.y+40},{x:item.x-f.fw/2-35,y:item.y},{x:item.x+f.fw/2+35,y:item.y}];
  return points.find(p=>findPath(KITCHEN_ENTRY,p,(x,y)=>roomWalkable(x,y,state,'kitchen')))||null;
 }
 export function canUseStove(state,id,area){return area==='kitchen'&&state.furnitureOwned?.includes(id)&&FURNITURE.some(f=>f.id===id&&f.cooking)&&state.kitchenLayout?.some(f=>f.id===id);}
@@ -256,7 +292,7 @@ export function placeFurniture(state,id,pos,player=ROOM_ENTRY,area='room'){if(!h
  if(!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))return false;
  const furniture=FURNITURE.find(f=>f.id===id);
  if(!furniture)return false;
- const snapped=pos.on?attachedPosition({id,...pos},layoutFor(state,area),FURNITURE):furniture?.wall?wallPosition(pos,furniture):floorPosition(pos,furniture,{auto:false});
+ const snapped=pos.on?attachedPosition({id,...pos},layoutFor(state,area),FURNITURE):furniture?.wall?wallPosition(pos,furniture,area):floorPosition(pos,furniture,{auto:false,area});
  if(!canPlaceFurniture(state,id,snapped,area))return false;
  const next=placementState(state,id,snapped,area);
  if(!canReachInterior(next,player,area))return false;

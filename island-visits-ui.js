@@ -30,7 +30,7 @@ export function normalizeVisitRoomLayouts(snapshot){
   const key=VISIT_LAYOUTS[index],area=areas[index];
   const layout=(Array.isArray(snapshot[key])?snapshot[key]:[]).filter(item=>item&&Number.isFinite(item.x)&&Number.isFinite(item.y)&&FURNITURE.some(f=>f.id===item.id)).map(item=>{
    if(item.on)return {...item};
-   const f=FURNITURE.find(f=>f.id===item.id),aligned=f.wall&&!f.ceiling&&wallSide(item)!==0?wallPosition(item,f):canonicalMountedPosition(item,f);
+   const f=FURNITURE.find(f=>f.id===item.id),aligned=f.wall&&!f.ceiling&&wallSide(item)!==0?wallPosition(item,f,area):canonicalMountedPosition(item,f,area);
    const valid=aligned&&(!f.areas||f.areas.includes(area))&&(f.wall?wallPlacementValid(f,aligned,area):spatialFloorValid(f,aligned));
    return valid?{...item,...aligned}:{...item};
   });
