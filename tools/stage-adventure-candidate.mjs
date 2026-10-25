@@ -2,13 +2,18 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
-import {CANDIDATE_BASELINE,CANDIDATE_ID,candidateFiles,digest,runCandidateCommand} from './build-adventure-candidate.mjs';
+import {CANDIDATE_BASELINE,CANDIDATE_ID,PREVIOUS_CANDIDATE_ID,candidateFiles,digest,runCandidateCommand} from './build-adventure-candidate.mjs';
 
 const sourceRoot=path.resolve(import.meta.dirname,'..');
 export function validatePublishFiles(manifest){
  const named=candidateFiles(manifest.id),required=[named.bundle,named.css,named.manifest,'adventure-release-policy.js','adventure-entry.bundle.js','adventure-preview.html'];
- if(manifest.id!==CANDIDATE_ID||manifest.baseline!==CANDIDATE_BASELINE||!Array.isArray(manifest.publishFiles))throw Error('Unexpected candidate manifest');
+ if(manifest.id!==CANDIDATE_ID||manifest.baseline!==CANDIDATE_BASELINE||manifest.previousCandidate!==PREVIOUS_CANDIDATE_ID||!Array.isArray(manifest.publishFiles))throw Error('Unexpected candidate manifest');
  const unique=[...new Set(manifest.publishFiles)];if(unique.length!==manifest.publishFiles.length)throw Error('Duplicate publish path');
+ const inventory=manifest.assetInventory;
+ if(!inventory||!Array.isArray(inventory.newAssets)||!Array.isArray(inventory.perspectiveReferences))throw Error('Missing sealed runtime art inventory');
+ const assets=unique.filter(file=>typeof file==='string'&&file.startsWith('assets/'));
+ if(new Set(inventory.newAssets).size!==inventory.newAssets.length||JSON.stringify([...assets].sort())!==JSON.stringify([...inventory.newAssets].sort()))throw Error('Publish assets differ from sealed asset inventory');
+ for(const file of assets)if(file.startsWith('assets/home-perspective/')&&!inventory.perspectiveReferences.includes(file))throw Error('Unreferenced perspective art cannot be published: '+file);
  for(const file of unique){
   if(typeof file!=='string'||file.includes('..')||file.includes('\\')||path.posix.isAbsolute(file))throw Error('Unsafe publish path');
   if(!required.includes(file)&&!/^assets\/(?:home-perspective|home-rooms-v3)\/[a-zA-Z0-9_/-]+-[a-f0-9]{8,64}\.webp$/.test(file))throw Error('Not in candidate-only publish allowlist: '+file);

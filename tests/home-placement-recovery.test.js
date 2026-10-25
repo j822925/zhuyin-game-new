@@ -4,6 +4,7 @@ import {FURNITURE,freshState,sanitizeState,placeFurniture,ROOM_ENTRY,ROOM_KITCHE
 import {HOME_FLOOR,HOME_DOOR_SPACE,HOME_CORNER_SPACE,floorPosition,floorWallX,floorWallRightX,furnitureWallAnchor,furnitureWallDepth,spatialFloorValid,surfaceVector,sideFurnitureRange} from '../home-spatial-model.js';
 import {furnitureSurfaces,freeSurfacePosition,surfaceAnchor,surfaceDistance,surfaceOffsetAt,attachedPosition,surfaceItemWidth} from '../furniture-surfaces.js';
 import {wallPosition,wallSide,wallPlacementValid,wallMountDepth,WALL_HANG_HEIGHT} from '../data/home-wall-furniture.js';
+import {nativeCabinetGeometry,nativeBookcaseGeometry} from '../home-native-cabinet-geometry.js';
 
 const furniture=id=>FURNITURE.find(item=>item.id===id);
 const owned=()=>({...freshState(),furnitureOwned:FURNITURE.map(item=>item.id),layout:[],kitchenLayout:[],bedroomLayout:[],bathroomLayout:[]});
@@ -110,30 +111,33 @@ test('both side-wall counters keep all three appliances on their shared surface 
   const state=owned(),f=furniture('collection-moon-kitchen-base'),host={id:f.id,...floorPosition({x:side==='left'?200:1080,y:targetY},f,{area:'kitchen'})},axis=surfaceVector(host),half=f.surfaceWidth/2,sign=side==='left'?1:-1,depth=furnitureWallDepth(f);
   state.kitchenLayout=[host];assert(host.y-half>=HOME_FLOOR.back+5);assert(host.y+half<=HOME_FLOOR.front-5);
   for(const offset of [-half,half]){const rear={x:host.x-sign*depth+axis.x*offset,y:host.y+axis.y*offset};assert(Math.abs(rear.x-(side==='left'?floorWallX(rear.y):floorWallRightX(rear.y)))<=2.5,'back edge follows the room wall');}
-  const surface=furnitureSurfaces(f,host)[0],anchor=surfaceAnchor(host,surface);assert(Math.abs(anchor.x-(host.x-sign*18.4))<.001);assert(Math.abs(anchor.y-(host.y-81.1))<.001);assert.equal(surface.width,80);
+  const surface=furnitureSurfaces(f,host)[0],anchor=surfaceAnchor(host,surface),painted=nativeCabinetGeometry(f,host);assert.deepEqual(anchor,{x:painted.top.x,y:painted.top.y});assert.equal(surface.width,180);
   for(const id of ['collection-port-3','collection-port-8','collection-port-4']){
    const p=freeSurfacePosition(id,host,0,state.kitchenLayout,FURNITURE);assert(p);assert(placeFurniture(state,id,p,undefined,'kitchen'),side+' '+id);
-   assert(Math.abs((p.x-anchor.x)-sign*.914*p.offsetX)<.001);assert(Math.abs((p.y-anchor.y)+p.offsetX)<.001);
+   assert(Math.abs((p.x-anchor.x)-sign*surface.axis.x*p.offsetX)<.001);assert(Math.abs((p.y-anchor.y)-surface.axis.y*p.offsetX)<.001);
    assert(Math.abs(p.offsetX)+surfaceItemWidth(furniture(id),p,host,surface)/2<=surface.width/2,'whole footprint remains on the painted top');
   }
   const restored=sanitizeState(state);assert.equal(restored.kitchenLayout.filter(p=>p.on===host.id).length,3);assert.deepEqual(restored.kitchenLayout,state.kitchenLayout);
  }
 });
 
-test('side shelves retain front-plane anchors and native L-run workspaces clear the sink',()=>{
+test('side shelves follow inner painted bearing edges and native L-run workspaces clear the sink',()=>{
  const shelf=furniture('collection-moon-bookcase');
  for(const side of ['left','right']){
   const host={id:shelf.id,...floorPosition({x:side==='left'?200:1080,y:550},shelf)};
-  for(const surface of furnitureSurfaces(shelf))assert.equal(surfaceAnchor(host,surface).x,host.x);
+  const painted=nativeBookcaseGeometry(shelf,host);
+  furnitureSurfaces(shelf).forEach((surface,i)=>assert.deepEqual(surfaceAnchor(host,surface),{x:painted.shelves[i].x,y:painted.shelves[i].y}));
  }
  const f=furniture('spatial-moon-corner-kitchen'),surfaces=furnitureSurfaces(f);
  for(const side of ['left','right']){
   const host={id:f.id,...floorPosition({x:side==='left'?200:1080,y:550},f)},sign=side==='left'?1:-1;
   const back=surfaceAnchor(host,surfaces[0]),wing=surfaceAnchor(host,surfaces[1]);
-  assert.equal(back.x,host.x+sign*155);assert.equal(back.y,318);
-  assert.equal(wing.x,host.x-sign*210);assert.equal(wing.y,335);
+  assert.equal(back.x,host.x+sign*165);assert.equal(back.y,310);
+  assert.equal(wing.x,host.x-sign*132);assert.equal(wing.y,340);
   if(side==='left')assert(back.x-surfaces[0].width/2>=450,'right workspace starts beyond the painted sink');
-  assert.equal(surfaces[1].width,70,'short native return cannot accept the old artificial 120-unit span');
+  assert.equal(surfaces[1].width,48,'short native return cannot accept the old artificial 120-unit span');
+  assert.equal(surfaces[0].width,56);assert.equal(surfaces[2].width,78);
+  assert.equal(surfaceAnchor(host,surfaces[2]).x,host.x-sign*52,'left and right workspaces leave the sink between them');
  }
 });
 
@@ -185,10 +189,10 @@ test('both corner runs end behind the door approach and keep mirrored attachment
  for(const right of [false,true]){
   const host={id:f.id,...floorPosition({x:right?1080:200,y:550},f)},sign=right?-1:1;
   assert(host.y<=550);assert(host.y+40<=HOME_DOOR_SPACE.start);
-  for(let index=0;index<surfaces.length;index++)for(const offsetX of [-15,15]){
-   const a=surfaceAnchor(host,surfaces[index]),item=attachedPosition({id:'plush-0',on:f.id,surface:index,offsetX},[host],FURNITURE);assert(item);
+  for(let index=0;index<surfaces.length;index++)for(const offsetX of [-5,5]){
+   const a=surfaceAnchor(host,surfaces[index]),item=attachedPosition({id:'collection-port-8',on:f.id,surface:index,offsetX},[host],FURNITURE);assert(item);
    assert.equal(item.y,a.y+(index===1?-offsetX:0));
-   assert(Math.abs(item.x-a.x-sign*(index===1?.8:1)*offsetX)<1e-9);
+   assert(Math.abs(item.x-a.x-sign*(index===1?1.18:1)*offsetX)<1e-9);
   }
  }
 });

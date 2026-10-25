@@ -5,10 +5,12 @@ import {createHash} from 'node:crypto';
 import {FURNITURE} from '../adventure-model.js';
 import {HOME_PERSPECTIVE_ART} from '../data/home-perspective-art.js';
 import {paintedFurnitureSprite,paintedFurnitureBounds,drawPaintedFurniture} from '../home-painted-furniture.js';
+import {HOME_CORNER_SPACE} from '../home-spatial-model.js';
 
 const art={perspective:Object.fromEntries(Object.entries(HOME_PERSPECTIVE_ART).map(([key,meta])=>[key,{image:{key},cells:meta.cells}]))};
 test('all six native corner and cabinet styles have bounded, immutable transparent atlases',()=>{
- assert.equal(Object.keys(HOME_PERSPECTIVE_ART).length,13);
+ for(const theme of ['daisy','fox','moon','honey','ocean','berry'])for(const kind of ['Side','Corner','Cabinet'])assert(HOME_PERSPECTIVE_ART[theme+kind]);
+ assert(HOME_PERSPECTIVE_ART.appliances);
  for(const meta of Object.values(HOME_PERSPECTIVE_ART)){
   const bytes=fs.readFileSync(new URL('../'+meta.src,import.meta.url));
   assert.ok(meta.src.includes(createHash('sha256').update(bytes).digest('hex').slice(0,12)));
@@ -33,7 +35,7 @@ test('oven and other tabletop appliances resolve a real side drawing after attac
 });
 test('both complete painted L units leave a generous gap ahead of the doorway',()=>{
  for(const theme of ['daisy','fox','moon','honey','ocean','berry'])for(const facing of ['left','right']){
-  const f=FURNITURE.find(f=>f.corner&&f.style===theme),p={x:facing==='left'?410:870,y:500,facing,mount:'corner-'+facing};
-  const r=paintedFurnitureBounds(art,f,p);assert.equal(r.y+r.h,500);assert.ok(590-(r.y+r.h)>=90);assert.equal(r.w,570);
+  const f=FURNITURE.find(f=>f.corner&&f.style===theme),p={x:facing==='left'?HOME_CORNER_SPACE.leftX:HOME_CORNER_SPACE.rightX,y:HOME_CORNER_SPACE.bottom,facing,mount:'corner-'+facing};
+  const r=paintedFurnitureBounds(art,f,p);assert.equal(r.y+r.h,500);assert.ok(590-(r.y+r.h)>=90);assert.equal(r.w,400);
  }
 });

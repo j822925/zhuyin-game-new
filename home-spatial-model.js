@@ -21,7 +21,7 @@ export function surfaceVector(host={}){
 // aligns the furniture's BACK contact, never its variable collision-box width.
 export const HOME_FLOOR={back:385,left:175,right:1105,front:730,leftFront:60,rightFront:1220,sideSlope:.34};
 export const HOME_DOOR_SPACE={start:590,end:735,margin:8,wallMargin:20,innerLeft:320,innerRight:960,anchorY:640,approachY:680};
-export const HOME_CORNER_SPACE={leftX:410,rightX:870,bottom:500,width:570,depth:115};
+export const HOME_CORNER_SPACE={leftX:325,rightX:955,bottom:500,width:400,depth:115};
 export const HOME_SIDE_DOORS={room:['left','right'],bedroom:['left','right'],kitchen:['left'],bathroom:['right']};
 export function floorWallX(y){return Math.max(HOME_FLOOR.leftFront,HOME_FLOOR.left-(y-HOME_FLOOR.back)*HOME_FLOOR.sideSlope);}
 export function floorWallRightX(y){return Math.min(HOME_FLOOR.rightFront,HOME_FLOOR.right+(y-HOME_FLOOR.back)*HOME_FLOOR.sideSlope);}

@@ -80,7 +80,7 @@ test('shortening a legacy L return keeps every owned item, uses a free worktop f
   const restored=sanitizeState(s),oven=restored.kitchenLayout.find(p=>p.id==='collection-port-3'),plush=restored.kitchenLayout.find(p=>p.id==='plush-0');
   assert.equal(restored.kitchenLayout.length,3);
   assert.equal(plush.surface,1);assert.equal(plush.offsetX,0,'valid existing placement claims its original space');
-  assert.equal(oven.surface,0,'oversized return appliance moves onto an available back worktop');
+  assert.equal(oven.surface,2,'the larger left workspace takes an oven; the narrow right cabinet cannot');
   assert.equal(oven.on,id);assert.equal(oven.facing,'left');assert.equal(plush.facing,'right');
   assert.deepEqual(restored.furnitureOwned,s.furnitureOwned);
   assert.deepEqual(sanitizeState(restored).kitchenLayout,restored.kitchenLayout);
