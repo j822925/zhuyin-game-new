@@ -12,7 +12,7 @@ test('approved gallery release loads stable for every authenticated class and ac
   assert.equal(count,1);
  }
  const entry=readFileSync(new URL('../adventure-entry.js',import.meta.url),'utf8');
- assert(entry.includes('adventure-play.bundle.js?v=20261025-homegallery1'));
+ assert(entry.includes('adventure-play.bundle.js?v=20261025-cards1'));
  const built=readFileSync(new URL('../adventure-play.bundle.js',import.meta.url),'utf8');
  assert(built.includes('home-spatial.css?v=20261025-homegallery1'));
  assert(!built.includes('adventure-candidate-20261025-perspective2.css'));

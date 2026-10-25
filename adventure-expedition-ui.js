@@ -1,3 +1,4 @@
+import {createGuardianCards} from './adventure-guardian-cards.js';
 import {forestMusic} from './adventure-music.js';
 import {appendToneTarget} from './adventure-tone-question.js';
 import {ZONE_STOREFRONTS} from './data/zone-storefront-art.js';
@@ -19,6 +20,8 @@ export function createExpedition(api){
  let motion=null,fieldMotion=null,resolving=false,opening=false;
  let local=false,localWon=null,actors=[],keys=new Set(),joystick=null,shopArrivalHeld=false,exitArrivalHeld=true;
  const state=()=>api.state(),exp=()=>state().expedition,run=()=>exp().runs[z?.id];
+ const cards=createGuardianCards({state});
+ function openCards(){if(resolving||(!dialog.open&&api.blocked()))return;keys.clear();joystick=null;target=null;api.stop();stopAudio();cards.open();}
  const transaction=fn=>{const before=structuredClone(state()),result=fn();if(!result||result.ok===false)return false;if(!api.save()){Object.assign(state(),before);message='💾 儲存失敗，這次操作未扣款。請再試一次。';return false;}api.changed();return result;};
  function fitBattle(){
   if(!dialog.open||local||view!=='battle')return;
@@ -30,14 +33,14 @@ export function createExpedition(api){
  const layoutObserver=new ResizeObserver(fitBattle);layoutObserver.observe(dialog);
  let releaseQuestionMusic=null,releaseSpeechMusic=null;
  function stopAudio(){audio?.pause();audio=null;releaseQuestionMusic?.();releaseQuestionMusic=null;releaseSpeechMusic?.();releaseSpeechMusic=null;if(globalThis.speechSynthesis?.speaking)speechSynthesis.cancel();}
- function close(){forestMusic.setArea(api.scene()?.area||null);forestMusic.setBattle(false);motion?.dispose();motion=null;fieldMotion?.dispose();fieldMotion=null;resolving=false;generation++;loading=false;keys.clear();joystick=null;stopAudio();cancelAnimationFrame(raf);dialog.close();if(local&&api.scene())api.scene().castAt=0;api.stop();}
+ function close(){cards.close();forestMusic.setArea(api.scene()?.area||null);forestMusic.setBattle(false);motion?.dispose();motion=null;fieldMotion?.dispose();fieldMotion=null;resolving=false;generation++;loading=false;keys.clear();joystick=null;stopAudio();cancelAnimationFrame(raf);dialog.close();if(local&&api.scene())api.scene().castAt=0;api.stop();}
  function depart(suspend=false){if(resolving)return;if(!local&&run()&&!transaction(()=>leaveExpedition(state(),{suspend}))){api.toast('💾 還沒存好，請再試一次');return;}close();if(suspend)completeAction('saved');}
  dialog.addEventListener('cancel',e=>{e.preventDefault();depart();});
  function button(label,action,cls=''){const b=document.createElement('button');b.textContent=label;b.className=cls;b.onclick=action;return b;}
  dialog.addEventListener('keydown',event=>{if(view!=='field'||event.target.closest('button'))return;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','w','a','s','d'].includes(event.key)){event.preventDefault();keys.add(event.key);}});dialog.addEventListener('keyup',e=>keys.delete(e.key));window.addEventListener('blur',()=>{keys.clear();joystick=null;});
  function drawPlayer(now){
   if(!dialog.open)return;const dt=Math.min(.05,(now-last)/1000||0);last=now;
-  if(document.hidden){last=now;raf=requestAnimationFrame(drawPlayer);return;}
+  if(document.hidden||cards.busy){last=now;raf=requestAnimationFrame(drawPlayer);return;}
   if(local&&api.scene().castAt&&now-api.scene().castAt>1050)api.scene().castAt=0;
   const cv=dialog.querySelector('.exp-player'),world=dialog.querySelector('.exp-world');
   if(world){const width=Math.max(dialog.clientWidth,dialog.clientHeight*1.5),height=width/1.5;world.style.width=width+'px';world.style.height=height+'px';world.style.left=(view==='field'?Math.min(0,Math.max(dialog.clientWidth-width,dialog.clientWidth/2-position.x/100*width)):(dialog.clientWidth-width)/2)+'px';world.style.top=(view==='field'?Math.min(0,Math.max(dialog.clientHeight-height,dialog.clientHeight*.62-position.y/100*height)):(dialog.clientHeight-height)/2)+'px';}
@@ -61,7 +64,7 @@ export function createExpedition(api){
   layoutObserver.disconnect();layoutObserver.observe(dialog);layoutObserver.observe(dialog.querySelector('.exp-panel'));layoutObserver.observe(dialog.querySelector('.exp-header'));
   if(!local)dialog.style.setProperty('--zone-scene',`url("${z.id==='bud'?api.art().terrain.village.src:'assets/expedition/'+z.scene+'.webp'}")`);
   const e=exp(),p=playerStats(e.level),head=dialog.querySelector('header div');head.innerHTML=`<strong>${z.icon} ${z.name}</strong><span>Lv.${e.level}　♥ ${e.hp}/${p.hp}　⚔ ${p.attack}　🛡 ${p.defense}</span><small>✦ ${state().stars}　🥄 ${state().life.nutrition.energy}/100　EXP ${e.xp}/${nextXP(e.level)||'MAX'}</small>`;
-  const nav=dialog.querySelector('nav');nav.append(button('🎒',()=>{view='food';render();}),button('🃏',()=>{view='cards';render();}),button('💾 ↩',()=>depart(true)));nav.children[0].ariaLabel='遠征食物';nav.children[1].ariaLabel='守護者好友卡';nav.children[2].ariaLabel=local?'儲存並離開挑戰':'存檔休息，下次繼續這次遠征';
+  const nav=dialog.querySelector('nav');nav.append(button('🎒',()=>{view='food';render();}),button('🃏',openCards),button('💾 ↩',()=>depart(true)));nav.children[0].ariaLabel='遠征食物';nav.children[1].ariaLabel='守護者好友卡';nav.children[2].ariaLabel=local?'儲存並離開挑戰':'存檔休息，下次繼續這次遠征';
   const musicButton=button(forestMusic.state().enabled?'♫ 音樂':'♫ 靜音',()=>{document.getElementById('forest-music-toggle')?.click();musicButton.textContent=forestMusic.state().enabled?'♫ 音樂':'♫ 靜音';});musicButton.ariaLabel='背景音樂開關';nav.append(musicButton);
   const field=dialog.querySelector('.exp-field');field.onclick=event=>{if(event.target.closest('button')||view!=='field'||local)return;const b=field.querySelector('.exp-world').getBoundingClientRect();target=fieldPoint(z.id,{x:(event.clientX-b.left)/b.width*100,y:(event.clientY-b.top)/b.height*100});dialog.focus({preventScroll:true});};
   if(!local&&view==='field'){const stick=button('✿',()=>{},'exp-stick');stick.ariaLabel='區域移動搖桿';field.append(stick);const move=e=>{const r=stick.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;joystick=Math.hypot(x,y)>6?{x,y}:null;};stick.onpointerdown=e=>{e.preventDefault();stick.setPointerCapture(e.pointerId);move(e);};stick.onpointermove=e=>{if(stick.hasPointerCapture(e.pointerId))move(e);};for(const name of ['pointerup','pointercancel','lostpointercapture'])stick.addEventListener(name,()=>joystick=null);}
@@ -70,7 +73,6 @@ export function createExpedition(api){
  function portrait(src,name,cls=''){const img=document.createElement('img');img.src=src;img.alt=name;img.className=cls;img.onerror=()=>{message='圖片暫時載入失敗，可離開後再進入。';};return img;}
  function render(){
   if(!dialog.open||!z)return;shell();const panel=dialog.querySelector('.exp-panel'),r=run(),e=exp();if(!r)return;const b=r.battle;
-  if(view==='cards'){panel.classList.add('exp-library');panel.innerHTML='<h2>🃏 守護者好友</h2>';for(const zone of ZONES){const c=e.cards[zone.id],tile=document.createElement('article');tile.className='boss-card';if(c){let beast=false;const img=portrait(zone.human,zone.boss);tile.append(img,button('人形 ⇄ 獸形',()=>{beast=!beast;img.src=beast?zone.beast:zone.human;}));tile.insertAdjacentHTML('beforeend',`<strong>${zone.boss}</strong><small>${zone.name} · 🤝 好友 · 切磋成功 ${c.wins} 次</small>`);}else tile.innerHTML=`<span class="locked-card">🔒</span><strong>${zone.name}</strong>`;panel.append(tile);}panel.append(button('↩',()=>{view=b?'battle':'field';render();}));return;}
   if(view==='food'){panel.innerHTML='<h2>🎒 遠征食物</h2><small>料理補一半生命；原食材補一成。戰鬥中吃東西會用掉攻擊回合。</small>';for(const cooked of [false,true])for(const [id,f] of Object.entries(cooked?RECIPES:RAW_FOOD)){const n=(cooked?state().life.nutrition.meals:state().life.harvest)[id]||0;if(!n)continue;panel.append(button(`${cooked?'🍲':'🥕'} ${f.name} ×${n}`,()=>{if(transaction(()=>expeditionFood(state(),id,cooked))){message='🍽️ 補充好了';view=b?'battle':'field';render();completeAction('eat',{host:dialog,anchor:'.exp-player'});}else{message=b&&b.phase!=='attack'?'🛡 防禦後才能吃東西':'已經補滿了';const hint=document.createElement('p');hint.textContent=message;panel.append(hint);}}));}panel.append(button('↩',()=>{view=b?'battle':'field';render();}));return;}
   if(b){view='battle';dialog.dataset.view='battle';const enemy=currentEnemy(state()),area=dialog.querySelector('.exp-field');if(!local){const hero=dialog.querySelector('.exp-player'),foe=portrait(enemy.art,enemy.name,'exp-foe');area.append(foe,hero);api.scene().drawPlayer(hero.getContext('2d'),api.art(),{x:90,y:192,height:166,outfit:state().outfit,wand:state().wand,direction:1,walking:false,phase:0});motion=mountSparring({hero,foe,characterId:state().companions.active,zone:z,beast:b.transformed,boss:enemy.boss});requestAnimationFrame(fitBattle);}panel.innerHTML=`${local?'<small>Lv.'+e.level+'　♥ '+e.hp+'/'+playerStats(e.level).hp+'　EXP '+e.xp+'/'+nextXP(e.level)+'</small>':''}<strong>${enemy.boss?'👑 ':''}${enemy.name} · Lv.${enemy.level}</strong><label>♥ ${b.hp}/${enemy.hp}<progress max="${enemy.hp}" value="${b.hp}"></progress></label><p>${message}</p>`;
    if(b.phase==='transform'){area.classList.add('exp-transform');panel.append(button('🔊',()=>speak(z.transform)),Object.assign(document.createElement('p'),{className:'guardian-speech',textContent:z.transform}),button('🛡 準備好了',()=>{if(transaction(()=>acknowledgeTransform(state()))){message='獸形：攻擊提升、防禦降低';render();}}));panel.querySelector('.guardian-speech')?.setAttribute('data-forest-dialogue','');fitBattle();return;}
@@ -80,7 +82,7 @@ export function createExpedition(api){
   }
   if(local){close();return;}view='field';const exit=button('🗺️ ↩',()=>depart(),'exp-return');exit.ariaLabel='離開區域，下次三隻小怪重新出現';const [ex,ey]=fieldLayout(z.id).entry;exit.style.left=ex+'%';exit.style.top=ey+'%';dialog.querySelector('.exp-world').append(exit);
   const regional=zoneShop(z.id);if(regional&&api.openShop){const door=button('',()=>void visitShop(),'exp-shop-entry'),[sx,sy]=fieldLayout(z.id).shop,at=fieldPoint(z.id,{x:sx,y:sy});door.append(portrait(ZONE_STOREFRONTS[z.id].src,regional.name));const caption=document.createElement('small');caption.textContent=regional.icon+' '+regional.name;door.append(caption);door.ariaLabel='進入'+regional.name;door.style.left=at.x+'%';door.style.top=at.y+'%';dialog.querySelector('.exp-world').append(door);}const done=r.monsters.filter(m=>m.done).length;panel.innerHTML=`<strong>${r.complete?'🤝 切磋成功！守護者還在這裡':`小怪 ${done}/${r.monsters.length}　${done===r.monsters.length?'👑 BOSS 出現了':'🔒 BOSS'}`}</strong><p>${message}</p>`;
-  if(r.complete){panel.append(button('🃏 看收藏卡',()=>{view='cards';render();}),button('🗺️ 回地圖',()=>depart()));}
+  if(r.complete){panel.append(button('🃏 看收藏卡',openCards),button('🗺️ 回地圖',()=>depart()));}
   const area=dialog.querySelector('.exp-monsters');
   for(let i=0;i<r.monsters.length;i++){const m=r.monsters[i];if(m.done)continue;const mob=button('',()=>void begin(i),'exp-mob');mob.dataset.mob=String(i);mob.setAttribute('aria-label','挑戰'+MINIONS[m.art].name);mob.style.left=actors[i].x+'%';mob.style.top=actors[i].y+'%';mob.append(portrait(`assets/expedition/minions-${m.art}.webp`,MINIONS[m.art].name));mob.insertAdjacentHTML('beforeend',`<small>${['single','spelling','tone'].indexOf(m.mode)===0?'👂':m.mode==='tone'?'♫':'🧩'} ${MINIONS[m.art].name}</small>`);area.append(mob);}
   if(done===r.monsters.length){const boss=button('',()=>{view='intro';renderIntro();},'exp-mob exp-boss');const [bx,by]=fieldLayout(z.id).boss;boss.style.left=bx+'%';boss.style.top=by+'%';boss.style.zIndex=Math.round(by);boss.ariaLabel=(bossIsFriend(state(),z.id)?'找好友切磋：':'與守護者切磋：')+z.boss;boss.append(portrait(z.human,z.boss));boss.insertAdjacentHTML('beforeend',`<small>${bossIsFriend(state(),z.id)?'🤝':'👑'} ${z.boss}</small>`);area.append(boss);fieldMotion=mountGuardian(boss.querySelector('img'),{zone:z});}
@@ -132,5 +134,5 @@ export function createExpedition(api){
    z=expeditionZone(exp());generation++;api.stop();view='battle';dialog.showModal();render();
   }finally{opening=false;}
   }
- return {open,openEncounter,close,get localBattle(){return dialog.open&&local;},get busy(){return dialog.open;}};
+ return {open,openEncounter,openCards,close,get localBattle(){return dialog.open&&local;},get busy(){return dialog.open||cards.busy;}};
 }

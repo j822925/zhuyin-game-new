@@ -1,0 +1,20 @@
+html body #guardian-cards{box-sizing:border-box;width:min(1000px,96vw);height:min(900px,94vh);height:min(900px,94dvh);max-width:96vw;max-height:94vh;max-height:94dvh;padding:16px;margin:auto;color:#365746;background:#fff8e7;border:3px solid #bfa879;border-radius:24px;overflow:hidden;touch-action:manipulation}
+#guardian-cards[open]{display:flex;flex-direction:column;gap:10px}
+#guardian-cards::backdrop{background:#20362fbb;backdrop-filter:blur(3px)}
+html body #guardian-cards button{font:700 17px/1.4 "PingFang TC","Microsoft JhengHei",sans-serif!important;letter-spacing:normal!important;color:#365746!important;-webkit-text-fill-color:currentColor!important;text-indent:0!important;min-height:48px;padding:10px 16px;border:1px solid #c8b58b;border-radius:14px;background:#fffdf4;cursor:pointer;touch-action:manipulation}
+html body #guardian-cards button::before,html body #guardian-cards button::after{content:none!important;display:none!important}
+html body #guardian-cards button>*{visibility:visible!important;font-size:inherit;letter-spacing:normal}
+#guardian-cards button:focus-visible{outline:3px solid #4d8667;outline-offset:2px}
+#guardian-cards header{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none}
+#guardian-cards h2{font-size:24px;margin:0}#guardian-cards p{margin:0}#guardian-cards .guardian-count{font-size:16px}
+#guardian-cards .guardian-album{overflow:auto;min-height:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));align-content:start;gap:12px;padding:4px 5px 12px;overscroll-behavior:contain}
+html body #guardian-cards .guardian-tile{min-width:0;padding:12px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;border:2px solid #c9ae71;border-radius:18px;background:linear-gradient(145deg,#fffbed,#ede0bc)}
+#guardian-cards .guardian-tile img{width:100%;height:185px;object-fit:contain}#guardian-cards .guardian-tile small{font-size:14px!important}
+#guardian-cards .guardian-tile>span{font-size:14px!important}#guardian-cards .guardian-locked{opacity:.68}#guardian-cards .guardian-tile .guardian-lock{display:grid;place-items:center;height:185px;font-size:48px!important}
+#guardian-cards .guardian-detail{min-height:0;flex:1;display:flex;flex-direction:column;align-items:center;gap:12px;overflow:auto;overscroll-behavior:contain}
+#guardian-cards .guardian-enlarged{box-sizing:border-box;flex:1;min-height:140px;width:min(580px,100%);margin:0;padding:14px;display:flex;flex-direction:column;border:3px solid #c7a566;border-radius:24px;background:radial-gradient(ellipse at 50% 35%,#fffdf3,#e7d7ab);box-shadow:inset 0 0 0 5px #fff8df}
+#guardian-cards .guardian-enlarged img{display:block;min-height:0;flex:1;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 5px 5px #77684635)}
+#guardian-cards figcaption{display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:10px;flex:none;text-align:center}#guardian-cards figcaption strong{font-size:24px}#guardian-cards figcaption small{font-size:14px}
+#guardian-cards .guardian-detail nav{display:flex;flex:none;justify-content:center;gap:12px;flex-wrap:wrap}
+@media(max-width:550px){html body #guardian-cards{padding:12px;width:96vw}#guardian-cards h2{font-size:19px}#guardian-cards .guardian-album{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#guardian-cards .guardian-tile img,#guardian-cards .guardian-lock{height:145px}#guardian-cards figcaption strong{font-size:21px}}
+@media(max-height:500px) and (min-width:600px){#guardian-cards .guardian-detail{flex-direction:row;justify-content:center}#guardian-cards .guardian-enlarged{height:100%;width:65%;flex:none;flex-direction:row;align-items:center}#guardian-cards .guardian-enlarged img{width:60%;height:100%;flex:none}#guardian-cards figcaption{flex:1;padding:0}#guardian-cards .guardian-detail nav{flex-direction:column}}
