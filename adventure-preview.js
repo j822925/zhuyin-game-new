@@ -8,6 +8,7 @@ import {furnitureVisualBounds} from './home-spatial-art.js';
 import {equippedOutfit,outfitCharacter,defaultOutfit} from './adventure-model.js';
 import {clothingCharacter,ensureClothingArt,drawClothing} from './adventure-clothing.js';
 import {ensureBathroom} from './adventure-bathroom.js';
+import {ensureRoomShell,roomShell,roomShellDoorGeometry} from './home-room-shells.js';
 import {createActionFeedback,completeAction} from './adventure-action-feedback.js';
 import {installReadingAid} from './adventure-reading-aid.js';
 import {createHomeRest} from './adventure-rest-ui.js';
@@ -162,7 +163,7 @@ function positionHotspots(){
   const returnDoor=scene.area==='kitchen'?ROOM_BEDROOM_DOOR:ROOM_KITCHEN_DOOR;
   $('room-wardrobe').style.width=Math.max(64,145*s)+'px';$('room-wardrobe').style.height=Math.max(70,205*s)+'px';
   for(const [id,x,y] of [['room-wardrobe',ROOM_WARDROBE.x,ROOM_WARDROBE.y],['room-exit',scene.area==='room'?640:returnDoor.x,scene.area==='room'?746:returnDoor.y]]){const at=scene.toScreen(x,y),el=$(id);el.style.left=at.x+'px';el.style.top=at.y+'px';el.hidden=(id==='room-wardrobe'?scene.area!=='bedroom':!indoors)||scene.editing;}
-  function wallDoorTarget(id,point){const p=(art.spatial?.doors?paintedDoorGeometry:interiorDoorGeometry)(scene.area,point.x<640?-1:1),door=p,topRise=door.rise-door.flare;const at=scene.toScreen(p.x,p.y+door.rise/2),el=$(id);el.style.left=at.x+'px';el.style.top=at.y+'px';el.style.width=Math.max(48,(door.width+12)*s)+'px';el.style.height=(door.height+door.rise)*s+'px';el.style.setProperty('--door-sign-inset',(p.x<640?-8:8)*s+'px');el.style.setProperty('--door-sign-top',(door.rise/2-40+8*topRise/door.width)*s+'px');el.style.setProperty('--door-sign-width',72*s+'px');el.style.setProperty('--door-sign-height',56*s+'px');el.style.setProperty('--door-sign-shear',String((p.x<640?-1:1)*.55*topRise/door.width));}
+  function wallDoorTarget(id,point){const shell=roomShell(art,scene.wallpaperPreview||state.wallpaper,scene.area),p=(shell?roomShellDoorGeometry(scene.area,point.x<640?-1:1):null)||(art.spatial?.doors?paintedDoorGeometry:interiorDoorGeometry)(scene.area,point.x<640?-1:1),door=p,topRise=door.rise-door.flare;const at=scene.toScreen(p.x,p.y+door.rise/2),el=$(id);el.style.left=at.x+'px';el.style.top=at.y+'px';el.style.width=Math.max(48,(door.width+12)*s)+'px';el.style.height=(door.height+door.rise)*s+'px';el.style.setProperty('--door-sign-inset',(p.x<640?-8:8)*s+'px');el.style.setProperty('--door-sign-top',(shell?14:door.rise/2-40+8*topRise/door.width)*s+'px');el.style.setProperty('--door-sign-width',72*s+'px');el.style.setProperty('--door-sign-height',56*s+'px');el.style.setProperty('--door-sign-shear',String((p.x<640?-1:1)*.55*topRise/door.width));}
   wallDoorTarget('room-bathroom',ROOM_BEDROOM_DOOR);$('room-bathroom').hidden=scene.area!=='bedroom'||scene.editing;
   wallDoorTarget('room-kitchen',ROOM_KITCHEN_DOOR);wallDoorTarget('room-bedroom',ROOM_BEDROOM_DOOR);
   for(const id of ['room-kitchen','room-bedroom'])$(id).hidden=scene.area!=='room'||scene.editing;
@@ -227,7 +228,7 @@ $('room-exit').addEventListener('click',()=>scene?.area==='room'?leaveRoom():lea
 $('room-kitchen').addEventListener('click',()=>enterExit('kitchen'));
 $('room-bedroom').addEventListener('click',()=>enterExit('bedroom'));
 $('room-bathroom').addEventListener('click',()=>enterExit('bathroom'));
-$('room-wardrobe').addEventListener('click',()=>walkTo({x:1030,y:385},openWardrobe));
+$('room-wardrobe').addEventListener('click',()=>walkTo({x:ROOM_WARDROBE.x,y:ROOM_WARDROBE.y+53},openWardrobe));
 function renderArea(){
   forestMusic.setArea(scene.area);
   kitchen.update();
@@ -253,7 +254,7 @@ async function switchArea(area,onArrival=null){
   if(area==='grove'||area==='island'){try{toast('🌲 正在展開地圖…');await ensureExplorationArt(art,area);}catch(e){switching=false;toast('地圖暫時沒載入，請再試一次。');return false;}}
   if(area==='farm'){try{toast('🌱 正在走進農場…');await Promise.all([ensureTerrain(art.terrain,'farm'),ensureHomeArt(art,['extraCrops','collectionCrops'])]);}catch(e){switching=false;toast('農場圖片暫時沒載入，請再試一次。');return false;}}
   if(area==='island'){state.world.visited=true;save();}
-  if(isInterior(area)){try{toast('正在推開房間的小門…');await Promise.all([ensureHomeArt(art,['daisyHome',...furnitureArtKeys(layoutFor(state,area))]),(area==='bathroom'?ensureBathroom(art):ensureWallpapers(art,[state.wallpaper])),(area==='bedroom'?ensureWardrobeArt(art,state.wallpaper):null)]);}catch(error){console.warn(error);switching=false;toast('房間圖片暫時沒載入，請再點門口試一次。');return false;}}
+  if(isInterior(area)){try{toast('正在推開房間的小門…');await Promise.all([ensureHomeArt(art,['daisyHome',...(area==='bathroom'?['daisyComplete']:[]),...furnitureArtKeys(layoutFor(state,area))]),ensureRoomShell(art,state.wallpaper,area),(area==='bedroom'?ensureWardrobeArt(art,state.wallpaper):null)]);}catch(error){console.warn(error);switching=false;toast('房間圖片暫時沒載入，請再點門口試一次。');return false;}}
   clearTimeout(toastTimer);$('map-toast').hidden=true;$('scene-fade').classList.add('changing');
   return new Promise(resolve=>setTimeout(()=>{
     const fromGrove=scene.area==='grove',fromIsland=scene.area==='island',fromFarm=scene.area==='farm',fromKitchen=scene.area==='kitchen',fromBedroom=scene.area==='bedroom',fromBathroom=scene.area==='bathroom';scene.area=area;scene.player={...(area==='kitchen'?ROOM_BEDROOM_APPROACH:area==='bathroom'?ROOM_KITCHEN_APPROACH:area==='bedroom'?(fromBathroom?ROOM_BEDROOM_APPROACH:ROOM_KITCHEN_APPROACH):area==='room'?(fromKitchen?ROOM_KITCHEN_APPROACH:fromBedroom?ROOM_BEDROOM_APPROACH:ROOM_ENTRY):area==='farm'?FARM_ENTRY:area==='grove'?(fromIsland?GROVE_EXIT:GROVE_ENTRY):area==='island'?ISLAND_ENTRY:fromFarm?{x:450,y:660}:fromGrove?{x:988,y:400}:{x:260,y:371}),direction:isInterior(area)||area==='grove'||area==='farm'?2:0,moving:false,phase:0};scene.marker=null;scene.fishingView=false;scene.monster={...scene.monster,...MONSTER_HOME,hp:3,visible:!isInterior(area)&&area!=='farm',route:[],moving:false,wait:1.1};if(area==='grove'){scene.encounters??=[0,1,2].map(i=>newEncounter(i));scene.monster=scene.encounters.find(m=>m.visible)||scene.encounters[0];}scene.camera.x=scene.player.x;scene.camera.y=scene.player.y;renderArea();
@@ -436,9 +437,7 @@ save();renderState();requestAnimationFrame(tick);init();
 // Reconcile the original game's completed rounds before the next home save.
 window.addEventListener('forest-wallet',event=>{state.stars=event.detail.stars;renderState();});
 window.addEventListener('storage',async e=>{if(globalThis.ForestStudent)return;if(e.key!==SAVE_KEY)return;actionFeedback.clear();expedition?.close();companions.close();shop.close();exploration.close();endBattle({focus:false});state=load();if(!scene)return;kitchen.cancelDining();rest?.cancel();stopMoving();closeDecor();life.close();document.getElementById('food-dialog').close();await restoreCompanion();
- try{if(isInterior(scene.area))await Promise.all([ensureHomeArt(art,[...furnitureArtKeys(layoutFor(state,scene.area))]),ensureWallpapers(art,[state.wallpaper]),(scene.area==='bedroom'?ensureWardrobeArt(art,state.wallpaper):null)]);}catch{toast('圖片還沒載入，請重新進房間。');}
+ try{if(isInterior(scene.area))await Promise.all([ensureHomeArt(art,[...(scene.area==='bathroom'?['daisyComplete']:[]),...furnitureArtKeys(layoutFor(state,scene.area))]),ensureRoomShell(art,state.wallpaper,scene.area),(scene.area==='bedroom'?ensureWardrobeArt(art,state.wallpaper):null)]);}catch{toast('圖片還沒載入，請重新進房間。');}
  renderState();renderArea();if(scene.area==='farm'){await ensureHomeArt(art,['extraCrops','collectionCrops']);life.enterFarm();}
 });
 window.addEventListener('pageshow',async e=>{if(e.persisted){expedition?.close();companions.close();state=load();await restoreCompanion();renderState();}});
-
-

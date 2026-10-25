@@ -231,4 +231,4 @@ $('tiles').addEventListener('pointerdown',e=>{const tile=e.target.closest('.tile
 $('tiles').addEventListener('pointerup',e=>{if(!touchStart||e.pointerType==='mouse')return;const {tile,x,y}=touchStart;touchStart=null;const slot=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-slot]');if(tile.hasPointerCapture(e.pointerId))tile.releasePointerCapture(e.pointerId);if(slot?.dataset.slot===tile.dataset.kind||Math.hypot(e.clientX-x,e.clientY-y)<12)place(tile.dataset.kind,tile.textContent);});
 $('tiles').addEventListener('pointercancel',()=>{touchStart=null;});
 window.addEventListener('online',flushPending);window.addEventListener('beforeunload',e=>{if(pending.length){e.preventDefault();e.returnValue='';}});mountFarmReturn();load();
-import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn,resumeFarmLesson} from './farm-learning.bundle.js?v=20261025-home1';
+import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn,resumeFarmLesson} from './farm-learning.bundle.js?v=20261025-homefix2';

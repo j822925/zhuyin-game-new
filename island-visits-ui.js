@@ -4,6 +4,10 @@ import {ensureHomeArt,furnitureArtKeys} from './adventure-home-art.js';
 import {ensureWallpapers,WALLPAPERS} from './adventure-wallpaper.js';
 import {ensureWardrobeArt} from './adventure-wardrobe-art.js';
 import {ensureBathroom} from './adventure-bathroom.js';
+import {ensureRoomShell} from './home-room-shells.js';
+import {canonicalMountedPosition,spatialFloorValid} from './home-spatial-model.js';
+import {wallSide,wallPosition,wallPlacementValid} from './data/home-wall-furniture.js';
+import {attachedPosition} from './furniture-surfaces.js';
 import {ensureClothingArt,drawClothing} from './adventure-clothing.js';
 import {loadWalker,drawWalker} from './adventure-characters.js';
 import {companionById,companionReady} from './adventure-companions-model.js';
@@ -17,6 +21,23 @@ import {ensureSocialArt,drawSocialMotion} from './social-motion-art.js';
 const el=(tag,text)=>{const n=document.createElement(tag);if(text)n.textContent=text;return n;};
 const names={forest:'🌳 村莊',room:'🛋️ 客廳',bedroom:'🛏️ 臥室',kitchen:'🍳 廚房',bathroom:'🫧 衛浴'};
 const errors={visit_closed:'島主暫時不開放參觀。',visit_not_ready:'這座小島還沒保存，等同學玩過再來！',visit_unavailable:'暫時無法拜訪這位同學。',gift_owned:'已經擁有這件物品，禮物仍保留在收禮箱。',gift_claimed:'這份禮物已經領取。',gift_quantity:'物品數量已改變，請重新選擇。',gift_mail_full:'對方收禮箱滿了，等朋友領取後再送。',gift_protected:'先收納或換下這件物品，再送給朋友。',forest_conflict:'另一個分頁已更新進度，請重新整理後再試。',authentication_required:'請回學習廣場重新登入。',forest_closed:'老師暫時關閉探險島。'};
+// A visitor only projects the public snapshot onto the current painted room.
+// Do not run the owner/save sanitizer here: it can grant starter furnishings or
+// migrate ownership. Nothing from this display copy is written to either player.
+export function normalizeVisitRoomLayouts(snapshot){
+ const next={...snapshot},areas=['room','bedroom','kitchen','bathroom'];
+ for(let index=0;index<VISIT_LAYOUTS.length;index++){
+  const key=VISIT_LAYOUTS[index],area=areas[index];
+  const layout=(Array.isArray(snapshot[key])?snapshot[key]:[]).filter(item=>item&&Number.isFinite(item.x)&&Number.isFinite(item.y)&&FURNITURE.some(f=>f.id===item.id)).map(item=>{
+   if(item.on)return {...item};
+   const f=FURNITURE.find(f=>f.id===item.id),aligned=f.wall&&!f.ceiling&&wallSide(item)!==0?wallPosition(item,f):canonicalMountedPosition(item,f);
+   const valid=aligned&&(!f.areas||f.areas.includes(area))&&(f.wall?wallPlacementValid(f,aligned,area):spatialFloorValid(f,aligned));
+   return valid?{...item,...aligned}:{...item};
+  });
+  next[key]=layout.map(item=>{if(!item.on)return item;const pos=attachedPosition(item,layout,FURNITURE);return pos?{...item,...pos}:item;});
+ }
+ return next;
+}
 export function createIslandVisits(api){
  const css=el('link');css.rel='stylesheet';css.href=new URL('./island-visits.css?v=20261015-facing2',import.meta.url).href;document.head.append(css);
  const dialog=el('dialog');dialog.id='island-visits';dialog.setAttribute('aria-label','搭船拜訪同學');
@@ -57,8 +78,7 @@ export function createIslandVisits(api){
  }
  async function enter(target,hosting){
   const token=++generation;clearConnection();api.stop();const result=await store().visitRequest({kind:'visit-snapshot',target});if(token!==generation)return;
-  snapshot={...freshState(),...result.snapshot};snapshot.wallpaper=WALLPAPERS.some(w=>w.id===snapshot.wallpaper)?snapshot.wallpaper:'original';
-  for(const k of VISIT_LAYOUTS)snapshot[k]=snapshot[k].filter(v=>FURNITURE.some(f=>f.id===v.id));
+  snapshot=normalizeVisitRoomLayouts({...freshState(),...result.snapshot});snapshot.wallpaper=WALLPAPERS.some(w=>w.id===snapshot.wallpaper)?snapshot.wallpaper:'original';
   owner=target;title.textContent=hosting?'🏡 在家接待':target+' 的小島';list.hidden=true;canvas.hidden=false;nav.hidden=false;stick.hidden=false;drawer.hidden=true;
   scene=new ForestScene(canvas,api.art());scene.monster.visible=false;scene.extraPlayers=[];
   const defaultDraw=scene.drawPlayer;
@@ -98,7 +118,7 @@ export function createIslandVisits(api){
  }
  async function room(id){
   social.cancel();socialRequest.hidden=true;route=[];keys.clear();joystick.reset();
-  if(isInterior(id))await Promise.all([ensureHomeArt(api.art(),['daisyHome',...furnitureArtKeys(layoutFor(snapshot,id))]),id==='bathroom'?ensureBathroom(api.art()):ensureWallpapers(api.art(),[snapshot.wallpaper]),id==='bedroom'?ensureWardrobeArt(api.art(),snapshot.wallpaper):null]);
+  if(isInterior(id))await Promise.all([ensureHomeArt(api.art(),['daisyHome',...(id==='bathroom'?['daisyComplete']:[]),...furnitureArtKeys(layoutFor(snapshot,id))]),ensureRoomShell(api.art(),snapshot.wallpaper,id),id==='bedroom'?ensureWardrobeArt(api.art(),snapshot.wallpaper):null]);
   scene.area=id;Object.assign(scene.player,{x:id==='forest'?630:owner===store().seat?700:580,y:id==='forest'?610:630,moving:false});
  }
  async function connect(hosting){

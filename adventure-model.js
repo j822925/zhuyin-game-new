@@ -1,8 +1,8 @@
 import {freshRest,sanitizeRest} from './adventure-rest-model.js';
 import {attachedPosition} from './furniture-surfaces.js';
-import {spatialFields,spatialFootprint,spatialFloorValid,floorPosition} from './home-spatial-model.js';
+import {spatialFields,spatialFootprint,spatialFloorValid,floorPosition,canonicalMountedPosition} from './home-spatial-model.js';
 import {WALK_OUTFITS} from './data/walk-outfits.js';
-import {wallPosition,wallPlacementValid} from './data/home-wall-furniture.js';
+import {wallPosition,wallPlacementValid,wallSide} from './data/home-wall-furniture.js';
 import {freshExpedition,sanitizeExpedition} from './adventure-expedition-model.js';
 import {freshWorld,sanitizeWorld,deepGroveWalkable} from './adventure-exploration-model.js';
 import {hasEnergy} from './adventure-food-model.js';
@@ -62,13 +62,14 @@ function legacyGroveWalkable(x,y,padding=13){
   return !GROVE_TREES.some(t=>((x-t.x)/(23+padding))**2+((y-(t.y-8))/(17+padding))**2<1);
 }
 export const ROOM_ENTRY={x:640,y:684};
-export const ROOM_WARDROBE={x:1030,y:332};
+export const ROOM_WARDROBE={x:1030,y:425};
+export const ROOM_WARDROBE_APPROACH={x:ROOM_WARDROBE.x,y:ROOM_WARDROBE.y+53};
 // Door thresholds follow the painted side-wall skirting, not the floor plane.
 export const WALL_DOOR={width:53,height:210,rise:127};
-export const ROOM_KITCHEN_DOOR={x:1181.5,y:473.5};
-export const ROOM_KITCHEN_APPROACH={x:1070,y:505};
-export const ROOM_BEDROOM_DOOR={x:98.5,y:473.5};
-export const ROOM_BEDROOM_APPROACH={x:210,y:505};
+export const ROOM_KITCHEN_DOOR={x:1165,y:550};
+export const ROOM_KITCHEN_APPROACH={x:1050,y:570};
+export const ROOM_BEDROOM_DOOR={x:115,y:550};
+export const ROOM_BEDROOM_APPROACH={x:230,y:570};
 export const KITCHEN_ENTRY={x:640,y:684};
 export const INTERIOR_AREAS=['room','kitchen','bedroom','bathroom'];
 export const layoutKeyFor=(area='room')=>({room:'layout',kitchen:'kitchenLayout',bedroom:'bedroomLayout',bathroom:'bathroomLayout'})[area];
@@ -76,7 +77,7 @@ export const layoutFor=(state,area='room')=>state[layoutKeyFor(area)]||[];
 export const isInterior=area=>INTERIOR_AREAS.includes(area);
 export const DEFAULT_LAYOUT=[{id:'sofa',x:830,y:450},{id:'rug',x:610,y:558},{id:'table',x:610,y:492},{id:'plant',x:996,y:596}];
 export const DEFAULT_BEDROOM_LAYOUT=[{id:'bed',x:320,y:434},{id:'lamp',x:234,y:612}];
-const RECT_WARDROBE={x:956,y:277,w:142,h:63};
+const RECT_WARDROBE={x:ROOM_WARDROBE.x-74,y:ROOM_WARDROBE.y-55,w:142,h:63};
 const DOOR_CLEARANCE={x:550,y:628,w:180,h:116};
 export function freshState(){return {version:1,homeRest:freshRest(),bathroomLayout:[],expedition:freshExpedition(),world:freshWorld(),companions:freshCompanions(),homeRoomsVersion:1,starterKitchenVersion:1,stars:12,roles:['rabbit'],owned:['daisy'],outfit:'daisy',wand:true,wins:0,settled:[],visited:false,groveUnlocked:false,life:freshLife(),wallpaper:'original',wallpaperOwned:['original'],furnitureOwned:[...STARTER_FURNITURE],kitchenLayout:[{id:'daisy-stove',x:800,y:410}],bedroomLayout:DEFAULT_BEDROOM_LAYOUT.map(x=>({...x})),layout:DEFAULT_LAYOUT.map(x=>({...x}))};}
 export function sanitizeState(raw){
@@ -99,13 +100,22 @@ export function sanitizeState(raw){
   s.wallpaperOwned=[...new Set(['original',...(Array.isArray(raw.wallpaperOwned)?raw.wallpaperOwned.filter(id=>WALLPAPERS.some(w=>w.id===id)):[])])];
   s.wallpaper=s.wallpaperOwned.includes(raw.wallpaper)?raw.wallpaper:'original';
   s.furnitureOwned=[...new Set([...STARTER_FURNITURE,...(Array.isArray(raw.furnitureOwned)?raw.furnitureOwned.filter(id=>FURNITURE.some(f=>f.id===id)):[])])];
+  // Only explicitly wall-snapped furniture moves with the new room shell.
+  // This uses absolute positions rather than a one-time flag, so repeated cloud
+  // loads cannot drift. Restore hosts first; their saved small objects follow below.
+  const restoreHost=(item,area)=>{
+    if(!item||item.on||!Number.isFinite(item.x)||!Number.isFinite(item.y))return null;
+    const f=FURNITURE.find(f=>f.id===item.id);if(!f)return null;
+    const aligned=f.wall&&!f.ceiling&&wallSide(item)!==0?wallPosition(item,f):canonicalMountedPosition(item,f),pos=aligned&&canPlaceFurniture(s,item.id,aligned,area)?aligned:item;
+    return canPlaceFurniture(s,item.id,pos,area)?{id:item.id,x:pos.x,y:pos.y,...spatialFields(pos)}:null;
+  };
   if(Array.isArray(raw.layout)){
     s.layout=[];
-    for(const item of raw.layout)if(item&&!item.on&&FURNITURE.some(f=>f.id===item.id)&&!s.layout.some(f=>f.id===item.id)&&canPlaceFurniture(s,item.id,item))s.layout.push({id:item.id,x:item.x,y:item.y,...spatialFields(item)});
+    for(const item of raw.layout){const restored=restoreHost(item,'room');if(restored&&!s.layout.some(f=>f.id===restored.id))s.layout.push(restored);}
   }
   s.kitchenLayout=[];s.bedroomLayout=[];s.bathroomLayout=[];
   for(const area of ['kitchen','bedroom','bathroom'])for(const item of Array.isArray(raw[layoutKeyFor(area)])?raw[layoutKeyFor(area)]:[]){
-    if(item&&!item.on&&!INTERIOR_AREAS.some(a=>layoutFor(s,a).some(f=>f.id===item.id))&&canPlaceFurniture(s,item.id,item,area))s[layoutKeyFor(area)].push({id:item.id,x:item.x,y:item.y,...spatialFields(item)});
+    const restored=restoreHost(item,area);if(restored&&!INTERIOR_AREAS.some(a=>layoutFor(s,a).some(f=>f.id===restored.id)))s[layoutKeyFor(area)].push(restored);
   }
   // Hosts first, then their small objects, independent of save array ordering.
   for(const area of INTERIOR_AREAS)for(const item of Array.isArray(raw[layoutKeyFor(area)])?raw[layoutKeyFor(area)]:[]){
@@ -207,7 +217,7 @@ export function buyAndPlaceFurniture(state,id,pos,player,area){
 const KITCHEN_DOOR_CLEARANCE={x:410,y:288,w:90,h:118};
 export function roomWalkable(x,y,state,area='room'){
  if(!Number.isFinite(x)||!Number.isFinite(y)||x<180||x>1100||y<288||y>725)return false;
- if(area==='bathroom'&&y<445)return false;
+ if(area==='bathroom'&&y<360)return false;
  if(area==='bedroom'&&contains(RECT_WARDROBE,x,y,14))return false;
  // Furnishings are depth-sorted scenery, so dense decorations never trap a child.
  return true;
@@ -215,7 +225,7 @@ export function roomWalkable(x,y,state,area='room'){
 export function canPlaceFurniture(state,id,pos,area='room'){
  const f=FURNITURE.find(f=>f.id===id);if(!f||!isInterior(area)||!state.furnitureOwned?.includes(id)||(f.areas&&!f.areas.includes(area))||!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))return false;
  if(f.wall)return wallPlacementValid(f,pos,area);
- if(pos.on){const p=attachedPosition({id,...pos},layoutFor(state,area),FURNITURE);return !!p&&p.x>=158&&p.x<=1122&&p.y>=150&&p.y<=728;}
+ if(pos.on){const p=attachedPosition({id,...pos},layoutFor(state,area),FURNITURE);return !!p&&p.x>=60&&p.x<=1220&&p.y>=50&&p.y<=728;}
  return spatialFloorValid(f,pos);
 }
 export function hasFurnitureOverlap(state,id,pos,area='room'){
@@ -239,7 +249,7 @@ export function canReachInterior(state,player,area='room'){
  const checker=(x,y)=>roomWalkable(x,y,state,area);
  if(!findPath(player,ROOM_ENTRY,checker))return false;
  if(area==='room'&&(!findPath(ROOM_ENTRY,ROOM_KITCHEN_APPROACH,checker)||!findPath(ROOM_ENTRY,ROOM_BEDROOM_APPROACH,checker)))return false;
- if(area==='bedroom'&&!findPath(ROOM_ENTRY,{x:1030,y:385},checker))return false;
+ if(area==='bedroom'&&!findPath(ROOM_ENTRY,ROOM_WARDROBE_APPROACH,checker))return false;
  return area!=='kitchen'||state.kitchenLayout.filter(item=>FURNITURE.find(f=>f.id===item.id)?.cooking).every(item=>stoveApproach(state,item));
 }
 export function placeFurniture(state,id,pos,player=ROOM_ENTRY,area='room'){if(!hasEnergy(state))return false;

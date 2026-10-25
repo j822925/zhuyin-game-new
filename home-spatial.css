@@ -1,50 +1,66 @@
-/* The room is the workspace. Keep controls outside the fitted room camera. */
+/* Keep one camera footprint when choosing, moving and saving an item. */
 body.decorating .topbar,body.decorating .world-top,body.decorating .world-bottom,
 body.decorating .joystick,body.decorating .energy-hud,body.decorating #energy-hud,
-body.decorating #forest-music-toggle,body.decorating .home-hotspot,body.decorating .action-feedback,
-body.decorating .stove-hotspot,body.decorating .home-action,body.decorating .map-note{visibility:hidden!important;pointer-events:none!important}
-body.decorating #decor-panel{position:fixed;inset:12px 12px 12px auto;width:320px;max-width:calc(100vw - 24px);max-height:none;box-sizing:border-box;padding:14px;display:flex;gap:7px;z-index:80;border:1px solid #cbbd98;background:#fffbedf7;box-shadow:0 4px 20px #493b2824;border-radius:20px;overflow:hidden}
+body.decorating #forest-music-toggle,body.decorating #picture-help,body.decorating .home-hotspot,
+body.decorating .action-feedback,body.decorating .stove-hotspot,body.decorating .home-action,
+body.decorating .map-note{visibility:hidden!important;pointer-events:none!important}
+body.decorating{touch-action:manipulation;overscroll-behavior:none}
+body.decorating #map-stage,body.decorating #world{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+body.decorating #decor-panel{position:fixed;inset:12px 12px 12px auto;width:340px;max-width:calc(100vw - 24px);max-height:none;box-sizing:border-box;padding:14px;display:flex;flex-direction:column;gap:8px;z-index:80;border:1px solid #cbbd98;background:#fffbed;box-shadow:0 4px 20px #493b2824;border-radius:20px;overflow:hidden;transform:none;filter:none;backdrop-filter:none;-webkit-backdrop-filter:none;touch-action:manipulation}
 body.decorating #decor-panel[hidden]{display:none}
-body.decorating #decor-panel header{margin:0;min-height:44px;flex-shrink:0}
+body.decorating #decor-panel header{display:flex;flex-wrap:wrap;gap:6px;margin:0;min-height:44px;flex-shrink:0;align-items:center}
+body.decorating #decor-panel header>div{flex:1 0 100%;display:flex;align-items:center;justify-content:space-between;gap:8px}
 body.decorating #decor-panel h2{font-size:16px;letter-spacing:0}
-body.decorating #decor-panel button{min-height:44px;font-size:13px;line-height:1.3;letter-spacing:0;padding:6px 9px;touch-action:manipulation}
-body.decorating #decor-panel button::before,body.decorating #decor-panel button::after{display:none!important}
-body.decorating #decor-panel button span,body.decorating #decor-panel button small{font-size:12px;letter-spacing:0;overflow-wrap:anywhere;white-space:normal}
+body.decorating #decor-wallet{position:static;margin:0;flex-shrink:0}
+/* Override picture-first font-size:0!important with actual text labels. */
+html body.decorating #decor-panel button{min-height:44px;min-width:0;font-size:14px!important;line-height:1.35!important;letter-spacing:0!important;padding:7px 9px;text-indent:0;-webkit-text-fill-color:currentColor;touch-action:manipulation;white-space:normal;overflow-wrap:anywhere}
+html body.decorating #decor-panel button::before,html body.decorating #decor-panel button::after{display:none!important;content:none!important}
+html body.decorating #decor-panel button span,html body.decorating #decor-panel button small{font-size:12px!important;letter-spacing:0!important;overflow-wrap:anywhere;white-space:normal}
+html body.decorating #decor-panel button:disabled{color:#6d7568;opacity:.75}
+html body.decorating #decor-panel button[aria-pressed=true],html body.decorating #decor-panel button.primary:not(:disabled){background:#3c604c;color:#fffbed}
+html body.decorating #decor-close{width:auto;height:auto;flex:1;border-radius:12px;float:none;background:#3c604c;color:#fffbed;padding:9px 12px;min-height:46px}
+html body.decorating #decor-reset-view{flex:1;min-height:46px}
 body.decorating #decor-rooms{display:flex;gap:4px;flex-shrink:0}
 body.decorating #decor-rooms button{flex:1}
-body.decorating #decor-panel button[aria-pressed=true]{background:#3c604c;color:#fffbed}
 body.decorating #decor-styles{display:flex;flex-wrap:wrap;gap:4px;margin:0;flex-shrink:0}
-body.decorating #decor-styles button{flex:1 0 21%;white-space:normal}
-body.decorating #decor-categories{gap:4px;margin:0}
-body.decorating #furniture-palette{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-height:none;min-height:80px;gap:7px;overflow:auto;flex:1}
-body.decorating #furniture-palette button{display:flex;flex-direction:column;align-items:center;min-height:135px;justify-content:flex-start}
-body.decorating #furniture-palette canvas{width:110px;height:92px;object-fit:contain}
-body.decorating #decor-hint{min-height:0;font-size:12px;line-height:1.4;margin:0}
-body.decorating #decor-position-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-body.decorating #decor-position-tools strong{font-size:15px;flex:1 0 100%;text-align:center}
-body.decorating #decor-position-tools button{flex:1;white-space:nowrap}
-body.decorating #decor-choose{align-self:flex-start}
-body.decorating #decor-supports{max-height:92px;overflow:auto;flex-shrink:0}
-body.decorating .decor-actions{display:flex;gap:8px;margin:0}
+body.decorating #decor-styles button{flex:1 0 27%;white-space:normal}
+body.decorating #decor-categories{gap:4px;margin:0;flex-shrink:0}
+html body.decorating #decor-panel #decor-categories button{flex:1 0 27%;min-height:44px}
+body.decorating #furniture-palette{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-height:none;min-height:80px;gap:7px;overflow:auto;flex:1;touch-action:pan-y;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+html body.decorating #decor-panel #furniture-palette button{display:flex;flex-direction:column;align-items:center;min-height:150px;justify-content:flex-start;gap:4px}
+body.decorating #furniture-palette canvas{width:110px;height:92px;object-fit:contain;flex-shrink:0}
+body.decorating #decor-hint{min-height:0;font-size:13px;line-height:1.4;margin:0;flex-shrink:0}
+body.decorating #decor-position-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
+body.decorating #decor-position-tools strong{font-size:16px;flex:1 0 100%;text-align:left;padding:6px 0}
+body.decorating #decor-position-tools button{flex:1 0 42%;white-space:nowrap}
+body.decorating #decor-choose{align-self:flex-start;position:static;flex-shrink:0}
+body.decorating #decor-supports{max-height:160px;overflow:auto;flex-shrink:1;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+body.decorating .decor-actions{display:flex;gap:6px;margin:0;flex-shrink:0}
 body.decorating .decor-actions button{flex:1}
 body.decorating #decor-panel [hidden]{display:none!important}
-body.decor-placing #decor-panel{inset:auto auto 12px 50%;transform:translateX(-50%);width:min(960px,calc(100vw - 24px));max-height:45dvh;padding:10px 14px;gap:5px}
-body.decor-placing #decor-panel header,body.decor-placing #decor-categories,body.decor-placing #decor-styles,body.decor-placing #decor-style-note,body.decor-placing #furniture-palette{display:none!important}
-body.decor-placing #decor-choose{position:absolute;left:14px;top:8px;min-height:34px}
-body.decor-placing #decor-position-tools strong{min-height:34px;padding:5px 100px;box-sizing:border-box}
-body.decor-placing #decor-hint{text-align:center}
+body.decor-placing #decor-categories,body.decor-placing #decor-styles,body.decor-placing #decor-style-note,body.decor-placing #furniture-palette{display:none!important}
+body.decor-placing #decor-panel header>div{display:none}
+body.decor-placing .decor-actions{margin-top:auto}
 @media(max-width:700px),(orientation:portrait){
- body.decorating #decor-panel{inset:auto 12px 12px;width:calc(100vw - 24px);height:46dvh;padding:10px;gap:4px}
- body.decorating #decor-panel header{min-height:32px}
- body.decorating #decor-wallet,body.decorating #decor-style-note{display:none}
- body.decorating #decor-categories{flex-wrap:nowrap;overflow-x:auto;min-height:44px}
- body.decorating #decor-categories button{flex:0 0 auto}
- body.decorating #decor-styles{flex-wrap:nowrap;overflow-x:auto;min-height:44px}
+ body.decorating #decor-panel{inset:auto 12px 12px;width:calc(100vw - 24px);height:48vh;height:48dvh;padding:10px;gap:5px}
+ body.decorating #decor-panel header{flex-wrap:nowrap;min-height:46px}
+ body.decorating #decor-panel header>div{display:none}
+ body.decorating #decor-style-note{display:none}
+ body.decorating #decor-categories{flex-wrap:nowrap;overflow-x:auto;min-height:44px;touch-action:pan-x;-webkit-overflow-scrolling:touch}
+ html body.decorating #decor-panel #decor-categories button{flex:0 0 auto}
+ body.decorating #decor-styles{flex-wrap:nowrap;overflow-x:auto;min-height:44px;touch-action:pan-x;-webkit-overflow-scrolling:touch}
  body.decorating #decor-styles button{flex:0 0 auto}
- body.decorating #furniture-palette{grid-template-columns:repeat(3,minmax(0,1fr))}
+ body.decorating #furniture-palette{grid-template-columns:repeat(3,minmax(0,1fr));min-height:50px}
  body.decorating #furniture-palette canvas{width:85px;height:70px}
- body.decorating #furniture-palette button{min-height:116px}
- body.decor-placing #decor-panel{left:50%;right:auto;height:auto;max-height:44dvh}
- body.decor-placing #decor-position-tools strong{font-size:13px;padding:5px 75px}
- body.decor-placing #decor-position-tools button{flex:1 0 21%;font-size:12px;padding:5px}
+ html body.decorating #decor-panel #furniture-palette button{min-height:128px}
+ body.decorating #decor-position-tools button{flex:1 0 21%}
+ body.decorating #decor-supports{max-height:80px}
+}
+@media(max-height:560px) and (orientation:landscape){
+ body.decorating #decor-panel{inset:6px 6px 6px auto;padding:9px;gap:4px}
+ body.decorating #decor-panel header>div,body.decorating #decor-style-note{display:none}
+ body.decorating #decor-styles{flex-wrap:nowrap;overflow-x:auto;min-height:44px;touch-action:pan-x;-webkit-overflow-scrolling:touch}
+ body.decorating #decor-styles button{flex:0 0 auto}
+ body.decorating #decor-categories{flex-wrap:nowrap;overflow-x:auto;min-height:44px;touch-action:pan-x;-webkit-overflow-scrolling:touch}
+ html body.decorating #decor-panel #decor-categories button{flex:0 0 auto}
 }

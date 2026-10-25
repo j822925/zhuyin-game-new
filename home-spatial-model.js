@@ -1,4 +1,4 @@
-// Optional layout fields: old saves retain their original position and appearance.
+// Optional layout fields: old free placements retain their original position.
 export const HOME_FACINGS=['front','right','back','left'];
 export const HOME_MOUNTS=['back','left','right','corner-left','corner-right'];
 export function spatialFields(p={}){return {...(HOME_FACINGS.includes(p.facing)?{facing:p.facing}:{}),...(HOME_MOUNTS.includes(p.mount)?{mount:p.mount}:{})};}
@@ -13,11 +13,36 @@ export function spatialRole(f){
 export function fixtureRole(f){if(!f||f.small||f.wall||f.corner)return null;return f.cooking?'stove':/fridge/.test(f.id)?'fridge':/sink|vanity/.test(f.id)?'sink':f.rest==='bath'?'tub':null;}
 export function facingOptions(f){return f?.corner?['left','right']:spatialRole(f)==='chair'?HOME_FACINGS:['front','left','right'];}
 export function surfaceVector(host={}){
- if(host.mount==='left')return {x:1,y:-.45};
- if(host.mount==='right')return {x:1,y:.45};
+ if(host.mount==='left')return {x:.42,y:-1};
+ if(host.mount==='right')return {x:-.42,y:-1};
  return {x:host.facing==='left'?-1:1,y:0};
 }
-export function floorWallX(y){return Math.max(65,200-(y-280)*.31);}
+// New rooms share one painted floor plan, including the bathroom. A wall snap
+// aligns the furniture's BACK contact, never its variable collision-box width.
+export const HOME_FLOOR={back:360,left:220,right:1060,front:730,sideSlope:.42};
+export function floorWallX(y){return Math.max(65,HOME_FLOOR.left-(y-HOME_FLOOR.back)*HOME_FLOOR.sideSlope);}
+export function furnitureWallDepth(f){
+ if(!f)return 0;
+ if(f.wall)return 0;
+ if(spatialRole(f)==='base'||['stove','fridge','sink'].includes(fixtureRole(f)))return 65;
+ return Math.round(Math.max(25,Math.min(120,Number(f.fh)||45))/5)*5;
+}
+export function furnitureWallAnchor(f,p){
+ const depth=furnitureWallDepth(f);
+ if(p.mount==='left')return {x:p.x-depth,y:p.y};
+ if(p.mount==='right')return {x:p.x+depth,y:p.y};
+ return {x:p.x,y:p.y-depth};
+}
+// Absolute, idempotent placement: safe even if a server omits version flags.
+// Wall hangings and free floor objects are intentionally not migrated.
+export function canonicalMountedPosition(p,f){
+ if(!f||f.wall||f.ceiling||f.flat||f.small||!HOME_MOUNTS.includes(p.mount)||!Number.isFinite(p.x)||!Number.isFinite(p.y))return null;
+ if(f.corner){if(!['corner-left','corner-right'].includes(p.mount))return null;const side=p.mount==='corner-left'?'left':'right';return {x:side==='left'?380:900,y:545,facing:side,mount:'corner-'+side};}
+ const depth=furnitureWallDepth(f);
+ if(p.mount==='back')return {x:Math.max(Math.ceil((220+f.fw/2)/5)*5,Math.min(Math.floor((1060-f.fw/2)/5)*5,Math.round(p.x/5)*5)),y:HOME_FLOOR.back+depth,facing:'front',mount:'back'};
+ if(p.mount==='left'||p.mount==='right'){const half=(f.surfaceWidth||f.fw)/2,minY=Math.ceil((HOME_FLOOR.back+half+5)/5)*5,maxY=Math.floor((HOME_FLOOR.front-half-5)/5)*5,y=Math.max(minY,Math.min(maxY,Math.round(p.y/5)*5)),left=Math.round((floorWallX(y)+depth)/5)*5;return {x:p.mount==='left'?left:1280-left,y,facing:p.mount,mount:p.mount};}
+ return null;
+}
 export function spatialFootprint(f,p){
  if(f.corner)return {x:p.x-f.fw/2,y:p.y-f.fh,w:f.fw,h:f.fh};
  const side=p.mount==='left'||p.mount==='right';const w=side?Math.max(50,f.fw*.62):f.fw,h=side?f.fh+f.fw*.4:f.fh;
@@ -25,19 +50,20 @@ export function spatialFootprint(f,p){
 }
 export function floorPosition(at,f,{auto=true,area='room'}={}){
  let p={x:Math.round(at.x/5)*5,y:Math.round(at.y/5)*5,...spatialFields(at)};
- if(f.corner){const side=at.x<640?'left':'right';return {x:side==='left'?360:920,y:465,facing:side,mount:'corner-'+side};}
+ if(f.corner){if(!auto&&['corner-left','corner-right'].includes(at.mount))return p;const side=at.x<640?'left':'right';return {x:side==='left'?380:900,y:545,facing:side,mount:'corner-'+side};}
  if(!auto||f.flat||f.small)return p;
  // The child's pointer chooses a wall; rotation can also be chosen explicitly.
  const wallSuitable=f.cooking||f.areas?.includes('kitchen')||/cabinet|bookcase|shelf|fridge|sink|pantry|stand|desk|vanity|glass-door|bed|sofa|tub|toilet/.test(f.id);
- if(wallSuitable&&at.x<300){p.mount='left';p.facing='left';p.y=Math.max(area==='bathroom'?500:370,Math.min(690,p.y));p.x=Math.round((floorWallX(p.y)+Math.max(40,f.fw*.24))/5)*5;}
- else if(wallSuitable&&at.x>980){p.mount='right';p.facing='right';p.y=Math.max(area==='bathroom'?500:370,Math.min(690,p.y));p.x=1280-Math.round((floorWallX(p.y)+Math.max(40,f.fw*.24))/5)*5;}
- else if(wallSuitable&&at.y<(area==='bathroom'?510:390)){p.mount='back';p.facing='front';p.y=(area==='bathroom'?425:280)+f.fh;p.x=Math.max(220+f.fw/2,Math.min(1060-f.fw/2,p.x));}
+ if(wallSuitable&&at.x<300){p.mount='left';Object.assign(p,canonicalMountedPosition(p,f));}
+ else if(wallSuitable&&at.x>980){p.mount='right';Object.assign(p,canonicalMountedPosition(p,f));}
+ else if(wallSuitable&&at.y<450){p.mount='back';Object.assign(p,canonicalMountedPosition(p,f));}
  else delete p.mount;
  return p;
 }
 export function spatialFloorValid(f,p){
  if(f.corner)return ['corner-left','corner-right'].includes(p.mount)&&p.x>=300&&p.x<=980&&p.y>=400&&p.y<=600;
- if(p.mount==='left'||p.mount==='right')return p.y>=340&&p.y<=710&&p.x>=floorWallX(p.y)+20&&p.x<=1280-floorWallX(p.y)-20;
+ // Do not discard existing saved side placements when the painted room changes.
+ if(p.mount==='left'||p.mount==='right'){const legacyX=Math.max(65,200-(p.y-280)*.31),minX=Math.min(legacyX,floorWallX(p.y));return p.y>=340&&p.y<=710&&p.x>=minX+20&&p.x<=1280-minX-20;}
  const r=spatialFootprint(f,p);return r.x>=158&&r.x+r.w<=1122&&r.y>=280&&r.y+r.h<=728;
 }
 export function decorCamera(width,height,insets={}){
