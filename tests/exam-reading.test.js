@@ -5,3 +5,23 @@ test('installed iPad Safari handoff preserves exact exam/class only, not credent
 test('recognition remains ordinary reading: known correct/homophone yes, clear wrong no, unclear retry',()=>{const q=READING_WORDS.find(w=>w.word==='梨子');assert.equal(readingExamAnswer(q,'梨子'),'yes');assert.equal(readingExamAnswer(q,'離子'),'yes');assert.equal(readingExamAnswer(q,'香蕉'),'no');for(const text of ['', 'Múma','𰻞'])assert.equal(readingExamAnswer(q,text),null);});
 test('mic controller cancels stale speech, permits ungraded retry and submits just one boolean outcome',()=>{const previous=globalThis.document,nodes=new Map(),element=()=>({children:[],append(x){this.children.push(x);},replaceChildren(){this.children=[];},setAttribute(){}});globalThis.document={createElement:element};const root={set innerHTML(v){},querySelector(s){if(!nodes.has(s))nodes.set(s,element());return nodes.get(s);}},instances=[],answers=[];class Recognition{constructor(){instances.push(this);}start(){this.onstart();this.onaudiostart();}abort(){this.aborted=true;}stop(){}};const input=createReadingExamInput(root,a=>answers.push(a),{Recognition,apple:false}),mic=nodes.get('button'),q=READING_WORDS.find(w=>w.word==='梨子');const finish=(r,text)=>{r.onresult({results:[Object.assign([{transcript:text}],{isFinal:true})]});r.onend();};try{input.show(q);assert(mic.disabled);input.setEnabled(true);mic.onclick();finish(instances.at(-1),'Múma');assert.deepEqual(answers,[]);assert(!mic.disabled);mic.onclick();const old=instances.at(-1);input.cancel();finish(old,'梨子');assert.deepEqual(answers,[]);input.show(q);input.setEnabled(true);mic.onclick();const current=instances.at(-1);finish(old,'香蕉');finish(current,'梨子');finish(current,'梨子');assert.deepEqual(answers,['yes']);assert(mic.disabled);input.show(q);input.setEnabled(true);mic.onclick();finish(instances.at(-1),'香蕉');assert.deepEqual(answers,['yes','no']);}finally{input.cancel();globalThis.document=previous;}});
 test('reading exam uses pending receipt/recovery and no practice/farm writes; hidden-page late import guarded',()=>{const s=read('exam.js');assert.match(s,/readingExamVersion:1/);assert.match(s,/savePending\(payload\)/);assert.match(s,/version!==renderVersion\|\|document.hidden/);assert.match(s,/pagehide',stopReading/);assert(!/kind:'round'|kind:'forest-save'/.test(s));assert.match(s,/mode:'reading',questionId:q.id/);assert.match(s,/✅ 已完成/);assert.match(read('exam-entry.js'),/activeExams.length>1/);});
+
+test('iPad exam mode is opt-in, remembered, and grades only natural final results',()=>{
+ const previousDocument=globalThis.document,previousStorage=Object.getOwnPropertyDescriptor(globalThis,'localStorage');
+ const data=new Map(),nodes=new Map(),instances=[],answers=[];
+ const element=()=>({children:[],append(x){this.children.push(x);},replaceChildren(){this.children=[];},setAttribute(){}});
+ globalThis.document={createElement:element};Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:k=>data.get(k),setItem:(k,v)=>data.set(k,v)}});
+ const root={set innerHTML(v){},querySelector(s){if(!nodes.has(s))nodes.set(s,element());return nodes.get(s);}};
+ class Recognition{constructor(){instances.push(this);}start(){this.onaudiostart();}stop(){throw Error('Automatic mode must not call stop');}abort(){this.aborted=true;}}
+ const input=createReadingExamInput(root,a=>answers.push(a),{Recognition,apple:true}),mic=nodes.get('button'),mode=nodes.get('[data-speech-mode]'),q=READING_WORDS.find(w=>w.word==='梨子');
+ try{
+  input.show(q);input.setEnabled(true);assert.match(mode.textContent,/試用/);mode.onclick();assert.match(mode.textContent,/改回/);assert.deepEqual([...data.values()],['on']);
+  for(const word of ['梨子','香蕉','離子']){
+   input.show(q);input.setEnabled(true);mic.onclick();const r=instances.at(-1);assert.equal(r.continuous,false);assert(mic.disabled);assert(mode.disabled);assert.match(mic.textContent,/正在聽/);
+   r.onresult({results:[Object.assign([{transcript:word}],{isFinal:true})]});r.onend();assert(mic.disabled);
+  }
+  assert.deepEqual(answers,['yes','no','yes']);
+  input.show(q);input.setEnabled(true);mic.onclick();instances.at(-1).onerror({error:'aborted'});assert.deepEqual(answers,['yes','no','yes']);assert.match(nodes.get('[role=status]').textContent,/中止/);assert.match(nodes.get('[data-speech-diagnostic]').textContent,/模式：停頓後送出/);
+  mode.onclick();assert.deepEqual([...data.values()],['off']);assert.match(mode.textContent,/試用/);
+ }finally{input.cancel();globalThis.document=previousDocument;if(previousStorage)Object.defineProperty(globalThis,'localStorage',previousStorage);else delete globalThis.localStorage;}
+});

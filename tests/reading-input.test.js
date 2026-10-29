@@ -22,6 +22,34 @@ function harness({native=false,reject,late=false,continuous=false,finalGraceMs=0
 
 const transcript=(r,text,isFinal=true)=>r.onresult({results:[Object.assign([{transcript:text}],{isFinal})]});
 
+test('opt-in automatic native mode completes five questions without any stop call',()=>{
+ const h=harness({native:true,continuous:true,finalGraceMs:1200,stopDelayMs:350});
+ for(const word of ['梨子','白雲','香蕉','火車','小白兔']){
+  h.speech.start({autoFinish:true});const r=h.instances.at(-1);assert.equal(r.continuous,false);r.onstart();r.onaudiostart();
+  transcript(r,word,false);h.speech.release();assert.equal(r.stopped,undefined);assert.equal(h.states.at(-1),'listening');
+  r.onend();assert.equal(h.speech.busy,true);transcript(r,word);assert.equal(h.speech.busy,false);assert.equal(h.timers.size,0);
+ }
+ assert.deepEqual(h.results,['梨子','白雲','香蕉','火車','小白兔']);assert.deepEqual(h.errors,[]);
+ h.speech.start();assert.equal(h.instances.at(-1).continuous,true);h.speech.cancel();
+});
+
+test('silent automatic mode times out without stop, scoring or restarting',()=>{
+ const h=harness({native:true,continuous:true});h.speech.start({autoFinish:true});const r=h.instances[0];r.onaudiostart();
+ [...h.timers.values()][0]();assert.equal(r.stopped,undefined);assert.equal(r.aborted,true);assert.equal(h.speech.busy,false);
+ assert.deepEqual(h.results,[]);assert.deepEqual(h.errors,['timeout']);assert.equal(h.instances.length,1);assert.equal(h.timers.size,0);
+ assert.equal(h.diagnostics[0].autoFinish,true);assert.equal(h.diagnostics[0].stopRequested,false);
+});
+
+test('automatic mode never grades interim-only text, aborted input or cancelled late finals',()=>{
+ const h=harness({native:true,continuous:true,finalGraceMs:1200});
+ h.speech.start({autoFinish:true});let r=h.instances.at(-1);r.onaudiostart();transcript(r,'梨子',false);r.onend();[...h.timers.values()][0]();
+ assert.deepEqual(h.results,[]);assert.deepEqual(h.errors,['no-result']);
+ h.speech.start({autoFinish:true});r=h.instances.at(-1);r.onaudiostart();r.onerror({error:'aborted'});r.onend();
+ assert.deepEqual(h.errors,['no-result','aborted']);assert.equal(h.instances.length,2);
+ h.speech.start({autoFinish:true});r=h.instances.at(-1);r.onaudiostart();transcript(r,'梨子',false);r.onend();h.speech.cancel();
+ h.speech.start({autoFinish:true});transcript(r,'梨子');r.onend();assert.deepEqual(h.results,[]);assert(h.speech.busy);h.speech.cancel();assert.equal(h.timers.size,0);
+});
+
 test('native send keeps a short audio tail and cancelling it cannot stop the next question',()=>{
  const h=harness({native:true,continuous:true,stopDelayMs:350});h.speech.start();let r=h.instances.at(-1);r.onaudiostart();h.speech.release();
  assert.equal(r.stopped,undefined);assert.equal(h.states.at(-1),'processing');[...h.timers.values()].at(-1)();assert.equal(r.stopped,true);
@@ -39,7 +67,7 @@ test('five native questions retain a delayed third final, allow an ungraded retr
   if(i===2){r.onend();assert.equal(h.speech.busy,true);assert.equal(h.speech.start(),false);assert.equal(h.states.at(-1),'processing');transcript(r,word);}
   else if(i===3){
    r.onend();[...h.timers.values()][0]();assert.equal(h.results.length,3);assert.equal(h.errors.at(-1),'no-result');
-   assert.deepEqual(h.diagnostics.at(-1),{capturing:true,stopRequested:true,resultEvents:1,hadInterim:true});
+   assert.deepEqual(h.diagnostics.at(-1),{capturing:true,stopRequested:true,resultEvents:1,hadInterim:true,autoFinish:false});
    const old=r;assert.equal(h.speech.start(),true);r=h.instances.at(-1);r.onaudiostart();transcript(old,'錯誤舊答案');old.onend();
    h.speech.release();transcript(r,word);r.onend();
   }else {transcript(r,word);if(i===4)r.onerror({error:'aborted'});else r.onend();}

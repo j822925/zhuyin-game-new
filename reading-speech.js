@@ -10,18 +10,18 @@ export function createReadingSpeech({Recognition,onState,onResult,onError,getAud
  function clear(run){clearTimer(run.timer);clearTimer(run.deadline);}
  function close(run){run.stream?.getTracks().forEach(t=>t.stop());run.stream=null;}
  function cancel(){const run=active;if(!run)return;active=null;clear(run);try{run.recognition.abort();}catch{}close(run);onState('idle');}
- function start({deviceId=''}={}){
+ function start({deviceId='',autoFinish=false}={}){
   if(active)return false;
-  const recognition=new Recognition(),run={recognition,started:false,capturing:false,heard:false,released:false,ended:false,transcript:'',finals:new Map(),resultEvents:0,hadInterim:false};active=run;
-  recognition.lang='zh-TW';recognition.continuous=continuous;recognition.interimResults=true;recognition.maxAlternatives=1;
+  const recognition=new Recognition(),run={recognition,autoFinish:!!autoFinish,started:false,capturing:false,heard:false,released:false,ended:false,transcript:'',finals:new Map(),resultEvents:0,hadInterim:false};active=run;
+  recognition.lang='zh-TW';recognition.continuous=continuous&&!run.autoFinish;recognition.interimResults=true;recognition.maxAlternatives=1;
   const current=()=>active===run;
   const emptyReason=()=>!run.capturing?'mic-not-ready':run.heard?'no-result':'no-speech';
-  const diagnostics=()=>({capturing:run.capturing,stopRequested:run.released,resultEvents:run.resultEvents,hadInterim:run.hadInterim});
+  const diagnostics=()=>({capturing:run.capturing,stopRequested:run.released,resultEvents:run.resultEvents,hadInterim:run.hadInterim,autoFinish:run.autoFinish});
   function finish(code,abort=false){if(!current())return;active=null;clear(run);if(abort)try{recognition.abort();}catch{}close(run);onState('idle');if(run.transcript.trim())onResult(run.transcript);else onError(code||emptyReason(),diagnostics());}
   function fail(code){finish(code,true);}
   function stop(){if(!current()||!run.started)return;try{recognition.stop();}catch{fail('audio-capture');}}
   run.stop=stop;
-  function capturing(){if(!current()||run.capturing||run.released||run.ended)return;run.started=true;run.capturing=true;clearTimer(run.deadline);run.timer=setTimer(()=>release(),12000);onState('listening');}
+  function capturing(){if(!current()||run.capturing||run.released||run.ended)return;run.started=true;run.capturing=true;clearTimer(run.deadline);run.timer=setTimer(()=>run.autoFinish?fail('timeout'):release(),12000);onState('listening');}
   recognition.onstart=()=>{if(!current())return;run.started=true;if(run.stream)capturing();};
   recognition.onaudiostart=capturing;
   recognition.onsoundstart=()=>{capturing();};
@@ -52,6 +52,9 @@ export function createReadingSpeech({Recognition,onState,onResult,onError,getAud
   try{onInput('瀏覽器預設麥克風');recognition.start();}catch{fail('audio-capture');return false;}return true;
  }
  function release(){const run=active;if(!run||run.released)return;
+  // Opt-in native single-utterance mode lets the service end naturally. Neither
+  // a second tap nor the capture timeout calls stop(), which aborts on some iPads.
+  if(run.autoFinish)return;
   if(!run.capturing){run.fail('too-short');return;}
   run.released=true;clear(run);run.deadline=setTimer(()=>run.fail('timeout'),10000);onState('processing');
   // A short native capture tail lets the last syllable reach the recognizer.
