@@ -8,6 +8,7 @@ import {readingStars,readingAttemptDecision,READING_WORDS} from './reading-core.
 import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
 import {createReadingSpeech,supportsReadingAudioTrack} from './reading-speech.js?v=20261029-auto1';
 import {readSpeechAutoFinish,saveSpeechAutoFinish,speechDiagnostic} from './reading-speech-mode.js?v=20261029-auto1';
+import {mountDictationTrial} from './reading-dictation-trial.js?v=20261029-dictation1';
 import {createMicCheck,clearMicPlayback} from './reading-mic-check.js?v=20260928-mic3';
 import {createMicPreference} from './reading-mic-preference.js?v=20260928-all1';
 import {classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
@@ -56,7 +57,7 @@ const errors={
  'too-long':'錄音超過時間，這次不計分，請重新讀一次詞語。',
  'no-speech':'沒有辨識到完整詞語，這次不計分，請重新讀一次。',
  'authentication_required':'登入已到期，這題不計分。請按「先休息」返回，再登入開始。',
- 'timeout':'辨識等候逾時，這次不計分，請確認網路後再試。',
+ 'timeout':'等候結束仍未收到完整辨識結果，這題不計分。請找老師查看「給大人」。',
  'network':'網路連線失敗，這次不計分，請確認網路後再試。'
 };
 const speechOptions={
@@ -234,5 +235,6 @@ window.addEventListener('pageshow',()=>{if(!$('play').hidden&&!locked&&!micBusy&
  $('leave').onclick=leave;$('stay').onclick=()=>$('leave-dialog').close();$('confirm-leave').onclick=()=>{$('leave-dialog').close();home();};
  $('again').onclick=()=>{if(hasUnsaved()){$('save-status').textContent='請先儲存這次紀錄，再開始下一回合。';return;}home();start();};
  $('retry-save').onclick=flushPending;
+mountDictationTrial({trigger:$('dictation-trial'),beforeOpen:cancel});
 mountFarmReturn();load();
 import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn} from './farm-learning.bundle.js?v=20261025-homegallery1';

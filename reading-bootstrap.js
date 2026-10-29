@@ -3,4 +3,4 @@ import {readingLaunchEnvironment,readingLaunchPlan,mountReadingLaunch} from './r
 const plan=readingLaunchPlan(location.href,readingLaunchEnvironment());
 if(plan.standalone){
  mountReadingLaunch(plan);await import('./class-context.js?v=20261023-exam1');
-}else await import('./reading.js?v=20261029-auto1');
+}else await import('./reading.js?v=20261029-dictation1');
