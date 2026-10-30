@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readSpeechAutoFinish,saveSpeechAutoFinish,speechDiagnostic} from '../reading-speech-mode.js';
+import {readSpeechAutoFinish,saveSpeechAutoFinish,speechDiagnostic,readReadingInputMode,saveReadingInputMode} from '../reading-speech-mode.js';
 test('automatic preference defaults off, persists on this browser and can be reversed',()=>{
  const data=new Map(),storage={getItem:k=>data.get(k),setItem:(k,v)=>data.set(k,v)};
  assert.equal(readSpeechAutoFinish(storage),false);assert(saveSpeechAutoFinish(true,storage));assert.equal(readSpeechAutoFinish(storage),true);
@@ -13,4 +13,14 @@ test('restricted browser storage never blocks recording mode selection',()=>{
 test('adult diagnostics distinguish no text from provisional text without exposing it',()=>{
  const text=speechDiagnostic('aborted',{autoFinish:true,capturing:true,stopRequested:false,resultEvents:2,hadInterim:true,transcript:'secret'});
  assert.match(text,/停頓後送出/);assert.match(text,/已按送出：否/);assert.match(text,/文字回報：2次/);assert(!text.includes('secret'));
+});
+
+test('keyboard choice is available without Apple detection, validates values and preserves native auto preference',()=>{
+ const data=new Map(),storage={getItem:k=>data.get(k),setItem:(k,v)=>data.set(k,v)};
+ assert.equal(readReadingInputMode(storage),'speech');saveSpeechAutoFinish(true,storage);
+ assert(saveReadingInputMode('keyboard',storage));assert.equal(readReadingInputMode(storage),'keyboard');assert.equal(readSpeechAutoFinish(storage),true);
+ assert.equal(saveReadingInputMode('invalid',storage),false);assert.equal(readReadingInputMode(storage),'keyboard');
+ saveReadingInputMode('speech',storage);assert.equal(readReadingInputMode(storage),'speech');
+ const denied={getItem(){throw Error();},setItem(){throw Error();}};
+ assert.equal(readReadingInputMode(denied),'speech');assert.equal(saveReadingInputMode('keyboard',denied),false);
 });

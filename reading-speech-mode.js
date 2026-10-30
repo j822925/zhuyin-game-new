@@ -1,5 +1,8 @@
 // Device/browser preference only: no student identifier, transcript or recording.
 const KEY='zhuyin-reading-auto-finish-v1';
+const INPUT_KEY='zhuyin-reading-input-mode-v1';
+export function readReadingInputMode(storage){try{return (storage??globalThis.localStorage)?.getItem(INPUT_KEY)==='keyboard'?'keyboard':'speech';}catch{return 'speech';}}
+export function saveReadingInputMode(value,storage){if(!['speech','keyboard'].includes(value))return false;try{(storage??globalThis.localStorage)?.setItem(INPUT_KEY,value);return true;}catch{return false;}}
 export function readSpeechAutoFinish(storage){try{return (storage??globalThis.localStorage)?.getItem(KEY)==='on';}catch{return false;}}
 export function saveSpeechAutoFinish(value,storage){try{(storage??globalThis.localStorage)?.setItem(KEY,value?'on':'off');return true;}catch{return false;}}
 export function speechDiagnostic(code,d={}){

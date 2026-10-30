@@ -10,7 +10,7 @@ const handler=source.slice(source.indexOf('function answer(text){'),source.index
 function harness(words){
  const nodes=new Map(),battles=[];
  const $=id=>{if(!nodes.has(id))nodes.set(id,{hidden:id==='next',disabled:false,textContent:''});return nodes.get(id);};
- const context=vm.createContext({$,readingAttemptDecision,Date,Math,locked:false,rows:[],deck:words.map(text=>READING_WORDS.find(w=>w.word===text)),questionStarted:Date.now(),readingBattle:{answer(...args){battles.push(args);}}});
+ const context=vm.createContext({$,inputMode:'speech',keyboard:{setEnabled(){},setVisible(){}},readingAttemptDecision,Date,Math,locked:false,rows:[],deck:words.map(text=>READING_WORDS.find(w=>w.word===text)),questionStarted:Date.now(),readingBattle:{answer(...args){battles.push(args);}}});
  vm.runInContext(handler,context);
  return {context,$,battles,answer(text){context.answer(text);}};
 }
