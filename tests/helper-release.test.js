@@ -25,7 +25,7 @@ test('the 64 display examples are original fixtures, not runtime answer override
 });
 test('release loads current audio, lazy dictionary and versioned data without game-server writes',()=>{
  const source=read('zhuyin-helper.js');
- assert.match(source,/little-teacher.js\?v=20261020-bo1/);assert.match(source,/audio-source.js\?v=20261020-bo1/);
+ assert.match(source,/little-teacher.js\?v=20261102-a1/);assert.match(source,/audio-source.js\?v=20261102-a1/);
  assert.match(source,/data\/syllables.json\?v=20261018-teacher1/);assert.match(source,/tone-questions.json\?v=20261011-teacher1/);
  assert.match(source,/function dictionary\(\)/);assert.match(source,/import\('\.\/reading-pronunciation-data/);
  assert.doesNotMatch(source,/localStorage|sessionStorage|workers\.dev|method:\s*['"]POST/);

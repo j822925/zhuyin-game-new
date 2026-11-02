@@ -30,11 +30,11 @@ test('legacy cache URLs, full classroom URLs and aliases refresh without rewriti
  for(const id of ['s383','s858','s892'])assert.equal(audioSource(catalog.find(q=>q.id===id).audio),'audio/teacher-20261018/'+id+'.mp3');
 });
 test('all public players and entry dependency chains use the new audio version',()=>{
- for(const f of ['app.js','little-teacher.js','exam-review.js','exam.js','online.js','multiplayer.js','notebook.js','teacher-audio.js','classroom-completion.js','classroom-reliable.js'])assert.match(read(f),/audio-source.js\?v=20261020-bo1/,f);
- for(const f of ['index.html','grade2.html'])assert.match(read(f),/game-boot.js\?v=20261020-bo1/);
+ for(const f of ['app.js','little-teacher.js','exam-review.js','exam.js','online.js','multiplayer.js','notebook.js','teacher-audio.js','classroom-completion.js','classroom-reliable.js'])assert.match(read(f),/audio-source.js\?v=20261102-a1/,f);
+ for(const f of ['index.html','grade2.html'])assert.match(read(f),/game-boot.js\?v=20261102-a1/);
  assert.ok(read('app.js').includes('tutorClips(spellingParts(q)).map(audioSource)'));
- assert.match(read('adventure-entry.js'),/adventure-play.bundle.js\?v=20261021-mapzoom1/);
- assert.match(read('adventure-preview.html'),/adventure-entry.bundle.js\?v=20261021-mapzoom1/);
+ assert.match(read('adventure-entry.js'),/adventure-play.bundle.js\?v=20261102-a1/);
+ assert.match(read('adventure-preview.html'),/adventure-entry.bundle.js\?v=20261102-a1/);
  assert.match(read('adventure-play.bundle.js'),/audio\/teacher-20261020\/L001.mp3/);
 });
 test('approved gentle standalone bo replaces legacy paths while preserving the original recording',()=>{

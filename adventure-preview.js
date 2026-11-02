@@ -13,7 +13,7 @@ import {ensureRoomShell,roomShell,roomShellDoorGeometry} from './home-room-shell
 import {createActionFeedback,completeAction} from './adventure-action-feedback.js';
 import {installReadingAid} from './adventure-reading-aid.js';
 import {createHomeRest} from './adventure-rest-ui.js';
-import {createExpedition} from './adventure-expedition-ui.js';
+import {createExpedition} from './adventure-expedition-ui.js?v=20261102-a1';
 import {GROVE_WORLD,GROVE_ENTRY,GROVE_EXIT,ISLAND_ENTRY,ISLAND_WORLD,islandWalkable,newEncounter,advanceEncounters,enemySpec,dismissEncounter,settleEncounter,modeIcon} from './adventure-exploration-model.js';
 import {ensureExplorationArt} from './adventure-exploration-art.js';
 import {createShop} from './adventure-cart-ui.js';
@@ -41,7 +41,7 @@ import {drawFurnitureThumb} from './adventure-room.js';
 import {createJoystick} from './adventure-joystick.js';
 import {WALK_CYCLE_DISTANCE,walkFrame} from './adventure-animation.js';
 import {poolFor,questionDeck,optionsFor} from './core.js';
-import {audioSource} from './audio-source.js';
+import {audioSource} from './audio-source.js?v=20261102-a1';
 import {loadWalker,drawWalker,walkerFrameCount} from './adventure-characters.js';
 import {GROVE_PRICE,unlockGrove,groveWalkable} from './adventure-model.js';
 import {farmWalkable,FARM_ENTRY} from './adventure-life-model.js';

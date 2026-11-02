@@ -1,5 +1,5 @@
 {
-  "version": "20261020-bo1",
+  "version": "20261102-a1",
   "variant": "clean",
   "pitchShiftSemitones": 0,
   "gameSpelling": 1312,
@@ -165,9 +165,10 @@
     {
       "id": "L022",
       "label": "ㄚ",
-      "path": "audio/teacher-20261018/L022.mp3",
-      "sha256": "de84e679af7ad40a7742b82f3be1fa6e9f62836e087a6f969c6d99d99f1326df",
-      "bytes": 15308
+      "path": "audio/teacher-20261102/L022.mp3",
+      "sha256": "49b26463b066b914ed293ea9e46fac778a2cb0b7fd9d74c7372565f275c696a7",
+      "bytes": 16748,
+      "revision": "Teacher supplied new standalone ㄚ, 2026-11-02. Gentle cleanup and level matching; original pitch and tempo."
     },
     {
       "id": "L023",

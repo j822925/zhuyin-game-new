@@ -12,7 +12,7 @@ import {ZONES,zoneById,MINIONS} from './data/adventure-zones.js';
 import {bossIsFriend,expeditionZone,enterLocalEncounter,playerStats,nextXP,enemyStats,enterExpedition,leaveExpedition,startExpeditionBattle,currentEnemy,answerExpedition,acknowledgeTransform,expeditionFood} from './adventure-expedition-model.js';
 import {encounterDeck} from './adventure-encounters.js';
 import {spellingChoices,spellingParts} from './core.js';
-import {audioSource} from './audio-source.js';
+import {audioSource} from './audio-source.js?v=20261102-a1';
 import {RAW_FOOD,RECIPES} from './adventure-food-model.js';
 export function createExpedition(api){
  const dialog=document.createElement('dialog');dialog.id='expedition';dialog.setAttribute('aria-label','區域遠征');document.body.append(dialog);

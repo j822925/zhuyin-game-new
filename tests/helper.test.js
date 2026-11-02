@@ -46,7 +46,7 @@ test('every playable catalog tutor clip resolves to a real teacher recording', a
   for (const q of index.values()) {
     for (const clip of tutorClips(q)) {
       const path = audioSource(clip);
-      assert.match(path, /^audio\/teacher-202610(?:18|20)\//, `${q.id}: ${path}`);
+      assert.match(path, /^audio\/teacher-(?:20261018|20261020|20261102)\//, `${q.id}: ${path}`);
       paths.add(path);
     }
   }

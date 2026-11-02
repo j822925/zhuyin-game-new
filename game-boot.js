@@ -1,6 +1,6 @@
 import {bootPreparation} from './preparation.js?v=20261023-zonemusic1';
 (async()=>{void bootPreparation().catch(()=>{});
-await import('./app.js?v=20261025-homegallery1');
+await import('./app.js?v=20261102-a1');
 await import('./forest-home-entry.js?v=20261023-zonemusic1');
 await import('./child-navigation.js?v=20260928-all1');
 await import('./reading-entry.js?v=20261025-homegallery1');

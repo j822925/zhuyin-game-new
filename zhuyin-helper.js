@@ -1,8 +1,8 @@
 import {INITIALS, FINALS, TONES, displaySound, createSoundIndex, boardQuestion, createWordLookup} from './helper-core.js?v=20261022-common1';
 import {createHelperWebAudioPlayer} from './helper-web-audio.js?v=20261022-audio1';
 import {createHelperSpeech} from './helper-speech.js?v=20261022-audio1';
-import {tutorClips} from './little-teacher.js?v=20261020-bo1';
-import {audioSource} from './audio-source.js?v=20261020-bo1';
+import {tutorClips} from './little-teacher.js?v=20261102-a1';
+import {audioSource} from './audio-source.js?v=20261102-a1';
 import {symbolPage, symbolPageSize, resizeSymbolPage} from './helper-pagination.js?v=20261022-pages1';
 import {HELPER_EXAMPLES} from './helper-examples.js?v=20261022-common1';
 

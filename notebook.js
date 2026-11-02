@@ -1,5 +1,5 @@
 import './asset-cache.js?v=20260928-all1';
-import {audioSource} from './audio-source.js?v=20261020-bo1';
+import {audioSource} from './audio-source.js?v=20261102-a1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
 import {createStudentAuth} from './student-auth.js?v=20261009-accounts1';
 import {classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
