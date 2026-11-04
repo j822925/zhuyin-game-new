@@ -23,7 +23,7 @@ script+=await bundle('annual-challenge.js','app');script+='})();';
 new Script(script,{filename:'annual-standalone.js'});
 const bootstrap=await readFile(resolve(root,'annual-challenge-bootstrap.js'),'utf8'),css=await readFile(resolve(root,'annual-challenge.css'),'utf8');
 let html=await readFile(resolve(root,'annual-challenge.html'),'utf8');
-html=html.replace('<html lang="zh-Hant">','<html lang="zh-Hant" data-annual-standalone="1">').replace('<link rel="stylesheet" href="annual-challenge.css">',()=>'<style>'+css+'</style>');
+html=html.replace('<html lang="zh-Hant">','<html lang="zh-Hant" data-annual-standalone="1">').replace(/<link rel="stylesheet" href="annual-challenge\.css(?:\?[^"\s]*)?">/,()=>'<style>'+css+'</style>');
 html=html.replace(/<script[^>]*src="annual-challenge-bootstrap\.js[^"\s]*"[^>]*><\/script>/,()=>'<script>'+bootstrap.replace(/<\/script/gi,'<\\/script')+'</script>\n<script>'+script.replace(/<\/script/gi,'<\\/script')+'</script>');
 html=html.replace('本機試玩 · 全部使用虛構帳號 · 尚未接上正式登入與雲端成績','單檔試玩 · 虛構帳號 · 進度只存此瀏覽器，未連接正式學生資料');
 html=html.replace('href="annual-challenge.html"','href="#"');
