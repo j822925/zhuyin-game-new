@@ -1,6 +1,6 @@
 // Fictional browser-only preview, never a production authentication implementation.
-import {createAnnualChallengeService} from './annual-challenge-service.js';
-import {STATIONS,active} from './annual-challenge-core.js';
+import {createAnnualChallengeService} from './annual-challenge-service.js?v=20261106-v2';
+import {STATIONS,active} from './annual-challenge-core.js?v=20261106-v2';
 export function createBrowserPreview({bank,assets={},storage=globalThis.localStorage,tabStorage=globalThis.sessionStorage,uuid=()=>crypto.randomUUID(),now=Date.now,year=new Date().getFullYear(),channel=null,lock=null}={}){
  const prefix='annual-review-local-v1:',listeners=new Set(),fallback=new Map(),sessions=new Map();let persistent=true,queue=Promise.resolve();
  const error=(message,status=400)=>{throw Object.assign(Error(message),{status});};
@@ -27,10 +27,13 @@ export function createBrowserPreview({bank,assets={},storage=globalThis.localSto
     const key=uuid(),who={role:input.role,classId:input.classId,seat:input.seat,station:input.station,stations:[input.station],id:'browser-preview-'+input.role};sessions.set(key,who);saveSessions();return {...who,token:key};
    }
    const who=sessions.get(token);if(!who||who.expiresAt&&who.expiresAt<=now())error('請重新登入或請關主重新解鎖',401);
-   if(op==='card')return service.card(who,Number(url.searchParams.get('year')),url.searchParams.get('seat'));
+   if(op==='config-read'){if(who.role==='student')error('請由老師查看活動設定',403);return service.config(who,Number(input?.year??url.searchParams.get('year')));}
+   if(op==='availability')return service.availability(who,Number(input?.year??url.searchParams.get('year')));
+   if(op==='roster'){if(who.role==='student')error('請由老師選擇學生',403);return {seats:['990001','990002','990003']};}
+   if(op==='card')return service.card(who,Number(url.searchParams.get('year')),url.searchParams.get('seat'),url.searchParams.get('mode')||undefined,url.searchParams.has('round')?Number(url.searchParams.get('round')):undefined);
    if(op==='unlock'){
     if(who.role!=='student'||!STATIONS.some(s=>s.id===input.station))error('請從孩子目前的闖關卡進入',403);
-    const event=await service.config(who,input.year);if(!active(event,now())||input.mode!==event.mode)error('活動模式已改變，請更新進度',403);
+    const {event}=await service.card(who,input.year,who.seat,input.mode);if(!active(event,now()))error('活動模式已改變，請更新進度',403);
     if(input.mode==='rehearsal'&&(input.rehearsalRound??1)!==event.rehearsalRound)error('預演已重置，請更新進度',403);
     const key=uuid(),grant={role:'teacher',classId:who.classId,seatScope:who.seat,station:input.station,stations:[input.station],yearScope:input.year,modeScope:input.mode,rehearsalRoundScope:input.mode==='rehearsal'?event.rehearsalRound:undefined,expiresAt:now()+600000,id:'browser-preview-handoff',handoff:true};sessions.set(key,{...grant,parentToken:token});return {...grant,token:key};
    }

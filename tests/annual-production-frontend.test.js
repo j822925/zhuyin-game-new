@@ -7,6 +7,20 @@ test('only the existing Worker admin path selects teacher authentication',()=>{
  assert.equal(productionContext({href:'https://j822925.github.io/zhuyin-game-new/annual-challenge.html?role=organizer'}).teacher,false);
  assert.equal(productionContext({href:ANNUAL_API_ORIGIN+'/annual-challenge.html?role=organizer'}).teacher,false);
 });
+test('student mode is fixed by its entrance URL and transport cannot drift to another mode',async()=>{
+ const rehearsal=productionContext({href:'https://j822925.github.io/zhuyin-game-new/annual-challenge.html?class=main'});
+ const official=productionContext({href:'https://j822925.github.io/zhuyin-game-new/annual-challenge.html?class=main&mode=official'});
+ assert.equal(rehearsal.mode,'rehearsal');assert.equal(official.mode,'official');
+ const sent=[],send=createAnnualTransport({context:official,getToken:async()=> 'test-token',fetchImpl:async(url,options)=>{sent.push(JSON.parse(options.body));return {ok:true,json:async()=>({ok:true})};}});
+ await send('card',{year:2026,mode:'rehearsal'});await send('command',{year:2026,mode:'rehearsal',type:'choose-stamp',stamp:'spell-fox'});
+ assert.deepEqual(sent.map(v=>v.mode),['official','official']);
+ await assert.rejects(send('config-read',{}),/關主/);await assert.rejects(send('roster',{}),/關主/);
+});
+test('saving one mode access preserves the independent map and never copies settings into the other mode',()=>{
+ const access={official:{enabled:false,allStudents:false,seats:['990001'],startsAt:null,endsAt:null}};
+ const out=annualRequestData('config',{year:2026,revision:9,mode:'official',access,actionCount:3});
+ assert.deepEqual(out,{year:2026,patch:{revision:9,mode:'official',actionCount:3,access}});assert.equal(out.patch.access.rehearsal,undefined);
+});
 test('student requests keep bearer credentials out of the URL and cannot choose a class or admin action',async()=>{
  const calls=[],send=createAnnualTransport({context:{origin:ANNUAL_API_ORIGIN,teacher:false,classId:'main'},getToken:()=>Promise.resolve('test-secret'),fetchImpl:async(url,options)=>{calls.push({url,options});return {ok:true,status:200,json:async()=>({ok:true})};}});
  await send('command',{classId:'grade2',seat:'990001',year:2026,type:'answer'});

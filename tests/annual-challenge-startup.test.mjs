@@ -33,4 +33,15 @@ function bootFixture(standalone){
 }
 test('opening the old HTML directly gives a working single-file link instead of a permanent spinner',()=>{const {app}=bootFixture(false);assert.equal(app.textContent,'');const section=app.children[0];assert.equal(section.children[0].textContent,'請開啟新版單檔試玩');assert.match(decodeURI(section.children.at(-1).href),/注音闖關單檔試玩.html$/);});
 test('startup timeout shows recovery, and a ready page is never replaced by the timeout',()=>{const first=bootFixture(true);first.timeout();assert.equal(first.app.children.length,1);const ready=bootFixture(true);ready.handlers.get('annual-ready')();ready.timeout();assert.equal(ready.app.children.length,0);});
-test('built review contains inline scripts and stamps with no external script/module/style requirement',async()=>{const html=await readFile(new URL('../../../output/annual-challenge-20261103/注音闖關單檔試玩.html',import.meta.url),'utf8');assert.doesNotMatch(html,/<script[^>]+src=/);assert.doesNotMatch(html,/<link[^>]+stylesheet/);const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];assert.equal(scripts.length,2);for(const [,source]of scripts)new vm.Script(source);assert.equal((html.match(/data:image\/webp;base64,/g)||[]).length,5);});
+test('built review contains inline scripts and all 25 stamps with no external script/module/style requirement',async()=>{const html=await readFile(new URL('../../../output/annual-challenge-20261103/注音闖關單檔試玩.html',import.meta.url),'utf8');assert.doesNotMatch(html,/<script[^>]+src=/);assert.doesNotMatch(html,/<link[^>]+stylesheet/);const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];assert.equal(scripts.length,2);for(const [,source]of scripts)new vm.Script(source);assert.equal((html.match(/data:image\/webp;base64,/g)||[]).length,25);});
+
+test('browser preview exposes explicit modes and teacher-only settings independently of the default mode',async()=>{
+ const adapter=createBrowserPreview({bank,storage:memory(),tabStorage:memory(),uuid,year:2026});
+ const org=await adapter.request('login',null,{role:'organizer',classId:'main'}),child=await adapter.request('login',null,{role:'student',classId:'main',seat:'990001'});
+ const config=await adapter.request('config-read?year=2026',org.token);assert.equal(config.access.rehearsal.enabled,true);assert.equal(config.access.official.enabled,false);assert.deepEqual((await adapter.request('roster',org.token)).seats,['990001','990002','990003']);
+ await assert.rejects(adapter.request('config-read?year=2026',child.token),/老師/);await assert.rejects(adapter.request('roster',child.token),/老師/);
+ await adapter.request('configure',org.token,{year:2026,revision:config.revision,mode:'official',enabled:true});
+ assert.equal((await adapter.request('card?year=2026&mode=rehearsal',child.token)).mode,'rehearsal');
+ const grant=await adapter.request('unlock',child.token,{year:2026,mode:'rehearsal',station:'read',rehearsalRound:1});assert.equal(grant.modeScope,'rehearsal');
+ assert.deepEqual(await adapter.request('availability?year=2026',child.token),{rehearsal:{enabled:true,allowed:true},official:{enabled:true,allowed:true}});
+});

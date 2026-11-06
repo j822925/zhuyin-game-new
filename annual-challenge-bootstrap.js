@@ -16,5 +16,5 @@
  window.addEventListener('error',failed,{once:true});window.addEventListener('unhandledrejection',failed,{once:true});
  if(document.documentElement.dataset.annualStandalone==='1')return;
  if(location.protocol==='file:'){failed();return;}
- import('./annual-challenge.js?v=20261104-pilot1').catch(failed);
+ import('./annual-challenge.js?v=20261106-v2').catch(failed);
 })();

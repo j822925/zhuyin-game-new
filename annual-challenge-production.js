@@ -3,7 +3,7 @@ export const ANNUAL_API_ORIGIN='https://zhuyin-api.j822925.workers.dev';
 export function productionContext(location){
  const url=new URL(location.href);
  const teacher=url.origin===ANNUAL_API_ORIGIN&&url.pathname.startsWith('/admin/annual/');
- return {teacher,classId:url.searchParams.get('class')||'main',origin:ANNUAL_API_ORIGIN};
+ return {teacher,classId:url.searchParams.get('class')||'main',mode:url.searchParams.get('mode')==='official'?'official':'rehearsal',origin:ANNUAL_API_ORIGIN};
 }
 export function annualQuestionKey(card,station){
  if(!card||!station)return '';
@@ -14,7 +14,7 @@ export function annualQuestionKey(card,station){
 export function annualScopeKey(card){return card?JSON.stringify([card.event?.classId,card.event?.year,card.mode,card.rehearsalRound,card.seat]):'';}
 export function annualRequestData(action,data){
  if(action!=='config')return data;
- const patch={};for(const name of ['revision','enabled','mode','startsAt','endsAt','actionCount'])if(Object.hasOwn(data,name))patch[name]=data[name];
+ const patch={};for(const name of ['revision','enabled','mode','startsAt','endsAt','actionCount','access'])if(Object.hasOwn(data,name))patch[name]=data[name];
  return {year:data.year,patch};
 }
 export function createStationPoller({read,eligible,onError=()=>{},setTimer=setTimeout,clearTimer=clearTimeout,interval=3000}){
@@ -45,13 +45,13 @@ export function annualTimeout(promise,timeoutMs,message,onTimeout=()=>{}){
 }
 export function createAnnualTransport({context,getToken,fetchImpl=globalThis.fetch,timeoutMs=12000,tokenTimeoutMs=12000}){
  return async function request(action,data={}){
-  if(!['session','card','command','config','reset-rehearsal'].includes(action))throw Error('找不到闖關操作');
-  if(!context.teacher&&['config','reset-rehearsal'].includes(action))throw Error('請由關主操作');
+  if(!['session','card','command','config','config-read','roster','availability','reset-rehearsal'].includes(action))throw Error('找不到闖關操作');
+  if(!context.teacher&&['config','config-read','roster','reset-rehearsal'].includes(action))throw Error('請由關主操作');
   if(context.teacher&&globalThis.location&&globalThis.location.origin!==context.origin)throw Error('請從原平台的關主入口登入');
   const token=await annualTimeout(Promise.resolve().then(getToken),tokenTimeoutMs,'登入確認逾時，請重試原本的操作；尚未確認的保存會保留。');if(!token)throw Object.assign(Error('請先登入'),{status:401});
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
   try{
-   const response=await fetchImpl(context.origin+(context.teacher?'/admin/annual/api/':'/annual/api/')+action,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({...data,classId:context.classId}),cache:'no-store',credentials:'omit',signal:controller.signal});
+   const response=await fetchImpl(context.origin+(context.teacher?'/admin/annual/api/':'/annual/api/')+action,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({...data,classId:context.classId,mode:context.mode||'rehearsal'}),cache:'no-store',credentials:'omit',signal:controller.signal});
    let out;try{out=await response.json();}catch{throw Error('服務暫時無法回應，請稍後重試');}
    if(!response.ok||out?.error)throw Object.assign(Error(messages[out?.error]||out?.error||'無法讀取，請重試'),{status:response.status,code:out?.error});
    return out;
@@ -91,13 +91,14 @@ export async function createProductionAdapter({location=globalThis.location,year
  async function rejectSession(error){if(context.teacher||error.status===401)await logout();else studentSeat='';}
  async function established(){
   const out=await transport('session',{year,...(!context.teacher?{seat:studentSeat}:{})});
-  if(context.teacher){if(out.role!=='organizer'||!Array.isArray(out.seats)||!out.seats.length||out.seats.some(s=>typeof s!=='string'||!/^\d{6}$/.test(s)))throw Error('關主帳號尚未準備好');}
+  if(context.teacher){if(out.role!=='organizer'||!Array.isArray(out.seats)||out.seats.some(s=>typeof s!=='string'||!/^\d{6}$/.test(s)))throw Error('關主帳號尚未準備好');}
   else if(out.role!=='student'||out.seat!==studentSeat)throw Error('學生登入資料不一致');
   if(out.classId!==context.classId)throw Error('班級資料不一致');
   return out;
  }
  return {
   context,teacher:context.teacher,
+  setMode(mode){if(!context.teacher||!['rehearsal','official'].includes(mode))throw Error('無法切換闖關模式');context.mode=mode;},
   async restore(){if(context.teacher)return null;studentSeat=studentAuth.currentSeat();if(!studentSeat)return null;try{return await established();}catch(error){await rejectSession(error);throw error;}},
   async login({seat}={}){
    const started=epoch;

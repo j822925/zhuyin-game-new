@@ -18,9 +18,9 @@ const send=(res,status,body)=>{res.writeHead(status,headers);res.end(JSON.string
 const admin={role:'organizer',classId:'main',id:'preview-organizer'};
 // First launch opens only the isolated fictional event for convenient review.
 if(!saved['main:2026:event'])await service.configure(admin,2026,{revision:0,enabled:true,mode:'rehearsal'});
-else if(!saved['main:2026:event'].mode)await service.configure(admin,2026,{revision:saved['main:2026:event'].revision,mode:'rehearsal',listenCount:10,spellCount:10});
+else if(!saved['main:2026:event'].mode)await service.configure(admin,2026,{revision:saved['main:2026:event'].revision,mode:'rehearsal',listenCount:10,spellCount:5});
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.webp':'image/webp','.mp3':'audio/mpeg'};
-const allowed=new Set(['annual-challenge.html','annual-challenge.css','annual-challenge.js','annual-challenge-bootstrap.js','annual-challenge-core.js','annual-challenge-bank.js']);
+const allowed=new Set(['annual-challenge.html','annual-challenge.css','annual-challenge.js','annual-challenge-bootstrap.js','annual-challenge-core.js','annual-challenge-bank.js','annual-challenge-stamps.js']);
 async function body(req){let text='';for await(const chunk of req){text+=chunk;if(text.length>300000)throw Object.assign(Error('資料過大'),{status:413});}return JSON.parse(text||'{}');}
 function notify(who){for(const stream of streams)if(stream.classId===who.classId)stream.res.write('data: changed\n\n');}
 const server=http.createServer(async(req,res)=>{
@@ -38,12 +38,16 @@ const server=http.createServer(async(req,res)=>{
    }
    const bearer=req.headers.authorization?.replace(/^Bearer /,''),who=sessions.get(bearer);if(!who||who.expiresAt&&who.expiresAt<=Date.now())return send(res,401,{error:'請重新登入或請關主重新解鎖'});
    if(op==='updates'&&req.method==='GET'){res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-store',Connection:'keep-alive'});res.write('data: ready\n\n');const stream={res,classId:who.classId};streams.add(stream);req.on('close',()=>streams.delete(stream));return;}
-   if(op==='card'&&req.method==='GET'){send(res,200,await service.card(who,Number(url.searchParams.get('year')),url.searchParams.get('seat')));return;}
+   if(op==='config-read'&&req.method==='GET'){if(who.role==='student')return send(res,403,{error:'請由老師查看活動設定'});send(res,200,await service.config(who,Number(url.searchParams.get('year'))));return;}
+   if(op==='availability'&&req.method==='GET'){send(res,200,await service.availability(who,Number(url.searchParams.get('year'))));return;}
+   if(op==='roster'&&req.method==='GET'){if(who.role==='student')return send(res,403,{error:'請由老師選擇學生'});send(res,200,{seats:['990001','990002','990003']});return;}
+   if(op==='card'&&req.method==='GET'){send(res,200,await service.card(who,Number(url.searchParams.get('year')),url.searchParams.get('seat'),url.searchParams.get('mode')||undefined,url.searchParams.has('round')?Number(url.searchParams.get('round')):undefined));return;}
    if(req.method!=='POST')return send(res,405,{error:'不支援此操作'});
    const input=await body(req);
+   if(op==='config-read'){if(who.role==='student')return send(res,403,{error:'請由老師查看活動設定'});send(res,200,await service.config(who,input.year));return;}
    if(op==='unlock'){
     if(who.role!=='student'||!STATIONS.some(s=>s.id===input.station))return send(res,403,{error:'請從孩子目前的闖關卡進入'});
-    const event=await service.config(who,input.year);if(!active(event)||input.mode!==event.mode)return send(res,403,{error:'活動模式已改變，請更新進度'});
+    const {event}=await service.card(who,input.year,who.seat,input.mode);if(!active(event))return send(res,403,{error:'活動模式已改變，請更新進度'});
     if(input.mode==='rehearsal'&&(input.rehearsalRound??1)!==event.rehearsalRound)return send(res,403,{error:'預演已重置，請更新進度'});
     const token=randomUUID(),grant={role:'teacher',classId:who.classId,seatScope:who.seat,station:input.station,stations:[input.station],yearScope:input.year,modeScope:input.mode,rehearsalRoundScope:input.mode==='rehearsal'?event.rehearsalRound:undefined,expiresAt:Date.now()+600000,id:'preview-handoff-'+input.station,handoff:true};sessions.set(token,{...grant,parentToken:bearer});send(res,200,{...grant,token});return;
    }

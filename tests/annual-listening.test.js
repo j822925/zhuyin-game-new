@@ -29,7 +29,7 @@ test('2/1/0 results sum to twenty at most and editing/clearing replaces results 
  await rate(3,'pass');await rate(3,'hint');let a=(await s.card(teacher,2026,'990001')).attempts.listen;assert.equal(listeningSummary(a).points,1);assert.equal(a.rounds[3].result.points,1);
  await rate(3,'fail');assert.equal(listeningSummary((await s.card(teacher,2026,'990001')).attempts.listen).assessed,1);await rate(3,null);assert.equal(listeningSummary((await s.card(teacher,2026,'990001')).attempts.listen).assessed,0);
  for(let i=0;i<10;i++)await rate(i,i<6?'pass':i<9?'hint':'fail');
- a=(await s.card(teacher,2026,'990001')).attempts.listen;assert.deepEqual(listeningSummary(a),{assessed:10,points:15,pass:6,hint:3,fail:1,remaining:0});
+ a=(await s.card(teacher,2026,'990001')).attempts.listen;assert.deepEqual(listeningSummary(a),{assessed:10,rawPoints:15,points:15,pass:6,hint:3,fail:1,total:10,remaining:0});
  await assert.rejects(s.command(teacher,2026,'990001','listen',payload('award',rev,{award:{...award,score:20}})),/加總/);
  const save=payload('award',rev,{award});await s.command(teacher,2026,'990001','listen',save);await s.command(teacher,2026,'990001','listen',save);
  assert.equal((await s.card(child,2026)).attempts.listen.award.score,15);

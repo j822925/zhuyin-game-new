@@ -11,7 +11,7 @@ function setup(){return createAnnualChallengeService({bank,store:createMemorySto
 async function finish(s,seat,mode,rehearsalRound,score){let rev=(await s.command(org,2026,seat,'read',cmd('start',0,{mode,rehearsalRound}))).revision;rev=(await s.command({...child,seat},2026,seat,'read',cmd('draw',rev,{mode,rehearsalRound}))).revision;await s.command(org,2026,seat,'read',cmd('award',rev,{mode,rehearsalRound,award:{...award,score}}));}
 test('whole-class reset starts new blank rehearsal cards while preserving old rounds and official scores',async()=>{
  const s=setup();await s.configure(org,2026,{revision:0,enabled:true});await finish(s,'990001','official',null,20);
- await s.configure(org,2026,{revision:1,mode:'rehearsal'});await finish(s,'990001','rehearsal',1,18);await finish(s,'990002','rehearsal',1,16);
+ await s.configure(org,2026,{revision:1,mode:'rehearsal',enabled:true});await finish(s,'990001','rehearsal',1,18);await finish(s,'990002','rehearsal',1,16);
  const reset={revision:2,requestId:'reset-class-once'};await s.resetRehearsal(org,2026,reset);await s.resetRehearsal(org,2026,reset);
  for(const seat of ['990001','990002']){const card=await s.card({...child,seat},2026);assert.equal(card.rehearsalRound,2);assert.deepEqual(card.attempts,{});}
  assert.equal((await s.card(child,2026,undefined,'rehearsal',1)).attempts.read.award.score,18);
@@ -33,7 +33,7 @@ test('stale rehearsal requests and temporary teacher grants cannot write into a 
 test('only an organizer in an open rehearsal can reset, with revision and retry protection',async()=>{
  const s=setup();await assert.rejects(s.resetRehearsal(child,2026,{revision:0,requestId:'reset-not-teacher'}),/只有活動管理/);await assert.rejects(s.resetRehearsal(teacher,2026,{revision:0,requestId:'reset-not-admin'}),/只有活動管理/);
  await assert.rejects(s.resetRehearsal(org,2026,{revision:0,requestId:'reset-closed-event'}),/先開啟預演/);await s.configure(org,2026,{revision:0,enabled:true});
- await assert.rejects(s.resetRehearsal(org,2026,{revision:1,requestId:'reset-in-official'}),/先開啟預演/);await s.configure(org,2026,{revision:1,mode:'rehearsal'});
+ await assert.rejects(s.resetRehearsal(org,2026,{revision:1,requestId:'reset-in-official'}),/先開啟預演/);await s.configure(org,2026,{revision:1,mode:'rehearsal',enabled:true});
  await assert.rejects(s.resetRehearsal(org,2026,{revision:1,requestId:'reset-stale-event'}),/已更新/);
  await s.resetRehearsal(org,2026,{revision:2,requestId:'reset-valid-retry'});await assert.rejects(s.resetRehearsal(org,2026,{revision:1,requestId:'reset-valid-retry'}),/重試內容不同/);assert.equal((await s.config(org,2026)).rehearsalRound,2);
 });

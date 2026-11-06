@@ -1,8 +1,8 @@
 // A single familiar entrance. Never shown to signed-in students in normal mode.
 if(new URLSearchParams(location.search).get('demo')==='1'){
  const panel=document.createElement('section');panel.id='teacher-testing-hub';panel.className='teacher-testing-hub';
- panel.innerHTML=`<h2>🧪 教師試玩中心</h2><p>所有試玩集中在這裡。全班問答使用本班帳號，錯題存入教師後台；年度注音闖關限指定帳號預演，其餘測試使用獨立試玩帳號。下方原有遊戲仍可繼續試玩。</p><div class="teacher-test-grid">
- <a href="https://zhuyin-api.j822925.workers.dev/admin/annual/annual-challenge.html?class=main"><b>🏝️ 年度注音闖關・關主台</b><span>沿用教師 Google 登入，目前只開放指定學生預演。關主登入一次，連續選題、評分、蓋章與簽名；預演可開始新一輪。</span></a>
+ panel.innerHTML=`<h2>🧪 教師試玩中心</h2><p>所有試玩集中在這裡。全班問答使用本班帳號，錯題存入教師後台；年度注音闖關由老師分別設定預演與正式開放對象，其餘測試使用獨立試玩帳號。下方原有遊戲仍可繼續試玩。</p><div class="teacher-test-grid">
+ <a href="https://zhuyin-api.j822925.workers.dev/admin/annual/annual-challenge.html?class=main"><b>🏝️ 年度注音闖關・關主台</b><span>沿用教師 Google 登入，分別設定預演／正式的開放學生。關主可選題數、追加題目、評分與專屬簽章；預演可開始新一輪。</span></a>
  <a href="https://zhuyin-api.j822925.workers.dev/trial/classroom.html?role=teacher&from=admin"><b>🌟 老師主持・全班問答</b><span>老師 Google 登入、選範圍並開房間。孩子從正式首頁登入、直接選活動加入。可比速度、重播、揭曉；最後只公布前五名，錯題存到各班後台。完成活動依名次發星星，之後訂正錯題；不計入正式小考成績。</span></a>
  <a href="classroom.html"><b>🎒 全班問答・學生加入</b><span>用平常的座號、密碼登入遊戲，直接選本班活動，不用填房號或再登入一次。題目預設由老師統一播放，孩子不必下載，直接等老師開始。</span></a>
  <a href="https://zhuyin-api.j822925.workers.dev/trial/admin/"><b>👩‍🏫 指定學生重考</b><span>登入測試後台 → 建立小考 → 指定 901 或 902 重考。保留原題，獎勵不重複發放。</span></a>
