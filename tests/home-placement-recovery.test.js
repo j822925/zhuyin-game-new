@@ -59,7 +59,7 @@ test('realignment carries existing tabletop contents, is idempotent and never gr
  }
  assert.equal(restored.kitchenLayout.length,4);
  assert.deepEqual(sanitizeState(restored).kitchenLayout,restored.kitchenLayout);
- assert.deepEqual(restored.furnitureOwned,state.furnitureOwned);
+ assert.deepEqual([...restored.furnitureOwned].sort(),[...state.furnitureOwned].sort());
  const unowned=freshState();unowned.kitchenLayout=[host];assert(!sanitizeState(unowned).kitchenLayout.some(item=>item.id===host.id));
 });
 

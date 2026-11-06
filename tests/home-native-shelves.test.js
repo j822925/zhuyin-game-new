@@ -38,7 +38,7 @@ test('legacy shelf coordinates are reattached to matching levels without losing 
  for(const style of styles)for(const role of ['bookcase','display-cabinet'])for(const side of ['left','right']){
   const f=find(`collection-${style}-${role}`),host={id:f.id,...floorPosition({x:side==='left'?200:1080,y:490},f,{area:'room'})},s=owned();
   s.layout=[host,...objects.map((id,i)=>({id,x:123,y:456,on:host.id,surface:i,offsetX:i*5-5,facing:i===0?'front':side}))];
-  const saved=sanitizeState(s);assert.deepEqual(saved.furnitureOwned,s.furnitureOwned);assert.equal(saved.layout.length,4);
+  const saved=sanitizeState(s);assert.deepEqual([...saved.furnitureOwned].sort(),[...s.furnitureOwned].sort());assert.equal(saved.layout.length,4);
   for(let i=0;i<3;i++){const p=saved.layout.find(p=>p.id===objects[i]);assert.equal(p.surface,i);assert.equal(p.offsetX,i*5-5);assert.equal(p.facing,i===0?'front':side);}
   assert.deepEqual(sanitizeState(saved).layout,saved.layout);
   const front=furnitureSurfaces(f,{id:f.id,x:640,y:450,facing:'front',mount:'back'});

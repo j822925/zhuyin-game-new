@@ -11,12 +11,12 @@ import {drawDoll} from './adventure-art.js?v=20261010-light2';
 import {WALLPAPERS,ensureWallpaperThumbs} from './adventure-wallpaper.js';
 import {lifeStamp} from './adventure-life-art.js';
 import {cartItem,shopIsOpen,quoteCart,checkoutCart} from './adventure-cart-model.js';
-import {inventoryItems,ownedQuantity,quoteSale,checkoutSale,TRADE_KINDS} from './adventure-trade-inventory.js';
+import {inventoryItems,ownedQuantity,quoteSale,checkoutSale,TRADE_KINDS,filterShopItems} from './adventure-trade-inventory.js';
 import {checkoutSound} from './adventure-shop-sound.js';
 import {HOME_STYLES} from './data/home-furniture.js';
 export function createShop(api){
  const dialog=document.createElement('dialog');dialog.id='island-shop';dialog.className='cart-shop';dialog.setAttribute('aria-label','島上商店');document.body.append(dialog);
- let active=null,category='furniture',style='daisy',version=0,mode='buy',baskets={buy:[],sell:[]},filter='all',stage='welcome',notice='',committing=false,onReturn=null,observers=[];
+ let active=null,category='furniture',style='daisy',version=0,mode='buy',baskets={buy:[],sell:[]},filter='all',goodsQuery='',goodsShow='all',stage='welcome',notice='',committing=false,onReturn=null,observers=[];
  const s=()=>api.state(),basket=()=>baskets[mode],near=()=>active&&(active.zone?s().expedition.active===active.zone&&!!s().expedition.runs[active.zone]&&!s().expedition.runs[active.zone].battle:api.scene()?.area==='island'&&Math.hypot(api.scene().player.x-active.entry.x,api.scene().player.y-active.entry.y)<100);
  const room=createShopRoom({...api,name:()=>active?.name||'商店',leave:close,trade:()=>{stage='browse';notice='';void render();}});
  function disconnect(){observers.forEach(o=>o.disconnect());observers=[];}
@@ -30,7 +30,7 @@ export function createShop(api){
   }catch{Object.assign(s(),before);fail('💾 尚未儲存，星幣和物品都沒有變動，請再試一次');return false;}finally{committing=false;}
   api.changed();checkoutSound(true);return true;
  }
- function resetTrade(){baskets={buy:[],sell:[]};mode='buy';filter='all';notice='';}
+ function resetTrade(){baskets={buy:[],sell:[]};mode='buy';filter='all';goodsQuery='';goodsShow='all';notice='';}
  async function open(id){if(api.blocked())return;active=DESTINATIONS.find(x=>x.id===id&&x.kind==='shop');if(!active||!near()){active=null;return;}api.stop();resetTrade();stage=shopIsOpen(s(),id)?'room':'welcome';category=id==='furniture'?'furniture':id==='clothes'?'clothes':'seeds';dialog.showModal();await render(true);}
  async function openRegion(id,returned){if(dialog.open)return false;const shop=zoneShop(id);if(!shop||s().expedition.active!==shop.zone||!s().expedition.runs[shop.zone]||s().expedition.runs[shop.zone].battle)return false;active=shop;onReturn=returned;api.stop();resetTrade();stage='room';category='regional';dialog.showModal();await render(true);return true;}
  function btn(text,fn,cls=''){const b=document.createElement('button');b.type='button';b.textContent=text;b.className=cls;b.onclick=fn;return b;}
@@ -64,7 +64,7 @@ export function createShop(api){
  }
  function grid(host,list,inventory,token){
   const grid=document.createElement('div');grid.className='trade-grid';grid.dataset.scroll=inventory?'inventory':'goods';host.append(grid);
-  if(!list.length){grid.innerHTML='<p class="cart-empty">這個分類目前沒有物品</p>';return;}
+  if(!list.length){grid.innerHTML='<p class="cart-empty">'+(inventory?'這個分類目前沒有物品':'沒有符合條件的商品，試試其他字詞或改選全部商品。')+'</p>';return;}
   const observer=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){observer.unobserve(e.target);void draw(e.target,list[Number(e.target.dataset.index)]);}}, {root:grid,rootMargin:'80px'});observers.push(observer);
   async function draw(b,item){const cv=b.querySelector('canvas');if(!cv)return;try{
    if(item.kind==='furniture')await ensureHomeArt(api.art(),[item.atlas].filter(Boolean));
@@ -87,6 +87,7 @@ export function createShop(api){
    if(!inventory&&roleLocked)b.querySelector('small').textContent='🔒 先解鎖'+({fox:'橘子狐',bear:'蜂蜜熊',rabbit:'棉花兔'}[item.character]||'夥伴');
    b.title=item.name+' · 持有 '+count+(inventory?' · '+(item.sellReason||'賣出單價 '+item.sellPrice):' · 單價 '+item.price);grid.append(b);observer.observe(b);
   });
+  return observer;
  }
  async function render(reset=false){
   if(!active||!dialog.open)return;
@@ -112,7 +113,20 @@ export function createShop(api){
   const inv=inventoryItems(s(),active.id);if(filter!=='all'&&!inv.some(v=>v.kind===filter))filter='all';if(new Set(inv.map(v=>v.kind)).size>1)for(const [id,label]of Object.entries(TRADE_KINDS))if(id==='all'||inv.some(v=>v.kind===id))invTabs.append(btn(label,()=>{filter=id;void render();},filter===id?'primary':''));
   if(filter!=='all'&&!inv.some(v=>v.kind===filter))filter='all';
   const goods=items(),kinds=new Set(goods.map(v=>v.kind));body.dataset.sparse=String(goods.length<=3);
-  grid(merchant,goods,false,token);grid(owned,inv.filter(v=>filter==='all'||v.kind===filter).sort((a,b)=>Number(kinds.has(b.kind))-Number(kinds.has(a.kind))),true,token);
+  const search=document.createElement('div');search.className='trade-search';
+  const input=document.createElement('input');input.type='search';input.placeholder='搜尋目前商品';input.ariaLabel='搜尋目前商品';input.value=goodsQuery;input.maxLength=60;
+  const select=document.createElement('select');select.ariaLabel='商品顯示條件';
+  for(const [value,label]of [['all','全部商品'],['unowned','還沒擁有'],['affordable','買得起']]){const option=document.createElement('option');option.value=value;option.textContent=label;select.append(option);}select.value=goodsShow;search.append(input,select);merchant.append(search);
+  let goodsObserver=null;
+  const refreshGoods=()=>{
+   goodsObserver?.disconnect();observers=observers.filter(o=>o!==goodsObserver);merchant.querySelector('.trade-grid')?.remove();
+   goodsObserver=grid(merchant,filterShopItems(s(),goods,{query:goodsQuery,show:goodsShow}),false,token);
+  };
+  // Keep the same input node while typing so iPad Chinese composition and focus survive.
+  input.addEventListener('input',e=>{if(e.isComposing)return;goodsQuery=input.value;refreshGoods();});
+  input.addEventListener('compositionend',()=>{goodsQuery=input.value;refreshGoods();});
+  select.addEventListener('change',()=>{goodsShow=select.value;refreshGoods();});
+  refreshGoods();grid(owned,inv.filter(v=>filter==='all'||v.kind===filter).sort((a,b)=>Number(kinds.has(b.kind))-Number(kinds.has(a.kind))),true,token);
   for(const e of dialog.querySelectorAll('[data-scroll]'))if(scrolls[e.dataset.scroll]){e.scrollTop=scrolls[e.dataset.scroll][0];e.scrollLeft=scrolls[e.dataset.scroll][1];}
  }
  return {open,openRegion,close,get busy(){return dialog.open;}};

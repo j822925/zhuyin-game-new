@@ -12,7 +12,6 @@ import {tutorClips} from '../little-teacher.js';
 const source=file=>readFileSync(new URL('../'+file,import.meta.url),'utf8');
 const decode=text=>text.replace(/\\u\{([0-9a-f]+)\}|\\u([0-9a-f]{4})/gi,(_,a,b)=>String.fromCodePoint(parseInt(a||b,16)));
 const memory=()=>{const map=new Map();return {getItem:key=>map.get(key)||null,setItem:(key,value)=>map.set(key,value)};};
-const version='20261025-homegallery1';
 const directionalLayout=[{id:'spatial-moon-corner-kitchen',x:955,y:500,facing:'right',mount:'corner-right'},{id:'collection-moon-dining-chair',x:650,y:560,facing:'back'}];
 
 test('all four shipped bundles carry the complete new crop, fish and food catalogs',()=>{
@@ -23,17 +22,18 @@ test('all four shipped bundles carry the complete new crop, fish and food catalo
 });
 
 test('home, farm, Safari and shortcut entry chains refresh the collection reading bundle',()=>{
- const refs={
-  'index.html':['game-boot.js'],'grade2.html':['game-boot.js'],
-  'game-boot.js':['app.js','reading-entry.js'],'reading-entry.js':['reading-launch.js'],
-  'reading-shortcut.html':['reading-launch.js'],'reading.html':['reading-bootstrap.js'],
-  'reading-bootstrap.js':['reading-launch.js','reading.js'],
-  'reading.js':['farm-learning.bundle.js','reading-farm.bundle.js'],
-  'app.js':['farm-learning.bundle.js'],'tone.js':['farm-learning.bundle.js'],
-  'adventure-preview.html':['adventure-entry.bundle.js'],'adventure-entry.js':['adventure-play.bundle.js'],
- };
- for(const [file,imports]of Object.entries(refs))for(const name of imports){
-  const expected=['adventure-entry.bundle.js','adventure-play.bundle.js'].includes(name)?'20261025-toilet1':version;
+ // Each chain advances independently; preserve newer annual, audio and reading releases.
+ const refs=[
+  ['index.html','game-boot.js','20261106-annual2'],['grade2.html','game-boot.js','20261102-a1'],
+  ['game-boot.js','app.js','20261102-a1'],['game-boot.js','reading-entry.js','20261025-homegallery1'],
+  ['reading-entry.js','reading-launch.js','20261025-homegallery1'],['reading-shortcut.html','reading-launch.js','20261025-homegallery1'],
+  ['reading.html','reading-bootstrap.js','20261030-keyboard1'],['reading-bootstrap.js','reading-launch.js','20261025-homegallery1'],
+  ['reading-bootstrap.js','reading.js','20261030-keyboard1'],['reading.js','farm-learning.bundle.js','20261025-homegallery1'],
+  ['reading.js','reading-farm.bundle.js','20261025-homegallery1'],['app.js','farm-learning.bundle.js','20261025-homegallery1'],
+  ['tone.js','farm-learning.bundle.js','20261025-homegallery1'],
+  ['adventure-preview.html','adventure-entry.bundle.js','20261106-review1'],['adventure-entry.js','adventure-play.bundle.js','20261106-review1'],
+ ];
+ for(const [file,name,expected]of refs){
   assert(source(file).includes(name+'?v='+expected),file+' -> '+name);
  }
  const ipad={userAgent:'iPad CPU OS 17_0 Version/17.0 Safari/605.1',standalone:true};
@@ -77,6 +77,7 @@ test('collection release retains the approved single bo audio and helper audio m
  const old='audio/processed-20260925/s_1.mp3',fresh='audio/teacher-20261020/L001.mp3';
  assert.equal(audioSource(old),fresh);assert(existsSync(new URL('../'+fresh,import.meta.url)));
  const clips=tutorClips({initial:'ㄅ',final:'ㄠ',tone:1,audio:'audio/syllable-clear/s1.wav'}).map(audioSource);assert.equal(clips[0],fresh);
- assert(source('app.js').includes("./audio-source.js?v=20261020-bo1"));assert(source('app.js').includes("./little-teacher.js?v=20261020-bo1"));
+ assert(source('app.js').includes("./audio-source.js?v=20261102-a1"));assert(source('app.js').includes("./little-teacher.js?v=20261102-a1"));
+ assert.equal(audioSource('audio/teacher-20261018/L022.mp3'),'audio/teacher-20261102/L022.mp3','keep the later approved a retake alongside bo');
  assert(source('little-teacher.js').includes('voice.src=audioSource(clips[step])'));
 });

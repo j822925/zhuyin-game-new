@@ -21,16 +21,15 @@ test('all zone audio is verified, compact and included in optional pre-class pre
  }
 });
 test('shipped adventure and preparation cache chains select the new build without purging existing media',()=>{
- const version='20261023-zonemusic1';
- const refs={
-  'index.html':['game-boot.js'],'grade2.html':['game-boot.js'],
-  'game-boot.js':['app.js','preparation.js','forest-home-entry.js'],
-  'app.js':['preparation.js'],'preparation.js':['data/adventure-preload.js'],
-  'forest-home-entry.js':['adventure-preview.html'],
-  'adventure-preview.html':['adventure-entry.bundle.js'],'adventure-entry.js':['adventure-play.bundle.js'],
- };
- for(const [file,targets]of Object.entries(refs))for(const target of targets){const expected=['adventure-entry.bundle.js','adventure-play.bundle.js'].includes(target)?'20261025-toilet1':['adventure-entry.bundle.js','adventure-play.bundle.js','game-boot.js','app.js'].includes(target)?'20261025-homegallery1':version;assert(read(file).includes(target+'?v='+expected),file+' -> '+target);}
- assert(read('adventure-entry.bundle.js').includes('adventure-play.bundle.js?v=20261025-toilet1'));
+ const refs=[
+  ['index.html','game-boot.js','20261106-annual2'],['grade2.html','game-boot.js','20261102-a1'],
+  ['game-boot.js','app.js','20261102-a1'],['game-boot.js','preparation.js','20261023-zonemusic1'],
+  ['game-boot.js','forest-home-entry.js','20261023-zonemusic1'],['app.js','preparation.js','20261023-zonemusic1'],
+  ['preparation.js','data/adventure-preload.js','20261023-zonemusic1'],['forest-home-entry.js','adventure-preview.html','20261023-zonemusic1'],
+  ['adventure-preview.html','adventure-entry.bundle.js','20261106-review1'],['adventure-entry.js','adventure-play.bundle.js','20261106-review1'],
+ ];
+ for(const [file,target,expected]of refs)assert(read(file).includes(target+'?v='+expected),file+' -> '+target);
+ assert(read('adventure-entry.bundle.js').includes('adventure-play.bundle.js?v=20261106-review1'));
  const bundle=read('adventure-play.bundle.js');
  assert(bundle.includes('assets/music/zone-'));
  for(const id of Object.keys(ZONE_MUSIC_TRACKS))assert(bundle.includes('"'+id+'"'),id);

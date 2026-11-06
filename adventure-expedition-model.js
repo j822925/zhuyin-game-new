@@ -7,6 +7,11 @@ const integer=(n,min,max,fallback=min)=>Number.isSafeInteger(n)?Math.max(min,Mat
 export const playerStats=l=>({hp:40+6*(l-1),attack:10+2*(l-1),defense:3+l-1});
 export const monsterXP=l=>8+2*(l-1);
 export const nextXP=l=>l>=30?0:monsterXP(l)*(l<=5?4:l<=10?6:l<=15?8:l<=20?10:l<=25?12:16);
+export function expeditionSupplyHint(state,zone,{boss=false}={}){
+ const e=state.expedition,b=e.runs[e.active]?.battle;
+ if(e.hp<=playerStats(e.level).hp*.5)return b&&b.phase!=='attack'?'♥ 生命偏低，防禦後可打開 🎒 吃料理。':'♥ 生命偏低，可以打開 🎒 吃料理。';
+ return boss&&zone.index>=6?'🎒 長途切磋記得帶料理，防禦答對仍會受到少量傷害。':'';
+}
 // Each guardian offers its regional souvenir; duplicate furniture stays unique.
 export const BOSS_GIFT_CHANCE=2/3;
 export const bossIsFriend=(state,id)=>!!state.expedition.cards[id]?.wins;

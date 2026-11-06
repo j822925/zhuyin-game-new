@@ -55,7 +55,7 @@ test('legacy 180-unit side rows reflow all three appliances, preserve directions
   const s=owned(),host={id:'collection-moon-kitchen-base',...floorPosition({x:side==='left'?200:1080,y:490},item('collection-moon-kitchen-base'),{area:'kitchen'})};
   s.kitchenLayout=[host,...[['collection-port-3',-55],['collection-port-4',17.5],['collection-port-8',72.5]].map(([id,offsetX])=>({id,x:0,y:0,on:host.id,surface:0,offsetX,facing:side}))];
   const restored=sanitizeState(s),children=restored.kitchenLayout.filter(p=>p.on);
-  assert.equal(children.length,3);assert.deepEqual(restored.furnitureOwned,s.furnitureOwned);
+  assert.equal(children.length,3);assert.deepEqual([...restored.furnitureOwned].sort(),[...s.furnitureOwned].sort());
   for(const p of children){assert.equal(p.facing,side);assert(attachedPosition(p,restored.kitchenLayout,FURNITURE));assert(Math.abs(p.offsetX)<90);}
   assert.deepEqual(byId(sanitizeState(restored).kitchenLayout),byId(restored.kitchenLayout));
  }

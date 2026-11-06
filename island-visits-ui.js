@@ -22,6 +22,11 @@ import {ensureSocialArt,drawSocialMotion} from './social-motion-art.js';
 const el=(tag,text)=>{const n=document.createElement(tag);if(text)n.textContent=text;return n;};
 const names={forest:'🌳 村莊',room:'🛋️ 客廳',bedroom:'🛏️ 臥室',kitchen:'🍳 廚房',bathroom:'🫧 衛浴'};
 const errors={visit_closed:'島主暫時不開放參觀。',visit_not_ready:'這座小島還沒保存，等同學玩過再來！',visit_unavailable:'暫時無法拜訪這位同學。',gift_owned:'已經擁有這件物品，禮物仍保留在收禮箱。',gift_claimed:'這份禮物已經領取。',gift_quantity:'物品數量已改變，請重新選擇。',gift_mail_full:'對方收禮箱滿了，等朋友領取後再送。',gift_protected:'先收納或換下這件物品，再送給朋友。',forest_conflict:'另一個分頁已更新進度，請重新整理後再試。',authentication_required:'請回學習廣場重新登入。',forest_closed:'老師暫時關閉探險島。'};
+export function availableVisitGifts(state){
+ // Current starter status can be newer than the server's shared gift catalog.
+ // Keep complimentary furnishings and friendship keepsakes in the child's home.
+ return inventoryItems(state).filter(item=>!item.starter&&!item.giftOnly&&!giftBlocked(state,catalog.find(c=>c.kind===item.kind&&c.id===item.id)));
+}
 // A visitor only projects the public snapshot onto the current painted room.
 // Do not run the owner/save sanitizer here: it can grant starter furnishings or
 // migrate ownership. Nothing from this display copy is written to either player.
@@ -156,7 +161,7 @@ export function createIslandVisits(api){
   drawer.append(grid);if(!result.gifts.length)drawer.append(el('p','收禮箱空空的，收到禮物時會放在這裡。'));
  }
  function showGifts(){
-  drawerHead('🎁 送給 '+owner);const items=inventoryItems(api.state()).filter(i=>!giftBlocked(api.state(),catalog.find(c=>c.kind===i.kind&&c.id===i.id)));
+  drawerHead('🎁 送給 '+owner);const items=availableVisitGifts(api.state());
   const select=el('select');select.setAttribute('aria-label','禮物分類');for(const [id,name]of Object.entries({all:'全部可送禮物',furniture:'家具與娃娃',clothes:'服飾',wallpaper:'室內風格',seeds:'種子',harvest:'收穫',meal:'料理',fish:'魚',bait:'魚餌'})){const o=el('option',name);o.value=id;select.append(o);}
   const grid=el('div');grid.className='visit-grid';const render=()=>{grid.replaceChildren();for(const item of items.filter(i=>select.value==='all'||i.kind===select.value)){const c=el('article');c.className='visit-card';c.append(el('span',catalog.find(v=>v.kind===item.kind&&v.id===item.id)?.icon||'🎁'),el('strong',item.name),el('small','持有 '+item.quantity),button('選這個',()=>confirmGift(item)));grid.append(c);}if(!grid.children.length)grid.append(el('p','這個分類沒有可送出的物品。'));};select.onchange=render;drawer.append(el('p','初始贈品與好友紀念品留給自己；擺放中的物品請先收納。'),select,grid);render();
  }

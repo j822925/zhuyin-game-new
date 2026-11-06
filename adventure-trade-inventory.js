@@ -12,6 +12,14 @@ export const TRADE_KINDS={all:'全部',furniture:'家具',wallpaper:'風格',clo
 const UNIQUE={furniture:'furnitureOwned',wallpaper:'wallpaperOwned',clothes:'owned'};
 const stack=(s,kind)=>({bait:s.life?.bait,seeds:s.life?.seeds,meal:s.life?.nutrition?.meals,harvest:s.life?.harvest,fish:s.life?.fish})[kind];
 export function ownedQuantity(s,kind,id){return UNIQUE[kind]?(s[UNIQUE[kind]]||[]).includes(id)?1:0:stack(s,kind)?.[id]||0;}
+// These are local display filters; checkout remains responsible for validation.
+export function filterShopItems(state,items,{query='',show='all'}={}){
+ const words=String(query).normalize('NFKC').toLocaleLowerCase().trim().split(/\s+/).filter(Boolean);
+ return items.filter(item=>{
+  const text=(item.name+' '+(item.description||'')).normalize('NFKC').toLocaleLowerCase();
+  return words.every(word=>text.includes(word))&&(show!=='unowned'||ownedQuantity(state,item.kind,item.id)===0)&&(show!=='affordable'||Number.isSafeInteger(state.stars)&&item.price<=state.stars);
+ });
+}
 export function shopAcceptsItem(shop,kind,id){
  if(shop==='clothes')return kind==='clothes';
  if(shop==='furniture')return kind==='wallpaper'||kind==='furniture'&&!!FURNITURE.find(item=>item.id===id&&!item.zoneShop);

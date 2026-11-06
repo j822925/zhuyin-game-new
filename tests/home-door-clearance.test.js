@@ -24,7 +24,7 @@ test('door keep-clear applies to new floor objects and wall cabinets but never d
  assert(!placeFurniture(s,id,blocked,ROOM_ENTRY,'room'));
  s.layout=[{id,...blocked}];const restored=sanitizeState(s);
  assert.deepEqual(restored.layout,s.layout,'keep the previously purchased and placed cabinet');
- assert.deepEqual(restored.furnitureOwned,s.furnitureOwned);
+ assert.deepEqual([...restored.furnitureOwned].sort(),[...s.furnitureOwned].sort());
  assert.deepEqual(sanitizeState(restored).layout,restored.layout);
  const cabinet=item('collection-moon-kitchen-wall');
  for(const area of ['room','bedroom','kitchen','bathroom'])for(const side of ['left','right']){
@@ -82,7 +82,7 @@ test('shortening a legacy L return keeps every owned item, uses a free worktop f
   assert.equal(plush.surface,1);assert.equal(plush.offsetX,0,'valid existing placement claims its original space');
   assert.equal(oven.surface,2,'the larger left workspace takes an oven; the narrow right cabinet cannot');
   assert.equal(oven.on,id);assert.equal(oven.facing,'left');assert.equal(plush.facing,'right');
-  assert.deepEqual(restored.furnitureOwned,s.furnitureOwned);
+  assert.deepEqual([...restored.furnitureOwned].sort(),[...s.furnitureOwned].sort());
   assert.deepEqual(sanitizeState(restored).kitchenLayout,restored.kitchenLayout);
  }
 });
@@ -101,6 +101,6 @@ test('a former return item stays visible on the floor when all new worktops are 
  assert.equal(restored.kitchenLayout.length,s.kitchenLayout.length);
  assert(child);assert(!child.on,'full surfaces do not overlap or erase the former attachment');
  assert.equal(child.facing,'right');assert(canPlaceFurniture(restored,child.id,child,'kitchen'));
- assert.deepEqual(restored.furnitureOwned,s.furnitureOwned);
+ assert.deepEqual([...restored.furnitureOwned].sort(),[...s.furnitureOwned].sort());
  assert.deepEqual(sanitizeState(restored).kitchenLayout,restored.kitchenLayout);
 });

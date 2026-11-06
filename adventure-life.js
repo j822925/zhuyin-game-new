@@ -1,4 +1,5 @@
 import {ensureHomeArt} from './adventure-home-art.js';
+import {commitLifeChange} from './adventure-life-transaction.js';
 import {completeAction} from './adventure-action-feedback.js';
 import {FREE_SEEDS} from './adventure-exploration-model.js';
 import {fishingEffect,fishingStage} from './adventure-fishing-feedback.js';
@@ -13,6 +14,7 @@ export function createLife(api){
  const dialog=$('life-dialog'),body=$('life-body');let mode=null,plotId=0,selectedCrop='carrot',lastTick=0,lastStage='',result=null;
  const state=()=>api.state(),scene=()=>api.scene();
  const save=()=>{const saved=api.save();api.renderState();return saved;};
+ const commit=action=>{const value=commitLifeChange(state(),action,()=>api.save());if(value===null)api.toast('還沒保存成功，種子、收成和星幣都保留了，請再試一次。');api.renderState();return value;};
  function chime(){try{const Audio=globalThis.AudioContext||globalThis.webkitAudioContext;if(!Audio)return;const ctx=new Audio();[523,659,784].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+i*.1;o.frequency.value=f;g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.001,t+.23);o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+.24);});setTimeout(()=>ctx.close(),700);}catch{}}
 
  function show(next){
@@ -34,8 +36,8 @@ export function createLife(api){
  function visit(id){if(api.blocked())return;if(!state().life[id+'Unlocked']){show('unlock-'+id);return;}if(id==='farm')api.switchArea('farm');else routeToVillage(()=>{api.stopMoving();Object.assign(scene().player,POND_BANK,{direction:1});api.arrived();show('pond');});}
  function plot(index){if(api.blocked()||scene().area!=='farm'||!state().life.farmUnlocked)return;const field=FARM_PLOTS[index];api.walkTo({x:field.x+135,y:field.y+100},()=>{
   plotId=index;scene().player.direction=2;const p=state().life.plots[index],stage=plotStage(p);scene().farmFocus={x:field.x,y:field.y};
-  if(stage==='seed'){if(waterCrop(state(),index)){save();farmEffect(scene(),'water',field,p.crop,p.plantId);api.toast('澆好水了，小芽冒出來囉！再玩一次'+CROP_LESSONS[CROPS[p.crop].lesson].name+'，達到 70% 就會長大。');}}
-  else if(stage==='ready'){const crop=harvestCrop(state(),index);if(crop){save();farmEffect(scene(),'harvest',field,crop,p.plantId);chime();api.toast('拔起來了！'+CROPS[crop].name+' +'+CROP_HARVEST_YIELD+'，放進小竹籃。');}else api.toast('這種作物的籃子快滿了，先使用一些，再回來採收。');}
+  if(stage==='seed'){if(commit(()=>waterCrop(state(),index))){farmEffect(scene(),'water',field,p.crop,p.plantId);api.toast('澆好水了，小芽冒出來囉！再玩一次'+CROP_LESSONS[CROPS[p.crop].lesson].name+'，達到 70% 就會長大。');}}
+  else if(stage==='ready'){const crop=commit(()=>harvestCrop(state(),index));if(crop){farmEffect(scene(),'harvest',field,crop,p.plantId);chime();api.toast('拔起來了！'+CROPS[crop].name+' +'+CROP_HARVEST_YIELD+'，放進小竹籃。');}else if(crop!==null)api.toast('這種作物的籃子快滿了，先使用一些，再回來採收。');}
   else show('plot');
  });}
  function enterFarm(){const ready=state().life.plots.map((p,i)=>({p,i})).filter(({p})=>p?.ready&&!p.growthSeen);for(const {p,i}of ready)farmEffect(scene(),'grow',FARM_PLOTS[i],p.crop,p.plantId,performance.now(),350+i*100);if(ready.length){scene().farmFocus=null;api.toast('練習完成！看，這批作物正在長大。');}}
@@ -45,7 +47,7 @@ export function createLife(api){
  if(!mode)return;
  if(mode.startsWith('unlock-')){const id=mode.slice(7),isFarm=id==='farm',price=ACTIVITY_PRICES[id],owned=state().life[id+'Unlocked'];base(isFarm?'通往農場的小路':'池邊的小小釣魚會',owned?'已經開放，隨時歡迎你':'一份星幣，打開新的日常');$('life-picture').setAttribute('aria-label',isFarm?'可愛的農場小屋':'池塘木棧台');
  $('life-message').textContent=owned?'開放好了！釣竿、種子和水都準備好了。':`開放需要 ${price} 星幣，你現在有 ${state().stars} 星幣。`;
- btn(owned?(isFarm?'沿著小路去農場 →':'走到池塘釣魚 →'):`用 ${price} 星幣開放`,()=>{if(owned){close();visit(id);}else if(unlockActivity(state(),id)){save();render();completeAction('unlock',{host:dialog,detail:'只付一次，以後自由進出'});}},{primary:true,disabled:!owned&&state().stars<price,id:'life-unlock'});
+ btn(owned?(isFarm?'沿著小路去農場 →':'走到池塘釣魚 →'):`用 ${price} 星幣開放`,()=>{if(owned){close();visit(id);}else if(commit(()=>unlockActivity(state(),id))){render();completeAction('unlock',{host:dialog,detail:'只付一次，以後自由進出'});}},{primary:true,disabled:!owned&&state().stars<price,id:'life-unlock'});
  $('life-note').textContent=owned?'這是原本小屋裡的新活動，收穫會跟著小屋一起保存。':state().stars<price?`再收集 ${price-state().stars} 星幣就可以開放。`:'只付一次，之後自由進出。';
  }else if(mode==='pond'){
  base('微光池塘','🪱 魚餌 '+(state().life.bait?.basic||0));const stage=fishingStage(state().life.fishing,scene().fishingEffect),busy=stage==='casting'||stage==='reeling';lastStage=stage;
@@ -66,19 +68,19 @@ export function createLife(api){
  if(stage==='empty'){
  if(!FREE_SEEDS.includes(selectedCrop)&&!state().life.seeds?.[selectedCrop])selectedCrop='carrot';
  for(const [id,crop]of Object.entries(CROPS).filter(([id])=>FREE_SEEDS.includes(id)||state().life.seeds?.[id]>0)){const b=document.createElement('button');b.innerHTML=`<span>${crop.icon}</span>${crop.name}<small>${CROP_LESSONS[crop.lesson].name} · 70%</small>`;b.setAttribute('aria-pressed',String(selectedCrop===id));b.onclick=()=>{selectedCrop=id;render();};$('life-choices').append(b);}
- $('life-message').textContent='🥕 🍅 🌽 免費種子；其他種子到探險島地圖的 🌱 店購買。';btn('種下'+CROPS[selectedCrop].name+'',()=>{if(plantCrop(state(),plotId,selectedCrop)){const p=state().life.plots[plotId];save();close();farmEffect(scene(),'seed',FARM_PLOTS[plotId],selectedCrop,p.plantId);api.toast('種下'+CROPS[selectedCrop].name+'了！點這片田幫它澆水。');}},{primary:true,id:'life-plant'});
- }else if(stage==='seed'){$('life-message').textContent='種子住進土裡了，澆完水就可以去玩平常的注音關卡。';btn('澆水 💧',()=>{if(waterCrop(state(),plotId)){save();close();farmEffect(scene(),'water',FARM_PLOTS[plotId],p.crop,p.plantId);}},{primary:true,id:'life-water'});
+ $('life-message').textContent='🥕 🍅 🌽 免費種子；其他種子到探險島地圖的 🌱 店購買。';btn('種下'+CROPS[selectedCrop].name+'',()=>{if(commit(()=>plantCrop(state(),plotId,selectedCrop))){const p=state().life.plots[plotId];close();farmEffect(scene(),'seed',FARM_PLOTS[plotId],selectedCrop,p.plantId);api.toast('種下'+CROPS[selectedCrop].name+'了！點這片田幫它澆水。');}},{primary:true,id:'life-plant'});
+ }else if(stage==='seed'){$('life-message').textContent='種子住進土裡了，澆完水就可以去玩平常的注音關卡。';btn('澆水 💧',()=>{if(commit(()=>waterCrop(state(),plotId))){close();farmEffect(scene(),'water',FARM_PLOTS[plotId],p.crop,p.plantId);}},{primary:true,id:'life-water'});
  }else if(stage==='growing'){
  const task=CROP_LESSONS[CROPS[p.crop].lesson],mode=CROPS[p.crop].lesson;let owner=null;try{owner=JSON.parse(state().life.learningOwner);}catch{}
  const demo=owner?owner[1]==='demo':new URL(location.href).searchParams.get('demo')==='1',batch=state().life.plots.filter(q=>q?.crop===p.crop&&plotStage(q)==='growing').length;
  $('life-message').textContent=`這批已有 ${batch} 處${CROPS[p.crop].name}澆好水。直接去玩平常的「${task.name}」，第一次答對至少 ${Math.ceil(task.questions*CROP_ACCURACY/100)}／${task.questions} 題，回來就能一起採收。不用老師另外指派。`;
  let leaving=false;const go=async trial=>{if(leaving)return;leaving=true;try{if(!save()||!await departForIslandLesson(mode,{demo:trial}))api.toast('暫時無法保存往返進度，請再試一次。');}finally{leaving=false;}};
  btn('去玩'+task.name+(demo?'（試玩）':''),()=>go(demo),{primary:true,id:'life-study'});
- }else{$('life-message').textContent=CROPS[p.crop].name+'長好了！可以採收 '+CROP_HARVEST_YIELD+' 個，放進小竹籃。';btn('採收'+CROPS[p.crop].name,()=>{const crop=harvestCrop(state(),plotId);if(crop){save();close();farmEffect(scene(),'harvest',FARM_PLOTS[plotId],crop,p.plantId);chime();api.toast('採收完成！'+CROPS[crop].name+' +'+CROP_HARVEST_YIELD+'。');}else api.toast('這種作物的籃子快滿了，先使用一些，再回來採收。');},{primary:true,id:'life-harvest'});}
+ }else{$('life-message').textContent=CROPS[p.crop].name+'長好了！可以採收 '+CROP_HARVEST_YIELD+' 個，放進小竹籃。';btn('採收'+CROPS[p.crop].name,()=>{const crop=commit(()=>harvestCrop(state(),plotId));if(crop){close();farmEffect(scene(),'harvest',FARM_PLOTS[plotId],crop,p.plantId);chime();api.toast('採收完成！'+CROPS[crop].name+' +'+CROP_HARVEST_YIELD+'。');}else if(crop!==null)api.toast('這種作物的籃子快滿了，先使用一些，再回來採收。');},{primary:true,id:'life-harvest'});}
  $('life-note').textContent='完成原有關卡，第一次作答達到 70%，回來就能收成。';
  const steps=document.createElement('div');steps.className='farm-steps';const current=['empty','seed','growing','ready'].indexOf(stage);['播種','澆水','玩注音','收成'].forEach((label,i)=>{const step=document.createElement('span');step.textContent=(i<current?'✓ ':i===current?'現在：':'')+label;if(i===current)step.setAttribute('aria-current','step');steps.append(step);});$('life-picture').before(steps);
  }else if(mode==='harvest'){
- base('收成了！',CROPS[result].name+'長大了');$('life-picture').classList.add('harvest-glow');$('life-picture').setAttribute('aria-label','剛採收的'+CROPS[result].name);$('life-message').textContent='收到 1 份'+CROPS[result].name+'，已放進小竹籃。';
+ base('收成了！',CROPS[result].name+'長大了');$('life-picture').classList.add('harvest-glow');$('life-picture').setAttribute('aria-label','剛採收的'+CROPS[result].name);$('life-message').textContent='收到 '+CROP_HARVEST_YIELD+' 份'+CROPS[result].name+'，已放進小竹籃。';
  btn('繼續照顧田地',close);btn('帶收穫回家',()=>{close();api.cook();},{primary:true,id:'harvest-cook'});$('life-note').textContent='作物直接吃補得少，做成料理再吃補得更多。向日葵可以收藏。';
  }else if(mode==='collection'){
 
@@ -104,7 +106,7 @@ export function createLife(api){
   }
  }
  }
- function position(now){const s=scene();if(!s)return;let changed=false;for(const [id,e]of s.farmEffects||[]){if(farmProgress(e,now)<1)continue;s.farmEffects.delete(id);if(s.area==='farm')completeAction(e.type,{detail:e.type==='harvest'?CROPS[e.crop].name+' +1':e.type==='water'?'👂 → ✅ 70% → 🧺':undefined});if(e.type==='grow'){const p=state().life.plots[id];if(p?.plantId===e.plantId&&p.ready&&!p.growthSeen){p.growthSeen=true;changed=true;}}}if(changed)save();
+ function position(now){const s=scene();if(!s)return;let changed=false;for(const [id,e]of s.farmEffects||[]){if(farmProgress(e,now)<1)continue;s.farmEffects.delete(id);if(s.area==='farm')completeAction(e.type,{detail:e.type==='harvest'?CROPS[e.crop].name+' +'+CROP_HARVEST_YIELD:e.type==='water'?'👂 → ✅ 70% → 🧺':undefined});if(e.type==='grow'){const p=state().life.plots[id];if(p?.plantId===e.plantId&&p.ready&&!p.growthSeen){p.growthSeen=true;changed=true;}}}if(changed)save();
  const fishEffect=s.fishingEffect;if(s.fishingView&&fishEffect&&!fishEffect.feedbackDone&&now-fishEffect.start>=fishEffect.duration){fishEffect.feedbackDone=true;completeAction(fishEffect.type==='reel'?'fish':'cast',{detail:fishEffect.fish?FISH[fishEffect.fish].name+' +1':undefined});}
  if(!dialog.open&&!s.farmEffects?.size)s.farmFocus=null;if(!s.fishingView)$('world').dataset.fishing='idle';
  $('world').dataset.farmEffect=[...(s.farmEffects?.values()||[])].map(e=>e.type).join(',');
