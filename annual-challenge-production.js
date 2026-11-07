@@ -5,6 +5,14 @@ export function productionContext(location){
  const teacher=url.origin===ANNUAL_API_ORIGIN&&url.pathname.startsWith('/admin/annual/');
  return {teacher,classId:url.searchParams.get('class')||'main',mode:url.searchParams.get('mode')==='official'?'official':'rehearsal',origin:ANNUAL_API_ORIGIN};
 }
+export function validateAnnualSession(out,{teacher,classId},studentSeat=''){
+ if(teacher){
+  const ids=['listen','tone','spell','action','read'];
+  if(!['teacher','organizer'].includes(out?.role)||!Array.isArray(out.seats)||out.seats.some(s=>typeof s!=='string'||!/^\d{6}$/.test(s))||!Array.isArray(out.stations)||!out.stations.length||new Set(out.stations).size!==out.stations.length||out.stations.some(id=>!ids.includes(id)))throw Error('關主帳號尚未準備好');
+ }else if(out?.role!=='student'||out.seat!==studentSeat)throw Error('學生登入資料不一致');
+ if(out.classId!==classId)throw Error('班級資料不一致');
+ return out;
+}
 export function annualQuestionKey(card,station){
  if(!card||!station)return '';
  const attempt=card.attempts?.[station],round=attempt?.rounds?.[attempt.index];
@@ -47,6 +55,7 @@ export function createAnnualTransport({context,getToken,fetchImpl=globalThis.fet
  return async function request(action,data={}){
   if(!['session','card','command','config','config-read','roster','availability','reset-rehearsal'].includes(action))throw Error('找不到闖關操作');
   if(!context.teacher&&['config','config-read','roster','reset-rehearsal'].includes(action))throw Error('請由關主操作');
+  if(context.role==='teacher'&&['config','reset-rehearsal'].includes(action))throw Object.assign(Error('請由活動管理老師操作'),{status:403});
   if(context.teacher&&globalThis.location&&globalThis.location.origin!==context.origin)throw Error('請從原平台的關主入口登入');
   const token=await annualTimeout(Promise.resolve().then(getToken),tokenTimeoutMs,'登入確認逾時，請重試原本的操作；尚未確認的保存會保留。');if(!token)throw Object.assign(Error('請先登入'),{status:401});
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
@@ -87,13 +96,11 @@ export async function createProductionAdapter({location=globalThis.location,year
  }
  if(bootController.signal.aborted)throw Error(bootMessage);
  })(),15000,bootMessage,abortBoot);}catch(error){abortBoot();if(error.name==='AbortError')throw Error(bootMessage);throw error;}finally{signal?.removeEventListener('abort',abortBoot);}
- async function logout(){epoch++;clearTimeout(expiryTimer);studentSeat='';studentAuth?.forgetAll();teacher=null;if(firebaseAuth)await sdk.signOut(firebaseAuth).catch(()=>{});}
+ async function logout(){epoch++;clearTimeout(expiryTimer);studentSeat='';studentAuth?.forgetAll();teacher=null;delete context.role;if(firebaseAuth)await sdk.signOut(firebaseAuth).catch(()=>{});}
  async function rejectSession(error){if(context.teacher||error.status===401)await logout();else studentSeat='';}
  async function established(){
   const out=await transport('session',{year,...(!context.teacher?{seat:studentSeat}:{})});
-  if(context.teacher){if(out.role!=='organizer'||!Array.isArray(out.seats)||out.seats.some(s=>typeof s!=='string'||!/^\d{6}$/.test(s)))throw Error('關主帳號尚未準備好');}
-  else if(out.role!=='student'||out.seat!==studentSeat)throw Error('學生登入資料不一致');
-  if(out.classId!==context.classId)throw Error('班級資料不一致');
+  validateAnnualSession(out,context,studentSeat);context.role=out.role;
   return out;
  }
  return {

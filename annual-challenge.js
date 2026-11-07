@@ -19,6 +19,7 @@ let settingsTab='stations',listenCategory=0,spellingCategory='initial',awardStep
 const year=Number(new URL(location.href).searchParams.get('year'))||new Date().getFullYear(),local=['127.0.0.1','localhost'].includes(location.hostname)||location.protocol==='file:'&&!!previewAdapter;
 const production=!local&&!previewAdapter;
 let productionAdapter=null,liveHelpers=null,poller=null,cardFingerprint='',draftQuestionKey='',combinedOpen=false,loginGeneration=0,readSequence=0;
+const permittedStations=()=>STATIONS.filter(s=>session?.role==='organizer'||(session?.stations||[session?.station]).includes(s.id));
 const allTeacherSeats=()=>production?session?.seats||[]:['990001','990002','990003'];
 const seatsForTeacher=()=>{const access=fullEvent?.access?.[workingMode];return allTeacherSeats().filter(seat=>!access||access.allStudents||access.seats.includes(seat));};
 function saveTabSession(value){if(production)return;try{if(value)sessionStorage.setItem('annual-preview-session',JSON.stringify(value));else sessionStorage.removeItem('annual-preview-session');}catch{}}
@@ -33,7 +34,7 @@ async function api(path,body){
 }
 function identity(){
  $('home-link').href=homeUrl;
- $('identity').innerHTML=session?`<span>${handoffChild?'🔒 關主操作 · '+handoffChild.seat:session.role==='student'?(production?'🎒 學號 ':'🎒 示範學號 ')+escape(session.seat):session.role==='organizer'?'🧑‍🏫 活動管理老師':'🧑‍🏫 '+STATIONS.find(s=>s.id===session.station)?.name+'關主'}</span><button id="${handoffChild?'return-child':'logout'}" class="quiet">${handoffChild?'交回孩子':'換人登入'}</button>`:'';
+ $('identity').innerHTML=session?`<span>${handoffChild?'🔒 關主操作 · '+handoffChild.seat:session.role==='student'?(production?'🎒 學號 ':'🎒 示範學號 ')+escape(session.seat):session.role==='organizer'?'🧑‍🏫 活動管理老師':'🧑‍🏫 '+escape(session.displayName||'闖關關主')}</span><button id="${handoffChild?'return-child':'logout'}" class="quiet">${handoffChild?'交回孩子':'換人登入'}</button>`:'';
  if($('return-child'))$('return-child').onclick=()=>{if(busy||pending)return;leaveTeacher().catch(e=>toast(e.message));};
  if($('logout'))$('logout').onclick=async()=>{if(busy)return;if(pending){toast('保存尚未確認，請先重試');return;}try{await api('logout',{});}catch{}resetViewSession();loginScreen();};
 }
@@ -70,7 +71,7 @@ function productionLoginScreen(){
  if(teacher)$('live-login').onclick=perform;else $('live-student-form').onsubmit=perform;
  startupReady();
 }
-async function login(details){if(busy)return;busy=true;try{const data=await api('login',{...details,classId:'main',year});session=data;saveTabSession(session);station=session.role==='teacher'?session.station:null;identity();await refresh();subscribe();}catch(e){toast(e.message);}finally{busy=false;}}
+async function login(details){if(busy)return;busy=true;try{const data=await api('login',{...details,classId:'main',year});session=data;saveTabSession(session);station=null;identity();await refresh();subscribe();}catch(e){toast(e.message);}finally{busy=false;}}
 function renderUnavailable(message){
  card=null;station=null;app.dataset.screen='closed';identity();
  app.innerHTML=hero()+'<section class="panel closed"><div class="big-icon">🌙</div><h2>'+modeName()+'目前無法進入</h2><p>'+escape(message)+'</p><button id="closed-refresh">↻ 重新確認</button><a class="primary preview-open" href="'+homeUrl+'">回池東探險島</a></section>';
@@ -79,8 +80,8 @@ function renderUnavailable(message){
 async function refresh(){
  if(!session)return;const sequence=++readSequence,identityAtStart=session,modeAtStart=workingMode;let data;
  if(session.role!=='student'&&!handoffChild&&(!station||!fullEvent)){
-  let config;try{config=await api('config-read?year='+year);}catch(e){if(sequence!==readSequence||session!==identityAtStart)return;if(production&&e.status===401){await productionAdapter.logout();resetViewSession();loginScreen();toast(e.message);return;}throw e;}if(sequence!==readSequence||session!==identityAtStart||modeAtStart!==workingMode)return;
-  fullEvent=config;event=selectedEvent(config);const seats=seatsForTeacher();if(!seats.includes(target))target=seats[0]||'';
+  let config,roster;try{[config,roster]=await Promise.all([api('config-read?year='+year),session.role==='teacher'?api('roster?year='+year):Promise.resolve(null)]);if(roster&&(!Array.isArray(roster.seats)||roster.seats.some(seat=>typeof seat!=='string'||!/^\d{6}$/.test(seat))))throw Error('學生名單暫時無法讀取');}catch(e){if(sequence!==readSequence||session!==identityAtStart)return;if(production&&[401,403].includes(e.status)){await productionAdapter.logout();resetViewSession();loginScreen();toast(e.message);return;}throw e;}if(sequence!==readSequence||session!==identityAtStart||modeAtStart!==workingMode)return;
+  if(roster)session.seats=roster.seats;fullEvent=config;event=selectedEvent(config);const seats=seatsForTeacher();if(!seats.includes(target))target=seats[0]||'';
   if(!station||!target){card=null;cardFingerprint='';render();return;}
  }
  const seatAtStart=session.role==='student'?session.seat:target;
@@ -88,7 +89,7 @@ async function refresh(){
   if(sequence!==readSequence||session!==identityAtStart||modeAtStart!==workingMode)return;
   if(handoffChild&&[401,403].includes(e.status)){pending=null;$('award-dialog').close();toast('請關主重新確認活動模式');await leaveTeacher();return;}
   if(production&&e.status===401){await productionAdapter.logout();resetViewSession();loginScreen();toast(e.message);return;}
-  if(e.status===403){if(session.role==='student')renderUnavailable(e.message);else{station=session.role==='teacher'?session.station:null;card=null;fullEvent=null;render();toast(e.message);}return;}throw e;
+  if(e.status===403){if(session.role==='student')renderUnavailable(e.message);else{station=null;card=null;fullEvent=null;await refresh();toast(e.message);}return;}throw e;
  }
  if(sequence!==readSequence||session!==identityAtStart||modeAtStart!==workingMode||(session.role==='student'?session.seat:target)!==seatAtStart)return;
  const fingerprint=JSON.stringify(data),changed=fingerprint!==cardFingerprint;
@@ -122,6 +123,7 @@ function renderContent(){
  identity();const teacher=session.role!=='student';
  app.dataset.screen='card';
  if(teacher&&session.role==='organizer'&&(!station||!card)){renderSettings();return;}
+ if(session.role==='teacher'&&!handoffChild&&(!station||!card||!active(event))){if(!active(event))station=null;renderTeacherDesk();return;}
  if(teacher&&!card){app.innerHTML='<section class="panel closed"><div class="big-icon">🌙</div><h2>'+modeName()+'目前沒有可操作的學生</h2><p>請活動管理老師確認這個模式的開放設定。</p><div class="mode-switch">'+['rehearsal','official'].map(mode=>'<button type="button" data-working-mode="'+mode+'">'+(mode==='rehearsal'?'預演':'正式闖關')+'</button>').join('')+'</div><button id="teacher-empty-refresh">↻ 更新活動</button></section>';app.querySelectorAll('[data-working-mode]').forEach(b=>b.onclick=()=>switchWorkingMode(b.dataset.workingMode).catch(e=>toast(e.message)));$('teacher-empty-refresh').onclick=()=>refresh().catch(e=>toast(e.message));return;}
  if(!active(event)){app.innerHTML=hero()+`<section class="panel closed"><div class="big-icon">🌙</div><h2>年度闖關還在休息中</h2><p>老師開放活動後，就可以帶著 iPad 來闖關囉。</p><button id="closed-refresh">↻ 更新活動</button>${session.role==='organizer'?'<button id="to-settings">回活動設定</button>':handoffChild?'<button id="close-to-child">交回孩子</button>':''}</section>`;if($('closed-refresh'))$('closed-refresh').onclick=()=>refresh().catch(e=>toast(e.message));if($('to-settings'))$('to-settings').onclick=()=>{station=null;render();};if($('close-to-child'))$('close-to-child').onclick=()=>leaveTeacher().catch(e=>toast(e.message));return;}
  if(station){renderStation();return;}
@@ -130,15 +132,24 @@ function renderContent(){
  app.querySelectorAll('[data-station]').forEach(b=>b.onclick=()=>{station=b.dataset.station;answers=[];render();});$('refresh').onclick=()=>refresh().then(()=>subscribe()).catch(e=>toast(e.message));$('print-card').onclick=()=>printCard();
 }
 async function switchWorkingMode(mode){
- if(busy||pending||mode===workingMode)return;workingMode=mode;productionAdapter?.setMode(mode);const url=new URL(location.href);url.searchParams.set('mode',mode);history.replaceState(null,'',url);station=session.role==='teacher'?session.station:null;card=null;cardFingerprint='';extensionPlanning=false;rosterPage=0;await refresh();
+ if(busy||pending||mode===workingMode)return;workingMode=mode;productionAdapter?.setMode(mode);const url=new URL(location.href);url.searchParams.set('mode',mode);history.replaceState(null,'',url);station=null;card=null;cardFingerprint='';extensionPlanning=false;rosterPage=0;await refresh();
 }
 async function saveAccess(button){
+ if(session.role!=='organizer'){toast('請由活動管理老師操作');return;}
  if(busy)return;busy=true;button.disabled=true;const draft=accessDraft();
  try{const config=await api('configure',{year,revision:draft.revision,mode:workingMode,actionCount:draft.actionCount,access:{[workingMode]:{enabled:draft.enabled,allStudents:draft.allStudents,seats:[...draft.seats],startsAt:draft.startsAt,endsAt:draft.endsAt}}});fullEvent=config;delete accessDrafts[workingMode];for(const draft of Object.values(accessDrafts)){draft.revision=config.revision;draft.actionCount=config.actionCount;}toast(modeName()+'設定已保存');await refresh();}
  catch(e){toast(e.message);if(e.status===409){accessDrafts={};await refresh();}}
  finally{busy=false;if(button.isConnected)button.disabled=false;}
 }
+function renderTeacherDesk(){
+ app.dataset.screen='teacher-desk';const ready=active(event)&&seatsForTeacher().length>0;
+ app.innerHTML='<div class="settings-heading"><h1>關主桌</h1><div class="mode-switch" aria-label="選擇闖關模式">'+['rehearsal','official'].map(mode=>'<button type="button" data-working-mode="'+mode+'" class="'+(workingMode===mode?'selected':'')+'" aria-pressed="'+(workingMode===mode)+'">'+(mode==='rehearsal'?'🌱 預演':'🏅 正式闖關')+'</button>').join('')+'</div></div><section class="panel settings-panel" data-panel="teacher-stations"><h2>請選擇要操作的關卡</h2><p class="subtle">'+(ready?'進入後先確認學生，再選題、評分與簽章。':modeName()+'目前未開放或沒有可操作的學生，請活動管理老師確認。')+'</p><div class="station-grid teacher-station-grid">'+permittedStations().map(s=>'<button type="button" data-station="'+s.id+'" class="station-choice" '+(ready?'':'disabled')+'>'+image(s.animal)+'<strong>'+s.name+'</strong><span>'+s.short+'</span></button>').join('')+'</div><p class="subtle">登入一次即可連續操作，孩子留在自己的作答畫面。</p><button id="teacher-desk-refresh">↻ 更新活動與學生</button></section>';
+ app.querySelectorAll('[data-working-mode]').forEach(b=>b.onclick=()=>switchWorkingMode(b.dataset.workingMode).catch(e=>toast(e.message)));
+ app.querySelectorAll('[data-station]').forEach(b=>b.onclick=async()=>{if(busy||pending)return;station=b.dataset.station;cardFingerprint='';await refresh();});
+ $('teacher-desk-refresh').onclick=()=>refresh().catch(e=>toast(e.message));
+}
 function renderSettings(){
+ if(session.role!=='organizer'){renderTeacherDesk();return;}
  app.dataset.screen='settings';const draft=accessDraft();
  app.innerHTML='<div class="settings-heading"><h1>'+year+' 注音闖關</h1><div class="mode-switch" aria-label="選擇管理模式">'+['rehearsal','official'].map(mode=>'<button type="button" data-working-mode="'+mode+'" class="'+(workingMode===mode?'selected':'')+'">'+(mode==='rehearsal'?'🌱 預演':'🏅 正式闖關')+'</button>').join('')+'</div></div><nav class="screen-tabs" aria-label="活動管理分頁">'+[['stations','🏝 關主桌'],['activity','⚙ 活動設定'],['access','🎒 開放對象'],['reset','🔄 重置預演']].map(([id,label])=>'<button type="button" data-settings-tab="'+id+'" aria-pressed="'+(settingsTab===id)+'" class="'+(settingsTab===id?'selected':'')+'">'+label+'</button>').join('')+'</nav><section class="panel settings-panel" data-panel="'+settingsTab+'" id="settings-content"></section>';
  app.querySelectorAll('[data-working-mode]').forEach(b=>b.onclick=()=>switchWorkingMode(b.dataset.workingMode).catch(e=>toast(e.message)));
@@ -171,11 +182,11 @@ function renderStation(){
  app.dataset.screen='station';app.dataset.station=station;app.dataset.role=session.role;
  {const nextKey=JSON.stringify([card.mode,card.rehearsalRound,card.seat,station,card.attempts[station]?.index,card.attempts[station]?.rounds[card.attempts[station]?.index]?.selected,!!card.attempts[station]?.rounds[card.attempts[station]?.index]?.result]);if(nextKey!==draftQuestionKey){draftQuestionKey=nextKey;answers=[];cursor=0;combinedOpen=false;spellingCategory='initial';}}
  const s=STATIONS.find(s=>s.id===station),a=card.attempts[station],teacher=session.role!=='student',round=a?.rounds[a.index];
- const controls=handoffChild?`<div class="handoff-notice">🔒 關主接手中 · ${escape(card.seat)} · ${s.name}<small>只操作眼前這位孩子；選好題目後會交回孩子作答。</small></div>`:teacher?`<section class="panel teacher-controls"><label>目前學生<select id="target">${seatsForTeacher().map(v=>`<option ${target===v?'selected':''}>${escape(v)}</option>`).join('')}</select></label><label>關主關卡<select id="station-select">${STATIONS.filter(v=>session.role==='organizer'||v.id===session.station).map(v=>`<option value="${v.id}" ${station===v.id?'selected':''}>${v.name}</option>`).join('')}</select></label><div><span class="eyebrow">關主操作畫面</span><p class="subtle">先確認學生，再選題與簽章</p></div></section>`:'';
+ const controls=handoffChild?`<div class="handoff-notice">🔒 關主接手中 · ${escape(card.seat)} · ${s.name}<small>只操作眼前這位孩子；選好題目後會交回孩子作答。</small></div>`:teacher?`<section class="panel teacher-controls"><label>目前學生<select id="target">${seatsForTeacher().map(v=>`<option ${target===v?'selected':''}>${escape(v)}</option>`).join('')}</select></label><label>關主關卡<select id="station-select">${permittedStations().map(v=>`<option value="${v.id}" ${station===v.id?'selected':''}>${v.name}</option>`).join('')}</select></label><div><span class="eyebrow">關主操作畫面</span><p class="subtle">先確認學生，再選題與簽章</p></div></section>`:'';
  app.innerHTML=`<div class="toolbar"><button id="back" class="quiet">← ${handoffChild?'交回孩子':teacher&&session.role==='organizer'?'活動設定':teacher?'關主桌':'我的闖關卡'}</button><button id="refresh">↻ 更新進度</button>${!production&&!teacher&&!a?.award?'<button id="unlock-teacher">🔒 請關主操作</button>':''}${pending?'<button id="retry" class="primary">重試剛才的保存</button>':''}</div>${controls}
  <div class="station-head">${image(s.animal)}<div><span class="eyebrow">第 ${STATIONS.indexOf(s)+1} 關 · ${teacher?'關主操作':'孩子作答'} · ${production&&teacher?'關主的 iPad':station==='tone'?'教室大屏':station==='spell'&&teacher&&!handoffChild?'關主的 iPad':'孩子的 iPad'}</span><h1>${s.name}</h1><p class="subtle">${s.description}</p></div></div><section class="panel question-panel"><div class="row question-progress"><span class="pill">🎒 ${escape(card.seat)}</span>${a?`<span>${station==='listen'?'已評 '+a.rounds.filter(r=>r.result).length+' / '+a.rounds.length+' 題':'第 '+(a.index+1)+' / '+a.rounds.length+' 題'}</span>`:''}</div><div id="question" class="question-area"></div></section>`;
  $('question').dataset.panel=station+'-'+(!a?'start':round?.result?'result':teacher?(round?.selected===null?'choose':'waiting'):'answer');
- $('back').onclick=()=>{if(pending)return;if(handoffChild){leaveTeacher().catch(e=>toast(e.message));return;}station=session.role==='teacher'?session.station:null;answers=[];extensionPlanning=false;if(session.role==='organizer')refresh().catch(e=>toast(e.message));else render();};$('refresh').onclick=()=>refresh().then(()=>subscribe()).catch(e=>toast(e.message));if($('unlock-teacher'))$('unlock-teacher').onclick=showUnlock;if($('retry'))$('retry').onclick=async()=>{if(busy)return;busy=true;try{await sendPending();toast('已確認保存');}catch(e){toast(e.message);}finally{busy=false;}};
+ $('back').onclick=()=>{if(pending)return;if(handoffChild){leaveTeacher().catch(e=>toast(e.message));return;}station=null;answers=[];extensionPlanning=false;if(session.role!=='student')refresh().catch(e=>toast(e.message));else render();};$('refresh').onclick=()=>refresh().then(()=>subscribe()).catch(e=>toast(e.message));if($('unlock-teacher'))$('unlock-teacher').onclick=showUnlock;if($('retry'))$('retry').onclick=async()=>{if(busy)return;busy=true;try{await sendPending();toast('已確認保存');}catch(e){toast(e.message);}finally{busy=false;}};
  if(teacher&&!handoffChild){$('target').onchange=async()=>{if(busy||pending){$('target').value=target;toast('請先重試剛才的保存');return;}target=$('target').value;pending=null;answers=[];await refresh();};$('station-select').onchange=()=>{if(busy||pending){$('station-select').value=station;toast('請先完成眼前的保存');return;}station=$('station-select').value;answers=[];extensionPlanning=false;render();};}
  if(a?.award){renderAward(a.award);return;}
  if(completeAttempt(a)&&!teacher){renderStudentStamp(a);return;}
@@ -311,7 +322,7 @@ function printCard(){
 systemSetup().catch(()=>window.dispatchEvent(new Event('annual-load-error')));
 async function systemSetup(){
  $('home-link').onclick=e=>{if(pending){e.preventDefault();toast('保存尚未確認，請先重試原本的保存');}};
- if(previewAdapter||production)document.querySelector('.brand').onclick=async e=>{e.preventDefault();if(busy||pending)return;if(handoffChild)await leaveTeacher();station=null;answers=[];if(session&&session.role==='organizer')await refresh();else if(session&&card)render();else if(session)await refresh();else loginScreen();};
+ if(previewAdapter||production)document.querySelector('.brand').onclick=async e=>{e.preventDefault();if(busy||pending)return;if(handoffChild)await leaveTeacher();station=null;answers=[];if(session&&session.role!=='student')await refresh();else if(session&&card)render();else if(session)await refresh();else loginScreen();};
  $('cancel-unlock').onclick=()=>{if(!busy)$('unlock-dialog').close();};$('unlock-dialog').addEventListener('cancel',e=>{if(busy)e.preventDefault();});
  $('confirm-unlock').onclick=async()=>{if(production||busy)return;busy=true;$('confirm-unlock').disabled=true;try{const grant=await api('unlock',{year,mode:card.mode,rehearsalRound:card.rehearsalRound,station});handoffChild=session;target=session.seat;streamController?.abort();session=grant;$('unlock-dialog').close();await refresh();subscribe();}catch(e){$('unlock-error').textContent=e.message;}finally{busy=false;$('confirm-unlock').disabled=false;}};
  $('close-award').onclick=()=>{if(pending){toast('保存尚未確認，請先重試原本的簽章');return;}if(!busy)$('award-dialog').close();};$('award-dialog').addEventListener('cancel',e=>{if(busy||pending)e.preventDefault();});$('clear-signature').onclick=()=>{if(busy||pending)return;lines=[];drawCanvas();};
@@ -326,7 +337,7 @@ async function systemSetup(){
   try{
    const bootController=new AbortController(),bootMessage='登入準備逾時，請確認網路後按「重新載入」再試。';let bootTimer;
    try{
-    const ready=await Promise.race([(async()=>{const helpers=await import('./annual-challenge-production.js?v=20261106-v2');if(bootController.signal.aborted)throw Error(bootMessage);const adapter=await helpers.createProductionAdapter({year,signal:bootController.signal,onExpired:()=>{resetViewSession();loginScreen();toast('關主登入已到期，請重新登入');}});if(bootController.signal.aborted)throw Error(bootMessage);return {helpers,adapter};})(),new Promise((resolve,reject)=>{bootTimer=setTimeout(()=>{bootController.abort();reject(Error(bootMessage));},15000);})]);
+    const ready=await Promise.race([(async()=>{const helpers=await import('./annual-challenge-production.js?v=20261107-teachers1');if(bootController.signal.aborted)throw Error(bootMessage);const adapter=await helpers.createProductionAdapter({year,signal:bootController.signal,onExpired:()=>{resetViewSession();loginScreen();toast('關主登入已到期，請重新登入');}});if(bootController.signal.aborted)throw Error(bootMessage);return {helpers,adapter};})(),new Promise((resolve,reject)=>{bootTimer=setTimeout(()=>{bootController.abort();reject(Error(bootMessage));},15000);})]);
     liveHelpers=ready.helpers;productionAdapter=ready.adapter;
    }finally{clearTimeout(bootTimer);}
    poller=liveHelpers.createStationPoller({read:refresh,eligible:()=>!!session&&!!station&&active(event)&&!busy&&!pending&&!spinning&&document.visibilityState==='visible'&&navigator.onLine!==false,onError:(error,count)=>{if(count===1)toast(error.message);}});
@@ -339,5 +350,5 @@ async function systemSetup(){
   }catch(error){app.innerHTML=hero()+'<section class="panel"><h2>登入暫時無法使用</h2><p id="live-start-error"></p><button id="live-start-retry">重新載入</button></section>';$('live-start-error').textContent=error.message;$('live-start-retry').onclick=()=>location.reload();}
   return;
  }
- try{const raw=sessionStorage.getItem('annual-preview-session');session=raw?JSON.parse(raw):null;if(session){target=session.role==='student'?session.seat:target;station=session.role==='teacher'?session.station:null;await refresh();subscribe();identity();}else loginScreen();}catch{session=null;saveTabSession(null);loginScreen();}
+ try{const raw=sessionStorage.getItem('annual-preview-session');session=raw?JSON.parse(raw):null;if(session){target=session.role==='student'?session.seat:target;station=null;await refresh();subscribe();identity();}else loginScreen();}catch{session=null;saveTabSession(null);loginScreen();}
 }

@@ -1,6 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {ANNUAL_API_ORIGIN,productionContext,createAnnualTransport,annualQuestionKey,annualScopeKey,createStationPoller,annualRequestData,annualTimeout} from '../annual-challenge-production.js';
+import {ANNUAL_API_ORIGIN,productionContext,createAnnualTransport,annualQuestionKey,annualScopeKey,createStationPoller,annualRequestData,annualTimeout,validateAnnualSession} from '../annual-challenge-production.js';
+
+test('verified station teachers keep their role and can receive all five permitted stations',()=>{
+ const context={teacher:true,classId:'main'},session={role:'teacher',classId:'main',stations:['listen','tone','spell','action','read'],seats:['990001','990002'],displayName:'測試關主'};
+ assert.equal(validateAnnualSession(session,context),session);assert.equal(session.role,'teacher');
+ assert.equal(validateAnnualSession({...session,role:'organizer'},context).role,'organizer');
+ assert.deepEqual(validateAnnualSession({...session,stations:['read'],seats:[]},context).stations,['read']);
+ for(const change of [{role:'student'},{stations:[]},{stations:['read','read']},{stations:['admin']},{seats:['001']},{classId:'grade2'}])assert.throws(()=>validateAnnualSession({...session,...change},context));
+ assert.throws(()=>validateAnnualSession(session,{teacher:false,classId:'main'},'990001'),/學生登入/);
+});
+test('a station teacher can read the desk but cannot send settings or rehearsal reset writes',async()=>{
+ const calls=[],context={origin:ANNUAL_API_ORIGIN,teacher:true,classId:'main',mode:'rehearsal',role:'teacher'};
+ const send=createAnnualTransport({context,getToken:async()=> 'fake-token',fetchImpl:async(url)=>{calls.push(url);return {ok:true,json:async()=>({ok:true})};}});
+ await send('config-read',{year:2026});await send('roster',{year:2026});await send('command',{year:2026,station:'read',type:'start'});
+ await assert.rejects(send('config',{year:2026,patch:{enabled:true}}),error=>error.status===403&&/管理老師/.test(error.message));
+ await assert.rejects(send('reset-rehearsal',{year:2026}),error=>error.status===403);assert.equal(calls.length,3);
+ context.role='organizer';await send('config',{year:2026,patch:{enabled:false}});assert.equal(calls.length,4);
+});
 
 test('only the existing Worker admin path selects teacher authentication',()=>{
  assert.equal(productionContext({href:ANNUAL_API_ORIGIN+'/admin/annual/annual-challenge.html?class=main'}).teacher,true);
