@@ -28,9 +28,9 @@ test('teacher screen and child tablet share the same first error and correction 
  await assert.rejects(f.command('next'),/完成/);await assert.rejects(f.command('choose-stamp',{stamp:'tone-frog'}),/完成/);
  await f.command('answer',{answer:[1,2]},child);r=(await f.attempt()).rounds[0];assert.equal(r.result.completed,true);assert.equal(r.result.tries,2);assert.deepEqual(r.result.firstAnswer,[2,2]);
  await f.command('next');await f.command('answer',{answer:[1,3]},child);await f.command('answer',{answer:[1,2]});
- await finishTone(f);a=await f.attempt();assert.equal(answerSummary(a).firstWrongCharacterCount,2);assert.equal(answerSummary(a).deductedPoints,4);assert.equal(answerSummary(a).points,13);
+ await finishTone(f);a=await f.attempt();assert.equal(answerSummary(a).firstWrongCharacterCount,2);assert.equal(answerSummary(a).deductedPoints,4);assert.equal(answerSummary(a).points,16);
  assert.deepEqual(answerSummary(await f.attempt(child)),answerSummary(a));
- await f.command('award',{award:{score:13,stamp:'tone-frog',signature,note:''}});assert.equal((await f.attempt(child)).award.score,13);
+ await f.command('award',{award:{score:16,stamp:'tone-frog',signature,note:''}});assert.equal((await f.attempt(child)).award.score,16);
  await assert.rejects(f.command('answer',{answer:[1,2]}),e=>e.status===409);
 });
 

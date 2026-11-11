@@ -26,7 +26,7 @@ test('students never receive access rosters; teacher config can be read without 
 });
 test('legacy event access retains only supplied pilot accounts and never changes cards or persists a migration on read',async()=>{
  const {s,store}=setup(['990001','990002']);const legacy={enabled:true,mode:'rehearsal',revision:1,listenCount:10,spellCount:10,actionCount:3};await store.transaction('main:2026:event',()=>({value:legacy}));
- const c=await s.config(org,2026);assert.equal(c.spellCount,5);assert.equal(c.toneCount,4);assert.deepEqual(c.access.rehearsal.seats,['990001','990002']);assert.equal(c.access.rehearsal.allStudents,false);assert.equal(c.access.rehearsal.enabled,true);assert.equal(c.access.official.enabled,false);assert.deepEqual(c.access.official.seats,[]);await assert.rejects(s.card(student('990001'),2026,undefined,'official'),/尚未開放給/);await assert.rejects(s.card(student('990003'),2026),/尚未開放給/);assert.deepEqual(await store.transaction('main:2026:event',v=>({out:v})),legacy);
+ const c=await s.config(org,2026);assert.equal(c.spellCount,4);assert.equal(c.toneCount,4);assert.deepEqual(c.access.rehearsal.seats,['990001','990002']);assert.equal(c.access.rehearsal.allStudents,false);assert.equal(c.access.rehearsal.enabled,true);assert.equal(c.access.official.enabled,false);assert.deepEqual(c.access.official.seats,[]);await assert.rejects(s.card(student('990001'),2026,undefined,'official'),/尚未開放給/);await assert.rejects(s.card(student('990003'),2026),/尚未開放給/);assert.deepEqual(await store.transaction('main:2026:event',v=>({out:v})),legacy);
  assert.equal(normalizeEvent(legacy).access.rehearsal.allStudents,true);
 });
 test('time windows and revoking access are checked on every command, while allowed closed cards remain readable',async()=>{

@@ -1,6 +1,6 @@
 // Integration boundary: identities must come from existing verified student/admin auth.
 // A durable adapter must implement atomic transaction(key, callback), not get-then-put.
-import {STATIONS,active,normalizeEvent,effectiveEvent,accessAllowed,validateAccess,ACTIVITY_MODES,STATION_LIMITS,optionsFor,isBasicToneQuestion,gradeAnswer,validateAward,shuffle,LISTEN_POLICY,LISTEN_OUTCOMES,makeListeningRounds,listeningSummary,ANSWER_POLICY,roundComplete,answerSummary} from './annual-challenge-core.js?v=20261111-toneshared1';
+import {STATIONS,active,normalizeEvent,effectiveEvent,accessAllowed,validateAccess,ACTIVITY_MODES,STATION_LIMITS,optionsFor,isBasicToneQuestion,gradeAnswer,validateAward,shuffle,LISTEN_POLICY,LISTEN_OUTCOMES,makeListeningRounds,listeningSummary,ANSWER_POLICY,SCALED_ANSWER_POLICY,roundComplete,answerSummary} from './annual-challenge-core.js?v=20261111-directscore1';
 import {isStampForStation} from './annual-challenge-stamps.js?v=20261106-v2';
 const copy=v=>structuredClone(v);
 const fail=(message,status=400)=>{throw Object.assign(Error(message),{status});};
@@ -10,7 +10,9 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
  // selections/answers stale; the next valid command for this station persists it.
  function projectAnswerAttempt(attempt,key){
   if(!attempt||attempt.award||!['tone','spell'].includes(attempt.station))return attempt;
-  const adoptPolicy=attempt.answerPolicy!==ANSWER_POLICY&&!attempt.rounds.every(roundComplete);
+  // All unsigned scaled cards adopt direct deductions, even when all answers
+  // are complete. Older policy-free completed cards retain manual grading.
+  const adoptPolicy=attempt.answerPolicy===SCALED_ANSWER_POLICY||attempt.answerPolicy!==ANSWER_POLICY&&!attempt.rounds.every(roundComplete);
   const pending=attempt.station==='tone'?attempt.rounds.map((round,index)=>!round.result&&round.options.some(q=>!isBasicToneQuestion(q))?index:-1).filter(index=>index>=0):[];
   if(!pending.length&&!adoptPolicy)return attempt;
   const projected=copy(attempt);
@@ -95,7 +97,7 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
     if(type==='start'||type==='listen-replan'){
      if(!teacher)fail('請關主開始闖關',403);if(type==='start'&&a)fail('這一關已經開始，請接續原進度',409);
      if(type==='listen-replan'&&(station!=='listen'||!a||a.award||a.listenPolicy&&a.rounds.some(r=>r.result)))fail('已評量或已簽章的題目不能改選',409);
-     const count=station==='listen'?10:station==='spell'?(command.count??event.spellCount):station==='tone'?(command.count??4):station==='action'?(command.count??event.actionCount):1;
+     const count=station==='listen'?10:['tone','spell'].includes(station)?(command.count??4):station==='action'?(command.count??event.actionCount):1;
      if(station==='action'&&(!Number.isInteger(count)||count<1||count>8))fail('動作題數請選一至八題');
      if(['tone','spell'].includes(station)&&(!Number.isInteger(count)||count<3||count>8))fail('拼音與聲調題數請選三至八題');
      const previous=a;
@@ -148,7 +150,7 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
      }else if(type==='award'){
       if(!teacher)fail('請由關主評分簽章',403);if(!a.rounds.every(roundComplete))fail('請先完成所有題目');
       if(station==='listen'&&a.listenPolicy&&(listeningSummary(a).assessed!==a.rounds.length||command.award?.score!==listeningSummary(a).points))fail('聽音辨識分數必須依逐題加總並換算為二十分');
-      if(['tone','spell'].includes(station)&&a.answerPolicy===ANSWER_POLICY&&command.award?.score!==answerSummary(a).points)fail('聲調與拼音分數必須依首次錯字比例換算為二十分');
+      if(['tone','spell'].includes(station)&&a.answerPolicy===ANSWER_POLICY&&command.award?.score!==answerSummary(a).points)fail('聲調與拼音分數必須依首次錯字直接扣分');
       a.award={...validateAward(command.award,station),teacherId:who.id||'teacher',savedAt:now()};
      }else fail('不支援的操作');
     }

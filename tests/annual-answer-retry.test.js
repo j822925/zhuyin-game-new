@@ -41,9 +41,9 @@ for(const station of ['tone','spell']){
   assert.deepEqual(answerSummary(student),answerSummary(await f.attempt()));
   await f.command('answer',{answer:good},child);r=(await f.attempt()).rounds[0];assert.equal(roundComplete(r),true);assert.equal(r.result.tries,3);assert.equal(r.result.firstWrongCharacterCount,1);assert.deepEqual(r.result.wrongCharacterIndices,[]);
   await assert.rejects(f.command('answer',{answer:good},child),e=>e.status===409);
-  await finish(f,station);a=await f.attempt();assert.deepEqual(answerSummary(a),{total:3,completed:3,remaining:0,answered:3,corrected:1,totalCharacters:5,firstWrongCharacterCount:1,wrongCharacters:1,initialWrongCharacterCount:1,extraWrongCharacterCount:0,deductedPoints:2,rawPoints:8,maxRawPoints:10,points:16});
-  await assert.rejects(f.command('award',{award:{score:18,stamp:station==='tone'?'tone-rabbit':'spell-fox',signature,note:''}}),/首次錯字比例/);
-  await f.command('award',{award:{score:16,stamp:station==='tone'?'tone-rabbit':'spell-fox',signature,note:''}});assert.equal((await f.attempt()).award.score,16);
+  await finish(f,station);a=await f.attempt();assert.deepEqual(answerSummary(a),{total:3,completed:3,remaining:0,answered:3,corrected:1,totalCharacters:5,firstWrongCharacterCount:1,wrongCharacters:1,initialWrongCharacterCount:1,extraWrongCharacterCount:0,deductedPoints:2,rawPoints:8,maxRawPoints:10,points:18});
+  await assert.rejects(f.command('award',{award:{score:16,stamp:station==='tone'?'tone-rabbit':'spell-fox',signature,note:''}}),/首次錯字直接扣分/);
+  await f.command('award',{award:{score:18,stamp:station==='tone'?'tone-rabbit':'spell-fox',signature,note:''}});assert.equal((await f.attempt()).award.score,18);
  });
 
  test(station+': first-answer retries are idempotent and stale/reused requests cannot change the first error',async()=>{
@@ -58,11 +58,11 @@ for(const station of ['tone','spell']){
  test(station+': initial first errors cost two and new extra errors cost one, fixed across retries and client overrides',async()=>{
   const f=await fixture(station);
   for(let i=0;i<3;i++){const a=await f.attempt(),q=a.rounds[i].options[0],good=correct(station,q),bad=good.map(v=>station==='tone'?(v%5)+1:'ㄇㄨˋ');await f.command('answer',{answer:bad},child);await f.command('answer',{answer:bad},child);await f.command('answer',{answer:good},child);if(i<2)await f.command('next');}
-  assert.equal(answerSummary(await f.attempt()).points,0);assert.equal(answerSummary(await f.attempt()).firstWrongCharacterCount,5);
+  assert.equal(answerSummary(await f.attempt()).points,10);assert.equal(answerSummary(await f.attempt()).firstWrongCharacterCount,5);
   const before=(await f.attempt()).rounds;await f.command('extend',{count:2,firstErrorPenalty:2});assert.ok((await f.attempt()).rounds.slice(3).every(r=>r.firstErrorPenalty===1));assert.ok((await f.attempt(child)).rounds.slice(3).every(r=>r.firstErrorPenalty===1));
   for(let i=3;i<5;i++){await f.command('select',{option:0});const r=(await f.attempt()).rounds[i],good=correct(station,r.options[0]),bad=good.map(v=>station==='tone'?(v%5)+1:'ㄇㄨˋ');await f.command('answer',{answer:bad,firstErrorPenalty:2},child);await f.command('answer',{answer:bad,firstErrorPenalty:0},child);await f.command('answer',{answer:good},child);const result=(await f.attempt()).rounds[i].result;assert.equal(result.firstErrorPenalty,1);assert.equal(result.tries,3);assert.equal(result.firstWrongCharacterCount,good.length);if(i<4)await f.command('next');}
   const after=await f.attempt(),total=after.rounds.reduce((n,r)=>n+[...r.options[r.selected].text].length,0),extraCharacters=total-5,sum=answerSummary(after);
-  assert.deepEqual(after.rounds.slice(0,3),before);assert.equal(sum.totalCharacters,total);assert.equal(sum.firstWrongCharacterCount,total);assert.equal(sum.initialWrongCharacterCount,5);assert.equal(sum.extraWrongCharacterCount,extraCharacters);assert.equal(sum.deductedPoints,10+extraCharacters);assert.equal(sum.rawPoints,extraCharacters);assert.equal(sum.points,Math.round(extraCharacters/(total*2)*20));assert.equal(sum.maxRawPoints,total*2);assert.ok(sum.points>0);
+  assert.deepEqual(after.rounds.slice(0,3),before);assert.equal(sum.totalCharacters,total);assert.equal(sum.firstWrongCharacterCount,total);assert.equal(sum.initialWrongCharacterCount,5);assert.equal(sum.extraWrongCharacterCount,extraCharacters);assert.equal(sum.deductedPoints,10+extraCharacters);assert.equal(sum.rawPoints,extraCharacters);assert.equal(sum.points,Math.max(0,10-extraCharacters));assert.equal(sum.maxRawPoints,total*2);
   assert.deepEqual(answerSummary(await f.attempt(child)),sum);assert.ok((await f.attempt(child)).rounds.slice(3).every(r=>r.result.firstErrorPenalty===1));
   await f.command('award',{award:{score:sum.points,stamp:station==='tone'?'tone-rabbit':'spell-fox',signature,note:''}});assert.equal((await f.attempt()).award.score,sum.points);
  });
@@ -81,9 +81,10 @@ for(const station of ['tone','spell']){
  });
 }
 
-test('tone defaults to four even for saved former defaults; explicit counts remain three through eight',async()=>{
- assert.equal(defaultEvent().toneCount,4);assert.equal(normalizeEvent({toneCount:10}).toneCount,4);
- const f=await fixture('tone',null);await f.service.configure(org,2026,{revision:1,toneCount:5});await f.command('start');assert.equal((await f.attempt()).rounds.length,4);
- for(const count of [3,4,5,6,7,8]){const t=await fixture('tone',null);await t.command('start',{count,firstErrorPenalty:1});assert.equal((await t.attempt()).rounds.length,count);assert.equal((await t.attempt()).answerPolicy,ANSWER_POLICY);assert.ok((await t.attempt()).rounds.every(r=>r.firstErrorPenalty===2));}
- const spell=await fixture('spell',null);await spell.command('start');assert.equal((await spell.attempt()).rounds.length,5);
+test('tone and spell default to four even for saved former defaults; explicit counts remain three through eight',async()=>{
+ for(const station of ['tone','spell']){
+  const key=station+'Count';assert.equal(defaultEvent()[key],4);assert.equal(normalizeEvent({[key]:10})[key],4);
+  const f=await fixture(station,null);await f.service.configure(org,2026,{revision:1,[key]:5});await f.command('start');assert.equal((await f.attempt()).rounds.length,4);
+  for(const count of [3,4,5,6,7,8]){const t=await fixture(station,null);await t.command('start',{count,firstErrorPenalty:1});assert.equal((await t.attempt()).rounds.length,count);assert.equal((await t.attempt()).answerPolicy,ANSWER_POLICY);assert.ok((await t.attempt()).rounds.every(r=>r.firstErrorPenalty===2));}
+ }
 });

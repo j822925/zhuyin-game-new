@@ -9,7 +9,8 @@ export const STATIONS=[
 ];
 export const TONES=[{value:1,mark:'─',name:'一聲'},{value:2,mark:'ˊ',name:'二聲'},{value:3,mark:'ˇ',name:'三聲'},{value:4,mark:'ˋ',name:'四聲'},{value:5,mark:'˙',name:'輕聲'}];
 export const LISTEN_POLICY='teacher-chosen-2-1-0-v1';
-export const ANSWER_POLICY='first-error-character-scaled-v1';
+export const ANSWER_POLICY='first-error-character-direct-v1';
+export const SCALED_ANSWER_POLICY='first-error-character-scaled-v1';
 export const LISTEN_OUTCOMES=[{id:'pass',label:'通過',icon:'✓',points:2},{id:'hint',label:'提示後通過',icon:'💡',points:1},{id:'fail',label:'未通過',icon:'✕',points:0}];
 export function makeListeningRounds(symbols,{min=10,max=10,used=[],offset=0}={}){
  const allowed=new Set([...INITIALS,...FINALS,...COMBINED]);
@@ -23,7 +24,7 @@ export function listeningSummary(attempt){
 }
 export function shuffle(items,rng=Math.random){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 export function active(event,now=Date.now()){return !!event?.enabled&&(event.startsAt==null||now>=event.startsAt)&&(event.endsAt==null||now<event.endsAt);}
-export function defaultEvent(classId='main',year=2026){return {id:'zhuyin-'+year,classId,year,title:year+' 注音闖關',enabled:false,mode:'official',rehearsalRound:1,startsAt:null,endsAt:null,tonePolicy:'lexical',listenCount:10,spellCount:5,toneCount:4,actionCount:3,revision:0};}
+export function defaultEvent(classId='main',year=2026){return {id:'zhuyin-'+year,classId,year,title:year+' 注音闖關',enabled:false,mode:'official',rehearsalRound:1,startsAt:null,endsAt:null,tonePolicy:'lexical',listenCount:10,spellCount:4,toneCount:4,actionCount:3,revision:0};}
 export const STATION_LIMITS=Object.freeze({listen:59,tone:30,spell:30,action:30,read:9});
 export const ACTIVITY_MODES=Object.freeze(['rehearsal','official']);
 const accessKeys=['enabled','allStudents','seats','startsAt','endsAt'];
@@ -39,7 +40,7 @@ export function normalizeEvent(value,classId='main',year=2026,legacySeats=null){
  else access[event.mode]=validateAccess({...access[event.mode],seats:value&&legacySeats!==null?[...legacySeats]:[],enabled:event.enabled,startsAt:event.startsAt,endsAt:event.endsAt});
  event.access=access;
  // A legacy ten-question attempt is left untouched; only new decks use 3–8.
- for(const key of ['spellCount','toneCount'])if(!Number.isInteger(event[key])||event[key]<3||event[key]>8)event[key]=key==='toneCount'?4:5;
+ for(const key of ['spellCount','toneCount'])if(!Number.isInteger(event[key])||event[key]<3||event[key]>8)event[key]=4;
  return effectiveEvent(event,event.mode);
 }
 export function effectiveEvent(event,mode=event.mode,includeAccess=true){
@@ -107,7 +108,10 @@ export function answerSummary(attempt){
   out.deductedPoints+=wrong*penalty;out[penalty===1?'extraWrongCharacterCount':'initialWrongCharacterCount']+=wrong;
   if(wrong&&roundComplete(round)&&round.result.correct===true)out.corrected++;
  }
- out.remaining=out.total-out.completed;out.wrongCharacters=out.firstWrongCharacterCount;out.maxRawPoints=2*out.totalCharacters;out.rawPoints=out.maxRawPoints-out.deductedPoints;out.points=out.maxRawPoints?Math.round(out.rawPoints/out.maxRawPoints*20):0;return out;
+ out.remaining=out.total-out.completed;out.wrongCharacters=out.firstWrongCharacterCount;out.maxRawPoints=2*out.totalCharacters;out.rawPoints=out.maxRawPoints-out.deductedPoints;
+ // Keep the historical raw counters for readers of older cards. New cards
+ // deduct from twenty directly; signed historical cards retain their policy.
+ out.points=attempt?.answerPolicy===ANSWER_POLICY?Math.max(0,20-out.deductedPoints):(out.maxRawPoints?Math.round(out.rawPoints/out.maxRawPoints*20):0);return out;
 }
 export function validateSignature(lines){
  if(!Array.isArray(lines)||lines.length<1||lines.length>100||lines.some(line=>!Array.isArray(line)||line.length<1||line.length>2000||line.some(p=>!Array.isArray(p)||p.length!==2||p.some(n=>!Number.isFinite(n)||n<0||n>1))))return false;
