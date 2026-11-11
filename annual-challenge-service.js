@@ -1,6 +1,6 @@
 // Integration boundary: identities must come from existing verified student/admin auth.
 // A durable adapter must implement atomic transaction(key, callback), not get-then-put.
-import {STATIONS,active,normalizeEvent,effectiveEvent,accessAllowed,validateAccess,ACTIVITY_MODES,STATION_LIMITS,optionsFor,isBasicToneQuestion,gradeAnswer,validateAward,shuffle,LISTEN_POLICY,LISTEN_OUTCOMES,makeListeningRounds,listeningSummary,ANSWER_POLICY,roundComplete,answerSummary} from './annual-challenge-core.js?v=20261111-retry2';
+import {STATIONS,active,normalizeEvent,effectiveEvent,accessAllowed,validateAccess,ACTIVITY_MODES,STATION_LIMITS,optionsFor,isBasicToneQuestion,gradeAnswer,validateAward,shuffle,LISTEN_POLICY,LISTEN_OUTCOMES,makeListeningRounds,listeningSummary,ANSWER_POLICY,roundComplete,answerSummary} from './annual-challenge-core.js?v=20261111-toneshared1';
 import {isStampForStation} from './annual-challenge-stamps.js?v=20261106-v2';
 const copy=v=>structuredClone(v);
 const fail=(message,status=400)=>{throw Object.assign(Error(message),{status});};
@@ -120,7 +120,7 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
       if(['tone','spell'].includes(station)){a.answerPolicy=ANSWER_POLICY;for(const round of extra)round.firstErrorPenalty=1;}
       a.index=a.rounds.length;a.rounds.push(...extra);
      }else if(type==='choose-stamp'){
-      if(who.role!=='student')fail('請讓孩子選擇喜歡的印章',403);
+      if(who.role!=='student'&&!(teacher&&station==='tone'))fail('請讓孩子選擇喜歡的印章',403);
       if(!a.rounds.every(roundComplete))fail('請先完成所有題目，再選印章');
       if(!isStampForStation(command.stamp,station))fail('請選擇這一關的印章');a.preferredStamp=command.stamp;
      }else if(type==='listen-rate'){
@@ -132,7 +132,7 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
       if(!teacher)fail('請由關主選題',403);if(round.selected!==null)fail('已選定題目，不能重抽',409);
       if(!Number.isInteger(command.option)||command.option<0||command.option>=round.options.length)fail('請選擇題目');round.selected=command.option;
      }else if(type==='answer'){
-      if(who.role!=='student')fail('請孩子作答',403);if(round.selected===null||roundComplete(round))fail('請等待關主出題',409);
+      if(who.role!=='student'&&!(teacher&&station==='tone'))fail('請孩子作答',403);if(round.selected===null||roundComplete(round))fail('請等待關主出題',409);
       const graded=gradeAnswer(station,round.options[round.selected],command.answer,a.tonePolicy),previous=round.result;
       round.result={...graded,completed:graded.correct,firstAnswer:copy(previous?.firstAnswer??graded.answer),firstWrongCharacterIndices:copy(previous?.firstWrongCharacterIndices??graded.wrongCharacterIndices),firstWrongCharacterCount:previous?.firstWrongCharacterCount??graded.wrongCharacterCount,firstErrorPenalty:(previous?.firstErrorPenalty??round.firstErrorPenalty)===1?1:2,tries:(previous?.tries||0)+1};
      }else if(type==='observe'){
