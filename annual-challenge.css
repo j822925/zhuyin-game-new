@@ -31,3 +31,9 @@ dialog{width:min(740px,96vw);max-height:calc(100dvh - 24px);border:0;border-radi
 .action-zhuyin.has-neutral{padding-top:.32em}
 .action-neutral{position:absolute;left:.5em;top:-.25em;width:.11em;height:.11em;transform:translateX(-50%);border-radius:50%;background:currentColor}
 .choice .action-zhuyin{display:flex;font-size:24px;margin-top:10px;color:#456153}
+
+.retry-notice{flex:none;display:flex;flex-direction:column;align-items:center;gap:2px;max-width:100%;padding:8px 16px;border:1.5px solid #e6b971;border-radius:12px;background:#fff2d7;color:#77501d;text-align:center;font-size:16px}
+.retry-notice strong{font-size:20px}.retry-notice span{font-size:13px}
+.tone-character{border:2px solid transparent;border-radius:14px;padding:4px}
+.tone-character.retry-character,.syllable-list .retry-character{border:2px solid #cf841c!important;box-shadow:0 0 0 2px #ffe4b5}
+@media(min-width:700px) and (max-height:820px){.question-area[data-panel=spell] .retry-notice{padding:5px 12px}.question-area[data-panel=spell] .retry-notice strong{font-size:18px}.question-area[data-panel=spell] .retry-notice span{font-size:12px}}

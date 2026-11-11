@@ -1,23 +1,37 @@
 // Integration boundary: identities must come from existing verified student/admin auth.
 // A durable adapter must implement atomic transaction(key, callback), not get-then-put.
-import {STATIONS,active,normalizeEvent,effectiveEvent,accessAllowed,validateAccess,ACTIVITY_MODES,STATION_LIMITS,optionsFor,isBasicToneQuestion,gradeAnswer,validateAward,shuffle,LISTEN_POLICY,LISTEN_OUTCOMES,makeListeningRounds,listeningSummary} from './annual-challenge-core.js?v=20261111-neutralbasic1';
+import {STATIONS,active,normalizeEvent,effectiveEvent,accessAllowed,validateAccess,ACTIVITY_MODES,STATION_LIMITS,optionsFor,isBasicToneQuestion,gradeAnswer,validateAward,shuffle,LISTEN_POLICY,LISTEN_OUTCOMES,makeListeningRounds,listeningSummary,ANSWER_POLICY,roundComplete,answerSummary} from './annual-challenge-core.js?v=20261111-retry1';
 import {isStampForStation} from './annual-challenge-stamps.js?v=20261106-v2';
 const copy=v=>structuredClone(v);
 const fail=(message,status=400)=>{throw Object.assign(Error(message),{status});};
 export function createMemoryStore(){const data=new Map();return {async transaction(key,fn){const draft=copy(data.get(key)||null);const result=fn(draft);if(result?.value!==undefined)data.set(key,copy(result.value));return copy(result?.out);}};}
 export function createAnnualChallengeService({store,bank,studentExists=()=>false,now=Date.now,rng=Math.random,legacySeats=null}){
  // Read views do not write a migration. A stable virtual revision makes old
- // selections/answers stale; the next valid tone command persists this same view.
- function projectToneAttempt(attempt,key){
-  if(!attempt||attempt.award)return attempt;
-  const pending=attempt.rounds.map((round,index)=>!round.result&&round.options.some(q=>!isBasicToneQuestion(q))?index:-1).filter(index=>index>=0);
-  if(!pending.length)return attempt;
+ // selections/answers stale; the next valid command for this station persists it.
+ function projectAnswerAttempt(attempt,key){
+  if(!attempt||attempt.award||!['tone','spell'].includes(attempt.station))return attempt;
+  const adoptPolicy=attempt.answerPolicy!==ANSWER_POLICY&&!attempt.rounds.every(roundComplete);
+  const pending=attempt.station==='tone'?attempt.rounds.map((round,index)=>!round.result&&round.options.some(q=>!isBasicToneQuestion(q))?index:-1).filter(index=>index>=0):[];
+  if(!pending.length&&!adoptPolicy)return attempt;
+  const projected=copy(attempt);
+  if(adoptPolicy)projected.answerPolicy=ANSWER_POLICY;
+  if(pending.length){
   const seed=key+':basic-tone-v1:'+attempt.revision+':'+attempt.rounds.map(r=>r.options.map(q=>q.id||q.text).join(',')).join('|');
   let state=2166136261;for(let i=0;i<seed.length;i++){state^=seed.charCodeAt(i);state=Math.imul(state,16777619);}
   const deterministic=()=>{state=(state+0x6D2B79F5)|0;let n=state;n=Math.imul(n^(n>>>15),n|1);n^=n+Math.imul(n^(n>>>7),n|61);return ((n^(n>>>14))>>>0)/4294967296;};
-  const replacements=optionsFor(bank,'tone',pending.length,deterministic,{usedIds:attempt.rounds.flatMap(r=>r.options.map(q=>q.id))}),projected=copy(attempt);
-  pending.forEach((index,i)=>{projected.rounds[index]=replacements[i];});projected.revision++;
+  const replacements=optionsFor(bank,'tone',pending.length,deterministic,{usedIds:attempt.rounds.flatMap(r=>r.options.map(q=>q.id))});
+  pending.forEach((index,i)=>{projected.rounds[index]=replacements[i];});
+  }
+  projected.revision++;
   return projected;
+ }
+ function studentResult(attempt,round){
+  if(!round.result)return null;
+  if(!['tone','spell'].includes(attempt.station))return {answered:true};
+  const result=round.result,out={answered:true,completed:roundComplete(round),correct:result.correct===true,tries:Number.isInteger(result.tries)?result.tries:1};
+  for(const field of ['answer','firstAnswer','wrongCharacterIndices','wrongCharacterCount','firstWrongCharacterIndices','firstWrongCharacterCount'])if(result[field]!==undefined)out[field]=copy(result[field]);
+  if(!Number.isInteger(out.firstWrongCharacterCount))out.firstWrongCharacterCount=answerSummary({...attempt,rounds:[round]}).firstWrongCharacterCount;
+  return out;
  }
  function identity(who){if(!who||!['student','teacher','organizer'].includes(who.role)||typeof who.classId!=='string'||!/^[-a-zA-Z0-9_]{1,40}$/.test(who.classId)||who.role==='student'&&(typeof who.seat!=='string'||!/^\d{6}$/.test(who.seat)))fail('請先登入',401);if(who.expiresAt!==undefined&&(!Number.isFinite(who.expiresAt)||who.expiresAt<=now()))fail('關主授權已到期，請重新驗證',401);}
  const prefix=(who,year)=>{identity(who);if(!Number.isInteger(year)||year<2020||year>2100)fail('活動年度有誤');if(who.yearScope!==undefined&&who.yearScope!==year)fail('關主授權僅限本次年度',403);return who.classId+':'+year;};
@@ -32,8 +46,8 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
  function requireAccess(event,mode,seat){if(!accessAllowed(event,mode,seat))fail('這個活動尚未開放給這位學生',403);}
  async function availability(who,year){prefix(who,year);if(who.role!=='student')fail('請使用學生身分查看自己的開放狀態',403);await requireStudent(who,who.seat);const event=await fullConfig(who,year);return Object.fromEntries(ACTIVITY_MODES.map(mode=>[mode,{enabled:active(event.access[mode],now()),allowed:accessAllowed(event,mode,who.seat)}]));}
  async function card(who,year,seat,requestedMode,requestedRound){const s=seatFor(who,seat);await requireStudent(who,s);const full=await fullConfig(who,year);const mode=modeFor(who,requestedMode||full.mode);requireAccess(full,mode,s);const rehearsalRound=roundFor(who,full,mode,requestedRound),event=effectiveEvent(full,mode,who.role!=='student');return store.transaction(cardKey(who,year,mode,rehearsalRound,s),value=>{
-  const attempts=value||{};const visible=copy(attempts);if(visible.tone)visible.tone=projectToneAttempt(visible.tone,cardKey(who,year,mode,rehearsalRound,s));
-  if(who.role==='student')for(const a of Object.values(visible)){delete a.receipts;delete a.previousListen;a.rounds=a.rounds.map(r=>({selected:r.selected===null?null:0,options:r.selected===null||a.station==='listen'?[]:[{text:r.options[r.selected].text,audioUrl:['tone','spell'].includes(a.station)?r.options[r.selected].audioUrl:undefined,zhuyin:a.station==='action'?r.options[r.selected].zhuyin:undefined}],result:r.result?{answered:true}:null}));}
+  const attempts=value||{};const visible=copy(attempts);for(const station of ['tone','spell'])if(visible[station])visible[station]=projectAnswerAttempt(visible[station],cardKey(who,year,mode,rehearsalRound,s));
+  if(who.role==='student')for(const a of Object.values(visible)){delete a.receipts;delete a.previousListen;a.rounds=a.rounds.map(r=>({selected:r.selected===null?null:0,options:r.selected===null||a.station==='listen'?[]:[{text:r.options[r.selected].text,audioUrl:['tone','spell'].includes(a.station)?r.options[r.selected].audioUrl:undefined,zhuyin:a.station==='action'?r.options[r.selected].zhuyin:undefined}],result:studentResult(a,r)}));}
   if(who.role==='teacher')for(const [id,a]of Object.entries(visible))if(!canStation(who,id))visible[id]={station:id,award:a.award?{score:a.award.score,stamp:a.award.stamp}:null};
   return {out:{event,mode,rehearsalRound,seat:s,attempts:visible}};
  });}
@@ -75,24 +89,25 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
     if(!command||typeof command.requestId!=='string'||!/^[-a-zA-Z0-9_]{8,80}$/.test(command.requestId))fail('請重新操作');
     const receipt=a?.receipts?.find(r=>r.id===command.requestId);
     if(receipt){if(receipt.body!==JSON.stringify(command))fail('重試內容不同，請重新讀取',409);return {out:{ok:true,revision:a.revision}};}
-    if(station==='tone'&&a){a=projectToneAttempt(a,key);attempts[station]=a;}
+    if(['tone','spell'].includes(station)&&a){a=projectAnswerAttempt(a,key);attempts[station]=a;}
     if((a?.revision||0)!==command.revision)fail('闖關進度已更新，請重新讀取',409);
     const type=command.type;
     if(type==='start'||type==='listen-replan'){
      if(!teacher)fail('請關主開始闖關',403);if(type==='start'&&a)fail('這一關已經開始，請接續原進度',409);
      if(type==='listen-replan'&&(station!=='listen'||!a||a.award||a.listenPolicy&&a.rounds.some(r=>r.result)))fail('已評量或已簽章的題目不能改選',409);
-     const count=station==='listen'?10:station==='spell'?(command.count??event.spellCount):station==='tone'?(command.count??event.toneCount):station==='action'?(command.count??event.actionCount):1;
+     const count=station==='listen'?10:station==='spell'?(command.count??event.spellCount):station==='tone'?(command.count??4):station==='action'?(command.count??event.actionCount):1;
      if(station==='action'&&(!Number.isInteger(count)||count<1||count>8))fail('動作題數請選一至八題');
      if(['tone','spell'].includes(station)&&(!Number.isInteger(count)||count<3||count>8))fail('拼音與聲調題數請選三至八題');
      const previous=a;
      a={station,revision:previous?.revision||0,index:0,rounds:station==='listen'?makeListeningRounds(command.symbols):optionsFor(bank,station,count,rng),award:null,tonePolicy:event.tonePolicy,preferredStamp:previous?.preferredStamp||null,receipts:previous?.receipts||[]};
+     if(['tone','spell'].includes(station))a.answerPolicy=ANSWER_POLICY;
      if(station==='listen'){a.listenPolicy=LISTEN_POLICY;if(previous?.previousListen)a.previousListen=previous.previousListen;else if(previous&&!previous.listenPolicy)a.previousListen={rounds:previous.rounds,index:previous.index};}
      attempts[station]=a;
     }else{
      if(!a)fail('請先開始闖關');if(a.award)fail('這一關已完成，不能再次覆寫',409);
      const round=a.rounds[a.index];
      if(type==='extend'){
-      if(!teacher)fail('請由關主加題',403);if(!a.rounds.every(r=>r.result))fail('請先完成目前所有題目，再加題');
+      if(!teacher)fail('請由關主加題',403);if(!a.rounds.every(roundComplete))fail('請先完成目前所有題目，再加題');
       const count=command.count??(station==='listen'&&Array.isArray(command.symbols)?command.symbols.length:undefined);
       if(!Number.isInteger(count)||count<1||count>5)fail('每次請增加一至五題');
       if(a.rounds.length+count>STATION_LIMITS[station])fail('這一關已達可加題的上限');
@@ -102,10 +117,10 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
        if(command.symbols?.length!==count)fail('加題數量與選取的符號不一致');
        extra=makeListeningRounds(command.symbols,{min:1,max:5,used:a.rounds.map(r=>r.options[0].text),offset:a.rounds.length});
       }else extra=optionsFor(bank,station,count,rng,{usedIds:a.rounds.flatMap(r=>r.options.map(q=>q.id))});
-      a.index=a.rounds.length;a.rounds.push(...extra);
+      a.index=a.rounds.length;a.rounds.push(...extra);if(['tone','spell'].includes(station))a.answerPolicy=ANSWER_POLICY;
      }else if(type==='choose-stamp'){
       if(who.role!=='student')fail('請讓孩子選擇喜歡的印章',403);
-      if(!a.rounds.every(r=>r.result))fail('請先完成所有題目，再選印章');
+      if(!a.rounds.every(roundComplete))fail('請先完成所有題目，再選印章');
       if(!isStampForStation(command.stamp,station))fail('請選擇這一關的印章');a.preferredStamp=command.stamp;
      }else if(type==='listen-rate'){
       if(!teacher||station!=='listen')fail('請由聽音關主評量',403);if(a.listenPolicy!==LISTEN_POLICY)fail('請先改用自由選題');
@@ -116,8 +131,9 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
       if(!teacher)fail('請由關主選題',403);if(round.selected!==null)fail('已選定題目，不能重抽',409);
       if(!Number.isInteger(command.option)||command.option<0||command.option>=round.options.length)fail('請選擇題目');round.selected=command.option;
      }else if(type==='answer'){
-      if(who.role!=='student')fail('請孩子作答',403);if(round.selected===null||round.result)fail('請等待關主出題',409);
-      round.result=gradeAnswer(station,round.options[round.selected],command.answer,a.tonePolicy);
+      if(who.role!=='student')fail('請孩子作答',403);if(round.selected===null||roundComplete(round))fail('請等待關主出題',409);
+      const graded=gradeAnswer(station,round.options[round.selected],command.answer,a.tonePolicy),previous=round.result;
+      round.result={...graded,completed:graded.correct,firstAnswer:copy(previous?.firstAnswer??graded.answer),firstWrongCharacterIndices:copy(previous?.firstWrongCharacterIndices??graded.wrongCharacterIndices),firstWrongCharacterCount:previous?.firstWrongCharacterCount??graded.wrongCharacterCount,tries:(previous?.tries||0)+1};
      }else if(type==='observe'){
       if(!teacher||!['listen','action'].includes(station))fail('請由關主評量',403);
       if(station==='listen'&&a.listenPolicy)fail('請使用二／一／零分評量');
@@ -127,10 +143,11 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
       if(station!=='read'||who.role!=='student'||round.result)fail('請孩子抽課',409);const used=a.rounds.map(r=>r.result?.lesson),lesson=shuffle([1,2,3,4,5,6,7,8,9].filter(v=>!used.includes(v)),rng)[0];if(!lesson)fail('九課都已抽過，不能再抽課');round.options=[{id:'R'+lesson,text:'第'+lesson+'課',lesson}];round.selected=0;round.result={lesson};
      }else if(type==='next'){
       if(station==='listen'&&a.listenPolicy)fail('請直接點選要評量的符號');
-      if(!teacher||!round.result||a.index>=a.rounds.length-1)fail('請完成目前這一題');a.index++;
+      if(!teacher||!roundComplete(round)||a.index>=a.rounds.length-1)fail('請完成目前這一題');a.index++;
      }else if(type==='award'){
-      if(!teacher)fail('請由關主評分簽章',403);if(!a.rounds.every(r=>r.result))fail('請先完成所有題目');
+      if(!teacher)fail('請由關主評分簽章',403);if(!a.rounds.every(roundComplete))fail('請先完成所有題目');
       if(station==='listen'&&a.listenPolicy&&(listeningSummary(a).assessed!==a.rounds.length||command.award?.score!==listeningSummary(a).points))fail('聽音辨識分數必須依逐題加總並換算為二十分');
+      if(['tone','spell'].includes(station)&&a.answerPolicy===ANSWER_POLICY&&command.award?.score!==answerSummary(a).points)fail('聲調與拼音分數必須依首次錯字比例換算為二十分');
       a.award={...validateAward(command.award,station),teacherId:who.id||'teacher',savedAt:now()};
      }else fail('不支援的操作');
     }

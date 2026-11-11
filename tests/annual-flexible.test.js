@@ -26,7 +26,7 @@ test('new tone/spell initial counts are teacher-selected 3–8; tone is basic-on
   if(station==='tone'){assert.equal(a.rounds.filter(r=>r.options.some(q=>q.mode!=='basic'||q.hasSandhi===true)).length,0);assert.ok(a.rounds.every(r=>r.options.length===3));}
   else{assert.ok(a.rounds.every(r=>r.options.every(q=>[...q.text].length<=2&&q.audioUrl)));await command(s,station,'select',{option:1});const shown=(await s.card(child,2026)).attempts.spell.rounds[0].options[0];assert.equal(shown.audioUrl,a.rounds[0].options[1].audioUrl);assert.equal(shown.zhuyin,undefined);}
  }
- for(const station of ['tone','spell']){const {service:s}=await setup();for(const count of [2,9,3.5,'5'])await assert.rejects(command(s,station,'start',{count}),/三至八/);await command(s,station,'start');assert.equal((await attempt(s,station)).rounds.length,5);}
+ for(const station of ['tone','spell']){const {service:s}=await setup();for(const count of [2,9,3.5,'5'])await assert.rejects(command(s,station,'start',{count}),/三至八/);await command(s,station,'start');assert.equal((await attempt(s,station)).rounds.length,station==='tone'?4:5);}
 });
 test('each station can extend only completed work, with teacher authority and idempotent receipts',async()=>{
  for(const station of ['listen','tone','spell','action','read']){const {service:s}=await setup();await command(s,station,'start',station==='listen'?{symbols:symbols.slice(0,10)}:{count:3});await assert.rejects(command(s,station,'extend',{count:1,...(station==='listen'?{symbols:symbols.slice(10,11)}:{})}),/先完成/);await complete(s,station);
