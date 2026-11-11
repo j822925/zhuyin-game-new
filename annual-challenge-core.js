@@ -2,7 +2,7 @@ import {INITIALS,FINALS,COMBINED,ACTIONS} from './annual-challenge-bank.js?v=202
 import {stampById,isStampForStation} from './annual-challenge-stamps.js?v=20261106-v2';
 export const STATIONS=[
  {id:'listen',name:'聽音辨識',animal:'listen-owl',icon:'🦉',short:'聽一聽，指一指',description:'老師讀出聲符、韻符或結合韻，請用愛的小手指出黑板上的符號。'},
- {id:'tone',name:'先聲奪人',animal:'tone-rabbit',icon:'🐰',short:'聽詞語，選聲調',description:'關主選詞後，聽一聽，再選出每個字原本的聲調。第一批含一題變音。'},
+ {id:'tone',name:'先聲奪人',animal:'tone-rabbit',icon:'🐰',short:'聽詞語，選聲調',description:'關主選詞後，聽一聽，再選出每個字原本的聲調。目前不出變音題。'},
  {id:'spell',name:'東拼西湊',animal:'spell-fox',icon:'🦊',short:'注音小幫手，拼一拼',description:'關主選字詞，請用聲符、韻符、結合韻和聲調拼出來。'},
  {id:'action',name:'照做不誤',animal:'action-monkey',icon:'🐵',short:'看注音，做動作',description:'讀一讀注音，做出動作。讓關主看看你的本領！'},
  {id:'read',name:'書聲琅琅',animal:'read-cat',icon:'🐱',short:'轉一轉，讀一課',description:'轉動九課幸運輪，抽出一課，再拿課本讀給老師聽。'}
@@ -47,15 +47,15 @@ export function effectiveEvent(event,mode=event.mode,includeAccess=true){
  return out;
 }
 export const accessAllowed=(event,mode,seat)=>!!event.access?.[mode]&&(event.access[mode].allStudents||event.access[mode].seats.includes(seat));
-export function optionsFor(bank,station,count=10,rng=Math.random,{includeSandhi=true,usedIds=[]}={}){
+export function isBasicToneQuestion(q){return q?.mode==='basic'&&q.hasSandhi!==true&&typeof q.text==='string'&&q.text.length>0&&q.text.length<=3&&!/[一不]/.test(q.text);}
+export function optionsFor(bank,station,count=10,rng=Math.random,{usedIds=[]}={}){
  if(!Number.isInteger(count)||count<1||count>30)throw Error('題數有誤');
  const enabled=bank.questions.filter(q=>q.enabled&&!bank.disabledIds.includes(q.id));
  const unusedFirst=items=>[...shuffle(items.filter(q=>!usedIds.includes(q.id)),rng),...shuffle(items.filter(q=>usedIds.includes(q.id)),rng)];
  if(station==='tone'){
-  const basic=unusedFirst(enabled.filter(q=>q.mode==='basic'&&q.text.length<=3&&!/[一不]/.test(q.text))),sandhi=unusedFirst(enabled.filter(q=>q.mode==='sandhi'&&q.text.length<=3));
-  if(basic.length<(count-Number(includeSandhi))*3||includeSandhi&&sandhi.length<3)throw Error('題庫不足');
-  const special=includeSandhi?Math.min(count-1,Math.floor(rng()*count)):-1;let b=0;
-  return Array.from({length:count},(_,i)=>({options:i===special?sandhi.slice(0,3):basic.slice(b,b+=3),selected:null,result:null}));
+  const basic=unusedFirst(enabled.filter(isBasicToneQuestion));
+  if(basic.length<count*3)throw Error('題庫不足');
+  return Array.from({length:count},(_,i)=>({options:basic.slice(i*3,i*3+3),selected:null,result:null}));
  }
  if(station==='spell'){
   const pool=unusedFirst(enabled.filter(q=>[...q.text].length>=1&&[...q.text].length<=2&&q.zhuyin&&typeof q.audioUrl==='string'&&q.audioUrl));if(pool.length<count*3)throw Error('題庫不足');

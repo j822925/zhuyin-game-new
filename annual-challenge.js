@@ -1,4 +1,4 @@
-import {STATIONS,TONES,active,summary,LISTEN_POLICY,LISTEN_OUTCOMES,listeningSummary} from './annual-challenge-core.js?v=20261106-v2';
+import {STATIONS,TONES,active,summary,LISTEN_POLICY,LISTEN_OUTCOMES,listeningSummary} from './annual-challenge-core.js?v=20261111-neutralbasic1';
 import {INITIALS,FINALS,COMBINED} from './annual-challenge-bank.js?v=20261106-v2';
 import {stampsForStation,stampById} from './annual-challenge-stamps.js?v=20261106-v2';
 const $=id=>document.getElementById(id),app=$('app'),escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -7,9 +7,9 @@ const asset=id=>previewAdapter?.assets[id]||'assets/annual-challenge-20261103/'+
 const image=id=>`<img src="${asset(id)}" alt="${escape(stampById(id)?.name||'過關印章')}" loading="lazy">`;
 function actionZhuyin(value){
  const syllables=String(value??'').trim().split(/[\s　]+/).filter(Boolean);
- return '<span class="action-zhuyin" role="img" aria-label="'+escape(syllables.join(' '))+'">'+syllables.map(syllable=>{
+ return '<span class="action-zhuyin'+(syllables.some(s=>s.includes('˙'))?' has-neutral':'')+'" role="img" aria-label="'+escape(syllables.join(' '))+'">'+syllables.map(syllable=>{
   const tone=syllable.match(/[ˉˊˇˋ˙]/)?.[0]||'',symbols=[...syllable.replace(/[ˉˊˇˋ˙]/g,'')];
-  return '<span class="action-syllable" aria-hidden="true">'+symbols.map((symbol,i)=>'<span class="action-glyph">'+escape(symbol)+(tone&&i===symbols.length-1?'<span class="action-tone">'+escape(tone)+'</span>':'')+'</span>').join('')+'</span>';
+  return '<span class="action-syllable" aria-hidden="true">'+symbols.map((symbol,i)=>'<span class="action-glyph">'+(tone==='˙'&&i===0?'<span class="action-neutral"></span>':'')+escape(symbol)+(tone&&tone!=='˙'&&i===symbols.length-1?'<span class="action-tone">'+escape(tone)+'</span>':'')+'</span>').join('')+'</span>';
  }).join('')+'</span>';
 }
 let session=null,handoffChild=null,card=null,event=null,station=null,target='990001',busy=false,answers=[],cursor=0,lines=[],stamp='',pending=null,streamController=null,offlineUnsubscribe=null,spinning=false;
@@ -206,7 +206,7 @@ function renderStation(){
  if(!a){$('question').innerHTML=`<div class="big-icon">${s.icon}</div><h2>${teacher?'準備好開始了嗎？':'等關主老師幫你開始'}</h2><p>${teacher?'請確認眼前孩子的學號，再按開始。':'走到這一關，讓老師確認你的學號。'}</p>${teacher&&['action','spell','tone'].includes(station)?`<label>這位孩子考幾次？<select id="attempt-count">${Array.from({length:station==='action'?8:6},(_,i)=>{const n=i+(station==='action'?1:3);return `<option value="${n}" ${(station==='action'?event.actionCount:5)===n?'selected':''}>${n} 題</option>`;}).join('')}</select></label>`:''}${teacher?'<button id="start" data-command class="primary">開始這位孩子的闖關 →</button>':''}`;if($('start'))$('start').onclick=()=>command('start',['action','spell','tone'].includes(station)?{count:Number($('attempt-count').value)}:{});return;}
  if(round.result){$('question').innerHTML=`<div class="done-mark">${station==='read'?'📖':'✓'}</div><h2>${station==='read'?escape(round.options[round.selected].text):'這一題已完成'}</h2><p>${teacher?station==='read'?'請孩子拿課本朗讀，聽完後評分。':['tone','spell'].includes(station)?`這題${round.result.correct?'答對了':'還需要練習'}，最後由關主確認整關分數。`:'已記下孩子的表現。':(production?'等老師準備下一個挑戰。':'請關主接手，準備下一個挑戰。')}</p>${teacher?`<button id="advance" data-command class="primary">${a.index===a.rounds.length-1?'評分、蓋章與簽名':'下一題 →'}</button>`:''}`;if($('advance'))$('advance').onclick=()=>a.index===a.rounds.length-1?renderCompletion(a):command('next');return;}
  if(teacher){
-  if(round.selected===null&&station!=='read'){$('question').innerHTML=`<h2>請關主選一${station==='action'?'個動作':'個詞語'}</h2><p class="subtle">${station==='tone'&&round.options[0].mode==='sandhi'?'這一題的三個選項都含變音。':'選定後才會送到孩子畫面，選好就不重抽。'}</p><div class="choice-grid">${round.options.map((q,i)=>`<button data-option="${i}" class="choice">${escape(q.text)}${station==='action'?actionZhuyin(q.zhuyin):''}</button>`).join('')}</div>`;app.querySelectorAll('[data-option]').forEach(b=>b.onclick=()=>command('select',{option:Number(b.dataset.option)}));return;}
+  if(round.selected===null&&station!=='read'){$('question').innerHTML=`<h2>請關主選一${station==='action'?'個動作':'個詞語'}</h2><p class="subtle">${'選定後才會送到孩子畫面，選好就不重抽。'}</p><div class="choice-grid">${round.options.map((q,i)=>`<button data-option="${i}" class="choice">${escape(q.text)}${station==='action'?actionZhuyin(q.zhuyin):''}</button>`).join('')}</div>`;app.querySelectorAll('[data-option]').forEach(b=>b.onclick=()=>command('select',{option:Number(b.dataset.option)}));return;}
   const q=round.options[round.selected];
   if(station==='read'){$('question').innerHTML='<div class="big-icon">🎡</div><h2>等孩子點轉盤抽課</h2><p>抽中的課次會同步到這裡。</p>';return;}
   $('question').innerHTML=`<p class="eyebrow">${station==='listen'?'請老師讀出這個符號':'孩子目前的題目'}</p><div class="${station==='listen'?'big-symbol':'big-word'}">${escape(q.text)}</div>${station==='action'?'<p class="zhuyin-action">'+actionZhuyin(q.zhuyin)+'</p>':''}${['listen','action'].includes(station)?'<div class="actions"><button id="observe-yes" data-command class="primary">✓ 完成得很好</button><button id="observe-no" data-command>再多練習</button></div>':'<p>請孩子在自己的畫面作答，送出後會同步顯示。</p>'}`;

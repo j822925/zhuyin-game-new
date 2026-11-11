@@ -21,9 +21,9 @@ async function complete(s,station){
   else {if(r.selected===null)await command(s,station,'select',{option:0});const q=r.options[r.selected??0];await command(s,station,station==='action'?'observe':'answer',station==='action'?{correct:true}:{answer:station==='tone'?q.lexicalTones:spellingParts(q)},station==='action'?org:child);}
  }if(a.index===a.rounds.length-1)return;await command(s,station,'next');}
 }
-test('new tone/spell initial counts are teacher-selected 3–8; tone guarantees exactly one sandhi and spelling retains audio',async()=>{
- for(const station of ['tone','spell'])for(const count of [3,5,8]){const {service:s}=await setup();await command(s,station,'start',{count});const a=await attempt(s,station);assert.equal(a.rounds.length,count);
-  if(station==='tone'){assert.equal(a.rounds.filter(r=>r.options.every(q=>q.mode==='sandhi')).length,1);assert.ok(a.rounds.every(r=>r.options.length===3));}
+test('new tone/spell initial counts are teacher-selected 3–8; tone is basic-only and spelling retains audio',async()=>{
+ for(const station of ['tone','spell'])for(const count of [3,4,5,6,7,8]){const {service:s}=await setup();await command(s,station,'start',{count});const a=await attempt(s,station);assert.equal(a.rounds.length,count);
+  if(station==='tone'){assert.equal(a.rounds.filter(r=>r.options.some(q=>q.mode!=='basic'||q.hasSandhi===true)).length,0);assert.ok(a.rounds.every(r=>r.options.length===3));}
   else{assert.ok(a.rounds.every(r=>r.options.every(q=>[...q.text].length<=2&&q.audioUrl)));await command(s,station,'select',{option:1});const shown=(await s.card(child,2026)).attempts.spell.rounds[0].options[0];assert.equal(shown.audioUrl,a.rounds[0].options[1].audioUrl);assert.equal(shown.zhuyin,undefined);}
  }
  for(const station of ['tone','spell']){const {service:s}=await setup();for(const count of [2,9,3.5,'5'])await assert.rejects(command(s,station,'start',{count}),/三至八/);await command(s,station,'start');assert.equal((await attempt(s,station)).rounds.length,5);}
@@ -35,8 +35,8 @@ test('each station can extend only completed work, with teacher authority and id
   await complete(s,station);const stamp=stampsForStation(station)[4].id;await command(s,station,'choose-stamp',{stamp},child);assert.equal((await s.card(child,2026)).attempts[station].preferredStamp,stamp);await command(s,station,'award',{award:{score:20,stamp,signature,note:''}});await assert.rejects(command(s,station,'extend',extra),/已完成/);
  }
 });
-test('extensions preserve one sandhi in total and avoid reused choices while unused items remain',async()=>{
- for(const station of ['tone','spell','action']){const {service:s}=await setup();await command(s,station,'start',{count:3});await complete(s,station);await command(s,station,'extend',{count:3});const a=await attempt(s,station),ids=a.rounds.flatMap(r=>r.options.map(q=>q.id));assert.equal(new Set(ids).size,ids.length);if(station==='tone')assert.equal(a.rounds.filter(r=>r.options.every(q=>q.mode==='sandhi')).length,1);}
+test('extensions stay basic-only and avoid reused choices while unused items remain',async()=>{
+ for(const station of ['tone','spell','action']){const {service:s}=await setup();await command(s,station,'start',{count:3});await complete(s,station);await command(s,station,'extend',{count:3});const a=await attempt(s,station),ids=a.rounds.flatMap(r=>r.options.map(q=>q.id));assert.equal(new Set(ids).size,ids.length);if(station==='tone')assert.equal(a.rounds.filter(r=>r.options.some(q=>q.mode!=='basic'||q.hasSandhi===true)).length,0);}
 });
 test('all caps are enforced, reading exhausts nine unique lessons, and listening can assess all 59 symbols',async()=>{
  assert.equal(symbols.length,59);

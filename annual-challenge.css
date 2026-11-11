@@ -23,9 +23,11 @@ dialog{width:min(740px,96vw);max-height:calc(100dvh - 24px);border:0;border-radi
 
 .listen-inline-pager{display:flex;align-items:center;gap:7px;font-size:13px}.listen-inline-pager button{min-width:44px;padding:4px 8px}.question-area[data-panel=extend] .done-mark{display:none}.question-area[data-panel=extend] .count-picker{margin:0}
 
-/* Action prompts: each syllable runs top to bottom; its tone belongs to the last glyph. */
+/* Action prompts: neutral dots sit above the syllable; other tones stay beside its last glyph. */
 .action-zhuyin{display:inline-flex;align-items:flex-start;justify-content:center;gap:.16em;max-width:100%;font-family:"BiauKai","DFKai-SB","KaiTi",serif;font-weight:400;line-height:1;letter-spacing:0;white-space:nowrap;text-align:center}
 .action-syllable{display:flex;flex-direction:column;align-items:flex-start;flex:none;padding-right:.5em}
 .action-glyph{display:block;position:relative;width:1em;height:1.05em;line-height:1.05;writing-mode:horizontal-tb;text-orientation:upright}
 .action-tone{position:absolute;left:1.38em;top:-.12em;width:.7em;font-size:.64em;line-height:1;letter-spacing:0;text-align:center}
+.action-zhuyin.has-neutral{padding-top:.32em}
+.action-neutral{position:absolute;left:.5em;top:-.25em;width:.11em;height:.11em;transform:translateX(-50%);border-radius:50%;background:currentColor}
 .choice .action-zhuyin{display:flex;font-size:24px;margin-top:10px;color:#456153}

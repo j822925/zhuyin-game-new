@@ -1,11 +1,24 @@
 // Integration boundary: identities must come from existing verified student/admin auth.
 // A durable adapter must implement atomic transaction(key, callback), not get-then-put.
-import {STATIONS,active,normalizeEvent,effectiveEvent,accessAllowed,validateAccess,ACTIVITY_MODES,STATION_LIMITS,optionsFor,gradeAnswer,validateAward,shuffle,LISTEN_POLICY,LISTEN_OUTCOMES,makeListeningRounds,listeningSummary} from './annual-challenge-core.js?v=20261106-v2';
+import {STATIONS,active,normalizeEvent,effectiveEvent,accessAllowed,validateAccess,ACTIVITY_MODES,STATION_LIMITS,optionsFor,isBasicToneQuestion,gradeAnswer,validateAward,shuffle,LISTEN_POLICY,LISTEN_OUTCOMES,makeListeningRounds,listeningSummary} from './annual-challenge-core.js?v=20261111-neutralbasic1';
 import {isStampForStation} from './annual-challenge-stamps.js?v=20261106-v2';
 const copy=v=>structuredClone(v);
 const fail=(message,status=400)=>{throw Object.assign(Error(message),{status});};
 export function createMemoryStore(){const data=new Map();return {async transaction(key,fn){const draft=copy(data.get(key)||null);const result=fn(draft);if(result?.value!==undefined)data.set(key,copy(result.value));return copy(result?.out);}};}
 export function createAnnualChallengeService({store,bank,studentExists=()=>false,now=Date.now,rng=Math.random,legacySeats=null}){
+ // Read views do not write a migration. A stable virtual revision makes old
+ // selections/answers stale; the next valid tone command persists this same view.
+ function projectToneAttempt(attempt,key){
+  if(!attempt||attempt.award)return attempt;
+  const pending=attempt.rounds.map((round,index)=>!round.result&&round.options.some(q=>!isBasicToneQuestion(q))?index:-1).filter(index=>index>=0);
+  if(!pending.length)return attempt;
+  const seed=key+':basic-tone-v1:'+attempt.revision+':'+attempt.rounds.map(r=>r.options.map(q=>q.id||q.text).join(',')).join('|');
+  let state=2166136261;for(let i=0;i<seed.length;i++){state^=seed.charCodeAt(i);state=Math.imul(state,16777619);}
+  const deterministic=()=>{state=(state+0x6D2B79F5)|0;let n=state;n=Math.imul(n^(n>>>15),n|1);n^=n+Math.imul(n^(n>>>7),n|61);return ((n^(n>>>14))>>>0)/4294967296;};
+  const replacements=optionsFor(bank,'tone',pending.length,deterministic,{usedIds:attempt.rounds.flatMap(r=>r.options.map(q=>q.id))}),projected=copy(attempt);
+  pending.forEach((index,i)=>{projected.rounds[index]=replacements[i];});projected.revision++;
+  return projected;
+ }
  function identity(who){if(!who||!['student','teacher','organizer'].includes(who.role)||typeof who.classId!=='string'||!/^[-a-zA-Z0-9_]{1,40}$/.test(who.classId)||who.role==='student'&&(typeof who.seat!=='string'||!/^\d{6}$/.test(who.seat)))fail('請先登入',401);if(who.expiresAt!==undefined&&(!Number.isFinite(who.expiresAt)||who.expiresAt<=now()))fail('關主授權已到期，請重新驗證',401);}
  const prefix=(who,year)=>{identity(who);if(!Number.isInteger(year)||year<2020||year>2100)fail('活動年度有誤');if(who.yearScope!==undefined&&who.yearScope!==year)fail('關主授權僅限本次年度',403);return who.classId+':'+year;};
  const canStation=(who,id)=>who.role==='organizer'||who.role==='teacher'&&Array.isArray(who.stations)&&who.stations.includes(id);
@@ -19,7 +32,7 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
  function requireAccess(event,mode,seat){if(!accessAllowed(event,mode,seat))fail('這個活動尚未開放給這位學生',403);}
  async function availability(who,year){prefix(who,year);if(who.role!=='student')fail('請使用學生身分查看自己的開放狀態',403);await requireStudent(who,who.seat);const event=await fullConfig(who,year);return Object.fromEntries(ACTIVITY_MODES.map(mode=>[mode,{enabled:active(event.access[mode],now()),allowed:accessAllowed(event,mode,who.seat)}]));}
  async function card(who,year,seat,requestedMode,requestedRound){const s=seatFor(who,seat);await requireStudent(who,s);const full=await fullConfig(who,year);const mode=modeFor(who,requestedMode||full.mode);requireAccess(full,mode,s);const rehearsalRound=roundFor(who,full,mode,requestedRound),event=effectiveEvent(full,mode,who.role!=='student');return store.transaction(cardKey(who,year,mode,rehearsalRound,s),value=>{
-  const attempts=value||{};const visible=copy(attempts);
+  const attempts=value||{};const visible=copy(attempts);if(visible.tone)visible.tone=projectToneAttempt(visible.tone,cardKey(who,year,mode,rehearsalRound,s));
   if(who.role==='student')for(const a of Object.values(visible)){delete a.receipts;delete a.previousListen;a.rounds=a.rounds.map(r=>({selected:r.selected===null?null:0,options:r.selected===null||a.station==='listen'?[]:[{text:r.options[r.selected].text,audioUrl:['tone','spell'].includes(a.station)?r.options[r.selected].audioUrl:undefined,zhuyin:a.station==='action'?r.options[r.selected].zhuyin:undefined}],result:r.result?{answered:true}:null}));}
   if(who.role==='teacher')for(const [id,a]of Object.entries(visible))if(!canStation(who,id))visible[id]={station:id,award:a.award?{score:a.award.score,stamp:a.award.stamp}:null};
   return {out:{event,mode,rehearsalRound,seat:s,attempts:visible}};
@@ -62,6 +75,7 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
     if(!command||typeof command.requestId!=='string'||!/^[-a-zA-Z0-9_]{8,80}$/.test(command.requestId))fail('請重新操作');
     const receipt=a?.receipts?.find(r=>r.id===command.requestId);
     if(receipt){if(receipt.body!==JSON.stringify(command))fail('重試內容不同，請重新讀取',409);return {out:{ok:true,revision:a.revision}};}
+    if(station==='tone'&&a){a=projectToneAttempt(a,key);attempts[station]=a;}
     if((a?.revision||0)!==command.revision)fail('闖關進度已更新，請重新讀取',409);
     const type=command.type;
     if(type==='start'||type==='listen-replan'){
@@ -87,7 +101,7 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
        if(!a.listenPolicy)fail('請先改用自由選題');
        if(command.symbols?.length!==count)fail('加題數量與選取的符號不一致');
        extra=makeListeningRounds(command.symbols,{min:1,max:5,used:a.rounds.map(r=>r.options[0].text),offset:a.rounds.length});
-      }else extra=optionsFor(bank,station,count,rng,{includeSandhi:false,usedIds:a.rounds.flatMap(r=>r.options.map(q=>q.id))});
+      }else extra=optionsFor(bank,station,count,rng,{usedIds:a.rounds.flatMap(r=>r.options.map(q=>q.id))});
       a.index=a.rounds.length;a.rounds.push(...extra);
      }else if(type==='choose-stamp'){
       if(who.role!=='student')fail('請讓孩子選擇喜歡的印章',403);
