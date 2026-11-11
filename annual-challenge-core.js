@@ -91,7 +91,7 @@ export function gradeAnswer(station,q,answer,policy='lexical'){
  throw Error('這一關由老師評量');
 }
 export function answerSummary(attempt){
- const rounds=attempt?.rounds||[],out={total:rounds.length,completed:0,remaining:rounds.length,answered:0,corrected:0,totalCharacters:0,firstWrongCharacterCount:0,wrongCharacters:0,rawPoints:0,maxRawPoints:0,points:0};
+ const rounds=attempt?.rounds||[],out={total:rounds.length,completed:0,remaining:rounds.length,answered:0,corrected:0,totalCharacters:0,firstWrongCharacterCount:0,wrongCharacters:0,initialWrongCharacterCount:0,extraWrongCharacterCount:0,deductedPoints:0,rawPoints:0,maxRawPoints:0,points:0};
  for(const round of rounds){
   if(roundComplete(round))out.completed++;
   const q=round.selected===null?null:round.options?.[round.selected],characters=typeof q?.text==='string'?[...q.text].length:0;
@@ -101,9 +101,13 @@ export function answerSummary(attempt){
   // Missing old answers are never treated as errors or rewritten on a read.
   if(!Number.isInteger(wrong))try{wrong=gradeAnswer(attempt.station,q,round.result.firstAnswer??round.result.answer,attempt.tonePolicy).wrongCharacterCount;}catch{wrong=0;}
   wrong=Math.max(0,Math.min(characters,wrong));out.firstWrongCharacterCount+=wrong;
+  // Only newly added questions explicitly opt into the smaller deduction.
+  // Missing historical metadata keeps its original two-point deduction.
+  const penalty=(round.result.firstErrorPenalty??round.firstErrorPenalty)===1?1:2;
+  out.deductedPoints+=wrong*penalty;out[penalty===1?'extraWrongCharacterCount':'initialWrongCharacterCount']+=wrong;
   if(wrong&&roundComplete(round)&&round.result.correct===true)out.corrected++;
  }
- out.remaining=out.total-out.completed;out.wrongCharacters=out.firstWrongCharacterCount;out.maxRawPoints=2*out.totalCharacters;out.rawPoints=2*(out.totalCharacters-out.firstWrongCharacterCount);out.points=out.maxRawPoints?Math.round(out.rawPoints/out.maxRawPoints*20):0;return out;
+ out.remaining=out.total-out.completed;out.wrongCharacters=out.firstWrongCharacterCount;out.maxRawPoints=2*out.totalCharacters;out.rawPoints=out.maxRawPoints-out.deductedPoints;out.points=out.maxRawPoints?Math.round(out.rawPoints/out.maxRawPoints*20):0;return out;
 }
 export function validateSignature(lines){
  if(!Array.isArray(lines)||lines.length<1||lines.length>100||lines.some(line=>!Array.isArray(line)||line.length<1||line.length>2000||line.some(p=>!Array.isArray(p)||p.length!==2||p.some(n=>!Number.isFinite(n)||n<0||n>1))))return false;

@@ -1,6 +1,6 @@
 // Integration boundary: identities must come from existing verified student/admin auth.
 // A durable adapter must implement atomic transaction(key, callback), not get-then-put.
-import {STATIONS,active,normalizeEvent,effectiveEvent,accessAllowed,validateAccess,ACTIVITY_MODES,STATION_LIMITS,optionsFor,isBasicToneQuestion,gradeAnswer,validateAward,shuffle,LISTEN_POLICY,LISTEN_OUTCOMES,makeListeningRounds,listeningSummary,ANSWER_POLICY,roundComplete,answerSummary} from './annual-challenge-core.js?v=20261111-retry1';
+import {STATIONS,active,normalizeEvent,effectiveEvent,accessAllowed,validateAccess,ACTIVITY_MODES,STATION_LIMITS,optionsFor,isBasicToneQuestion,gradeAnswer,validateAward,shuffle,LISTEN_POLICY,LISTEN_OUTCOMES,makeListeningRounds,listeningSummary,ANSWER_POLICY,roundComplete,answerSummary} from './annual-challenge-core.js?v=20261111-retry2';
 import {isStampForStation} from './annual-challenge-stamps.js?v=20261106-v2';
 const copy=v=>structuredClone(v);
 const fail=(message,status=400)=>{throw Object.assign(Error(message),{status});};
@@ -28,7 +28,7 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
  function studentResult(attempt,round){
   if(!round.result)return null;
   if(!['tone','spell'].includes(attempt.station))return {answered:true};
-  const result=round.result,out={answered:true,completed:roundComplete(round),correct:result.correct===true,tries:Number.isInteger(result.tries)?result.tries:1};
+  const result=round.result,out={answered:true,completed:roundComplete(round),correct:result.correct===true,tries:Number.isInteger(result.tries)?result.tries:1,firstErrorPenalty:(result.firstErrorPenalty??round.firstErrorPenalty)===1?1:2};
   for(const field of ['answer','firstAnswer','wrongCharacterIndices','wrongCharacterCount','firstWrongCharacterIndices','firstWrongCharacterCount'])if(result[field]!==undefined)out[field]=copy(result[field]);
   if(!Number.isInteger(out.firstWrongCharacterCount))out.firstWrongCharacterCount=answerSummary({...attempt,rounds:[round]}).firstWrongCharacterCount;
   return out;
@@ -47,7 +47,7 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
  async function availability(who,year){prefix(who,year);if(who.role!=='student')fail('請使用學生身分查看自己的開放狀態',403);await requireStudent(who,who.seat);const event=await fullConfig(who,year);return Object.fromEntries(ACTIVITY_MODES.map(mode=>[mode,{enabled:active(event.access[mode],now()),allowed:accessAllowed(event,mode,who.seat)}]));}
  async function card(who,year,seat,requestedMode,requestedRound){const s=seatFor(who,seat);await requireStudent(who,s);const full=await fullConfig(who,year);const mode=modeFor(who,requestedMode||full.mode);requireAccess(full,mode,s);const rehearsalRound=roundFor(who,full,mode,requestedRound),event=effectiveEvent(full,mode,who.role!=='student');return store.transaction(cardKey(who,year,mode,rehearsalRound,s),value=>{
   const attempts=value||{};const visible=copy(attempts);for(const station of ['tone','spell'])if(visible[station])visible[station]=projectAnswerAttempt(visible[station],cardKey(who,year,mode,rehearsalRound,s));
-  if(who.role==='student')for(const a of Object.values(visible)){delete a.receipts;delete a.previousListen;a.rounds=a.rounds.map(r=>({selected:r.selected===null?null:0,options:r.selected===null||a.station==='listen'?[]:[{text:r.options[r.selected].text,audioUrl:['tone','spell'].includes(a.station)?r.options[r.selected].audioUrl:undefined,zhuyin:a.station==='action'?r.options[r.selected].zhuyin:undefined}],result:studentResult(a,r)}));}
+  if(who.role==='student')for(const a of Object.values(visible)){delete a.receipts;delete a.previousListen;a.rounds=a.rounds.map(r=>({selected:r.selected===null?null:0,...(['tone','spell'].includes(a.station)?{firstErrorPenalty:(r.result?.firstErrorPenalty??r.firstErrorPenalty)===1?1:2}:{}),options:r.selected===null||a.station==='listen'?[]:[{text:r.options[r.selected].text,audioUrl:['tone','spell'].includes(a.station)?r.options[r.selected].audioUrl:undefined,zhuyin:a.station==='action'?r.options[r.selected].zhuyin:undefined}],result:studentResult(a,r)}));}
   if(who.role==='teacher')for(const [id,a]of Object.entries(visible))if(!canStation(who,id))visible[id]={station:id,award:a.award?{score:a.award.score,stamp:a.award.stamp}:null};
   return {out:{event,mode,rehearsalRound,seat:s,attempts:visible}};
  });}
@@ -100,7 +100,7 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
      if(['tone','spell'].includes(station)&&(!Number.isInteger(count)||count<3||count>8))fail('拼音與聲調題數請選三至八題');
      const previous=a;
      a={station,revision:previous?.revision||0,index:0,rounds:station==='listen'?makeListeningRounds(command.symbols):optionsFor(bank,station,count,rng),award:null,tonePolicy:event.tonePolicy,preferredStamp:previous?.preferredStamp||null,receipts:previous?.receipts||[]};
-     if(['tone','spell'].includes(station))a.answerPolicy=ANSWER_POLICY;
+     if(['tone','spell'].includes(station)){a.answerPolicy=ANSWER_POLICY;for(const round of a.rounds)round.firstErrorPenalty=2;}
      if(station==='listen'){a.listenPolicy=LISTEN_POLICY;if(previous?.previousListen)a.previousListen=previous.previousListen;else if(previous&&!previous.listenPolicy)a.previousListen={rounds:previous.rounds,index:previous.index};}
      attempts[station]=a;
     }else{
@@ -117,7 +117,8 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
        if(command.symbols?.length!==count)fail('加題數量與選取的符號不一致');
        extra=makeListeningRounds(command.symbols,{min:1,max:5,used:a.rounds.map(r=>r.options[0].text),offset:a.rounds.length});
       }else extra=optionsFor(bank,station,count,rng,{usedIds:a.rounds.flatMap(r=>r.options.map(q=>q.id))});
-      a.index=a.rounds.length;a.rounds.push(...extra);if(['tone','spell'].includes(station))a.answerPolicy=ANSWER_POLICY;
+      if(['tone','spell'].includes(station)){a.answerPolicy=ANSWER_POLICY;for(const round of extra)round.firstErrorPenalty=1;}
+      a.index=a.rounds.length;a.rounds.push(...extra);
      }else if(type==='choose-stamp'){
       if(who.role!=='student')fail('請讓孩子選擇喜歡的印章',403);
       if(!a.rounds.every(roundComplete))fail('請先完成所有題目，再選印章');
@@ -133,7 +134,7 @@ export function createAnnualChallengeService({store,bank,studentExists=()=>false
      }else if(type==='answer'){
       if(who.role!=='student')fail('請孩子作答',403);if(round.selected===null||roundComplete(round))fail('請等待關主出題',409);
       const graded=gradeAnswer(station,round.options[round.selected],command.answer,a.tonePolicy),previous=round.result;
-      round.result={...graded,completed:graded.correct,firstAnswer:copy(previous?.firstAnswer??graded.answer),firstWrongCharacterIndices:copy(previous?.firstWrongCharacterIndices??graded.wrongCharacterIndices),firstWrongCharacterCount:previous?.firstWrongCharacterCount??graded.wrongCharacterCount,tries:(previous?.tries||0)+1};
+      round.result={...graded,completed:graded.correct,firstAnswer:copy(previous?.firstAnswer??graded.answer),firstWrongCharacterIndices:copy(previous?.firstWrongCharacterIndices??graded.wrongCharacterIndices),firstWrongCharacterCount:previous?.firstWrongCharacterCount??graded.wrongCharacterCount,firstErrorPenalty:(previous?.firstErrorPenalty??round.firstErrorPenalty)===1?1:2,tries:(previous?.tries||0)+1};
      }else if(type==='observe'){
       if(!teacher||!['listen','action'].includes(station))fail('請由關主評量',403);
       if(station==='listen'&&a.listenPolicy)fail('請使用二／一／零分評量');
