@@ -1,3 +1,4 @@
+import {renderHanziNotebook} from './hanzi-hub.js?v=20261115-hanzi2';
 import {renderArithmeticNotebook} from './arithmetic-hub.js?v=20261115-math2';
 import './asset-cache.js?v=20260928-all1';
 import {audioSource} from './audio-source.js?v=20261102-a1';
@@ -9,6 +10,7 @@ import {readingNotebookLaunchPlan} from './notebook-launch.js?v=20261023-noteboo
 const $=id=>document.getElementById(id),client=createApiClient('https://zhuyin-api.j822925.workers.dev/api',{timeoutMs:15000}),readingPage=document.body.classList.contains('reading-page');
 const names={single:'👂 聽音辨識',spelling:'🧩 拼音工坊',tone:'🎭 聲調劇場',reading:'🎙️ 朗讀錯題本'};
 let config=null,seat='',question=null,selection={},heard=false,busy=false,pending=null,after='',afterMode='',mode=readingPage?'reading':'all',readingInput=null,view=0,audioEpoch=0;
+const hanziRoot=document.createElement('section');hanziRoot.id='hanzi-notebook';hanziRoot.hidden=true;document.querySelector('main').append(hanziRoot);
 const arithmeticRoot=document.createElement('section');arithmeticRoot.id='arithmetic-notebook';arithmeticRoot.hidden=true;document.querySelector('main').append(arithmeticRoot);
 const auth=createStudentAuth({demo:false,getConfig:()=>config,post:d=>client.post(d)}),audio=new Audio();audio.preload='auto';
 const toneInput=createToneInput($('tone-input'),()=>enable());
@@ -29,8 +31,8 @@ async function play(){if(document.hidden||!audio.getAttribute('src'))return;cons
 function part(kind){for(const p of ['initial','final'])$(p+'-slot').dataset.active=String(p===kind);}
 function options(id,values,kind){$(id).replaceChildren();for(const value of values){const b=document.createElement('button');b.type='button';b.textContent=value||'空白';b.dataset.choice=kind;b.onclick=()=>{selection[kind]=value;$(id).querySelectorAll('button').forEach(x=>x.classList.toggle('selected',x===b));if(kind!=='answer'){$(kind+'-slot').textContent=value||'空白';part(kind==='initial'&&selection.final===undefined?'final':kind);}enable();};$(id).append(b);}}
 async function loadQuestion(){
- const render=++view;stopAudio();readingInput?.cancel();arithmeticRoot.hidden=true;if(mode==='arithmetic'){question=null;for(const id of ['practice','feedback','empty'])$(id).hidden=true;await renderArithmeticNotebook(arithmeticRoot,{current:()=>render===view&&mode==='arithmetic'});return;}const mathCount=mode==='all'?await renderArithmeticNotebook(arithmeticRoot,{current:()=>render===view&&mode==='all',optional:true}):0;const out=await request({kind:'notebook-list',mode,after,afterMode});if(render!==view)return;
- question=out.question;heard=false;selection={};$('feedback').hidden=true;$('empty').hidden=!!question||mathCount>0;$('practice').hidden=!question;if(!question)return;
+ const render=++view;stopAudio();readingInput?.cancel();arithmeticRoot.hidden=true;hanziRoot.hidden=true;if(mode==='hanzi'){question=null;for(const id of ['practice','feedback','empty'])$(id).hidden=true;await renderHanziNotebook(hanziRoot,{current:()=>render===view&&mode==='hanzi'});return;}if(mode==='arithmetic'){question=null;for(const id of ['practice','feedback','empty'])$(id).hidden=true;await renderArithmeticNotebook(arithmeticRoot,{current:()=>render===view&&mode==='arithmetic'});return;}const [mathCount,hanziCount]=mode==='all'?await Promise.all([renderArithmeticNotebook(arithmeticRoot,{current:()=>render===view&&mode==='all',optional:true}),renderHanziNotebook(hanziRoot,{current:()=>render===view&&mode==='all',optional:true})]):[0,0];const out=await request({kind:'notebook-list',mode,after,afterMode});if(render!==view)return;
+ question=out.question;heard=false;selection={};$('feedback').hidden=true;$('empty').hidden=!!question||mathCount>0||hanziCount>0;$('practice').hidden=!question;if(!question)return;
  $('count').textContent='待複習 '+out.count+' 題';$('mode-label').textContent=names[question.mode];for(const [id,m] of [['choices','single'],['spelling','spelling'],['tone-input','tone'],['reading-input','reading']])$(id).hidden=question.mode!==m;
  $('submit').hidden=question.mode==='reading';$('listen').hidden=question.mode==='reading';$('audio-status').textContent='';
  if(question.mode==='single')options('choices',question.choices,'answer');
@@ -46,13 +48,13 @@ async function sendPending(){const sent={...pending};const out=await request(sen
 function submit(answer){if(busy||pending||!question)return;stopAudio();readingInput?.cancel();pending={kind:'notebook-answer',mode:question.mode,target:question.target,revision:question.revision,answer};savePending();run(sendPending);}
 async function open(){const selected=$('seat').value;if(!selected)return;if(seat!==selected){auth.forgetAll();after='';afterMode='';pending=null;}seat=selected;if(!await auth.ensure(seat))return;auth.setPrimary(seat);$('account').textContent=seat+' · 換人';$('account').hidden=false;$('login-area').hidden=true;restorePending();if(pending)await sendPending();else await loadQuestion();}
 for(const b of document.querySelectorAll('[data-mode]'))b.onclick=()=>{if(busy||pending)return;mode=b.dataset.mode;after='';afterMode='';enable();if(seat&&$('login-area').hidden)run(loadQuestion);};
-$('account').onclick=()=>{view++;stopAudio();readingInput?.cancel();question=null;$('login-area').hidden=false;$('practice').hidden=$('feedback').hidden=$('empty').hidden=true;arithmeticRoot.hidden=true;enable();};
+$('account').onclick=()=>{view++;stopAudio();readingInput?.cancel();question=null;$('login-area').hidden=false;$('practice').hidden=$('feedback').hidden=$('empty').hidden=true;arithmeticRoot.hidden=true;hanziRoot.hidden=true;enable();};
 $('start').onclick=()=>run(open);$('listen').onclick=$('replay').onclick=play;$('next').onclick=()=>run(loadQuestion);$('initial-slot').onclick=()=>part('initial');$('final-slot').onclick=()=>part('final');
 $('submit').onclick=()=>{if(!$('submit').disabled)submit(question.mode==='single'?selection.answer:question.mode==='tone'?toneInput.value():selection.initial+selection.final);};
 $('retry').onclick=()=>run(async()=>{if(!config){await start();return;}if(!seat){await open();return;}if(!await auth.ensure(seat))return;auth.setPrimary(seat);if(pending)await sendPending();else await loadQuestion();});
 window.addEventListener('pagehide',()=>{stopAudio();readingInput?.cancel();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){audio.pause();readingInput?.cancel();}else if(question?.mode==='reading'&&!pending&&!busy){readingInput?.show(question);enable();}});
-if(!readingPage&&new URLSearchParams(location.search).get('mode')==='arithmetic')mode='arithmetic';
+if(!readingPage&&['arithmetic','hanzi'].includes(new URLSearchParams(location.search).get('mode')))mode=new URLSearchParams(location.search).get('mode');
 const plan=readingNotebookLaunchPlan(location.href);$('home').href=classUrl('./');document.querySelector('#empty a').href=classUrl('./');
 if(readingPage)document.querySelector('nav a').href=classUrl('notebook.html');
 const readingLink=$('reading-link');if(readingLink){readingLink.href=plan.safariUrl||plan.browserUrl;if(plan.standalone&&!plan.safariUrl){readingLink.target='_blank';readingLink.rel='noopener';}}

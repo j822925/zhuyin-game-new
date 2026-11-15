@@ -1,3 +1,4 @@
+import {CHARACTERS,portrait} from './characters.js?v=20261007-ipad1';
 import {currentClass} from './class-context.js?v=20261023-exam1';
 
 // This is only the home-screen visibility rule. Every live /hanzi/ operation
@@ -50,8 +51,8 @@ export function mountHanziEntry({root=globalThis.document,view=globalThis.window
     if(!allowed||!worlds){link?.remove();link=null;}
     else if(!link){
       link=root.createElement('a');link.id='hanzi-island-entry';link.className='world forest';link.href=target.href;
-      link.style.cssText='display:block;text-decoration:none;color:inherit;border:1px solid #c6d6ba;border-radius:24px;padding:24px;background:#edf0e2';
-      link.innerHTML='<span class="world-art" aria-hidden="true">山<i>國字</i></span><small>國字學習</small><h3>國字森林</h3><p>看國字拼注音，動手寫國字。</p><span class="world-status">和夥伴一起挑戰 →</span>';
+      link.style.cssText='display:block;text-decoration:none;color:inherit';
+      link.innerHTML='<h3 class="home-level-title">國字森林</h3><span class="world-art" aria-hidden="true">'+portrait(CHARACTERS.find(c=>c.id==='owl'))+'<i>日・月・山</i></span><span class="world-status">開始玩 →</span>';
       link.addEventListener('click',protectClick);link.addEventListener('auxclick',protectClick);worlds.append(link);
     }
     scheduleExpiry(current.session,allowed);
@@ -59,7 +60,7 @@ export function mountHanziEntry({root=globalThis.document,view=globalThis.window
     if(!demo)trial?.remove();
     else if(grid&&!trial){
       const trialLink=root.createElement('a');trialLink.dataset.hanziTrial='1';trialLink.href=target.href;
-      trialLink.innerHTML='<b>🌿 國字森林</b><span>勾選課次，看國字拼注音、詞語注音手寫。試玩不記正式成績。</span>';grid.append(trialLink);
+      trialLink.innerHTML='<b>🌿 國字森林</b><span>看國字拼注音、看注音寫國字。試玩不記正式成績。</span>';grid.append(trialLink);
     }
   }
   function queueRefresh(){

@@ -279,6 +279,7 @@ export function createHandwriting(container, options = {}) {
       canvas.style.cursor = disabled ? 'default' : 'crosshair';
       notify(true);
     },
+    cancelDemo() { stopDemo(); },
     getReference() { return reference; },
     grade(gradeOptions = {}) {
       return gradeStrokes(copyStrokes(strokes), reference, { ...gradeOptions,

@@ -117,6 +117,10 @@ test('real browser retains original ink, resizes, undoes, cancels demos, and rec
     await page.evaluate(() => { window.demoFinished = null; window.pad.showDemo().then(v => { window.demoFinished = v; }); window.pad.clear(); });
     await page.waitForFunction(() => window.demoFinished !== null);
     assert.equal(await page.evaluate(() => window.demoFinished), false);
+    await page.evaluate(raw => { window.pad.restoreStrokes(raw); window.demoFinished = null; window.pad.showDemo().then(v => { window.demoFinished = v; }); window.pad.cancelDemo(); }, before.ink);
+    await page.waitForFunction(() => window.demoFinished !== null);
+    assert.equal(await page.evaluate(() => window.demoFinished), false);
+    assert.deepEqual(await page.evaluate(() => window.pad.getStrokes()), before.ink);
     await page.evaluate(() => window.pad.destroy());
     assert.equal(await page.locator('#board canvas').count(), 0);
     assert.deepEqual(errors, []);

@@ -1,3 +1,4 @@
+import {PRACTICE_RULE,practiceQuestions} from './hanzi-practice.js?v=20261115-hanzi2';
 import {questionPool,gradeReading} from './hanzi-bank.js';
 
 export function createHanziClient({endpoint,classId,getSession,fetchImpl=globalThis.fetch,timeoutMs=20000}){
@@ -23,30 +24,31 @@ export function createHanziDemo({bank,storage,key,gradeWriting}){
   const state=saved?.version===bank.version?saved:{version:bank.version,rounds:{},receipts:{},notebook:[]};
   const persist=()=>{try{storage?.setItem(key,JSON.stringify(state));}catch{}};
   return {async request(action,payload={}){
-    if(action==='bootstrap')return {version:'hanzi-demo-v1',catalog:bank,scope:{revision:0,termId:bank.semesterId,lessonIds:bank.lessons.map(x=>x.id)},assignments:[],exams:[]};
+    if(action==='bootstrap')return {version:'hanzi-demo-v1',catalog:bank,scope:{revision:0,termId:bank.semesterId,lessonIds:bank.lessons.filter(x=>x.id==='1').map(x=>x.id)},assignments:[],exams:[]};
     if(action==='assignments')return {assignments:[]};if(action==='exams')return {exams:[]};
     if(action==='notebook')return {items:state.notebook};
     if(action==='practice-start'){
       const existing=Object.values(state.rounds).find(r=>r.requestId===payload.requestId);if(existing)return existing;
       let pool=questionPool(bank,payload.lessonIds,payload.mode,{termId:payload.termId});if(payload.questionIds)pool=pool.filter(q=>payload.questionIds.includes(q.id));
       const unique=[...new Map(shuffled(pool).map(q=>[q.itemId,q])).values()];
-      const questions=shuffled(unique).slice(0,Math.max(1,Math.min(payload.mode==='writing'?10:30,Number(payload.count)||10))).map(q=>({...q,questionId:q.id,mode:payload.mode}));
+      const questions=shuffled(unique).slice(0,Math.max(1,Math.min(payload.mode==='writing'?10:30,Number(payload.count)||5))).map(q=>({...q,questionId:q.id,mode:payload.mode}));
       if(!questions.length)throw Error('empty_scope');
-      const round={roundId:crypto.randomUUID(),requestId:payload.requestId,mode:payload.mode,questions};state.rounds[round.roundId]=round;persist();return round;
+      const round={roundId:crypto.randomUUID(),requestId:payload.requestId,mode:payload.mode,questions,snapshot:{mode:payload.mode,practiceRule:PRACTICE_RULE,baseQuestions:structuredClone(questions),questions:structuredClone(questions),bonusPool:shuffled(unique)}};state.rounds[round.roundId]=round;persist();return round;
     }
     if(action==='practice-submit'){
       if(state.receipts[payload.roundId])return state.receipts[payload.roundId];
       const round=state.rounds[payload.roundId];if(!round)throw Error('round_not_found');
-      if(payload.answers?.length!==round.questions.length)throw Error('incomplete_round');
+      round.questions=practiceQuestions(round.snapshot,payload.answers);if(payload.answers?.length!==round.questions.length)throw Error('incomplete_round');
       const results=[];
       for(const q of round.questions){const submitted=payload.answers.find(a=>a.questionId===(q.questionId||q.id));if(!submitted)throw Error('incomplete_round');
         const result=round.mode==='writing'?await gradeWriting(q,submitted.answer):gradeReading(q,submitted.answer);
+        if(result.correct===false){const correction=submitted.correction,checked=correction&&(round.mode==='writing'?await gradeWriting(q,correction.answer):gradeReading(q,correction.answer));if(!correction?.demonstrationComplete||checked.correct!==true)throw Error('correction_required');}
         const status=result.status||(result.correct?'correct':'incorrect');const row={questionId:q.questionId||q.id,question:q,...result,status,hintUsed:!!submitted.hintUsed};results.push(row);
         state.notebook=state.notebook.filter(x=>x.questionId!==row.questionId||x.mode!==round.mode);
         if(status!=='correct')state.notebook.push({...row,mode:round.mode,updatedAt:new Date().toISOString()});
       }
       const pending=results.filter(r=>r.status==='pending').length,correct=results.filter(r=>r.status==='correct').length;
-      const result={run:{id:round.roundId,kind:'practice',mode:round.mode,status:'submitted',snapshot:{questions:round.questions},answers:results.map((r,i)=>({questionId:r.questionId,answer:payload.answers[i].answer,hintUsed:r.hintUsed,grade:r})),result:{correct,pending,total:results.length,incorrect:results.length-correct-pending,score:pending?null:Math.round(correct/results.length*100),perfect:!pending&&correct===results.length}},demo:true};state.receipts[round.roundId]=result;persist();return result;
+      const result={run:{id:round.roundId,kind:'practice',mode:round.mode,status:'submitted',snapshot:{questions:round.questions},answers:results.map((r,i)=>({questionId:r.questionId,answer:payload.answers[i].answer,hintUsed:r.hintUsed,grade:r})),result:{correct,pending,total:results.length,incorrect:results.length-correct-pending,score:pending?null:Math.round(correct/results.length*100),perfect:!pending&&correct===results.length,stars:correct===results.length?1:0,corrected:payload.answers.filter(a=>a.correction).length}},demo:true};state.receipts[round.roundId]=result;persist();return result;
     }
     throw Error('demo_unavailable');
   }};
@@ -67,7 +69,8 @@ export function taskState(task){
 // Six decimal places preserve much finer than a screen pixel while keeping a
 // ten-character round below the server's 1 MiB bound. Local ink is untouched.
 export function compactAnswers(answers){
-  return answers.map(row=>!Array.isArray(row.answer?.strokes)?row:{...row,answer:{...row.answer,strokes:row.answer.strokes.map(stroke=>stroke.map(p=>({x:Number(p.x.toFixed(6)),y:Number(p.y.toFixed(6)),...(p.t===undefined?{}:{t:Math.round(p.t)})})))}});
+ const compact=answer=>!Array.isArray(answer?.strokes)?answer:{...answer,strokes:answer.strokes.map(s=>s.map(p=>({x:Number(p.x.toFixed(6)),y:Number(p.y.toFixed(6)),...(p.t===undefined?{}:{t:Math.round(p.t)})})))};
+ return answers.map(row=>({...row,answer:compact(row.answer),...(row.correction?{correction:{...row.correction,answer:compact(row.correction.answer)}}:{})}));
 }
 
 export function createRoundStore({storage,key,getOwner}){
