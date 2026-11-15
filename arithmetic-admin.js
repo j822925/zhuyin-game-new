@@ -4,7 +4,7 @@ const timeInput=ms=>new Date(ms+8*3600000).toISOString().slice(0,16),parseTime=v
 const labels={add:'加法',sub:'減法',mix:'加減混合',basic:'不進位／不退位',regroup:'進位／退位',mixed:'綜合',any:'不限位數組合','large-small':'多位數加減一位數','large-large':'同位數加減'};
 export function setupArithmeticAdmin({host,request,api,getClass=()=>new URL(location.href).searchParams.get('class')||'main'}={}){
  if(!host){host=node('section');host.id='arithmetic-admin';document.getElementById('workspace').append(host);const nav=document.querySelector('#workspace nav');if(nav){const a=node('a','加減法學習');a.href='#arithmetic-admin';nav.append(a);}}
- host.classList.add('math-admin');const post=request||((op,data={})=>api('arithmetic/'+op,{...data,classId:getClass()}));let generation=0,boot,results=[],locked=false;
+ host.classList.add('math-admin');if(!host.querySelector('h2'))host.append(node('h2','加減法學習'));const post=request||((op,data={})=>api('arithmetic/'+op,{...data,classId:getClass()}));let generation=0,boot,results=[],locked=false;
  const status=node('p','', 'math-status');status.setAttribute('role','status');
  const run=async fn=>{if(locked)return;locked=true;host.querySelectorAll('button').forEach(b=>b.disabled=true);status.textContent='處理中…';try{await fn();if(status.textContent==='處理中…')status.textContent='已完成。';}catch(e){status.textContent=e.userMessage||({stale_revision:'資料已更新，請重新讀取。',task_locked:'已有學生作答，請另建新任務。',invalid_task:'請檢查任務名稱、對象與開放時間。',scope_too_small:'題目不足，請調整題型或題數。'}[e.message])||e.message;}finally{locked=false;host.querySelectorAll('button').forEach(b=>b.disabled=false);}};
  const button=(text,fn,cls)=>{const b=node('button',text,cls);b.type='button';b.onclick=()=>run(fn);return b;};
@@ -26,5 +26,5 @@ export function setupArithmeticAdmin({host,request,api,getClass=()=>new URL(loca
   function exportCSV(){const cell=v=>'"'+String(v??'').replace(/^[=+@-]/,"'$&").replaceAll('"','""')+'"';const rows=[['學號','時間','數字上限','運算','首次答對','獨立答對','總題數','提示','訂正'],...results.map(r=>[r.seat,new Date(r.updatedAt).toISOString(),r.config.max,r.config.operation,r.result?.correct,r.result?.independent,r.result?.total,r.result?.assisted,r.result?.corrected])];const url=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.map(cell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'})),a=node('a');a.href=url;a.download='加減法學習紀錄.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}draw();return section;
  }
  async function load(){const g=++generation,cid=getClass();const data=await post('bootstrap');if(g!==generation||cid!==getClass())return;boot=data;results=[];host.replaceChildren(node('p','數字探險谷・教師管理','math-eyebrow'),node('h2','加減法學習'),status);const buttons=node('div',undefined,'math-toolbar');buttons.append(button('重新讀取',load));host.append(buttons,renderScope(),renderTaskForm(),renderTasks(),renderResults());}
- return {load,clear(){generation++;boot=null;results=[];host.replaceChildren();}};
+ return {load,clear(){generation++;boot=null;results=[];host.replaceChildren(node('h2','加減法學習'));}};
 }
