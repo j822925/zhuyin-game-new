@@ -1,0 +1,2275 @@
+{
+  "version": "hanzi-curriculum-20261115-v1",
+  "semesterId": "kangxuan-g1-s1-115",
+  "title": "康軒一年級上學期國字",
+  "terms": [
+    {
+      "id": "kangxuan-g1-s1-115",
+      "label": "115學年一年級上學期",
+      "grade": 1,
+      "semester": 1,
+      "publisher": "康軒"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "0",
+      "termId": "kangxuan-g1-s1-115",
+      "title": "國字真簡單",
+      "characters": "一二三四五六七八九十"
+    },
+    {
+      "id": "1",
+      "termId": "kangxuan-g1-s1-115",
+      "title": "拍拍手",
+      "characters": "拍手左右你他也上下"
+    },
+    {
+      "id": "2",
+      "termId": "kangxuan-g1-s1-115",
+      "title": "這是誰的",
+      "characters": "這是誰的我分好了啊多個"
+    },
+    {
+      "id": "3",
+      "termId": "kangxuan-g1-s1-115",
+      "title": "秋千",
+      "characters": "秋千和玩陪高山到大海朋友們起"
+    },
+    {
+      "id": "4",
+      "termId": "kangxuan-g1-s1-115",
+      "title": "大個子，小個子",
+      "characters": "子小課兩人拉看找隻青蛙開心"
+    },
+    {
+      "id": "5",
+      "termId": "kangxuan-g1-s1-115",
+      "title": "比一比",
+      "characters": "比門裡外有什麼不同早晚王主又"
+    },
+    {
+      "id": "6",
+      "termId": "kangxuan-g1-s1-115",
+      "title": "小路",
+      "characters": "路長白花紅走在向說朵從頭那"
+    }
+  ],
+  "items": [
+    {
+      "id": "kx115-g1s1-l0-u4e00",
+      "lessonId": "0",
+      "character": "一",
+      "bopomofo": "ㄧ",
+      "strokeCount": 1,
+      "examples": [
+        {
+          "word": "第一",
+          "readings": [
+            "ㄉㄧˋ",
+            "ㄧ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "一月",
+          "readings": [
+            "ㄧ",
+            "ㄩㄝˋ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l0-u4e8c",
+      "lessonId": "0",
+      "character": "二",
+      "bopomofo": "ㄦˋ",
+      "strokeCount": 2,
+      "examples": [
+        {
+          "word": "二月",
+          "readings": [
+            "ㄦˋ",
+            "ㄩㄝˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "二十",
+          "readings": [
+            "ㄦˋ",
+            "ㄕˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l0-u4e09",
+      "lessonId": "0",
+      "character": "三",
+      "bopomofo": "ㄙㄢ",
+      "strokeCount": 3,
+      "examples": [
+        {
+          "word": "三月",
+          "readings": [
+            "ㄙㄢ",
+            "ㄩㄝˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "三角",
+          "readings": [
+            "ㄙㄢ",
+            "ㄐㄧㄠˇ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l0-u56db",
+      "lessonId": "0",
+      "character": "四",
+      "bopomofo": "ㄙˋ",
+      "strokeCount": 5,
+      "examples": [
+        {
+          "word": "四月",
+          "readings": [
+            "ㄙˋ",
+            "ㄩㄝˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "四方",
+          "readings": [
+            "ㄙˋ",
+            "ㄈㄤ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l0-u4e94",
+      "lessonId": "0",
+      "character": "五",
+      "bopomofo": "ㄨˇ",
+      "strokeCount": 4,
+      "examples": [
+        {
+          "word": "五月",
+          "readings": [
+            "ㄨˇ",
+            "ㄩㄝˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "五十",
+          "readings": [
+            "ㄨˇ",
+            "ㄕˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l0-u516d",
+      "lessonId": "0",
+      "character": "六",
+      "bopomofo": "ㄌㄧㄡˋ",
+      "strokeCount": 4,
+      "examples": [
+        {
+          "word": "六月",
+          "readings": [
+            "ㄌㄧㄡˋ",
+            "ㄩㄝˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "六十",
+          "readings": [
+            "ㄌㄧㄡˋ",
+            "ㄕˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l0-u4e03",
+      "lessonId": "0",
+      "character": "七",
+      "bopomofo": "ㄑㄧ",
+      "strokeCount": 2,
+      "examples": [
+        {
+          "word": "七月",
+          "readings": [
+            "ㄑㄧ",
+            "ㄩㄝˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "七十",
+          "readings": [
+            "ㄑㄧ",
+            "ㄕˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l0-u516b",
+      "lessonId": "0",
+      "character": "八",
+      "bopomofo": "ㄅㄚ",
+      "strokeCount": 2,
+      "examples": [
+        {
+          "word": "八月",
+          "readings": [
+            "ㄅㄚ",
+            "ㄩㄝˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "八十",
+          "readings": [
+            "ㄅㄚ",
+            "ㄕˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l0-u4e5d",
+      "lessonId": "0",
+      "character": "九",
+      "bopomofo": "ㄐㄧㄡˇ",
+      "strokeCount": 2,
+      "examples": [
+        {
+          "word": "九月",
+          "readings": [
+            "ㄐㄧㄡˇ",
+            "ㄩㄝˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "九十",
+          "readings": [
+            "ㄐㄧㄡˇ",
+            "ㄕˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l0-u5341",
+      "lessonId": "0",
+      "character": "十",
+      "bopomofo": "ㄕˊ",
+      "strokeCount": 2,
+      "examples": [
+        {
+          "word": "十月",
+          "readings": [
+            "ㄕˊ",
+            "ㄩㄝˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "十個",
+          "readings": [
+            "ㄕˊ",
+            "ㄍㄜˋ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l1-u62cd",
+      "lessonId": "1",
+      "character": "拍",
+      "bopomofo": "ㄆㄞ",
+      "strokeCount": 8,
+      "examples": [
+        {
+          "word": "拍手",
+          "readings": [
+            "ㄆㄞ",
+            "ㄕㄡˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "拍球",
+          "readings": [
+            "ㄆㄞ",
+            "ㄑㄧㄡˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l1-u624b",
+      "lessonId": "1",
+      "character": "手",
+      "bopomofo": "ㄕㄡˇ",
+      "strokeCount": 4,
+      "examples": [
+        {
+          "word": "右手",
+          "readings": [
+            "ㄧㄡˋ",
+            "ㄕㄡˇ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "手心",
+          "readings": [
+            "ㄕㄡˇ",
+            "ㄒㄧㄣ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l1-u5de6",
+      "lessonId": "1",
+      "character": "左",
+      "bopomofo": "ㄗㄨㄛˇ",
+      "strokeCount": 5,
+      "examples": [
+        {
+          "word": "左手",
+          "readings": [
+            "ㄗㄨㄛˇ",
+            "ㄕㄡˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "左邊",
+          "readings": [
+            "ㄗㄨㄛˇ",
+            "ㄅㄧㄢ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l1-u53f3",
+      "lessonId": "1",
+      "character": "右",
+      "bopomofo": "ㄧㄡˋ",
+      "strokeCount": 5,
+      "examples": [
+        {
+          "word": "右手",
+          "readings": [
+            "ㄧㄡˋ",
+            "ㄕㄡˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "右邊",
+          "readings": [
+            "ㄧㄡˋ",
+            "ㄅㄧㄢ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l1-u4f60",
+      "lessonId": "1",
+      "character": "你",
+      "bopomofo": "ㄋㄧˇ",
+      "strokeCount": 7,
+      "examples": [
+        {
+          "word": "你好",
+          "readings": [
+            "ㄋㄧˇ",
+            "ㄏㄠˇ"
+          ],
+          "targetIndex": 0,
+          "hint": "對男生說",
+          "hintReadings": [
+            "ㄉㄨㄟˋ",
+            "ㄋㄢˊ",
+            "ㄕㄥ",
+            "ㄕㄨㄛ"
+          ]
+        },
+        {
+          "word": "你們",
+          "readings": [
+            "ㄋㄧˇ",
+            "˙ㄇㄣ"
+          ],
+          "targetIndex": 0,
+          "hint": "稱呼男生",
+          "hintReadings": [
+            "ㄔㄥ",
+            "ㄏㄨ",
+            "ㄋㄢˊ",
+            "ㄕㄥ"
+          ]
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l1-u4ed6",
+      "lessonId": "1",
+      "character": "他",
+      "bopomofo": "ㄊㄚ",
+      "strokeCount": 5,
+      "examples": [
+        {
+          "word": "他們",
+          "readings": [
+            "ㄊㄚ",
+            "˙ㄇㄣ"
+          ],
+          "targetIndex": 0,
+          "hint": "指男生",
+          "hintReadings": [
+            "ㄓˇ",
+            "ㄋㄢˊ",
+            "ㄕㄥ"
+          ]
+        },
+        {
+          "word": "其他",
+          "readings": [
+            "ㄑㄧˊ",
+            "ㄊㄚ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l1-u4e5f",
+      "lessonId": "1",
+      "character": "也",
+      "bopomofo": "ㄧㄝˇ",
+      "strokeCount": 3,
+      "examples": [
+        {
+          "word": "也好",
+          "readings": [
+            "ㄧㄝˇ",
+            "ㄏㄠˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "也要",
+          "readings": [
+            "ㄧㄝˇ",
+            "ㄧㄠˋ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l1-u4e0a",
+      "lessonId": "1",
+      "character": "上",
+      "bopomofo": "ㄕㄤˋ",
+      "strokeCount": 3,
+      "examples": [
+        {
+          "word": "上下",
+          "readings": [
+            "ㄕㄤˋ",
+            "ㄒㄧㄚˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "上課",
+          "readings": [
+            "ㄕㄤˋ",
+            "ㄎㄜˋ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l1-u4e0b",
+      "lessonId": "1",
+      "character": "下",
+      "bopomofo": "ㄒㄧㄚˋ",
+      "strokeCount": 3,
+      "examples": [
+        {
+          "word": "下雨",
+          "readings": [
+            "ㄒㄧㄚˋ",
+            "ㄩˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "下課",
+          "readings": [
+            "ㄒㄧㄚˋ",
+            "ㄎㄜˋ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l2-u9019",
+      "lessonId": "2",
+      "character": "這",
+      "bopomofo": "ㄓㄜˋ",
+      "strokeCount": 11,
+      "examples": [
+        {
+          "word": "這裡",
+          "readings": [
+            "ㄓㄜˋ",
+            "ㄌㄧˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "這邊",
+          "readings": [
+            "ㄓㄜˋ",
+            "ㄅㄧㄢ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l2-u662f",
+      "lessonId": "2",
+      "character": "是",
+      "bopomofo": "ㄕˋ",
+      "strokeCount": 9,
+      "examples": [
+        {
+          "word": "是的",
+          "readings": [
+            "ㄕˋ",
+            "˙ㄉㄜ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "不是",
+          "readings": [
+            "ㄅㄨˊ",
+            "ㄕˋ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l2-u8ab0",
+      "lessonId": "2",
+      "character": "誰",
+      "bopomofo": "ㄕㄟˊ",
+      "strokeCount": 15,
+      "examples": [
+        {
+          "word": "是誰",
+          "readings": [
+            "ㄕˋ",
+            "ㄕㄟˊ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "誰的",
+          "readings": [
+            "ㄕㄟˊ",
+            "˙ㄉㄜ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l2-u7684",
+      "lessonId": "2",
+      "character": "的",
+      "bopomofo": "˙ㄉㄜ",
+      "strokeCount": 8,
+      "examples": [
+        {
+          "word": "我的",
+          "readings": [
+            "ㄨㄛˇ",
+            "˙ㄉㄜ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "你的",
+          "readings": [
+            "ㄋㄧˇ",
+            "˙ㄉㄜ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l2-u6211",
+      "lessonId": "2",
+      "character": "我",
+      "bopomofo": "ㄨㄛˇ",
+      "strokeCount": 7,
+      "examples": [
+        {
+          "word": "我們",
+          "readings": [
+            "ㄨㄛˇ",
+            "˙ㄇㄣ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "我的",
+          "readings": [
+            "ㄨㄛˇ",
+            "˙ㄉㄜ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l2-u5206",
+      "lessonId": "2",
+      "character": "分",
+      "bopomofo": "ㄈㄣ",
+      "strokeCount": 4,
+      "examples": [
+        {
+          "word": "分開",
+          "readings": [
+            "ㄈㄣ",
+            "ㄎㄞ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "分工",
+          "readings": [
+            "ㄈㄣ",
+            "ㄍㄨㄥ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l2-u597d",
+      "lessonId": "2",
+      "character": "好",
+      "bopomofo": "ㄏㄠˇ",
+      "strokeCount": 6,
+      "examples": [
+        {
+          "word": "好人",
+          "readings": [
+            "ㄏㄠˇ",
+            "ㄖㄣˊ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "好看",
+          "readings": [
+            "ㄏㄠˇ",
+            "ㄎㄢˋ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l2-u4e86",
+      "lessonId": "2",
+      "character": "了",
+      "bopomofo": "˙ㄌㄜ",
+      "strokeCount": 2,
+      "examples": [
+        {
+          "word": "好了",
+          "readings": [
+            "ㄏㄠˇ",
+            "˙ㄌㄜ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "走了",
+          "readings": [
+            "ㄗㄡˇ",
+            "˙ㄌㄜ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l2-u554a",
+      "lessonId": "2",
+      "character": "啊",
+      "bopomofo": "ㄚ",
+      "strokeCount": 11,
+      "examples": [
+        {
+          "word": "好啊",
+          "readings": [
+            "ㄏㄠˇ",
+            "˙ㄚ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "走啊",
+          "readings": [
+            "ㄗㄡˇ",
+            "˙ㄚ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l2-u591a",
+      "lessonId": "2",
+      "character": "多",
+      "bopomofo": "ㄉㄨㄛ",
+      "strokeCount": 6,
+      "examples": [
+        {
+          "word": "多少",
+          "readings": [
+            "ㄉㄨㄛ",
+            "ㄕㄠˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "好多",
+          "readings": [
+            "ㄏㄠˇ",
+            "ㄉㄨㄛ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l2-u500b",
+      "lessonId": "2",
+      "character": "個",
+      "bopomofo": "ㄍㄜˋ",
+      "strokeCount": 10,
+      "examples": [
+        {
+          "word": "個子",
+          "readings": [
+            "ㄍㄜˋ",
+            "˙ㄗ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "三個",
+          "readings": [
+            "ㄙㄢ",
+            "ㄍㄜˋ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u79cb",
+      "lessonId": "3",
+      "character": "秋",
+      "bopomofo": "ㄑㄧㄡ",
+      "strokeCount": 9,
+      "examples": [
+        {
+          "word": "秋天",
+          "readings": [
+            "ㄑㄧㄡ",
+            "ㄊㄧㄢ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "中秋",
+          "readings": [
+            "ㄓㄨㄥ",
+            "ㄑㄧㄡ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u5343",
+      "lessonId": "3",
+      "character": "千",
+      "bopomofo": "ㄑㄧㄢ",
+      "strokeCount": 3,
+      "examples": [
+        {
+          "word": "千萬",
+          "readings": [
+            "ㄑㄧㄢ",
+            "ㄨㄢˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "千元",
+          "readings": [
+            "ㄑㄧㄢ",
+            "ㄩㄢˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u548c",
+      "lessonId": "3",
+      "character": "和",
+      "bopomofo": "ㄏㄢˋ",
+      "strokeCount": 8,
+      "examples": [
+        {
+          "word": "和我玩",
+          "readings": [
+            "ㄏㄢˋ",
+            "ㄨㄛˇ",
+            "ㄨㄢˊ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "你和我",
+          "readings": [
+            "ㄋㄧˇ",
+            "ㄏㄢˋ",
+            "ㄨㄛˇ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u73a9",
+      "lessonId": "3",
+      "character": "玩",
+      "bopomofo": "ㄨㄢˊ",
+      "strokeCount": 8,
+      "examples": [
+        {
+          "word": "玩具",
+          "readings": [
+            "ㄨㄢˊ",
+            "ㄐㄩˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "好玩",
+          "readings": [
+            "ㄏㄠˇ",
+            "ㄨㄢˊ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u966a",
+      "lessonId": "3",
+      "character": "陪",
+      "bopomofo": "ㄆㄟˊ",
+      "strokeCount": 11,
+      "examples": [
+        {
+          "word": "陪我",
+          "readings": [
+            "ㄆㄟˊ",
+            "ㄨㄛˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "陪你",
+          "readings": [
+            "ㄆㄟˊ",
+            "ㄋㄧˇ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u9ad8",
+      "lessonId": "3",
+      "character": "高",
+      "bopomofo": "ㄍㄠ",
+      "strokeCount": 10,
+      "examples": [
+        {
+          "word": "高山",
+          "readings": [
+            "ㄍㄠ",
+            "ㄕㄢ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "高低",
+          "readings": [
+            "ㄍㄠ",
+            "ㄉㄧ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u5c71",
+      "lessonId": "3",
+      "character": "山",
+      "bopomofo": "ㄕㄢ",
+      "strokeCount": 3,
+      "examples": [
+        {
+          "word": "高山",
+          "readings": [
+            "ㄍㄠ",
+            "ㄕㄢ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "山上",
+          "readings": [
+            "ㄕㄢ",
+            "ㄕㄤˋ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u5230",
+      "lessonId": "3",
+      "character": "到",
+      "bopomofo": "ㄉㄠˋ",
+      "strokeCount": 8,
+      "examples": [
+        {
+          "word": "來到",
+          "readings": [
+            "ㄌㄞˊ",
+            "ㄉㄠˋ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "到校",
+          "readings": [
+            "ㄉㄠˋ",
+            "ㄒㄧㄠˋ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u5927",
+      "lessonId": "3",
+      "character": "大",
+      "bopomofo": "ㄉㄚˋ",
+      "strokeCount": 3,
+      "examples": [
+        {
+          "word": "大小",
+          "readings": [
+            "ㄉㄚˋ",
+            "ㄒㄧㄠˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "大海",
+          "readings": [
+            "ㄉㄚˋ",
+            "ㄏㄞˇ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u6d77",
+      "lessonId": "3",
+      "character": "海",
+      "bopomofo": "ㄏㄞˇ",
+      "strokeCount": 10,
+      "examples": [
+        {
+          "word": "大海",
+          "readings": [
+            "ㄉㄚˋ",
+            "ㄏㄞˇ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "海水",
+          "readings": [
+            "ㄏㄞˇ",
+            "ㄕㄨㄟˇ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u670b",
+      "lessonId": "3",
+      "character": "朋",
+      "bopomofo": "ㄆㄥˊ",
+      "strokeCount": 8,
+      "examples": [
+        {
+          "word": "朋友",
+          "readings": [
+            "ㄆㄥˊ",
+            "ㄧㄡˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "好朋友",
+          "readings": [
+            "ㄏㄠˇ",
+            "ㄆㄥˊ",
+            "ㄧㄡˇ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u53cb",
+      "lessonId": "3",
+      "character": "友",
+      "bopomofo": "ㄧㄡˇ",
+      "strokeCount": 4,
+      "examples": [
+        {
+          "word": "朋友",
+          "readings": [
+            "ㄆㄥˊ",
+            "ㄧㄡˇ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "好友",
+          "readings": [
+            "ㄏㄠˇ",
+            "ㄧㄡˇ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u5011",
+      "lessonId": "3",
+      "character": "們",
+      "bopomofo": "˙ㄇㄣ",
+      "strokeCount": 10,
+      "examples": [
+        {
+          "word": "我們",
+          "readings": [
+            "ㄨㄛˇ",
+            "˙ㄇㄣ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "他們",
+          "readings": [
+            "ㄊㄚ",
+            "˙ㄇㄣ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l3-u8d77",
+      "lessonId": "3",
+      "character": "起",
+      "bopomofo": "ㄑㄧˇ",
+      "strokeCount": 10,
+      "examples": [
+        {
+          "word": "起床",
+          "readings": [
+            "ㄑㄧˇ",
+            "ㄔㄨㄤˊ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "早起",
+          "readings": [
+            "ㄗㄠˇ",
+            "ㄑㄧˇ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u5b50",
+      "lessonId": "4",
+      "character": "子",
+      "bopomofo": "˙ㄗ",
+      "strokeCount": 3,
+      "examples": [
+        {
+          "word": "個子",
+          "readings": [
+            "ㄍㄜˋ",
+            "˙ㄗ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "大個子",
+          "readings": [
+            "ㄉㄚˋ",
+            "ㄍㄜˋ",
+            "˙ㄗ"
+          ],
+          "targetIndex": 2
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u5c0f",
+      "lessonId": "4",
+      "character": "小",
+      "bopomofo": "ㄒㄧㄠˇ",
+      "strokeCount": 3,
+      "examples": [
+        {
+          "word": "大小",
+          "readings": [
+            "ㄉㄚˋ",
+            "ㄒㄧㄠˇ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "小手",
+          "readings": [
+            "ㄒㄧㄠˇ",
+            "ㄕㄡˇ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u8ab2",
+      "lessonId": "4",
+      "character": "課",
+      "bopomofo": "ㄎㄜˋ",
+      "strokeCount": 15,
+      "examples": [
+        {
+          "word": "上課",
+          "readings": [
+            "ㄕㄤˋ",
+            "ㄎㄜˋ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "下課",
+          "readings": [
+            "ㄒㄧㄚˋ",
+            "ㄎㄜˋ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u5169",
+      "lessonId": "4",
+      "character": "兩",
+      "bopomofo": "ㄌㄧㄤˇ",
+      "strokeCount": 8,
+      "examples": [
+        {
+          "word": "兩手",
+          "readings": [
+            "ㄌㄧㄤˇ",
+            "ㄕㄡˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "兩人",
+          "readings": [
+            "ㄌㄧㄤˇ",
+            "ㄖㄣˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u4eba",
+      "lessonId": "4",
+      "character": "人",
+      "bopomofo": "ㄖㄣˊ",
+      "strokeCount": 2,
+      "examples": [
+        {
+          "word": "好人",
+          "readings": [
+            "ㄏㄠˇ",
+            "ㄖㄣˊ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "大人",
+          "readings": [
+            "ㄉㄚˋ",
+            "ㄖㄣˊ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u62c9",
+      "lessonId": "4",
+      "character": "拉",
+      "bopomofo": "ㄌㄚ",
+      "strokeCount": 8,
+      "examples": [
+        {
+          "word": "拉手",
+          "readings": [
+            "ㄌㄚ",
+            "ㄕㄡˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "拉開",
+          "readings": [
+            "ㄌㄚ",
+            "ㄎㄞ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u770b",
+      "lessonId": "4",
+      "character": "看",
+      "bopomofo": "ㄎㄢˋ",
+      "strokeCount": 9,
+      "examples": [
+        {
+          "word": "看書",
+          "readings": [
+            "ㄎㄢˋ",
+            "ㄕㄨ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "看到",
+          "readings": [
+            "ㄎㄢˋ",
+            "ㄉㄠˋ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u627e",
+      "lessonId": "4",
+      "character": "找",
+      "bopomofo": "ㄓㄠˇ",
+      "strokeCount": 7,
+      "examples": [
+        {
+          "word": "找到",
+          "readings": [
+            "ㄓㄠˇ",
+            "ㄉㄠˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "找人",
+          "readings": [
+            "ㄓㄠˇ",
+            "ㄖㄣˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u96bb",
+      "lessonId": "4",
+      "character": "隻",
+      "bopomofo": "ㄓ",
+      "strokeCount": 10,
+      "examples": [
+        {
+          "word": "一隻鳥",
+          "readings": [
+            "ㄧˋ",
+            "ㄓ",
+            "ㄋㄧㄠˇ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "兩隻貓",
+          "readings": [
+            "ㄌㄧㄤˇ",
+            "ㄓ",
+            "ㄇㄠ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u9752",
+      "lessonId": "4",
+      "character": "青",
+      "bopomofo": "ㄑㄧㄥ",
+      "strokeCount": 8,
+      "examples": [
+        {
+          "word": "青蛙",
+          "readings": [
+            "ㄑㄧㄥ",
+            "ㄨㄚ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "青草",
+          "readings": [
+            "ㄑㄧㄥ",
+            "ㄘㄠˇ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u86d9",
+      "lessonId": "4",
+      "character": "蛙",
+      "bopomofo": "ㄨㄚ",
+      "strokeCount": 12,
+      "examples": [
+        {
+          "word": "青蛙",
+          "readings": [
+            "ㄑㄧㄥ",
+            "ㄨㄚ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "小青蛙",
+          "readings": [
+            "ㄒㄧㄠˇ",
+            "ㄑㄧㄥ",
+            "ㄨㄚ"
+          ],
+          "targetIndex": 2
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u958b",
+      "lessonId": "4",
+      "character": "開",
+      "bopomofo": "ㄎㄞ",
+      "strokeCount": 12,
+      "examples": [
+        {
+          "word": "開門",
+          "readings": [
+            "ㄎㄞ",
+            "ㄇㄣˊ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "開心",
+          "readings": [
+            "ㄎㄞ",
+            "ㄒㄧㄣ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l4-u5fc3",
+      "lessonId": "4",
+      "character": "心",
+      "bopomofo": "ㄒㄧㄣ",
+      "strokeCount": 4,
+      "examples": [
+        {
+          "word": "開心",
+          "readings": [
+            "ㄎㄞ",
+            "ㄒㄧㄣ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "小心",
+          "readings": [
+            "ㄒㄧㄠˇ",
+            "ㄒㄧㄣ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u6bd4",
+      "lessonId": "5",
+      "character": "比",
+      "bopomofo": "ㄅㄧˇ",
+      "strokeCount": 4,
+      "examples": [
+        {
+          "word": "比賽",
+          "readings": [
+            "ㄅㄧˇ",
+            "ㄙㄞˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "比大小",
+          "readings": [
+            "ㄅㄧˇ",
+            "ㄉㄚˋ",
+            "ㄒㄧㄠˇ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u9580",
+      "lessonId": "5",
+      "character": "門",
+      "bopomofo": "ㄇㄣˊ",
+      "strokeCount": 8,
+      "examples": [
+        {
+          "word": "開門",
+          "readings": [
+            "ㄎㄞ",
+            "ㄇㄣˊ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "門口",
+          "readings": [
+            "ㄇㄣˊ",
+            "ㄎㄡˇ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u88e1",
+      "lessonId": "5",
+      "character": "裡",
+      "bopomofo": "ㄌㄧˇ",
+      "strokeCount": 12,
+      "examples": [
+        {
+          "word": "裡面",
+          "readings": [
+            "ㄌㄧˇ",
+            "ㄇㄧㄢˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "家裡",
+          "readings": [
+            "ㄐㄧㄚ",
+            "ㄌㄧˇ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u5916",
+      "lessonId": "5",
+      "character": "外",
+      "bopomofo": "ㄨㄞˋ",
+      "strokeCount": 5,
+      "examples": [
+        {
+          "word": "外面",
+          "readings": [
+            "ㄨㄞˋ",
+            "ㄇㄧㄢˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "門外",
+          "readings": [
+            "ㄇㄣˊ",
+            "ㄨㄞˋ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u6709",
+      "lessonId": "5",
+      "character": "有",
+      "bopomofo": "ㄧㄡˇ",
+      "strokeCount": 6,
+      "examples": [
+        {
+          "word": "有空",
+          "readings": [
+            "ㄧㄡˇ",
+            "ㄎㄨㄥˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "沒有",
+          "readings": [
+            "ㄇㄟˊ",
+            "ㄧㄡˇ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u4ec0",
+      "lessonId": "5",
+      "character": "什",
+      "bopomofo": "ㄕㄣˊ",
+      "strokeCount": 4,
+      "examples": [
+        {
+          "word": "什麼",
+          "readings": [
+            "ㄕㄣˊ",
+            "˙ㄇㄜ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "有什麼",
+          "readings": [
+            "ㄧㄡˇ",
+            "ㄕㄣˊ",
+            "˙ㄇㄜ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u9ebc",
+      "lessonId": "5",
+      "character": "麼",
+      "bopomofo": "˙ㄇㄜ",
+      "strokeCount": 14,
+      "examples": [
+        {
+          "word": "什麼",
+          "readings": [
+            "ㄕㄣˊ",
+            "˙ㄇㄜ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "有什麼",
+          "readings": [
+            "ㄧㄡˇ",
+            "ㄕㄣˊ",
+            "˙ㄇㄜ"
+          ],
+          "targetIndex": 2
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u4e0d",
+      "lessonId": "5",
+      "character": "不",
+      "bopomofo": "ㄅㄨˋ",
+      "strokeCount": 4,
+      "examples": [
+        {
+          "word": "不要",
+          "readings": [
+            "ㄅㄨˊ",
+            "ㄧㄠˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "不同",
+          "readings": [
+            "ㄅㄨˋ",
+            "ㄊㄨㄥˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u540c",
+      "lessonId": "5",
+      "character": "同",
+      "bopomofo": "ㄊㄨㄥˊ",
+      "strokeCount": 6,
+      "examples": [
+        {
+          "word": "同學",
+          "readings": [
+            "ㄊㄨㄥˊ",
+            "ㄒㄩㄝˊ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "不同",
+          "readings": [
+            "ㄅㄨˋ",
+            "ㄊㄨㄥˊ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u65e9",
+      "lessonId": "5",
+      "character": "早",
+      "bopomofo": "ㄗㄠˇ",
+      "strokeCount": 6,
+      "examples": [
+        {
+          "word": "早上",
+          "readings": [
+            "ㄗㄠˇ",
+            "ㄕㄤˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "早晚",
+          "readings": [
+            "ㄗㄠˇ",
+            "ㄨㄢˇ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u665a",
+      "lessonId": "5",
+      "character": "晚",
+      "bopomofo": "ㄨㄢˇ",
+      "strokeCount": 11,
+      "examples": [
+        {
+          "word": "晚上",
+          "readings": [
+            "ㄨㄢˇ",
+            "ㄕㄤˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "早晚",
+          "readings": [
+            "ㄗㄠˇ",
+            "ㄨㄢˇ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u738b",
+      "lessonId": "5",
+      "character": "王",
+      "bopomofo": "ㄨㄤˊ",
+      "strokeCount": 4,
+      "examples": [
+        {
+          "word": "國王",
+          "readings": [
+            "ㄍㄨㄛˊ",
+            "ㄨㄤˊ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "王子",
+          "readings": [
+            "ㄨㄤˊ",
+            "ㄗˇ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u4e3b",
+      "lessonId": "5",
+      "character": "主",
+      "bopomofo": "ㄓㄨˇ",
+      "strokeCount": 5,
+      "examples": [
+        {
+          "word": "主人",
+          "readings": [
+            "ㄓㄨˇ",
+            "ㄖㄣˊ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "公主",
+          "readings": [
+            "ㄍㄨㄥ",
+            "ㄓㄨˇ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l5-u53c8",
+      "lessonId": "5",
+      "character": "又",
+      "bopomofo": "ㄧㄡˋ",
+      "strokeCount": 2,
+      "examples": [
+        {
+          "word": "又來",
+          "readings": [
+            "ㄧㄡˋ",
+            "ㄌㄞˊ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "又是",
+          "readings": [
+            "ㄧㄡˋ",
+            "ㄕˋ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u8def",
+      "lessonId": "6",
+      "character": "路",
+      "bopomofo": "ㄌㄨˋ",
+      "strokeCount": 13,
+      "examples": [
+        {
+          "word": "小路",
+          "readings": [
+            "ㄒㄧㄠˇ",
+            "ㄌㄨˋ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "馬路",
+          "readings": [
+            "ㄇㄚˇ",
+            "ㄌㄨˋ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u9577",
+      "lessonId": "6",
+      "character": "長",
+      "bopomofo": "ㄔㄤˊ",
+      "strokeCount": 8,
+      "examples": [
+        {
+          "word": "長短",
+          "readings": [
+            "ㄔㄤˊ",
+            "ㄉㄨㄢˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "長度",
+          "readings": [
+            "ㄔㄤˊ",
+            "ㄉㄨˋ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u767d",
+      "lessonId": "6",
+      "character": "白",
+      "bopomofo": "ㄅㄞˊ",
+      "strokeCount": 5,
+      "examples": [
+        {
+          "word": "白色",
+          "readings": [
+            "ㄅㄞˊ",
+            "ㄙㄜˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "白雲",
+          "readings": [
+            "ㄅㄞˊ",
+            "ㄩㄣˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u82b1",
+      "lessonId": "6",
+      "character": "花",
+      "bopomofo": "ㄏㄨㄚ",
+      "strokeCount": 8,
+      "examples": [
+        {
+          "word": "紅花",
+          "readings": [
+            "ㄏㄨㄥˊ",
+            "ㄏㄨㄚ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "花朵",
+          "readings": [
+            "ㄏㄨㄚ",
+            "ㄉㄨㄛˇ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u7d05",
+      "lessonId": "6",
+      "character": "紅",
+      "bopomofo": "ㄏㄨㄥˊ",
+      "strokeCount": 9,
+      "examples": [
+        {
+          "word": "紅色",
+          "readings": [
+            "ㄏㄨㄥˊ",
+            "ㄙㄜˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "紅花",
+          "readings": [
+            "ㄏㄨㄥˊ",
+            "ㄏㄨㄚ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u8d70",
+      "lessonId": "6",
+      "character": "走",
+      "bopomofo": "ㄗㄡˇ",
+      "strokeCount": 7,
+      "examples": [
+        {
+          "word": "走路",
+          "readings": [
+            "ㄗㄡˇ",
+            "ㄌㄨˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "走開",
+          "readings": [
+            "ㄗㄡˇ",
+            "ㄎㄞ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u5728",
+      "lessonId": "6",
+      "character": "在",
+      "bopomofo": "ㄗㄞˋ",
+      "strokeCount": 6,
+      "examples": [
+        {
+          "word": "正在",
+          "readings": [
+            "ㄓㄥˋ",
+            "ㄗㄞˋ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "在家",
+          "readings": [
+            "ㄗㄞˋ",
+            "ㄐㄧㄚ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u5411",
+      "lessonId": "6",
+      "character": "向",
+      "bopomofo": "ㄒㄧㄤˋ",
+      "strokeCount": 6,
+      "examples": [
+        {
+          "word": "方向",
+          "readings": [
+            "ㄈㄤ",
+            "ㄒㄧㄤˋ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "向前",
+          "readings": [
+            "ㄒㄧㄤˋ",
+            "ㄑㄧㄢˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u8aaa",
+      "lessonId": "6",
+      "character": "說",
+      "bopomofo": "ㄕㄨㄛ",
+      "strokeCount": 14,
+      "examples": [
+        {
+          "word": "說話",
+          "readings": [
+            "ㄕㄨㄛ",
+            "ㄏㄨㄚˋ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "說明",
+          "readings": [
+            "ㄕㄨㄛ",
+            "ㄇㄧㄥˊ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u6735",
+      "lessonId": "6",
+      "character": "朵",
+      "bopomofo": "ㄉㄨㄛˇ",
+      "strokeCount": 6,
+      "examples": [
+        {
+          "word": "花朵",
+          "readings": [
+            "ㄏㄨㄚ",
+            "ㄉㄨㄛˇ"
+          ],
+          "targetIndex": 1
+        },
+        {
+          "word": "一朵花",
+          "readings": [
+            "ㄧˋ",
+            "ㄉㄨㄛˇ",
+            "ㄏㄨㄚ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u5f9e",
+      "lessonId": "6",
+      "character": "從",
+      "bopomofo": "ㄘㄨㄥˊ",
+      "strokeCount": 11,
+      "examples": [
+        {
+          "word": "從前",
+          "readings": [
+            "ㄘㄨㄥˊ",
+            "ㄑㄧㄢˊ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "從小",
+          "readings": [
+            "ㄘㄨㄥˊ",
+            "ㄒㄧㄠˇ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u982d",
+      "lessonId": "6",
+      "character": "頭",
+      "bopomofo": "ㄊㄡˊ",
+      "strokeCount": 16,
+      "examples": [
+        {
+          "word": "頭頂",
+          "readings": [
+            "ㄊㄡˊ",
+            "ㄉㄧㄥˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "點頭",
+          "readings": [
+            "ㄉㄧㄢˇ",
+            "ㄊㄡˊ"
+          ],
+          "targetIndex": 1
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "kx115-g1s1-l6-u90a3",
+      "lessonId": "6",
+      "character": "那",
+      "bopomofo": "ㄋㄚˋ",
+      "strokeCount": 7,
+      "examples": [
+        {
+          "word": "那裡",
+          "readings": [
+            "ㄋㄚˋ",
+            "ㄌㄧˇ"
+          ],
+          "targetIndex": 0
+        },
+        {
+          "word": "那邊",
+          "readings": [
+            "ㄋㄚˋ",
+            "ㄅㄧㄢ"
+          ],
+          "targetIndex": 0
+        }
+      ],
+      "enabled": true
+    }
+  ]
+}

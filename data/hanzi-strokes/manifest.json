@@ -1,0 +1,3006 @@
+{
+  "version": "20261115-tw1",
+  "coordinateSystem": "unit-square-top-left",
+  "totalCharacters": 84,
+  "status": "practice-only",
+  "sourceCommit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+  "summary": {
+    "taiwanAnimCJK": 83,
+    "projectAuthored": 1,
+    "textbookStrokeCountsMatched": 74,
+    "preparatoryCharactersWithoutTextbookCountTable": 10,
+    "orderVisuallyReviewed": 8,
+    "childHandwritingValidated": 0,
+    "examReady": 0
+  },
+  "limitations": [
+    "指定字中心線比對，不是任意國字辨識。",
+    "全部為練習候選；未經學校iPad與兒童筆跡驗收，不得當作正式小考自動評分。",
+    "僅8字的新增筆畫順序已與教材視覺核對；其餘沿臺灣資料集而未逐筆人工複核。",
+    "素材筆數吻合不代表字形或方向判定已可靠。",
+    "系統疑似誤判應保留原始筆跡並交教師複核。"
+  ],
+  "characters": [
+    {
+      "character": "一",
+      "file": "U4E00.json",
+      "strokeCount": 1,
+      "expectedStrokeCount": 1,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/19968.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "522f89d04ac76f3ba5de2bde887939b0d88e9eca",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 1,
+        "countMatchesTextbook": null,
+        "orderReviewed": false,
+        "lesson": 0,
+        "book": null,
+        "textbookPdfPages": [],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "預備單元字表無逐字筆數；與臺灣AnimCJK資料一致",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "二",
+      "file": "U4E8C.json",
+      "strokeCount": 2,
+      "expectedStrokeCount": 2,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20108.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "f3b77b6c10c766909892a82572126b00b52c2fc1",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 2,
+        "countMatchesTextbook": null,
+        "orderReviewed": false,
+        "lesson": 0,
+        "book": null,
+        "textbookPdfPages": [],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "預備單元字表無逐字筆數；與臺灣AnimCJK資料一致",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "三",
+      "file": "U4E09.json",
+      "strokeCount": 3,
+      "expectedStrokeCount": 3,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/19977.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "84e1f2e1d18c9cd47c239dba41f9f9d1b59a5ef8",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 3,
+        "countMatchesTextbook": null,
+        "orderReviewed": false,
+        "lesson": 0,
+        "book": null,
+        "textbookPdfPages": [],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "預備單元字表無逐字筆數；與臺灣AnimCJK資料一致",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "四",
+      "file": "U56DB.json",
+      "strokeCount": 5,
+      "expectedStrokeCount": 5,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/22235.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "ce32773aae863f19e56c64aed0d73422c8117007",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 5,
+        "countMatchesTextbook": null,
+        "orderReviewed": false,
+        "lesson": 0,
+        "book": null,
+        "textbookPdfPages": [],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "預備單元字表無逐字筆數；與臺灣AnimCJK資料一致",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "五",
+      "file": "U4E94.json",
+      "strokeCount": 4,
+      "expectedStrokeCount": 4,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20116.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "6a8a2a2ef6d034dea1e9e66778bb8e18c0d6e679",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 4,
+        "countMatchesTextbook": null,
+        "orderReviewed": false,
+        "lesson": 0,
+        "book": null,
+        "textbookPdfPages": [],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "預備單元字表無逐字筆數；與臺灣AnimCJK資料一致",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "六",
+      "file": "U516D.json",
+      "strokeCount": 4,
+      "expectedStrokeCount": 4,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20845.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "dfe140ce81639f288c923212578b005f7f57ce43",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 4,
+        "countMatchesTextbook": null,
+        "orderReviewed": false,
+        "lesson": 0,
+        "book": null,
+        "textbookPdfPages": [],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "預備單元字表無逐字筆數；與臺灣AnimCJK資料一致",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "七",
+      "file": "U4E03.json",
+      "strokeCount": 2,
+      "expectedStrokeCount": 2,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/19971.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "370eb3051cb28915651c39ab17794b3786c67fb9",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 2,
+        "countMatchesTextbook": null,
+        "orderReviewed": false,
+        "lesson": 0,
+        "book": null,
+        "textbookPdfPages": [],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "預備單元字表無逐字筆數；與臺灣AnimCJK資料一致",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "八",
+      "file": "U516B.json",
+      "strokeCount": 2,
+      "expectedStrokeCount": 2,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20843.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "f2119be94a48bc2a06bb573b857afd6a13bcb111",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 2,
+        "countMatchesTextbook": null,
+        "orderReviewed": false,
+        "lesson": 0,
+        "book": null,
+        "textbookPdfPages": [],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "預備單元字表無逐字筆數；與臺灣AnimCJK資料一致",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "九",
+      "file": "U4E5D.json",
+      "strokeCount": 2,
+      "expectedStrokeCount": 2,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20061.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "da8b4b0e8074486b716460ba7a5295b441125594",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 2,
+        "countMatchesTextbook": null,
+        "orderReviewed": false,
+        "lesson": 0,
+        "book": null,
+        "textbookPdfPages": [],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "預備單元字表無逐字筆數；與臺灣AnimCJK資料一致",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "十",
+      "file": "U5341.json",
+      "strokeCount": 2,
+      "expectedStrokeCount": 2,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/21313.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "75d687a9d5ab0e0243be2a8b67a12b1b86d78ef5",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 2,
+        "countMatchesTextbook": null,
+        "orderReviewed": false,
+        "lesson": 0,
+        "book": null,
+        "textbookPdfPages": [],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "預備單元字表無逐字筆數；與臺灣AnimCJK資料一致",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "拍",
+      "file": "U62CD.json",
+      "strokeCount": 8,
+      "expectedStrokeCount": 8,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/25293.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "22307e08470bf2c39081869c3c473f45f88af96e",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 8,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 1,
+        "book": "甲",
+        "textbookPdfPages": [
+          29,
+          30
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "手",
+      "file": "U624B.json",
+      "strokeCount": 4,
+      "expectedStrokeCount": 4,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/25163.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "3b3628868f6d545804104bf9bfc43b3c3bd873a4",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 4,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 1,
+        "book": "甲",
+        "textbookPdfPages": [
+          29,
+          30
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "左",
+      "file": "U5DE6.json",
+      "strokeCount": 5,
+      "expectedStrokeCount": 5,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/24038.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "93e5fdfb25992b4c71fa803d80af07a26f5e0527",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 5,
+        "countMatchesTextbook": true,
+        "orderReviewed": true,
+        "lesson": 1,
+        "book": "甲",
+        "textbookPdfPages": [
+          29,
+          30
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "已視覺比對教材逐步新增筆畫與臺灣資料之筆畫順序；未認證所有運筆細節或兒童筆跡容錯，仍為候選練習。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false,
+        "orderReviewReference": "康軒115上甲本PDF第29頁"
+      }
+    },
+    {
+      "character": "右",
+      "file": "U53F3.json",
+      "strokeCount": 5,
+      "expectedStrokeCount": 5,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/21491.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "a7fcb0c4261cd12e2f13f5924426c4d5e650a67b",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 5,
+        "countMatchesTextbook": true,
+        "orderReviewed": true,
+        "lesson": 1,
+        "book": "甲",
+        "textbookPdfPages": [
+          29,
+          30
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "已視覺比對教材逐步新增筆畫與臺灣資料之筆畫順序；未認證所有運筆細節或兒童筆跡容錯，仍為候選練習。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false,
+        "orderReviewReference": "康軒115上甲本PDF第29頁"
+      }
+    },
+    {
+      "character": "你",
+      "file": "U4F60.json",
+      "strokeCount": 7,
+      "expectedStrokeCount": 7,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20320.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "21bdff5d541b51cd0e74cf01b99e28a46c07353a",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 7,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 1,
+        "book": "甲",
+        "textbookPdfPages": [
+          29,
+          30
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "他",
+      "file": "U4ED6.json",
+      "strokeCount": 5,
+      "expectedStrokeCount": 5,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20182.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "6c6befe101938f3044159bad3d2a3275704f7a70",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 5,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 1,
+        "book": "甲",
+        "textbookPdfPages": [
+          29,
+          30
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "也",
+      "file": "U4E5F.json",
+      "strokeCount": 3,
+      "expectedStrokeCount": 3,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20063.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "7cd0ed7fa1d5612a7fb171260d0d74b2ed3761de",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 3,
+        "countMatchesTextbook": true,
+        "orderReviewed": true,
+        "lesson": 1,
+        "book": "甲",
+        "textbookPdfPages": [
+          29,
+          30
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "已視覺比對教材逐步新增筆畫與臺灣資料之筆畫順序；未認證所有運筆細節或兒童筆跡容錯，仍為候選練習。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false,
+        "orderReviewReference": "康軒115上甲本PDF第30頁"
+      }
+    },
+    {
+      "character": "上",
+      "file": "U4E0A.json",
+      "strokeCount": 3,
+      "expectedStrokeCount": 3,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/19978.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "c8172ae178041c69ab260ee7dc490ce23b0ec246",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 3,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 1,
+        "book": "甲",
+        "textbookPdfPages": [
+          29,
+          30
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "下",
+      "file": "U4E0B.json",
+      "strokeCount": 3,
+      "expectedStrokeCount": 3,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/19979.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "538b7ccab6e37980bd38ec76a4b4cd782a8b52fd",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 3,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 1,
+        "book": "甲",
+        "textbookPdfPages": [
+          29,
+          30
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "這",
+      "file": "U9019.json",
+      "strokeCount": 11,
+      "expectedStrokeCount": 11,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/36889.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "cb1340cd33f6bda529e98b1f7a7264e458870605",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 11,
+        "countMatchesTextbook": true,
+        "orderReviewed": true,
+        "lesson": 2,
+        "book": "乙",
+        "textbookPdfPages": [
+          29,
+          30,
+          31
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "已視覺比對教材逐步新增筆畫與臺灣資料之筆畫順序；未認證所有運筆細節或兒童筆跡容錯，仍為候選練習。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false,
+        "orderReviewReference": "康軒115上乙本PDF第29頁"
+      }
+    },
+    {
+      "character": "是",
+      "file": "U662F.json",
+      "strokeCount": 9,
+      "expectedStrokeCount": 9,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/26159.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "6aa740d51206edc48206537a127a8d98c7c0c0ad",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 9,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 2,
+        "book": "乙",
+        "textbookPdfPages": [
+          29,
+          30,
+          31
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "誰",
+      "file": "U8AB0.json",
+      "strokeCount": 15,
+      "expectedStrokeCount": 15,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/35504.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "dd951b1602a2a4d02c3fac5dd8fa3ef869e5d5b8",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 15,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 2,
+        "book": "乙",
+        "textbookPdfPages": [
+          29,
+          30,
+          31
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "的",
+      "file": "U7684.json",
+      "strokeCount": 8,
+      "expectedStrokeCount": 8,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/30340.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "464e4ac5f20cc90ada3ffe3cb34b5e3576e7e448",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 8,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 2,
+        "book": "乙",
+        "textbookPdfPages": [
+          29,
+          30,
+          31
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "我",
+      "file": "U6211.json",
+      "strokeCount": 7,
+      "expectedStrokeCount": 7,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/25105.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "976807c777e0e2e1efe7d576739590351a66f7a6",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 7,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 2,
+        "book": "乙",
+        "textbookPdfPages": [
+          29,
+          30,
+          31
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "分",
+      "file": "U5206.json",
+      "strokeCount": 4,
+      "expectedStrokeCount": 4,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20998.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "4a19acbe85fffd50af379bfba050bcc3f49da0af",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 4,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 2,
+        "book": "乙",
+        "textbookPdfPages": [
+          29,
+          30,
+          31
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "好",
+      "file": "U597D.json",
+      "strokeCount": 6,
+      "expectedStrokeCount": 6,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/22909.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "b6eb5ef630666c2c19c9757bf9ed62184ef9cc3c",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 6,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 2,
+        "book": "乙",
+        "textbookPdfPages": [
+          29,
+          30,
+          31
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "了",
+      "file": "U4E86.json",
+      "strokeCount": 2,
+      "expectedStrokeCount": 2,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20102.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "c58c987511b7c5761c819cb24f3cc7eb37ed6a61",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 2,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 2,
+        "book": "乙",
+        "textbookPdfPages": [
+          29,
+          30,
+          31
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "啊",
+      "file": "U554A.json",
+      "strokeCount": 11,
+      "expectedStrokeCount": 11,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/21834.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "bea59bebb7ba8a9a00749c0b33eb583f7480d8b0",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 11,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 2,
+        "book": "乙",
+        "textbookPdfPages": [
+          29,
+          30,
+          31
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "多",
+      "file": "U591A.json",
+      "strokeCount": 6,
+      "expectedStrokeCount": 6,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/22810.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "3baad75a64ee5ea6827e167ae6790116b366dc9b",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 6,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 2,
+        "book": "乙",
+        "textbookPdfPages": [
+          29,
+          30,
+          31
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "個",
+      "file": "U500B.json",
+      "strokeCount": 10,
+      "expectedStrokeCount": 10,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20491.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "567d6de9d56e10779233d48ee9f38ffc8012706e",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 10,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 2,
+        "book": "乙",
+        "textbookPdfPages": [
+          29,
+          30,
+          31
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "秋",
+      "file": "U79CB.json",
+      "strokeCount": 9,
+      "expectedStrokeCount": 9,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/31179.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "29dacaaf631d270de56ae307af21343bb5c04697",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 9,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "千",
+      "file": "U5343.json",
+      "strokeCount": 3,
+      "expectedStrokeCount": 3,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/21315.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "efefbaaec2e6cac1db4a4923d59f61e1b3affedf",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 3,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "和",
+      "file": "U548C.json",
+      "strokeCount": 8,
+      "expectedStrokeCount": 8,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/21644.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "793276e49f8046b8418496aaf771918042294f65",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 8,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "玩",
+      "file": "U73A9.json",
+      "strokeCount": 8,
+      "expectedStrokeCount": 8,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/29609.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "cb230fed5d6b6305f9c4fa247c301f66a026958d",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 8,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "陪",
+      "file": "U966A.json",
+      "strokeCount": 11,
+      "expectedStrokeCount": 11,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/38506.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "ec06f602dc5b2fc8e077a28eddd3ed95bbbf050c",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 11,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "高",
+      "file": "U9AD8.json",
+      "strokeCount": 10,
+      "expectedStrokeCount": 10,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/39640.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "6a9187f27cdbe85d4020b6119e822b7ba405ddad",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 10,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "山",
+      "file": "U5C71.json",
+      "strokeCount": 3,
+      "expectedStrokeCount": 3,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/23665.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "3211220f5c50ccb1902774a2bf0a8cec926e5ad4",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 3,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "到",
+      "file": "U5230.json",
+      "strokeCount": 8,
+      "expectedStrokeCount": 8,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/21040.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "233054ebf777f3bdab9d4bcf079fc219f49a8d60",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 8,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "大",
+      "file": "U5927.json",
+      "strokeCount": 3,
+      "expectedStrokeCount": 3,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/22823.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "2360932c2091c02afe1e73cc7c6370d54cc77237",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 3,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "海",
+      "file": "U6D77.json",
+      "strokeCount": 10,
+      "expectedStrokeCount": 10,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/28023.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "4bf5813cebffc67d93fe86342ebb02e75a0bcc3b",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 10,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "朋",
+      "file": "U670B.json",
+      "strokeCount": 8,
+      "expectedStrokeCount": 8,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/26379.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "85cd316963835c1ac468101d3440db67d941d59e",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 8,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "友",
+      "file": "U53CB.json",
+      "strokeCount": 4,
+      "expectedStrokeCount": 4,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/21451.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "99996d0704c01e5cfa2dd0541197c91c94db593b",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 4,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "們",
+      "file": "U5011.json",
+      "strokeCount": 10,
+      "expectedStrokeCount": 10,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20497.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "5612d6df20b681b3f0970b87484a33cf8f37bc76",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 10,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "起",
+      "file": "U8D77.json",
+      "strokeCount": 10,
+      "expectedStrokeCount": 10,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/36215.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "8a89716aa64737f23925ccb18799d7567324bc14",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 10,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 3,
+        "book": "甲",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "子",
+      "file": "U5B50.json",
+      "strokeCount": 3,
+      "expectedStrokeCount": 3,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/23376.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "79ed9f7015706435dc2110ea1779b8a92980f809",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 3,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "小",
+      "file": "U5C0F.json",
+      "strokeCount": 3,
+      "expectedStrokeCount": 3,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/23567.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "e97d2ade2055198b5c0f515fa126329c7563285a",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 3,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "課",
+      "file": "U8AB2.json",
+      "strokeCount": 15,
+      "expectedStrokeCount": 15,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/35506.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "eb38b4fc59aee566e570c0991d187003badd84cc",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 15,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "兩",
+      "file": "U5169.json",
+      "strokeCount": 8,
+      "expectedStrokeCount": 8,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20841.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "4bd4f37ed53e712d2d5a89ff52889a5286f4c943",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 8,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "人",
+      "file": "U4EBA.json",
+      "strokeCount": 2,
+      "expectedStrokeCount": 2,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20154.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "6d65e1d972930e2fd1369db633a8622f53492f9f",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 2,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "拉",
+      "file": "U62C9.json",
+      "strokeCount": 8,
+      "expectedStrokeCount": 8,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/25289.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "a014c749119e060f83b60e03b8c27ba41386cf91",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 8,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "看",
+      "file": "U770B.json",
+      "strokeCount": 9,
+      "expectedStrokeCount": 9,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/30475.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "099cda68f477b1ec202930e1bdfd6f73b6f4bd4d",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 9,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "找",
+      "file": "U627E.json",
+      "strokeCount": 7,
+      "expectedStrokeCount": 7,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/25214.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "a5d7827ae9de0c0796b6de5dc0ef1cf9b22812d4",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 7,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "隻",
+      "file": "U96BB.json",
+      "strokeCount": 10,
+      "expectedStrokeCount": 10,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/38587.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "4de2e383e95e2e787a8329d2d125aeaa32a650b3",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 10,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "青",
+      "file": "U9752.json",
+      "strokeCount": 8,
+      "expectedStrokeCount": 8,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/38738.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "25d4c76275121e4847482ea1ad15c19446448368",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 8,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "蛙",
+      "file": "U86D9.json",
+      "strokeCount": 12,
+      "expectedStrokeCount": 12,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "池東探險島",
+        "dataset": "project-authored-taiwan-candidate",
+        "url": null,
+        "commit": null,
+        "license": "Project-original geometry; no third-party vector or image included",
+        "copyright": "Original coordinate geometry authored for this project on 2026-11-15",
+        "reference": "康軒115上乙本PDF第37頁（印刷35頁）的十二筆順序；教育部筆順網僅作筆數核對 https://stroke-order.learningweb.moe.edu.tw/dictMean.jsp?ID=34521&la=0"
+      },
+      "review": {
+        "expectedStrokeCount": 12,
+        "countMatchesTextbook": true,
+        "countMatchesExpected": true,
+        "orderReviewed": true,
+        "directionReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "manuallyAuthored": true,
+        "realChildHandwritingValidated": false,
+        "orderReviewReference": "康軒115上乙本PDF第37頁（180dpi局部重渲染已檢視）",
+        "note": "AnimCJK臺灣集無此字。以普通幾何折線獨立繪製蟲旁與兩個土；僅參照教材筆數與順序，未抽取/描摹教材或教育部的向量路徑。未經老師試寫，需待確認。"
+      }
+    },
+    {
+      "character": "開",
+      "file": "U958B.json",
+      "strokeCount": 12,
+      "expectedStrokeCount": 12,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/38283.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "eca84d66fc9c84918e4f2509632a9ff376616755",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 12,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "心",
+      "file": "U5FC3.json",
+      "strokeCount": 4,
+      "expectedStrokeCount": 4,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/24515.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "a13a3084a9874540a6150844c8dbbb45489be823",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 4,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 4,
+        "book": "乙",
+        "textbookPdfPages": [
+          35,
+          36,
+          37
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "比",
+      "file": "U6BD4.json",
+      "strokeCount": 4,
+      "expectedStrokeCount": 4,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/27604.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "21fa66b07c826ab0d5a314037703722cabea7145",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 4,
+        "countMatchesTextbook": true,
+        "orderReviewed": true,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "已視覺比對教材逐步新增筆畫與臺灣資料之筆畫順序；未認證所有運筆細節或兒童筆跡容錯，仍為候選練習。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false,
+        "orderReviewReference": "康軒115上甲本PDF第42頁"
+      }
+    },
+    {
+      "character": "門",
+      "file": "U9580.json",
+      "strokeCount": 8,
+      "expectedStrokeCount": 8,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/38272.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "0303b60b31ec7581a9ab74ca6a1b549e5e0c08d9",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 8,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "裡",
+      "file": "U88E1.json",
+      "strokeCount": 12,
+      "expectedStrokeCount": 12,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/35041.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "2b6296866751fd73da0224d57fd67748efdb6bd0",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 12,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "外",
+      "file": "U5916.json",
+      "strokeCount": 5,
+      "expectedStrokeCount": 5,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/22806.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "36ec86ca6800ce9465514551981aaec3dde26c8e",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 5,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "有",
+      "file": "U6709.json",
+      "strokeCount": 6,
+      "expectedStrokeCount": 6,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/26377.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "f09d9557c4b9ca53614da2d8d2beb19a136f690f",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 6,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "什",
+      "file": "U4EC0.json",
+      "strokeCount": 4,
+      "expectedStrokeCount": 4,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20160.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "a1a56208a4dd88171c28e11dee2eb03b4af99c01",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 4,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "麼",
+      "file": "U9EBC.json",
+      "strokeCount": 14,
+      "expectedStrokeCount": 14,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/40636.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "7e0c7b891605f11257376ff41b43339a62329cae",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 14,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "不",
+      "file": "U4E0D.json",
+      "strokeCount": 4,
+      "expectedStrokeCount": 4,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/19981.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "27e7e4b91f6c4b1c204445eab9b10bd912a6fbe9",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 4,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "同",
+      "file": "U540C.json",
+      "strokeCount": 6,
+      "expectedStrokeCount": 6,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/21516.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "7f86c0a21c8b0d336bdba8e05c4bc4e5f1b2699a",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 6,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "早",
+      "file": "U65E9.json",
+      "strokeCount": 6,
+      "expectedStrokeCount": 6,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/26089.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "1d4e5580d23556fd2e7787e81c13fb1a256911b2",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 6,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "晚",
+      "file": "U665A.json",
+      "strokeCount": 11,
+      "expectedStrokeCount": 11,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/26202.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "9bb8c139a5d838b4b040da232abb575eba7fe09e",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 11,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "王",
+      "file": "U738B.json",
+      "strokeCount": 4,
+      "expectedStrokeCount": 4,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/29579.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "223c74869e1639fc1db6763f904bafffe971a527",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 4,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "主",
+      "file": "U4E3B.json",
+      "strokeCount": 5,
+      "expectedStrokeCount": 5,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/20027.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "d0a23c89cafeeae1431a2156ae4fbabb19d8a144",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 5,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "又",
+      "file": "U53C8.json",
+      "strokeCount": 2,
+      "expectedStrokeCount": 2,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/21448.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "338e45a84780352e13a8398799c2e6b5e5bb8e4f",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 2,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 5,
+        "book": "甲",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "路",
+      "file": "U8DEF.json",
+      "strokeCount": 13,
+      "expectedStrokeCount": 13,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/36335.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "99fcf29b6c5108210f1656b7b6610a99aba1cc44",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 13,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "長",
+      "file": "U9577.json",
+      "strokeCount": 8,
+      "expectedStrokeCount": 8,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/38263.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "1329fc4b27d9e80941b2e6c7acc37a81c55be881",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 8,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "白",
+      "file": "U767D.json",
+      "strokeCount": 5,
+      "expectedStrokeCount": 5,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/30333.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "0981e727bea95cb81e1a8e148d2a80ed9b4b97cf",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 5,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "花",
+      "file": "U82B1.json",
+      "strokeCount": 8,
+      "expectedStrokeCount": 8,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/33457.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "577e959c727baae95a759b5d44227369d0b5577b",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 8,
+        "countMatchesTextbook": true,
+        "orderReviewed": true,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "已視覺比對教材逐步新增筆畫與臺灣資料之筆畫順序；未認證所有運筆細節或兒童筆跡容錯，仍為候選練習。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false,
+        "orderReviewReference": "康軒115上乙本PDF第42頁"
+      }
+    },
+    {
+      "character": "紅",
+      "file": "U7D05.json",
+      "strokeCount": 9,
+      "expectedStrokeCount": 9,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/32005.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "4190fe0d373f74f225a1b5fdcdfdb7fb99bc49f6",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 9,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "走",
+      "file": "U8D70.json",
+      "strokeCount": 7,
+      "expectedStrokeCount": 7,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/36208.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "321dfb2e686c813d9a690cba18d8021e26b8b3b7",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 7,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "在",
+      "file": "U5728.json",
+      "strokeCount": 6,
+      "expectedStrokeCount": 6,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/22312.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "919c773c08471141d44bbfccfdb5bf92067b09d8",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 6,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "向",
+      "file": "U5411.json",
+      "strokeCount": 6,
+      "expectedStrokeCount": 6,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/21521.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "6e2e2892556afce63b006460aeb7cf8166b02b2e",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 6,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "說",
+      "file": "U8AAA.json",
+      "strokeCount": 14,
+      "expectedStrokeCount": 14,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/35498.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "f13d62ea378ac7190cbd5cdf226c11d54b4192f2",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 14,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "朵",
+      "file": "U6735.json",
+      "strokeCount": 6,
+      "expectedStrokeCount": 6,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/26421.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "647fa1d254ff2d99d447fe0df9751d6198915fb0",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 6,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "從",
+      "file": "U5F9E.json",
+      "strokeCount": 11,
+      "expectedStrokeCount": 11,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/24478.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "32bf9b034eeb8e5e0b0f96ac393101a95dc9121b",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 11,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "頭",
+      "file": "U982D.json",
+      "strokeCount": 16,
+      "expectedStrokeCount": 16,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/38957.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "fbc36422f3493b38ddf08ce83862549254f65c8c",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 16,
+        "countMatchesTextbook": true,
+        "orderReviewed": false,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "筆數已核對；中心線沿臺灣資料集，尚未逐字人工核驗所有筆序。只供候選練習，疑似誤判須待教師複核。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false
+      }
+    },
+    {
+      "character": "那",
+      "file": "U90A3.json",
+      "strokeCount": 7,
+      "expectedStrokeCount": 7,
+      "readiness": "practice-only",
+      "practiceReady": true,
+      "examReady": false,
+      "source": {
+        "project": "AnimCJK",
+        "dataset": "svgsZhHant",
+        "url": "https://github.com/parsimonhi/animCJK/blob/c63765b150cbd567c71d05cf4a4f8d00b57045c9/svgsZhHant/37027.svg",
+        "commit": "c63765b150cbd567c71d05cf4a4f8d00b57045c9",
+        "blobSha": "e854190cbf4cd746bf5fc2ef41c5d2dd70ea1ce4",
+        "license": "Arphic Public License",
+        "copyright": "AnimCJK 2016-2026 Copyright FM-SH; derived from Make Me a Hanzi and Arphic PL KaitiM fonts"
+      },
+      "review": {
+        "expectedStrokeCount": 7,
+        "countMatchesTextbook": true,
+        "orderReviewed": true,
+        "lesson": 6,
+        "book": "乙",
+        "textbookPdfPages": [
+          42,
+          43,
+          44
+        ],
+        "sourceRegion": "Taiwan",
+        "realChildHandwritingValidated": false,
+        "note": "已視覺比對教材逐步新增筆畫與臺灣資料之筆畫順序；未認證所有運筆細節或兒童筆跡容錯，仍為候選練習。",
+        "countMatchesExpected": true,
+        "expectedCountSource": "康軒教材筆順頁／國字教材核對-20261115.json",
+        "directionReviewed": false,
+        "orderReviewReference": "康軒115上乙本PDF第44頁"
+      }
+    }
+  ]
+}

@@ -1,0 +1,524 @@
+{
+  "version": "HANZI-PILOT-v1",
+  "status": "local-arithmetic-integration-verified-deployment-connectivity-blocked-not-published",
+  "gradingPolicy": "automatic-v1",
+  "baseCommit": "60d0565c35b964eaafcdf9cf1158196bd0feb197",
+  "sourceFiles": [
+    {
+      "path": "data/hanzi-curriculum.json",
+      "sha256": "c1165f2295e63a03b21816424a4e29dba1aa68354eff2b4a1f869f10707b8eda"
+    },
+    {
+      "path": "data/hanzi-strokes/U4E00.json",
+      "sha256": "75040021fa54daba000d0446191b3d6c3ec9973dd14f42b9b630d6f3a2ff7916"
+    },
+    {
+      "path": "data/hanzi-strokes/U4E03.json",
+      "sha256": "613ddbeb9ef1eaefb093641950baf2ceb1d268af34fae9e26b1e2853f8eb583c"
+    },
+    {
+      "path": "data/hanzi-strokes/U4E09.json",
+      "sha256": "846a4db5f4a612607ddb2d49f0390eb45579d72980d847fae1f9b7424eabfc1a"
+    },
+    {
+      "path": "data/hanzi-strokes/U4E0A.json",
+      "sha256": "f1d26c3ecbb82a0deea4dd50fcf990b5d532f753a011625dea38624e08dc2437"
+    },
+    {
+      "path": "data/hanzi-strokes/U4E0B.json",
+      "sha256": "a3e7e82eb2187996f2405435663812955f48cc8e15c4ef966fe80cd452652e58"
+    },
+    {
+      "path": "data/hanzi-strokes/U4E0D.json",
+      "sha256": "b572e61e7d892efa0ba39f46a1fbac3260254964aa8625f36e2654ae696cae8b"
+    },
+    {
+      "path": "data/hanzi-strokes/U4E3B.json",
+      "sha256": "453f324090c309177527271354a3ce2ddf1feb137aba212680e839348c2cc683"
+    },
+    {
+      "path": "data/hanzi-strokes/U4E5D.json",
+      "sha256": "a4cffda6a5bc0a3f3c5bf096f0bb8b03f23b7f5aeb6dbb4c4dfe613871e31bb4"
+    },
+    {
+      "path": "data/hanzi-strokes/U4E5F.json",
+      "sha256": "7f384abbf8443649864abb5067582e647e75c13af4285374e5733a89d2358a5c"
+    },
+    {
+      "path": "data/hanzi-strokes/U4E86.json",
+      "sha256": "6bcf70609cb7c110b4e1688407035056516eeee6c17f1213cdebac3f80ad15a8"
+    },
+    {
+      "path": "data/hanzi-strokes/U4E8C.json",
+      "sha256": "a4ddc5ffac6e0241f60e4e3f36c1c249b297652d3f6cde3ddde2e920fc01acbe"
+    },
+    {
+      "path": "data/hanzi-strokes/U4E94.json",
+      "sha256": "3291999feebe431836c19bfbb33a65dc5fada02e1dd18265c2e54afedd7f4a53"
+    },
+    {
+      "path": "data/hanzi-strokes/U4EBA.json",
+      "sha256": "dc705a230b7c9d91e664c0355d87a96dff8d7ac97f15054e5814f11bb53f3fdd"
+    },
+    {
+      "path": "data/hanzi-strokes/U4EC0.json",
+      "sha256": "d4ecc1d26e698f316be54f71939a9b8723bd1bebc09c89852fe4d3a421964397"
+    },
+    {
+      "path": "data/hanzi-strokes/U4ED6.json",
+      "sha256": "6dee4529197198b7017f4962c4042b72c60a8d2bba6178d76cd4bc75c4bd02f7"
+    },
+    {
+      "path": "data/hanzi-strokes/U4F60.json",
+      "sha256": "6a5d87a1e16e4884099f0d03f66ef3b67a9e6e50b245419fd10406f13f3da205"
+    },
+    {
+      "path": "data/hanzi-strokes/U500B.json",
+      "sha256": "9f67a497a5233296c987e8036beedc4e924c37d4f859180f170ec5611d7cb556"
+    },
+    {
+      "path": "data/hanzi-strokes/U5011.json",
+      "sha256": "ff0174308c6ab118d7ce2882cb8b00032e45bff9da0c55a7c87d27756ce26f04"
+    },
+    {
+      "path": "data/hanzi-strokes/U5169.json",
+      "sha256": "98173484f73532a212085c43b59ae412215157eb923d95723b27b7c57850a18e"
+    },
+    {
+      "path": "data/hanzi-strokes/U516B.json",
+      "sha256": "c1b9205e34dcb71db0ff649e014132db461f9e6ae6a7b65cce197b9615e3b8e2"
+    },
+    {
+      "path": "data/hanzi-strokes/U516D.json",
+      "sha256": "fc5f212b6bc24a8cc0d16d31b9d777097d7345316e93351ebdbd26d88e1af7dd"
+    },
+    {
+      "path": "data/hanzi-strokes/U5206.json",
+      "sha256": "da9708e84e4dce1f2847963367a2a8d247ee16b8e70ce3830335750830b054ae"
+    },
+    {
+      "path": "data/hanzi-strokes/U5230.json",
+      "sha256": "588a76b9ac305dd7895cea2f9a98b32d38ffecb675b2a2b5f573f1db82742c39"
+    },
+    {
+      "path": "data/hanzi-strokes/U5341.json",
+      "sha256": "8cf02dcffb409c672e329af621efa8329d832a2c563c835634c85b6f7333bc8c"
+    },
+    {
+      "path": "data/hanzi-strokes/U5343.json",
+      "sha256": "3ffd90ced27e54a3e55c168b733a7d0a3c4a3cfa8781b5fd52334029abb39109"
+    },
+    {
+      "path": "data/hanzi-strokes/U53C8.json",
+      "sha256": "b037534dcf30d04009131a53bb0f7cdebf266997adb987a74fd16324da5088b4"
+    },
+    {
+      "path": "data/hanzi-strokes/U53CB.json",
+      "sha256": "7623384daed1b7afc35cfa258d04ad94e3281ae02fcff1d82cb6ccf571faff36"
+    },
+    {
+      "path": "data/hanzi-strokes/U53F3.json",
+      "sha256": "d7dde6b371b1c4a399b1507e80c27816f35242a697b81e0d2e326f7c5adbaf85"
+    },
+    {
+      "path": "data/hanzi-strokes/U540C.json",
+      "sha256": "8de61a00342beda54b10407ba69cba3084605826b65f236861d176e236c47f64"
+    },
+    {
+      "path": "data/hanzi-strokes/U5411.json",
+      "sha256": "ee90ce919659696848d3e973f23fd1a435d9e075bacee7373e06b0e0b40307d1"
+    },
+    {
+      "path": "data/hanzi-strokes/U548C.json",
+      "sha256": "b5bf14c5ddc9e358f711a391b191d547e260ca82f6173a1f6d18980ae5325209"
+    },
+    {
+      "path": "data/hanzi-strokes/U554A.json",
+      "sha256": "ee94b4f8ce036de8e2d28edd99fda37a5ac478fad67c6378f0ab6c50657c7489"
+    },
+    {
+      "path": "data/hanzi-strokes/U56DB.json",
+      "sha256": "ef6a74c0cf950689706c823086d10201cdbe985849566531aa2b2b204d743e17"
+    },
+    {
+      "path": "data/hanzi-strokes/U5728.json",
+      "sha256": "00a65b301f317c72434e3e38d2878a9f6d631011f4d0fb27251871f0fed5b8ce"
+    },
+    {
+      "path": "data/hanzi-strokes/U5916.json",
+      "sha256": "2a1f69af6f003b743efe5ad23a77c782ff931be36c9cb6ff81b2f875aea83dce"
+    },
+    {
+      "path": "data/hanzi-strokes/U591A.json",
+      "sha256": "68f84e7acf8de36a28e52f55e0116cdf3250fe6c5a27eef7ae8b57c691fff989"
+    },
+    {
+      "path": "data/hanzi-strokes/U5927.json",
+      "sha256": "2c9daac1b299f70f62c38db1a241da2e6cf9641e2ce8dc1a01675084ffe3ee44"
+    },
+    {
+      "path": "data/hanzi-strokes/U597D.json",
+      "sha256": "bb4a5e64a8112112959e557bea39153cf8b814e7a353c1cca4f5493a7e17e4c1"
+    },
+    {
+      "path": "data/hanzi-strokes/U5B50.json",
+      "sha256": "c9a73adc107bfcedfb2c17750ec40cfe35fdb7ee62772dad711f5769cddfd334"
+    },
+    {
+      "path": "data/hanzi-strokes/U5C0F.json",
+      "sha256": "1e802c359b406d763434065c05f257bd10dcb84cf3ae7981eaee03ab3471165d"
+    },
+    {
+      "path": "data/hanzi-strokes/U5C71.json",
+      "sha256": "d53038d440d273edc432fe7837fcd5116d4ff6076b6fa46cb6ed774d42418099"
+    },
+    {
+      "path": "data/hanzi-strokes/U5DE6.json",
+      "sha256": "52b51404a508f16d2609b0749d167d06c3a14979b6b2d236555942723c5de7e9"
+    },
+    {
+      "path": "data/hanzi-strokes/U5F9E.json",
+      "sha256": "83cef2c082766a1b98b5059fd8b5bfa18c0bdd9b53ddb08d449b620e204af5ef"
+    },
+    {
+      "path": "data/hanzi-strokes/U5FC3.json",
+      "sha256": "475574d7079db59168627aa99fc18eb38eade3a65dc9c5f5206dd320bb5b7e75"
+    },
+    {
+      "path": "data/hanzi-strokes/U6211.json",
+      "sha256": "dd31a306a0ff482e6c4bb18b5916e0fa385af4292f02afe05d6bcb55e29ecc37"
+    },
+    {
+      "path": "data/hanzi-strokes/U624B.json",
+      "sha256": "a8816d2552235c7ba026bc11382646475fa1c16456a1a8b90a7a7004ffc355e3"
+    },
+    {
+      "path": "data/hanzi-strokes/U627E.json",
+      "sha256": "58c386300a0ad6b655c3279ec438cefedbff71118f3c280e7e44c0b1cf14f549"
+    },
+    {
+      "path": "data/hanzi-strokes/U62C9.json",
+      "sha256": "7d1c3eee14010f6713d0d1b9bcd2d55f9e407bb7d6ed1515dfb3c7dc2b9f700f"
+    },
+    {
+      "path": "data/hanzi-strokes/U62CD.json",
+      "sha256": "3efdc97b38fe84009b5496126561515df74e5376a1d750a8da9eff1194b1495a"
+    },
+    {
+      "path": "data/hanzi-strokes/U65E9.json",
+      "sha256": "064db24545ca26c14b3499215717f276e139188b6b92d5b62d0f76a7305320d9"
+    },
+    {
+      "path": "data/hanzi-strokes/U662F.json",
+      "sha256": "330d1051c563ee2302620bfd997638ac9c299e45f60361db3aec95883f3ad1e5"
+    },
+    {
+      "path": "data/hanzi-strokes/U665A.json",
+      "sha256": "7a1a95cc9692c027ffcba2278c1e187e266f6e5cddceb1d4d4ba7983d648c3f2"
+    },
+    {
+      "path": "data/hanzi-strokes/U6709.json",
+      "sha256": "d12426ee3a3a3c477226c718dd560012fc785528231411b01fc20d9bc653a89c"
+    },
+    {
+      "path": "data/hanzi-strokes/U670B.json",
+      "sha256": "12011c657370f5a685c4faafd1b21f26f24a364428601c3e524518efaca741c4"
+    },
+    {
+      "path": "data/hanzi-strokes/U6735.json",
+      "sha256": "60c19aefa2312171ba786273acba2b42e28d39651d9c6ebba6154539acb066cb"
+    },
+    {
+      "path": "data/hanzi-strokes/U6BD4.json",
+      "sha256": "177d114e571c47938fa17d400c424ca0258b1266b7b6dd04e4ba250346b9e26b"
+    },
+    {
+      "path": "data/hanzi-strokes/U6D77.json",
+      "sha256": "a74a7556cea2fd82b8fa2115bfdd0e46179868240ead095950639680b2fb4b7d"
+    },
+    {
+      "path": "data/hanzi-strokes/U738B.json",
+      "sha256": "277a6c957741796b395c4628a1cb619128236083d45d55786dbc97dd70cbf56d"
+    },
+    {
+      "path": "data/hanzi-strokes/U73A9.json",
+      "sha256": "19a0d0875baa23b7fc528efa97ec61960e5e5f580ed78863f05bdba061ee75f8"
+    },
+    {
+      "path": "data/hanzi-strokes/U767D.json",
+      "sha256": "6c807658c612abf59a10e25a26241bde4aca3b650c5a1305e5893dcc03e8f606"
+    },
+    {
+      "path": "data/hanzi-strokes/U7684.json",
+      "sha256": "e13c1067969ba22176b8ba408d68c73cac77e5714189788a85aeb0c96f5489cf"
+    },
+    {
+      "path": "data/hanzi-strokes/U770B.json",
+      "sha256": "9bafaa7650793697dbafe92d138256687b67d1b5aba0303e3078e280811533a8"
+    },
+    {
+      "path": "data/hanzi-strokes/U79CB.json",
+      "sha256": "da0a9269f312b7acfac7c8580daefbd59ba4e18e616e3fd31ff3459c2dade9fa"
+    },
+    {
+      "path": "data/hanzi-strokes/U7D05.json",
+      "sha256": "7857e4941991a2cb53bd482f920d133fa98b7b9cfaa6b87219c1e5209da917e9"
+    },
+    {
+      "path": "data/hanzi-strokes/U82B1.json",
+      "sha256": "d0005cd5142f4b32251ced097dcda591a695d8d28c5b3dea633bd39d39bccf0f"
+    },
+    {
+      "path": "data/hanzi-strokes/U86D9.json",
+      "sha256": "05be394bb732981bcb92f784f14c58f0e79a05d9f678a2170cddf62a593aad4e"
+    },
+    {
+      "path": "data/hanzi-strokes/U88E1.json",
+      "sha256": "51e6d82c329175b64461c70d5881805b99e46cd52969ce41160e69e9ac988278"
+    },
+    {
+      "path": "data/hanzi-strokes/U8AAA.json",
+      "sha256": "44b4ced4269160199a7599f0ccd136ad18aa51e5f982208f65ae54093dbd75c9"
+    },
+    {
+      "path": "data/hanzi-strokes/U8AB0.json",
+      "sha256": "01d599382e5254f2ef7c074110e9cdb1fbafbda9a55b3a915c40bff1528bfceb"
+    },
+    {
+      "path": "data/hanzi-strokes/U8AB2.json",
+      "sha256": "e13682fe06bae57e14a97d25a09938abc5e708443d34676625e05320051109f4"
+    },
+    {
+      "path": "data/hanzi-strokes/U8D70.json",
+      "sha256": "42310f9b09b4f7e26f043b928c7ee1008f4904ce77b5b94b29a5dd11a13e18c9"
+    },
+    {
+      "path": "data/hanzi-strokes/U8D77.json",
+      "sha256": "c1c3dadd24ac1978a509c0f77031fe0f12aa3f4bcbe446eea4564aa621f60d1a"
+    },
+    {
+      "path": "data/hanzi-strokes/U8DEF.json",
+      "sha256": "3f31744d53566e3caa2051220fce15a6896282761807741e0b8804e72fca0be5"
+    },
+    {
+      "path": "data/hanzi-strokes/U9019.json",
+      "sha256": "d70781244bd7db49adc92e48409b30d779e29b55e7e0689b447075b900ec095f"
+    },
+    {
+      "path": "data/hanzi-strokes/U90A3.json",
+      "sha256": "c33ca80bfcaa417f577c5a0527e2855789995e8edb3a447e6c441a0fc85feeef"
+    },
+    {
+      "path": "data/hanzi-strokes/U9577.json",
+      "sha256": "6c9c23db8dc0edfda6d7a4db40e5378a0a5d641c215190baeadae355b916e804"
+    },
+    {
+      "path": "data/hanzi-strokes/U9580.json",
+      "sha256": "fcb7fe9b55dcb5177ecb6f883f518e015022319ffeea0959dd965dd73725d1d1"
+    },
+    {
+      "path": "data/hanzi-strokes/U958B.json",
+      "sha256": "9e16fb7e7b083829c797c89f95601a144a98dc3793c15d7232b2a3375f409794"
+    },
+    {
+      "path": "data/hanzi-strokes/U966A.json",
+      "sha256": "d8c5866921e4fd90d86696d16d811245710ee618153cfad2ac33a21c1af96156"
+    },
+    {
+      "path": "data/hanzi-strokes/U96BB.json",
+      "sha256": "b565d70de4dbf3aacfffa39354fcedce25cd18864934673737d642bfd4b01aff"
+    },
+    {
+      "path": "data/hanzi-strokes/U9752.json",
+      "sha256": "195678252b73e920e9517dbb59246af523149ac019f185a253aff47e1f313446"
+    },
+    {
+      "path": "data/hanzi-strokes/U982D.json",
+      "sha256": "d70d47951a4c89885b74392d9a30a441d0b41c30767927d2e71176533765fe38"
+    },
+    {
+      "path": "data/hanzi-strokes/U9AD8.json",
+      "sha256": "cf1dfc510bf92e5bcf0a6c52739db2adc6723b3af7af157ebd4b67e0aa675314"
+    },
+    {
+      "path": "data/hanzi-strokes/U9EBC.json",
+      "sha256": "cce76e4c77e1b4d4e5706575e34e17e57db2f41c0ef87399ad1637a52c18a1f5"
+    },
+    {
+      "path": "data/hanzi-strokes/manifest.json",
+      "sha256": "a40f243a629dbdee15523e13adbc248d4814cd0d5ca949f715c479a625ab992b"
+    },
+    {
+      "path": "docs/hanzi-handwriting-validation.md",
+      "sha256": "73035b7499cd3f41bae48e960387a2854f9c074caf930736581dc1fc2d520921"
+    },
+    {
+      "path": "docs/hanzi-learning.md",
+      "sha256": "d151d1d751a2b15b5606d7982d6a1e5b9f7952c76596ddae64dcf6693e65e360"
+    },
+    {
+      "path": "docs/hanzi-qa/hanzi-entry-1024.png",
+      "sha256": "13e6561bca2a0c2dcf3f193ba9eed3beb0f2487e563dc72695f8c37a19c40763"
+    },
+    {
+      "path": "docs/hanzi-qa/hanzi-entry-390.png",
+      "sha256": "5a353b4e025d24345a42b1f37842a3746c79e48f22c066b4604a414917e83781"
+    },
+    {
+      "path": "docs/hanzi-qa/hanzi-entry-768.png",
+      "sha256": "9434f15b2565a9f86c615eea34809dac13d4e9e55324c54741e49c48ffb2c803"
+    },
+    {
+      "path": "docs/hanzi-qa/hanzi-writing-1024.png",
+      "sha256": "54f876469bc7065751520f60915f67186b485965224f7466c84d16d5a80cd994"
+    },
+    {
+      "path": "docs/hanzi-qa/hanzi-writing-390.png",
+      "sha256": "7259caed9c24f50be44baf5efe6937f6c9192612d312c6bb65a038b14fdc1340"
+    },
+    {
+      "path": "docs/hanzi-qa/hanzi-writing-768.png",
+      "sha256": "326da5fa802baf4ab6954163469b3c4c48303d1282889670cabc0d48e0135ab6"
+    },
+    {
+      "path": "game-boot.js",
+      "sha256": "976d8785d459b9521425b8c081e753ea45ebfdb83b2c0e4f859a428d502e0e54"
+    },
+    {
+      "path": "hanzi-bank.js",
+      "sha256": "385dc1837833a757b9e9d8abf88ea494d435d927afcab8a5f2c5b3c140e39c5a"
+    },
+    {
+      "path": "hanzi-client.js",
+      "sha256": "501e1deb3dfe9d699fb058e3e0bbbc3e88ac725a09c2d889fc49f1138f6922c8"
+    },
+    {
+      "path": "hanzi-entry.js",
+      "sha256": "2c9a57c5c2406986ea97b038a318a65a6d2f7205ad9b89a404ed994916fef17c"
+    },
+    {
+      "path": "hanzi-handwriting.js",
+      "sha256": "7a3e1f0632ea671eec5c78b7ceca8abda1d1447189cf1c37069aa5bdaf1dccf1"
+    },
+    {
+      "path": "hanzi-stroke-core.js",
+      "sha256": "38dfe17230527576ff80eb54d99eac3992260b292de6f16f52b33d666a174a0a"
+    },
+    {
+      "path": "hanzi.css",
+      "sha256": "4f9c7cd0156a2a4fef9b660e6d906fd77be0463be29151b802d2e98fab1bd22f"
+    },
+    {
+      "path": "hanzi.html",
+      "sha256": "e1e9a4e005c3e15ee3d3978ff5510cd4073a1eac0f08eef65ccddc45adf31e47"
+    },
+    {
+      "path": "hanzi.js",
+      "sha256": "82d84b26d802f596f8b06ef4254343e9a20d1fac1d04459834c0176f3e6466ab"
+    },
+    {
+      "path": "index.html",
+      "sha256": "41850d9631bb66fe2728954caf9514adf883fbff2e5e4ee67e59539d5e7881b1"
+    },
+    {
+      "path": "licenses/hanzi-ARPHICPL.txt",
+      "sha256": "e7fac9ad40b1298073cd23b8e54508b44f3429348f24f5a575093c8abd6582a6"
+    },
+    {
+      "path": "licenses/hanzi-AnimCJK-COPYING.txt",
+      "sha256": "de3f9893cb821fac22a20ebd52c697d321fdc588f61cc3147f52865c30ce433b"
+    },
+    {
+      "path": "licenses/hanzi-SOURCES.md",
+      "sha256": "219cfb6e499cee5a5df0f711a931e2faadb6c704f4b5bd66920ec10095dfb4de"
+    },
+    {
+      "path": "teacher-preview/README.md",
+      "sha256": "7569eebc717b48db2c5a2db2d69ec14f72f111f4a993f560785ac93bcacd33cc"
+    },
+    {
+      "path": "teacher-preview/hanzi-offline.html",
+      "sha256": "b99219676096d9045b17c9fd352a1464ff40b69ada7a549a88c1894c7181bd41"
+    },
+    {
+      "path": "tests/hanzi-bank.test.js",
+      "sha256": "45e8fc334ff40963a407f81e085b178c9bc9f9270bc9ad0ada2a42b190f37052"
+    },
+    {
+      "path": "tests/hanzi-client.test.js",
+      "sha256": "5d46311b57d51c2d4be330735bd65ef7e047a6a8d73eeff7d9e75aafd18d5cc8"
+    },
+    {
+      "path": "tests/hanzi-entry-gate.test.js",
+      "sha256": "ee5a10f465f84aeec1a665ebe58b178a3a35a479a15981b1b95e7832d7837b79"
+    },
+    {
+      "path": "tests/hanzi-handwriting-browser.test.js",
+      "sha256": "69a0c1be6bed358f759c474a18921e0d0f83161584f4b64c5357695685b765ea"
+    },
+    {
+      "path": "tests/hanzi-handwriting-core.test.js",
+      "sha256": "7e2b8b88eb88d49529ea5535423abc348d6169c600fd050451b37cf1b7f2449d"
+    },
+    {
+      "path": "tests/hanzi-handwriting-navigation.test.js",
+      "sha256": "24f9311359969b03de664420b33edd7adddfb07b96624eed2768d8dcb525b2d7"
+    },
+    {
+      "path": "tests/hanzi-ui.test.mjs",
+      "sha256": "9a9bca353d341a460b480436212fcc25e703dbc81ed26f1580028e5d7f4273c9"
+    },
+    {
+      "path": "tools/build-hanzi-preview.mjs",
+      "sha256": "36ffa7b4bb062248d2ccda10831c13c96a053bdbca83b642c3ecd6207b37826c"
+    }
+  ],
+  "verification": {
+    "bank": 10,
+    "client": 8,
+    "strokeCore": 17,
+    "browserFinalRun": 7,
+    "existingSessionBattleFarmSelected": 25,
+    "backendSeparate": 51,
+    "teacherUISeparate": 12,
+    "browserMethod": "new headless Chrome with memory routes and fabricated SQLite; no production student requests",
+    "realIPad": false,
+    "productionDeployment": false,
+    "entryGateThisTurn": 4,
+    "integratedUIThisTurn": 4,
+    "releaseGuardLocal": true,
+    "arithmeticCoreAndApiThisTurn": 10,
+    "arithmeticPublishedFilesPreserved": 18,
+    "integratedStudentUiThisTurn": 1,
+    "backendArithmeticIntegration": 7,
+    "backendArithmeticCore": 5,
+    "teacherUIReverified": 12,
+    "combinedTeacherUI": 1,
+    "releaseGuardUnit": 3
+  },
+  "preview": "teacher-preview/hanzi-offline.html",
+  "backendSnapshot": "../backend-hanzi-20261115",
+  "limits": [
+    "Child handwriting tolerance and actual iPad Safari remain uncalibrated.",
+    "No official deployment or migration was performed.",
+    "The offline preview contains student practice only; class assignments and cards use the integrated backend."
+  ],
+  "pilot": {
+    "classId": "main",
+    "studentSeats": [
+      "115015",
+      "115016"
+    ],
+    "serverEnforced": true,
+    "defaultScope": "built-in seven lessons only when teacher scope has never been saved"
+  },
+  "deploymentBlockers": [
+    "Shell DNS cannot resolve deployment service domains",
+    "Wrangler reports no active authorization",
+    "Latest Cloudflare baseline still requires live capture"
+  ],
+  "originalBranchBaseCommit": "dd77ca2abe1d49e10f3f1d5c0e3fc21dd98ef764",
+  "integrationMethod": "Applied exact published upstream diff and resolved only game-boot/index; candidate history is not the production parent; publish on latest main without force push",
+  "backendProductionBaseline": "3f810850-6785-4d41-8a5a-5247f3fcdc89",
+  "backendBundleSha256": "3c12ccf7f98fdb09adeb9ad7d93341ab41becd447702570d317464f7d8535c19"
+}
