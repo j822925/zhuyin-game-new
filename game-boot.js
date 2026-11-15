@@ -7,7 +7,7 @@ await import('./reading-entry.js?v=20261025-homegallery1');
 await import('./tone-entry.js?v=20261011-teacher1');
 await import('./teacher-hub.js?v=20261106-annual2');
 await import('./annual-challenge-entry.js?v=20261106-annual2').catch(()=>{});
-await import('./arithmetic-entry.js?v=20261115-math2').catch(()=>{});
+await import('./arithmetic-entry.js?v=20261115-math3').catch(()=>{});
 await import('./hanzi-entry.js?v=20261115-pilot1').catch(()=>{});
 await import('./helper-entry.js?v=20261022-audio1').catch(()=>{});
 await import('./island-names.js?v=20261023-exam1').catch(()=>{});
