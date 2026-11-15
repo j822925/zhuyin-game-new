@@ -1,8 +1,8 @@
-import {createArithmeticStore} from './arithmetic-store.js';
-import {createArithmeticService} from './arithmetic-service.js';
-import {fail,VERSION} from './arithmetic-core.js';
+import {createArithmeticStore} from './arithmetic-store.js?v=20261115-math2';
+import {createArithmeticService} from './arithmetic-service.js?v=20261115-math2';
+import {fail,VERSION} from './arithmetic-core.js?v=20261115-math2';
 export const handlesArithmetic=req=>/^\/(arithmetic|admin\/api\/arithmetic)\//.test(new URL(req.url).pathname);
-const teacherOps=new Set(['bootstrap','scope-save','assignment-save','exam-save','task-state','results']);
+const teacherOps=new Set(['bootstrap','assignment-save','exam-save','task-state','results','monthly']);
 const childOps=new Set(['access','bootstrap','practice-start','exam-start','submit','assignments','exams','notebook']);
 export const MESSAGES={forbidden:'目前尚未開放這個帳號使用。',teacher_required:'請先登入教師後台。',student_required:'請回首頁登入。',authentication_required:'登入已到期，請回首頁重新登入。',scope_closed:'老師尚未開放這個練習範圍。',invalid_config:'請檢查難度、題型與題數。',invalid_task:'請檢查作業對象與開放時間。',invalid_answer:'請輸入完整數字。',invalid_answers:'答案尚未完整，請繼續作答。',invalid_request_id:'這次操作未能辨識，請重新讀取。',task_closed:'這份小考或作業尚未開放，或已經截止。',task_locked:'已有作答紀錄，請建立新作業或小考。',request_conflict:'這份紀錄已經儲存，重試內容與原本不同。',stale_revision:'資料已更新，請重新讀取。',scope_too_small:'符合條件的題目不足，請減少題數或調整題型。',not_found:'找不到這份紀錄。',writes_disabled:'目前暫停儲存，請稍後再試。',service_unavailable:'暫時無法儲存，請保留畫面，稍後重試。'};
 function reply(request,teacher,data,status=200){const headers={'Cache-Control':'no-store','Vary':'Origin','X-Content-Type-Options':'nosniff'};if(!teacher&&request.headers.get('Origin'))headers['Access-Control-Allow-Origin']=request.headers.get('Origin');return Response.json(data,{status,headers});}
