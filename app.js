@@ -18,7 +18,7 @@ import {setupCozyUI} from './cozy-ui.js?v=20261007-ipad1';
 import {createStudentAuth} from './student-auth.js?v=20261009-accounts1';
 import {setupStudentLoginGate} from './student-login-gate.js?v=20260928-all1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
-import {setupExamEntry} from './exam-entry.js?v=20261023-readingexam1';
+import {setupExamEntry} from './exam-entry.js?v=20261116-hub1';
 import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,celebrateCharacter,motionPortrait} from './character-motion.js?v=20261011-battle1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
 import {setupMonsterCollection,startDemoMonster,creditDemoMonster,showMonsterReward} from './monster-cards-ui.js?v=20261011-battle1';
@@ -115,6 +115,7 @@ async function load(){
   const restored=auth.currentSeat();if(restored&&!config.seats.includes(restored))auth.forgetAll();
   if(!$('seat').value&&auth.currentSeat()){$('seat').value=auth.currentSeat();selectedIdentities.seat=$('seat').value;}
   await rewards.refresh();await profiles.refresh();refreshHome();resumeFarmLesson(auth);
+  const dailyMode=new URLSearchParams(location.search).get('dailyMode');if(['single','spelling'].includes(dailyMode)&&auth.currentSeat()){history.replaceState(null,'',classUrl('./?from=daily'));await start(dailyMode);}
   // Resume only records whose seat is authenticated; other students still require their PIN.
   if(!demo&&auth.currentSeat())flushPending();
  }catch{$('connection').textContent='尚未連線';$('home-message').textContent='還沒讀到老師的任務，請確認網路後再試一次。';document.querySelectorAll('[data-mode]').forEach(b=>b.disabled=auth.verified($('seat').value));}
@@ -215,7 +216,7 @@ for(const id of ['seat','partner'])$(id).onchange=async()=>{const seat=$(id).val
  if(seat&&!await auth.ensure(seat))$(id).value='';else if(id==='seat')auth.setPrimary(seat);
  await rewards.refresh();await profiles.refresh();if(config)refreshHome();renderIdentity();if(!demo)flushPending();};
 $('listen').onclick=play;$('check-spelling').onclick=()=>answer((selected.initial||'')+(selected.final||''));$('next').onclick=next;$('reload').onclick=load;$('demo-basic').onclick=()=>demoConfig(false);$('demo-expanded').onclick=()=>demoConfig(true);$('again').onclick=()=>start(mode);$('retry-save').onclick=flushPending;
-function home(){stopPracticeReview();practiceBattle.reset();clearCharacters($('player-turn'));clearCharacters($('result-details'));session++;tutor.close();audio.pause();teamUI.stop();screen('home');if(config)refreshHome();}
+function home(){if(new URLSearchParams(location.search).get('from')==='daily'){location.href=classUrl('daily.html');return;}stopPracticeReview();practiceBattle.reset();clearCharacters($('player-turn'));clearCharacters($('result-details'));session++;tutor.close();audio.pause();teamUI.stop();screen('home');if(config)refreshHome();}
 $('back-home').onclick=home;$('leave').onclick=()=>{$('leave-dialog').showModal();};$('stay').onclick=()=>$('leave-dialog').close();$('confirm-leave').onclick=()=>{$('leave-dialog').close();home();};
 // Home is an in-app action, not a document reload that discards the current round/session.
 document.querySelector('.brand').onclick=e=>{e.preventDefault();if(!$('game').hidden||!$('race-game').hidden)$('leave-dialog').showModal();else home();};

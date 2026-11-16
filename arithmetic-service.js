@@ -1,7 +1,8 @@
 import {VERSION,LEVELS,config,generate,grade,clone,fail,questionKey,validQuestion} from './arithmetic-core.js?v=20261115-math2';
 const id=v=>typeof v==='string'&&/^[A-Za-z0-9][\w.:-]{7,119}$/.test(v);
 const request=d=>{if(!id(d.requestId))fail('invalid_request_id');};
-export const ARITHMETIC_REWARD_RULE='arithmetic-perfect-20261115-v1';
+export const ARITHMETIC_REWARD_RULE='arithmetic-perfect-20261116-v2';
+const OLD_REWARD_RULE='arithmetic-perfect-20261115-v1';
 const defaultScope=()=>({enabled:true,levels:[...LEVELS],operations:['add','sub','mix'],skills:['basic','regroup','mixed'],revision:0});
 const active=(t,now)=>t.enabled&&now>=t.startsAt&&now<t.endsAt;
 const visible=(t,seat)=>!t.studentSeats.length||t.studentSeats.includes(seat);
@@ -37,7 +38,7 @@ export function createArithmeticService({store,now=Date.now,rng=Math.random,stud
   async submit(who,d){if(who.role!=='student')fail('student_required',403);request(d);const r=await store.getRun(d.roundId);if(!r||r.seat!==who.seat)fail('not_found',404);const fingerprint=JSON.stringify(d.answers);
    if(r.status==='submitted'){if(r.submitFingerprint!==fingerprint)fail('request_conflict',409);return {run:r,duplicate:true};}
    if(r.kind==='exam'){const t=await store.getDoc('exam',r.taskId);if(!t||!visible(t,who.seat)||!active(t,now()))fail('task_closed',403);}
-   const g=grade(r.questions,d.answers,{exam:r.kind==='exam'}),stars=r.kind==='practice'&&r.rewardRule===ARITHMETIC_REWARD_RULE&&g.result.correct===g.result.total?1:0;
+   const g=grade(r.questions,d.answers,{exam:r.kind==='exam'}),stars=r.kind==='practice'&&g.result.correct===g.result.total?(r.rewardRule===ARITHMETIC_REWARD_RULE?2:r.rewardRule===OLD_REWARD_RULE?1:0):0;
    const next={...r,status:'submitted',answers:g.rows,result:{...g.result,stars},submitFingerprint:fingerprint,submitRequestId:d.requestId,updatedAt:now()};
    try{await store.saveRun(next,r.revision,stars);}catch(e){if(e.status!==409)throw e;const existing=await store.getRun(r.id);if(existing.status==='submitted'&&existing.submitFingerprint===fingerprint)return {run:existing,duplicate:true};throw e;}return {run:await store.getRun(r.id)};
   },

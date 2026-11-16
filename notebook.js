@@ -1,5 +1,5 @@
-import {renderHanziNotebook} from './hanzi-hub.js?v=20261116-open1';
-import {renderArithmeticNotebook} from './arithmetic-hub.js?v=20261115-math2';
+import {renderHanziNotebook} from './hanzi-hub.js?v=20261116-hub1';
+import {renderArithmeticNotebook} from './arithmetic-hub.js?v=20261116-hub1';
 import './asset-cache.js?v=20260928-all1';
 import {audioSource} from './audio-source.js?v=20261102-a1';
 import {createApiClient} from './api-client.js?v=20260928-all1';
@@ -32,7 +32,7 @@ function part(kind){for(const p of ['initial','final'])$(p+'-slot').dataset.acti
 function options(id,values,kind){$(id).replaceChildren();for(const value of values){const b=document.createElement('button');b.type='button';b.textContent=value||'空白';b.dataset.choice=kind;b.onclick=()=>{selection[kind]=value;$(id).querySelectorAll('button').forEach(x=>x.classList.toggle('selected',x===b));if(kind!=='answer'){$(kind+'-slot').textContent=value||'空白';part(kind==='initial'&&selection.final===undefined?'final':kind);}enable();};$(id).append(b);}}
 async function loadQuestion(){
  const render=++view;stopAudio();readingInput?.cancel();arithmeticRoot.hidden=true;hanziRoot.hidden=true;if(mode==='hanzi'){question=null;for(const id of ['practice','feedback','empty'])$(id).hidden=true;await renderHanziNotebook(hanziRoot,{current:()=>render===view&&mode==='hanzi'});return;}if(mode==='arithmetic'){question=null;for(const id of ['practice','feedback','empty'])$(id).hidden=true;await renderArithmeticNotebook(arithmeticRoot,{current:()=>render===view&&mode==='arithmetic'});return;}const [mathCount,hanziCount]=mode==='all'?await Promise.all([renderArithmeticNotebook(arithmeticRoot,{current:()=>render===view&&mode==='all',optional:true}),renderHanziNotebook(hanziRoot,{current:()=>render===view&&mode==='all',optional:true})]):[0,0];const out=await request({kind:'notebook-list',mode,after,afterMode});if(render!==view)return;
- question=out.question;heard=false;selection={};$('feedback').hidden=true;$('empty').hidden=!!question||mathCount>0||hanziCount>0;$('practice').hidden=!question;if(!question)return;
+ question=out.question;heard=false;selection={};$('feedback').hidden=true;$('empty').hidden=!!question||mathCount==null||hanziCount==null||mathCount>0||hanziCount>0;$('practice').hidden=!question;if(!question)return;
  $('count').textContent='待複習 '+out.count+' 題';$('mode-label').textContent=names[question.mode];for(const [id,m] of [['choices','single'],['spelling','spelling'],['tone-input','tone'],['reading-input','reading']])$(id).hidden=question.mode!==m;
  $('submit').hidden=question.mode==='reading';$('listen').hidden=question.mode==='reading';$('audio-status').textContent='';
  if(question.mode==='single')options('choices',question.choices,'answer');

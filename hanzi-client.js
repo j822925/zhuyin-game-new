@@ -48,7 +48,7 @@ export function createHanziDemo({bank,storage,key,gradeWriting}){
         if(status!=='correct')state.notebook.push({...row,mode:round.mode,updatedAt:new Date().toISOString()});
       }
       const pending=results.filter(r=>r.status==='pending').length,correct=results.filter(r=>r.status==='correct').length;
-      const result={run:{id:round.roundId,kind:'practice',mode:round.mode,status:'submitted',snapshot:{questions:round.questions},answers:results.map((r,i)=>({questionId:r.questionId,answer:payload.answers[i].answer,hintUsed:r.hintUsed,grade:r})),result:{correct,pending,total:results.length,incorrect:results.length-correct-pending,score:pending?null:Math.round(correct/results.length*100),perfect:!pending&&correct===results.length,stars:correct===results.length?1:0,corrected:payload.answers.filter(a=>a.correction).length}},demo:true};state.receipts[round.roundId]=result;persist();return result;
+      const result={run:{id:round.roundId,kind:'practice',mode:round.mode,status:'submitted',snapshot:{questions:round.questions},answers:results.map((r,i)=>({questionId:r.questionId,answer:payload.answers[i].answer,hintUsed:r.hintUsed,grade:r})),result:{correct,pending,total:results.length,incorrect:results.length-correct-pending,score:pending?null:Math.round(correct/results.length*100),perfect:!pending&&correct===results.length,stars:correct===results.length?3:0,corrected:payload.answers.filter(a=>a.correction).length}},demo:true};state.receipts[round.roundId]=result;persist();return result;
     }
     throw Error('demo_unavailable');
   }};

@@ -1,5 +1,5 @@
-import {createArithmeticStore} from './arithmetic-store.js?v=20261115-math2';
-import {createArithmeticService} from './arithmetic-service.js?v=20261115-math2';
+import {createArithmeticStore} from './arithmetic-store.js?v=20261116-hub1';
+import {createArithmeticService} from './arithmetic-service.js?v=20261116-hub1';
 import {fail,VERSION} from './arithmetic-core.js?v=20261115-math2';
 export const handlesArithmetic=req=>/^\/(arithmetic|admin\/api\/arithmetic)\//.test(new URL(req.url).pathname);
 const teacherOps=new Set(['bootstrap','assignment-save','exam-save','task-state','results','monthly']);

@@ -1,3 +1,4 @@
+import {learningAward} from './learning-quota.js?v=20261116-hub1';
 import {fail} from './arithmetic-core.js?v=20261115-math2';
 export function createArithmeticStore(db,classId){
  if(!/^[a-z][a-z0-9]{1,20}$/.test(classId))fail('forbidden',403);
@@ -14,6 +15,12 @@ export function createArithmeticStore(db,classId){
   async getExam(seat,id){return parse(await one("SELECT data,revision FROM arithmetic_runs WHERE class_id=? AND seat=? AND task_id=? AND kind='exam'",classId,seat,id));},
   async listRuns(f={}){const where=['class_id=?'],v=[classId];if(f.seat){where.push('seat=?');v.push(f.seat);}if(f.taskId){where.push('task_id=?');v.push(f.taskId);}if(f.from){where.push('updated_at>=?');v.push(f.from);}if(f.to){where.push('updated_at<?');v.push(f.to);}const limit=Math.min(5001,Math.max(1,Number(f.limit)||300));return (await many('SELECT data,revision FROM arithmetic_runs WHERE '+where.join(' AND ')+' ORDER BY updated_at DESC,id DESC LIMIT ?',...v,limit)).map(parse);},
   async createRun(r){await batch([s('INSERT INTO arithmetic_runs(class_id,id,seat,kind,task_id,status,start_request_id,revision,data,updated_at) VALUES(?,?,?,?,?,?,?,0,?,?)',classId,r.id,r.seat,r.kind,r.taskId,r.status,r.startRequestId,JSON.stringify(r),r.updatedAt)]);},
-  async saveRun(r,revision,stars=0){if(![0,1].includes(stars))fail('invalid_answers');await batch([s('UPDATE arithmetic_runs SET status=?,data=?,updated_at=?,revision=revision+1 WHERE class_id=? AND id=? AND revision=?',r.status,JSON.stringify({...r,revision:revision+1}),r.updatedAt,classId,r.id,revision),...guard(),...(stars?[s('INSERT INTO wallets(seat) VALUES(?) ON CONFLICT(seat) DO NOTHING',r.seat),s('UPDATE wallets SET stars=stars+1,revision=revision+1 WHERE seat=? AND stars<9007199254740991',r.seat),...guard()]:[])]);}
+  async saveRun(r,revision,requested=0){if(![0,1,2].includes(requested))fail('invalid_answers');
+   for(let attempt=0;attempt<8;attempt++){
+    const award=requested?await learningAward(db,classId,r.seat,r.updatedAt,requested,guard):{stars:0,writes:[]};
+    const value={...r,revision:revision+1,result:{...r.result,stars:award.stars,...(award.reward?{dailyReward:award.reward}:{})}};
+    try{await batch([...award.writes,s("UPDATE arithmetic_runs SET status=?,data=?,updated_at=?,revision=revision+1 WHERE class_id=? AND id=? AND status='started' AND revision=?",r.status,JSON.stringify(value),r.updatedAt,classId,r.id,revision),...guard(),...(award.stars?[s('INSERT INTO wallets(seat) VALUES(?) ON CONFLICT(seat) DO NOTHING',r.seat),s('UPDATE wallets SET stars=stars+?,revision=revision+1 WHERE seat=? AND stars<=9007199254740991-?',award.stars,r.seat,award.stars),...guard()]:[])]);return;}catch(e){const row=await one('SELECT status,revision FROM arithmetic_runs WHERE class_id=? AND id=?',classId,r.id);if(e.status!==409||row?.status!=='started'||row?.revision!==revision||attempt===7)throw e;}
+   }
+  }
  };
 }
