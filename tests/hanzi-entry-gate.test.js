@@ -6,11 +6,11 @@ import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
 import {canSeeHanziEntry,hanziEntrySessionKey} from '../hanzi-entry.js';
 
-test('pilot entry requires the active, unexpired main-class session for either allowed student',()=>{
+test('pilot entry requires the active, unexpired session for every student in either class',()=>{
   const options=seat=>({classId:'main',selectedSeat:seat,now:1000,session:{seat,token:'fixture-token',expires:2000}});
   for(const seat of ['115015','115016'])assert.equal(canSeeHanziEntry(options(seat)),true);
-  assert.equal(canSeeHanziEntry(options('115001')),false);
-  assert.equal(canSeeHanziEntry({...options('115015'),classId:'grade2'}),false);
+  assert.equal(canSeeHanziEntry(options('115001')),true);
+  assert.equal(canSeeHanziEntry({...options('115015'),classId:'grade2'}),true);
   assert.equal(canSeeHanziEntry({...options('115015'),selectedSeat:'115016'}),false);
   assert.equal(canSeeHanziEntry({...options('115015'),selectedSeat:''}),false);
   assert.equal(canSeeHanziEntry({...options('115015'),session:null}),false);
@@ -78,7 +78,7 @@ test('real auth dialog drives entry login, account switching, logout and stale-s
     await page.selectOption('#seat','115015');await page.locator('#pin-dialog').waitFor({state:'visible'});await absent(page);
     await pin(page);await present(page);
     const oldToken=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('zhuyin.student-session.v1:/game/:live')).token);
-    await page.selectOption('#seat','115001');await page.locator('#pin-dialog').waitFor({state:'visible'});await absent(page);await pin(page);await absent(page);
+    await page.selectOption('#seat','115001');await page.locator('#pin-dialog').waitFor({state:'visible'});await absent(page);await pin(page);await present(page);
     await page.selectOption('#seat','115016');await pin(page);await present(page);
     await page.locator('#change-student').click();await absent(page);
     await page.selectOption('#seat','115015');await absent(page);await pin(page);await present(page);
@@ -97,12 +97,12 @@ test('real auth dialog drives entry login, account switching, logout and stale-s
   }finally{await browser.close();}
 });
 
-test('other classes stay closed while teacher demo remains independent and carries only class/demo URL state',{skip:!browserAvailable,timeout:30000},async()=>{
+test('other classes are open while teacher demo remains independent and carries only class/demo URL state',{skip:!browserAvailable,timeout:30000},async()=>{
   const browser=await chromium.launch({headless:true,...(chromePath?{executablePath:chromePath}:{})});
   try{
     const page=await browser.newPage();await setup(page);
     await page.addInitScript(()=>{sessionStorage.setItem('zhuyin.student-session.v1:/game/:live:class:grade2',JSON.stringify({seat:'115015',token:'fixture-other-class',expires:Date.now()+60000}));});
-    await page.goto(base+'index.html?class=grade2');await page.waitForFunction(()=>window.ready);assert.equal(await page.locator('#seat').inputValue(),'115015');await absent(page);
+    await page.goto(base+'index.html?class=grade2');await page.waitForFunction(()=>window.ready);assert.equal(await page.locator('#seat').inputValue(),'115015');await present(page);
     await page.goto(base+'index.html?class=grade2&demo=1&token=do-not-propagate&seat=115015');await page.waitForFunction(()=>window.ready);await present(page);
     assert.equal(await page.locator('[data-hanzi-trial]').count(),1);
     const target=new URL(await page.locator('#hanzi-island-entry').getAttribute('href'));
@@ -110,7 +110,7 @@ test('other classes stay closed while teacher demo remains independent and carri
   }finally{await browser.close();}
 });
 
-test('merged production boot keeps both pilot entries and independent teacher trials without losing logout behavior',{skip:!browserAvailable,timeout:30000},async()=>{
+test('merged production boot keeps both open entries and independent teacher trials without losing logout behavior',{skip:!browserAvailable,timeout:30000},async()=>{
   const browser=await chromium.launch({headless:true,...(chromePath?{executablePath:chromePath}:{})});
   try{
     const page=await browser.newPage();page.setDefaultTimeout(5000);const errors=[];page.on('pageerror',error=>errors.push(error.message));

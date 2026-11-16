@@ -5,7 +5,7 @@ let storage;try{storage=sessionStorage;}catch{}
 const sessions=createStudentSession({storage,key:classStorageKey('zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':live')});
 const endpoint=['localhost','127.0.0.1'].includes(location.hostname)?location.origin:'https://zhuyin-api.j822925.workers.dev';
 const client=createHanziClient({endpoint,classId:currentClass,getSession:()=>sessions.read()});
-const enabled=()=>currentClass==='main'&&['115015','115016'].includes(sessions.read()?.seat);
+const enabled=()=>!!sessions.read();
 const node=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
 export function hanziLaunch({task,review,mode,from}){const url=new URL(classUrl('hanzi.html'),location.href);for(const [k,v]of Object.entries({task,review,mode,from}))if(v)url.searchParams.set(k,v);return url.href;}
 export async function hanziTasks(){if(!enabled())return [];const [a,e]=await Promise.all([client.request('assignments'),client.request('exams')]);return [...e.exams.map(t=>({...t,kind:'exam'})),...a.assignments.map(t=>({...t,kind:'assignment'}))].map(t=>({...t,hanzi:true,hanziMode:t.mode,mode:'hanzi',id:'hanzi:'+t.id,taskId:t.id,questions:t.count,starts:t.startsAt,ends:t.endsAt,status:t.attempt?.status==='started'?'working':t.attempt?'finished':'open',title:'國字森林｜'+t.title}));}

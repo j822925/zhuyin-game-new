@@ -7,7 +7,7 @@ export const HANZI_PILOT_SEATS=Object.freeze(['115015','115016']);
 
 export function canSeeHanziEntry({classId='main',demo=false,session,selectedSeat='',now=Date.now()}={}){
   if(demo===true)return true;
-  return classId==='main'&&!!session&&HANZI_PILOT_SEATS.includes(session.seat)
+  return /^[a-z][a-z0-9]{1,20}$/.test(classId)&&!!session&&/^\d{6}$/.test(session.seat)
     &&selectedSeat===session.seat&&typeof session.token==='string'&&session.token.length>0
     &&session.token.length<8192&&Number.isFinite(session.expires)&&session.expires>now;
 }
