@@ -1,0 +1,7 @@
+國字筆順教學資料來源
+原84字：沿既有AnimCJK／ARPHIC授權。
+新增字形：教育部《國字標準字體筆順學習網》，經g0v/moedict-app公開JSON取用，僅供本校非營利教學。
+https://stroke-order.learningweb.moe.edu.tw/
+https://github.com/g0v/moedict-app/tree/main/public/stroke-json
+https://github.com/g0v/zh-stroke-data#資料來源--copyright
+寯、喆、媃、琋以教育部部件組合，未冒稱教育部原字資料。各檔保留精確來源與blob。

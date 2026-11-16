@@ -1,4 +1,4 @@
-import {hanziTasks,hanziLaunch} from './hanzi-hub.js?v=20261116-hub1';
+import {hanziTasks,hanziLaunch} from './hanzi-hub.js?v=20261116-copy1';
 import {arithmeticTasks,arithmeticLaunch} from './arithmetic-hub.js?v=20261116-hub1';
 import {offerReadingExamHandoff} from './exam-reading-launch.js?v=20261023-readingexam1';
 import {createQuestionReport} from './question-report.js?v=20261011-reports2';

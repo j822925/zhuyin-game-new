@@ -1,4 +1,4 @@
-import {renderHanziNotebook} from './hanzi-hub.js?v=20261116-hub1';
+import {renderHanziNotebook} from './hanzi-hub.js?v=20261116-copy1';
 import {renderArithmeticNotebook} from './arithmetic-hub.js?v=20261116-hub1';
 import './asset-cache.js?v=20260928-all1';
 import {audioSource} from './audio-source.js?v=20261102-a1';

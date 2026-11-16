@@ -1,3 +1,4 @@
+import {attachCopyEntries} from './hanzi-copy-entry.js?v=20261116-copy1';
 import {PRACTICE_RULE,bonusQuestion} from './hanzi-practice.js?v=20261115-hanzi2';
 import {HANZI_AUDIO} from './data/hanzi-teacher-audio.js?v=20261115-hanzi2';
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
@@ -210,6 +211,6 @@ async function boot(){
   else{if(!(localSession||sessions.read()))throw Error('authentication_required');client=createHanziClient({endpoint,classId:currentClass,getSession:()=>localSession||sessions.read()});}
   bootstrap=await client.request('bootstrap');bank=bootstrap.catalog||bank;if(!bank||!validateBank(bank).valid)throw Error('invalid_bank');
   if(!demo){const session=localSession||sessions.read();try{const response=await fetch(classUrl(endpoint+'/api'),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({kind:'profile',seat:session.seat,token:session.token})});const p=await response.json();if(p.error)throw Error(p.error);hero=PROFILE_CHARACTERS.find(c=>c.id===p.avatar)||hero;heroName=p.nickname||p.name||hero.name;}catch{heroName=hero.name;}}
-  mountCharacter($('hero'),hero);$('hero-name').textContent=heroName;drawScope();$('loading').hidden=true;enter();await launchFromPlaza();
+  mountCharacter($('hero'),hero);$('hero-name').textContent=heroName;drawScope();$('loading').hidden=true;enter();void attachCopyEntries({host:$('entry'),endpoint,classId:currentClass,classUrl,session:localSession||sessions.read(),demo});await launchFromPlaza();
 }
 boot().catch(e=>{$('loading').hidden=true;fail(e);});

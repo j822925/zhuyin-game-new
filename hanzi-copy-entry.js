@@ -1,0 +1,7 @@
+import {COPY_MODES} from './hanzi-copy-core.js?v=20261116-copy1';
+export async function attachCopyEntries({host,endpoint,classId,classUrl,session,demo}){
+ const box=document.createElement('div');box.className='mode-grid copy-mode-grid';host.querySelector('.mode-grid').after(box);
+ let status={copyReady:true,nameReady:demo};
+ if(!demo){try{const r=await fetch(new URL('/hanzi/copy/bootstrap',endpoint),{method:'POST',cache:'no-store',credentials:'omit',headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.token},body:JSON.stringify({classId})});if(!r.ok)throw Error();status=await r.json();}catch{box.textContent='新書寫練習暫時無法讀取，請稍後重新整理。';return;}}
+ for(const[mode,rule]of Object.entries(COPY_MODES)){if(mode!=='copy'&&!status.nameReady)continue;const b=document.createElement('button');b.className='mode-card writing-card';b.disabled=mode==='copy'&&!status.copyReady;const art=document.createElement('span');art.className='mode-art';art.textContent=mode==='copy'?'字':mode==='name-copy'?'名':'ㄅ';art.setAttribute('aria-hidden','true');const title=document.createElement('strong');title.textContent=rule.label;const go=document.createElement('span');go.className='mode-go';go.textContent='開始 →';b.append(art,title,go);b.onclick=()=>{const u=new URL(classUrl('hanzi-copy.html'),location.href);u.searchParams.set('mode',mode);if(demo)u.searchParams.set('demo','1');location.href=u.href;};box.append(b);}
+}
