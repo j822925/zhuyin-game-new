@@ -5,3 +5,5 @@
 
 /* Keep all writing controls on the same row as submission. */
 .ink-actions{display:none}.is-writing .ink-actions{display:contents}.ink-status:empty{display:none}.is-writing .answer-actions{flex-wrap:wrap;gap:7px}.is-writing .answer-actions .primary{min-width:120px;padding:8px 14px}.is-writing .ink-actions button{padding:8px 10px}.is-writing #handwriting{width:min(100%,calc(100dvh - 355px),390px)}.is-writing .feedback{margin:5px 0;min-height:24px}.is-writing:has(#correction-demo:not([hidden])) .ink-actions{display:none}.is-writing .word{min-height:74px}.is-writing .word-char{font-size:52px}
+
+.fighter .opponent-caption,.fighter-name{display:block!important;font-size:18px;font-weight:800;line-height:1.45;text-align:center;color:var(--ink);margin:4px 0 0;min-height:27px;overflow-wrap:anywhere}@media(max-width:600px){.fighter .opponent-caption,.fighter-name{font-size:12px;line-height:1.4;min-height:18px}}

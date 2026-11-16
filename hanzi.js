@@ -208,7 +208,7 @@ async function boot(){
   if(demo){const response=await fetch('data/hanzi-curriculum.json?v=20261115-1');if(!response.ok)throw Error('invalid_response');bank=await response.json();const valid=validateBank(bank);if(!valid.valid)throw Error('invalid_bank');client=createHanziDemo({bank,storage:tabStorage,key:classStorageKey('zhuyin.hanzi.demo.v1:'+new URL('.',location.href).pathname),gradeWriting:gradeInk});}
   else{if(!(localSession||sessions.read()))throw Error('authentication_required');client=createHanziClient({endpoint,classId:currentClass,getSession:()=>localSession||sessions.read()});}
   bootstrap=await client.request('bootstrap');bank=bootstrap.catalog||bank;if(!bank||!validateBank(bank).valid)throw Error('invalid_bank');
-  if(!demo){const session=localSession||sessions.read();try{const response=await fetch(classUrl(endpoint+'/api'),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({kind:'profile',seat:session.seat,token:session.token})});const p=await response.json();if(p.error)throw Error(p.error);hero=PROFILE_CHARACTERS.find(c=>c.id===p.avatar)||hero;heroName=p.nickname||hero.name;}catch{heroName=hero.name;}}
-  mountCharacter($('hero'),hero);drawScope();$('loading').hidden=true;enter();await launchFromPlaza();
+  if(!demo){const session=localSession||sessions.read();try{const response=await fetch(classUrl(endpoint+'/api'),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({kind:'profile',seat:session.seat,token:session.token})});const p=await response.json();if(p.error)throw Error(p.error);hero=PROFILE_CHARACTERS.find(c=>c.id===p.avatar)||hero;heroName=p.nickname||p.name||hero.name;}catch{heroName=hero.name;}}
+  mountCharacter($('hero'),hero);$('hero-name').textContent=heroName;drawScope();$('loading').hidden=true;enter();await launchFromPlaza();
 }
 boot().catch(e=>{$('loading').hidden=true;fail(e);});

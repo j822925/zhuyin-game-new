@@ -56,9 +56,9 @@ async function boot(){
  if(demo){let persistent;try{persistent=localStorage;}catch{}({student:client}=demoClients({storage:persistent,classId:currentClass}));$('identity').textContent='試玩小勇士';}
 
  else{if(!getSession())throw Error('authentication_required');client=createArithmeticClient({endpoint,classId:currentClass,getSession});$('identity').textContent=getSession().seat+' 號';}
- initialOwner=owner();let hero=PROFILE_CHARACTERS[0];
- if(!demo&&!fixture){const s=getSession();try{const r=await fetch(classUrl(endpoint+'/api'),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({kind:'profile',seat:s.seat,token:s.token})});const p=await r.json();hero=PROFILE_CHARACTERS.find(c=>c.id===p.avatar)||hero;}catch{}}
- mountCharacter($('hero'),hero);
+ initialOwner=owner();let hero=PROFILE_CHARACTERS[0],heroName=hero.name;
+ if(!demo&&!fixture){const s=getSession();try{const r=await fetch(classUrl(endpoint+'/api'),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({kind:'profile',seat:s.seat,token:s.token})});const p=await r.json();hero=PROFILE_CHARACTERS.find(c=>c.id===p.avatar)||hero;heroName=p.nickname||p.name||hero.name;}catch{}}
+ mountCharacter($('hero'),hero);$('hero-name').textContent=heroName;
  await enter();$('loading').hidden=true;
  const taskId=params.get('task'),reviewId=params.get('review');
  if(taskId){const task=[...bootstrap.exams,...bootstrap.assignments].find(t=>t.id===taskId);if(!task)throw Error('task_closed');await guard(()=>start(task));}
