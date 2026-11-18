@@ -1,0 +1,28 @@
+
+#entry .mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:14px;max-width:1060px;margin:12px auto}
+#entry .lesson-cover{--accent:#266858;--wash:#e0f0e1;border-radius:19px;background:#fffdf5;color:#243e32;border:1px solid #c4d1bd;box-shadow:0 3px 0 #bbc9b7;min-height:0;padding:0 0 16px;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;gap:14px;text-align:center}
+#entry .lesson-cover:focus-visible,.class-panel button:focus-visible{outline:3px solid #245c83;outline-offset:2px}
+#entry .lesson-cover:disabled{opacity:.62}
+#entry [data-cover=writing],#entry [data-cover=name-writing]{--accent:#96512f;--wash:#f9e6cd}
+#entry [data-cover=copy],#entry [data-cover=name-copy]{--accent:#395b8c;--wash:#e0eaf6}
+#entry [data-cover=classroom]{--accent:#795285;--wash:#efe4f0}
+.lesson-diagram{display:flex;position:relative;justify-content:center;align-items:center;gap:10px;background:var(--wash);min-height:92px;color:var(--accent)}
+.lesson-paper{position:relative;display:grid;place-items:center;box-sizing:border-box;width:64px;height:57px;border:2px solid currentColor;background:#fffdf3;border-radius:7px;font:700 27px/1 system-ui;box-shadow:0 3px 0 #0001}
+.lesson-arrow{font:700 28px system-ui}
+.grid .answer,.trace .model,.trace .answer{background:linear-gradient(90deg,transparent 49%,#b6bdab 50%,transparent 52%),linear-gradient(transparent 49%,#b6bdab 50%,transparent 52%),#fffdf3}
+.lesson-paper.answer:after{content:'✎';position:absolute;right:-9px;bottom:-9px;font:700 23px/1 system-ui;background:#fff9db;border-radius:50%;padding:2px}
+.trace .answer{color:#829cb4}
+.badge .answer,.badge .model{border-radius:12px}.badge .answer:before{content:'';width:13px;height:5px;border-radius:6px;background:var(--accent);position:absolute;top:3px}
+.choice .model{transform:rotate(-6deg);box-shadow:-3px 3px #fff,-5px 5px var(--accent)}
+.hz-ruby-title{display:inline-flex;gap:.08em;align-items:center;justify-content:center;flex-wrap:wrap}
+.hz-ruby-title ruby{display:inline-flex;align-items:center;gap:.02em;font:700 clamp(18px,2.3vw,25px)/1.2 system-ui}
+.hz-ruby-title rt{display:inline-block;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:0;font:500 10px/1 system-ui;color:#435344}
+.class-panel{max-width:680px;margin:0 auto 32px;padding:clamp(15px,3vw,28px);background:#fffdf5;border:1px solid #c5d0bb;border-radius:20px}
+.class-panel h1,.class-panel h2{margin:0 0 14px}.class-panel label{display:block;margin:15px 0 5px;font-weight:bold}.class-panel select{width:100%;padding:10px;min-height:48px;font-size:20px;border-radius:10px;color:#234a3c;background:#fff}
+.class-panel button{min-height:44px;margin:4px;padding:7px 12px;border:1px solid #a4b6a4;border-radius:10px;color:#24503e;background:#f4f8ed;font:inherit}.class-panel .primary{background:#295e49;color:white}.class-panel button:disabled{opacity:.5}
+.class-panel .hz-class-model{font-size:44px;text-align:center;margin:8px}.class-panel .hz-class-model svg{display:inline-block;width:100px;height:100px;border:1px solid #94a695;background:linear-gradient(90deg,transparent 49.5%,#c5d2bc 50%,transparent 50.5%),linear-gradient(transparent 49.5%,#c5d2bc 50%,transparent 50.5%);}
+.class-panel .hanzi-handwriting{max-width:280px;margin:auto}.class-panel .hz-keypad{display:grid;grid-template-columns:repeat(auto-fit,minmax(43px,1fr));gap:2px}.hz-keypad button{font-size:20px;margin:1px;padding:3px}.hz-response{min-height:42px;font-size:27px;text-align:center}
+@media(max-width:560px){#entry .mode-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.lesson-paper{width:44px;height:44px;font-size:19px}.lesson-diagram{gap:5px;min-height:66px}.lesson-arrow{font-size:19px}#entry .lesson-cover{gap:9px;padding-bottom:10px}.hz-ruby-title ruby{font-size:17px}.hz-ruby-title rt{font-size:8px}}
+
+
+.hz-ruby-title rt{position:relative;margin-right:.16em;font-size:11px;line-height:1.05}.hz-ruby-title rt[data-tone]{margin-right:.55em}.hz-ruby-title rt[data-tone]:after{content:attr(data-tone);position:absolute;top:40%;left:76%;font:700 10px/1 system-ui;writing-mode:horizontal-tb}.entry-title .hz-ruby-title ruby{font-size:35px}.entry-title .hz-ruby-title rt{font-size:13px}.lesson-paper.long-sound{font-size:17px;white-space:nowrap}.choice .model:before{content:"☞";position:absolute;bottom:-12px;left:-11px;transform:rotate(-28deg);font:27px/1 system-ui;color:#6c3f7a}.badge .model:before{content:"";position:absolute;top:0;left:24px;width:12px;height:6px;border-radius:5px;background:var(--accent)}.class-panel .hanzi-handwriting{max-width:300px!important}.hz-response{display:block}.hz-ruby-title rt:after{letter-spacing:0}@media(max-width:560px){.hz-ruby-title rt{font-size:9px}.lesson-paper.long-sound{font-size:12px}.entry-title .hz-ruby-title ruby{font-size:27px}}

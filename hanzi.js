@@ -1,4 +1,4 @@
-import {attachCopyEntries} from './hanzi-copy-entry.js?v=20261116-copy1';
+import {attachCopyEntries} from './hanzi-copy-entry.js?v=20261118-class1';
 import {PRACTICE_RULE,bonusQuestion} from './hanzi-practice.js?v=20261115-hanzi2';
 import {HANZI_AUDIO} from './data/hanzi-teacher-audio.js?v=20261115-hanzi2';
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
@@ -53,7 +53,7 @@ async function template(char){
   }
   return templates.get(char);
 }
-async function alternativeTemplates(q){const chars=[...new Set(bank.items.filter(x=>x.strokeCount===q.strokeCount&&x.character!==q.character).map(x=>x.character))];return (await Promise.all(chars.map(template))).filter(Boolean);}
+async function alternativeTemplates(q){const chars=[...new Set(bank.items.filter(x=>x.strokeCount===q.strokeCount&&x.character!==q.character).map(x=>x.character))].slice(0,6);return (await Promise.all(chars.map(template))).filter(Boolean);}
 async function gradeInk(q,answer,{exam=false}={}){const ref=await template(q.character);const other=await alternativeTemplates(q);return gradeStrokes(answer.strokes,ref,{mode:exam?'exam':'practice',gradingPolicy:'automatic-v1',alternatives:other,inputInterrupted:answer.inputInterrupted});}
 function drawScope(){scopeCount();}
 function scopeCount(){const ids=getLessons();$('scope-description').textContent=ids.length?'':'老師還沒有開放課次。';document.querySelectorAll('[data-mode]').forEach(b=>b.disabled=!ids.length||busy);}

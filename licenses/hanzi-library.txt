@@ -1,0 +1,9 @@
+池東探險島．國字森林共用筆順庫
+原有 126 字優先，其中包含原課程及姓名範本。新增 1,734 字。
+新增資料採 AnimCJK 的臺灣繁體版本 graphicsZhHant.txt
+https://github.com/parsimonhi/animCJK/tree/c63765b150cbd567c71d05cf4a4f8d00b57045c9
+Copyright FM-SH and contributing projects. Character graphics are distributed under the Arphic Public License.
+本版本將原始筆順中心線與輪廓換算為左上角原點的單位座標，依字拆檔供練習；本衍生筆順資料沿用 Arphic Public License。
+完整聲明與條款：hanzi-AnimCJK-COPYING.txt、hanzi-ARPHICPL.txt（同資料夾）。
+其中新增字是社群製作的臺灣繁體範本，未逐字取得教育部認證。
+
