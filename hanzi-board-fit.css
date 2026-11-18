@@ -1,0 +1,56 @@
+
+/* The writable square and its controls share the visible viewport. */
+.is-writing #handwriting, #writing, .class-panel #board {
+  width:min(100%,var(--ink-side,460px)); min-width:0; margin-inline:auto;
+}
+.class-panel #board .hanzi-handwriting {max-width:100%!important}
+.copy-shell .boards {grid-template-columns:minmax(0,0.64fr) minmax(0,1fr);max-width:1060px;align-items:start}
+.copy-shell .boards.single {grid-template-columns:1fr;max-width:720px}
+.copy-shell .reference {max-width:var(--ink-side,460px);margin-inline:auto}
+.class-panel #exercise[data-mode=read] #board {display:none}
+@media (orientation:landscape) {
+  .is-writing .masthead,.page-shell:has(#exercise:not([hidden])) .masthead {height:44px}
+  .is-writing .play-heading {margin:4px 0;gap:12px}
+  .is-writing .play-heading h1 {margin:3px 0}
+  .is-writing #progress {margin-bottom:5px}
+  .is-writing .question-panel {padding:5px 10px 8px}
+  .is-writing .word {min-height:50px;margin:0 0 3px}
+  .is-writing .word-char {font-size:43px}
+  .is-writing .feedback:empty {margin:0;min-height:0}
+  .copy-shell {padding-top:4px}
+  .copy-shell header {margin:2px 0 5px}
+  .copy-shell .boards {margin-top:5px;gap:16px}
+  .copy-shell .feedback:empty {min-height:4px;margin:2px}
+  .class-panel:has(#exercise:not([hidden])) {max-width:1060px;margin:5px auto 0;padding:8px 14px 10px}
+  .class-panel:has(#exercise:not([hidden])) #heading {display:none}
+  .class-panel #message {margin:4px 0;text-align:center}
+  .class-panel #message:empty {display:none}
+  #exercise:is([data-mode=write],[data-mode=imitate]):not([hidden]) {
+    display:grid;grid-template-columns:minmax(175px,0.51fr) minmax(0,1fr);
+    grid-template-rows:auto auto auto auto 1fr;column-gap:14px;align-content:start;
+  }
+  #exercise:is([data-mode=write],[data-mode=imitate]) > * {grid-column:1;text-align:center}
+  #exercise:is([data-mode=write],[data-mode=imitate]) #board {grid-column:2;grid-row:1 / 6;align-self:start}
+  #exercise:is([data-mode=write],[data-mode=imitate]) #back {align-self:start}
+  .class-panel .hz-class-model svg {width:min(17vw,160px);height:auto;aspect-ratio:1}
+}
+@media(max-width:600px) {
+  .copy-shell .boards:not(.single){grid-template-columns:minmax(0,.37fr) minmax(0,1fr);gap:8px}
+}
+/* Put the pitch mark in its own real text column. Horizontal layout on rt
+   avoids browser-specific positioning of generated content in vertical ruby. */
+.hz-ruby-title ruby {align-items:center;gap:.03em}
+.hz-ruby-title ruby rt {display:inline-flex;align-items:center;writing-mode:horizontal-tb;
+  margin:0 .1em 0 0;position:static;line-height:1;font-size:clamp(10px,1.5vw,14px);color:#263e37}
+.phonetic-symbols {writing-mode:vertical-rl;text-orientation:upright;letter-spacing:0}
+.phonetic-tone {display:inline-block;min-width:.6em;text-align:center;align-self:center;
+  font:700 1.15em/1 system-ui,"Microsoft JhengHei",sans-serif}
+
+
+.hz-phrase{display:inline-flex;align-items:center;white-space:nowrap;gap:.08em}.hz-ruby-title{row-gap:5px}.phonetic-tone{position:relative;width:clamp(7px,.95vw,11px);height:10px;font-size:0;min-width:0}.phonetic-tone svg{display:block;width:100%;height:100%;stroke:#1c443b;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;fill:none}.is-writing .preview-note{margin:2px 0;padding:2px 10px}
+@media (orientation:landscape) and (min-width:700px) {
+  .copy-shell #practice:not([hidden]) {display:grid;grid-template-columns:minmax(0,1fr) 150px;grid-template-rows:auto auto 1fr;gap:4px 14px;align-items:start}
+  .copy-shell #boards {grid-column:1;grid-row:1 / 4;width:100%;margin-inline:auto}
+  .copy-shell #practice > :is(.prompt,.feedback,.actions) {grid-column:2;max-width:100%}
+  .copy-shell #practice .actions {display:grid;align-self:start;gap:8px}
+}

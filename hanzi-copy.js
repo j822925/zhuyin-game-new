@@ -1,4 +1,4 @@
-import {COPY_MODES,COPY_RULE,gradeCopy,copyFeedback} from './hanzi-copy-core.js?v=20261116-copy1';
+import {COPY_MODES,COPY_RULE,gradeCopy,copyFeedback} from './hanzi-copy-core.js?v=20261118-ink2';
 import {gradeStrokes} from './hanzi-stroke-core.js';
 import {createHandwriting} from './hanzi-handwriting.js?v=20261115-hanzi2';
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';

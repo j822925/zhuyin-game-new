@@ -1,7 +1,7 @@
 import {gradeStrokes} from './hanzi-stroke-core.js';
 
 export const COPY_RULE='hanzi-copy-name-20261116-v1';
-export const COPY_TOLERANCE=Object.freeze({offset:.08,scale:.15});
+export const COPY_TOLERANCE=Object.freeze({offset:.09,scale:.17});
 export const COPY_MODES=Object.freeze({copy:{label:'生字模仿',stars:1,limit:10,period:'day'},'name-writing':{label:'看注音，寫姓名',stars:3,limit:900,period:'lifetime'},'name-copy':{label:'姓名模仿',stars:1,limit:10,period:'day'}});
 const point=p=>Array.isArray(p)?{x:p[0],y:p[1]}:p;
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -17,7 +17,7 @@ export function gradeCopy(strokes,reference,options={}){
  const dx=ac.x-ec.x,dy=ac.y-ec.y,scale=Math.max(actual[2]-actual[0],actual[3]-actual[1])/Math.max(expected[2]-expected[0],expected[3]-expected[1],.00001);
  const distances=strokes.map((s,i)=>{const a=sample(s).map(p=>({x:ec.x+(p.x-ac.x)/scale,y:ec.y+(p.y-ac.y)/scale})),b=sample(reference.strokes[i]);return a.reduce((n,p,j)=>n+distance(p,b[j]),0)/a.length;});
  const mean=distances.reduce((a,b)=>a+b,0)/distances.length,worst=Math.max(...distances);
- grade.position={correct:Math.abs(dx)<=COPY_TOLERANCE.offset+.000001&&Math.abs(dy)<=COPY_TOLERANCE.offset+.000001&&scale>=1-COPY_TOLERANCE.scale-.000001&&scale<=1+COPY_TOLERANCE.scale+.000001&&mean<=.065&&worst<=.12,dx,dy,scale,mean,worst,tolerance:COPY_TOLERANCE};
+ grade.position={correct:Math.abs(dx)<=COPY_TOLERANCE.offset+.000001&&Math.abs(dy)<=COPY_TOLERANCE.offset+.000001&&scale>=1-COPY_TOLERANCE.scale-.000001&&scale<=1+COPY_TOLERANCE.scale+.000001&&mean<=.070&&worst<=.13,dx,dy,scale,mean,worst,tolerance:COPY_TOLERANCE};
  if(!grade.position.correct){grade.correct=false;grade.status='incorrect';grade.reasons.push('grid-position-mismatch');}
  return grade;
 }

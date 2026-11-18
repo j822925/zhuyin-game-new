@@ -1,12 +1,26 @@
 const readings={森:'ㄙㄣ',林:'ㄌㄧㄣˊ',看:'ㄎㄢˋ',國:'ㄍㄨㄛˊ',字:'ㄗˋ',寫:'ㄒㄧㄝˇ',注:'ㄓㄨˋ',音:'ㄧㄣ',生:'ㄕㄥ',模:'ㄇㄛˊ',仿:'ㄈㄤˇ',姓:'ㄒㄧㄥˋ',名:'ㄇㄧㄥˊ',上:'ㄕㄤˋ',課:'ㄎㄜˋ',選:'ㄒㄩㄢˇ',練:'ㄌㄧㄢˋ',習:'ㄒㄧˊ',開:'ㄎㄞ',始:'ㄕˇ'};
+const tonePaths={'ˉ':'M1 5 H10','ˊ':'M2 8 L9 2','ˇ':'M1 3 L5.5 8 L10 3','ˋ':'M2 2 L9 8'};
 export function phonetic(text){
   const label=document.createElement('span');label.className='hz-ruby-title';label.setAttribute('aria-label',text);
-  for(const c of text){const r=document.createElement('ruby'),rt=document.createElement('rt');r.append(c);const raw=readings[c]||'',tone=raw.match(/[˙ˊˇˋ]/)?.[0]||'';rt.textContent=raw.replace(/[˙ˊˇˋ]/g,'');if(tone)rt.dataset.tone=tone;r.append(rt);label.append(r);}
+  const phrases=text.startsWith('看')&&text.length===6?[text.slice(0,3),text.slice(3)]:[text];
+  for(const phrase of phrases){
+    const group=document.createElement('span');group.className='hz-phrase';
+    for(const c of phrase){
+      const ruby=document.createElement('ruby'),rt=document.createElement('rt'),symbols=document.createElement('span'),mark=document.createElement('span');
+      const raw=readings[c],tone=raw.match(/[ˊˇˋ]/)?.[0]||'ˉ';
+      symbols.className='phonetic-symbols';symbols.textContent=raw.replace(/[ˊˇˋ]/g,'');
+      mark.className='phonetic-tone';mark.textContent=tone;
+      const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg'),path=document.createElementNS(ns,'path');
+      svg.setAttribute('viewBox','0 0 11 10');svg.setAttribute('aria-hidden','true');path.setAttribute('d',tonePaths[tone]);svg.append(path);mark.append(svg);
+      rt.append(symbols,mark);ruby.append(c,rt);group.append(ruby);
+    }
+    label.append(group);
+  }
   return label;
 }
 const cards={
-  reading:['看國字寫注音','山','ㄕㄢ','sound'],
-  writing:['看注音寫國字','ㄕㄢ','山','grid'],
+  reading:['看國字寫注音','山','ㄕㄢˉ','sound'],
+  writing:['看注音寫國字','ㄕㄢˉ','山','grid'],
   copy:['生字模仿','木','木','trace'],
   'name-writing':['看注音寫姓名','ㄇㄧㄥˊ','名','badge'],
   'name-copy':['姓名模仿','名','名','badge'],

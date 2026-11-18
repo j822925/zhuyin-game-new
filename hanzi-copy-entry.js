@@ -1,5 +1,5 @@
 import {COPY_MODES} from './hanzi-copy-core.js?v=20261116-copy1';
-import {cover,phonetic} from './hanzi-covers.js';
+import {cover,phonetic} from './hanzi-covers.js?v=20261118-ink2';
 export async function attachCopyEntries({host,endpoint,classId,classUrl,session,demo}){
   host.querySelector('.entry-title').replaceChildren(phonetic('國字森林'));const grid=host.querySelector('.mode-grid');
   for(const b of grid.querySelectorAll('[data-mode]'))cover(b,b.dataset.mode);
