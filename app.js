@@ -1,3 +1,4 @@
+import {showRoundOutcome} from './round-outcome.js';
 import {addPreparationButton} from './preparation.js?v=20261023-zonemusic1';
 import {tutorClips} from './little-teacher.js?v=20261102-a1';
 import {warmAudio} from './asset-cache.js?v=20260928-all1';
@@ -22,7 +23,7 @@ import {setupExamEntry} from './exam-entry.js?v=20261116-hub1';
 import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,celebrateCharacter,motionPortrait} from './character-motion.js?v=20261011-battle1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
 import {setupMonsterCollection,startDemoMonster,creditDemoMonster,showMonsterReward} from './monster-cards-ui.js?v=20261011-battle1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261011-battle1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261119-stars';
 const API='https://zhuyin-api.j822925.workers.dev/api';
 const demo=new URLSearchParams(location.search).get('demo')==='1';
 const names={single:'聲音森林',spelling:'拼音工坊'};
@@ -67,7 +68,7 @@ const postJSON=payload=>apiClient.post(payload);
 const auth=createStudentAuth({demo,getConfig:()=>config,post:postJSON});
 const questionReport=createQuestionReport({parent:document.querySelector('#game .question-card'),demo,request:payload=>auth.request(payload),getQuestion:()=>rounds[active]?.current?{seat:seats[active],mode,questionId:rounds[active].current.id}:null});
 let rewards,profiles,loginGate;
-const teamUI=createMultiplayer({localPicker:demo,getIdentity:seat=>profiles?.identity(seat),getOwned:seat=>rewards?.owned(seat),getSeats:()=>[$('seat').value,$('partner').value],onExit:home,onFinish:(payload,html)=>{screen('result');clearCharacters($('result-details'));$('result-details').innerHTML=html;persistResults([payload]);}});
+const teamUI=createMultiplayer({localPicker:demo,getIdentity:seat=>profiles?.identity(seat),getOwned:seat=>rewards?.owned(seat),getSeats:()=>[$('seat').value,$('partner').value],onExit:home,onFinish:(payload,html)=>{screen('result');clearCharacters($('result-details'));$('result-details').innerHTML=html;const teams=$('result-details').querySelectorAll('.race-results section');teams.forEach((team,i)=>showRoundOutcome(team,payload.results.filter(row=>row.attempts[i]?.correct).length,payload.total,payload.roundId,profiles.identity(payload.seats[i]).character?.id));persistResults([payload]);}});
 function renderIdentity(){teamUI.refreshPicker();profiles?.renderHeader();if($('change-student'))$('change-student').hidden=!auth.verified($('seat').value);document.querySelector('.mascot').innerHTML=portrait(auth.verified($('seat').value)?profiles?.identity($('seat').value).character||rewards.avatar($('seat').value):rewards.avatar(''));}
 rewards=createRewards({demo,getConfig:()=>config,getSeat:()=>auth.verified($('seat').value)?$('seat').value:'',getSeats:()=>[$('seat').value,$('partner').value].filter(s=>auth.verified(s)),jsonGet,post:payload=>auth.request(payload),onChange:renderIdentity});
 const voiceHelp=setupChildUI({demo,onPreviewBonus:()=>rewards.previewBonus(),onBeforeVoice:()=>{stopPracticeReview();audio.pause();}});
@@ -185,7 +186,10 @@ function next(){const r=rounds[active];if(!r.locked)return;r.next();if(rounds.ev
 function finish(){stopPracticeReview();practiceBattle.reset();clearCharacters($('player-turn'));audio.pause();teamUI.stop();screen('result');let html='';const results=[];
  rounds.forEach((r,i)=>{const correct=r.deck.length-r.mistakes;html+=`<h2>${safe(seats[i])} 號${r.mistakes===0?' · 全部答對！':''}</h2><div class="metrics"><div><strong>${correct}<small> / ${r.deck.length}</small></strong><span>第一次就答對</span></div><div><strong>${r.mistakes}</strong><span>需要再練的題目</span></div></div>`;const weak=[...new Set(r.rows.filter(x=>!x.firstCorrect).map(x=>x.target))];if(weak.length)html+='<p class="small">這幾個聲音，再當一次好朋友</p><div class="review-chips">'+weak.map(x=>`<button class="review-chip" data-review="${safe(x)}">${safe(x)} ♪</button>`).join('')+'</div>';const progress=read('zhuyin.progress.v2',{});progress[seats[i]]??={};progress[seats[i]][mode]=Math.max(progress[seats[i]][mode]||0,correct);write('zhuyin.progress.v2',progress);const key=`zhuyin.attempt.${seats[i]}`,attempt=read(key,0)+1;write(key,attempt);results.push({roundId:r.encounterId,monsterBattle:1,seat:seats[i],attempt,total:r.deck.length,mistakes:r.mistakes,mode,seconds:Math.round((Date.now()-r.started)/1000),results:r.rows});});
  if(duo){const a=-rounds[0].mistakes,b=-rounds[1].mistakes;html+=`<p>${a===b?'兩隊平手，一起完成探險！':`${safe(seats[a>b?0:1])} 號得到較多星星，兩位都完成了探險！`}</p>`;}
- $('result-details').innerHTML=html;document.querySelectorAll('[data-review]').forEach(b=>b.onclick=()=>{const q=currentPool.find(x=>(x.displayLabel||x.label)===b.dataset.review);audio.src=audioSource(q.audio);audio.currentTime=0;audio.play().catch(()=>{$('save-status').textContent='複習聲音無法播放，請確認音量與網路。';});});
+ $('result-details').innerHTML=html;
+ const headings=$('result-details').querySelectorAll('h2');
+ rounds.forEach((r,i)=>{const original=r.rows.filter(row=>!row.tutorReviewOf&&!row.tutorSpacer);const host=document.createElement('div');headings[i].after(host);showRoundOutcome(host,original.filter(row=>row.firstCorrect).length,original.length,r.encounterId,profiles.identity(seats[i]).character?.id,r.monsterId);});
+ document.querySelectorAll('[data-review]').forEach(b=>b.onclick=()=>{const q=currentPool.find(x=>(x.displayLabel||x.label)===b.dataset.review);audio.src=audioSource(q.audio);audio.currentTime=0;audio.play().catch(()=>{$('save-status').textContent='複習聲音無法播放，請確認音量與網路。';});});
  if(duo){const competition={kind:'turn',seats:[...seats],rounds:results.map(({total,mistakes,results})=>({total,mistakes,results}))};results.forEach(r=>r.competition=competition);}
  persistResults(results);
 }
@@ -195,7 +199,7 @@ function persistResults(results){
  if(demo){$('save-status').textContent='這是老師試玩，沒有傳送學生成績。';$('retry-save').hidden=true;return;}
  latestIds=results.map(x=>x.roundId);pending.push(...results);const stored=write('zhuyin.pending.v2',pending);$('save-status').textContent=stored?'正在確認老師是否收到紀錄…':'此裝置無法暫存，請保持頁面開啟，等待確認傳送。';flushPending();
 }
-function showAwardActor(root,award){const group=document.createElement('div');group.className='round-reward-scene';root.append(group);showMonsterReward(group,award);const character=profiles.identity(award.seat).character;const scene=awardCharacter(group,character,award.stars)||celebrateCharacter(group,character);if(scene){const label=document.createElement('span');label.className='award-seat';label.textContent=award.seat+' 號';scene.prepend(label);}}
+function showAwardActor(root,award){const group=document.createElement('div');group.className='round-reward-scene';root.append(group);showMonsterReward(group,award);const character=profiles.identity(award.seat).character;const scene=awardCharacter(group,character,award.stars);if(scene){const label=document.createElement('span');label.className='award-seat';label.textContent=award.seat+' 號';scene.prepend(label);}}
 async function send(payload){const status=await auth.request(payload);if(status.saved!==true)throw new Error(status.error||'unconfirmed');completeIslandFarmRound(payload,{confirmed:true});if(latestIds.includes(payload.roundId)&&Array.isArray(status.awards)&&!document.getElementById('award-'+payload.roundId)){const line=document.createElement('div');line.id='award-'+payload.roundId;line.className='round-awards';for(const award of status.awards){const p=document.createElement('p');p.textContent=`🔢 ${award.seat}　⭐ +${award.stars}　${dailyAwardMessage(award)}`;line.append(p);showAwardActor(line,award);}$('result-details').append(line);}}
 async function flushPending(){if(saving||demo||!config?.verifiedWrites)return;saving=true;$('retry-save').disabled=true;const attempted=new Set();try{for(const payload of [...pending]){attempted.add(payload.roundId);try{await send(payload);pending=pending.filter(x=>x.roundId!==payload.roundId);write('zhuyin.pending.v2',pending);}catch{/* Keep failed rounds and try the others. */}}}finally{saving=false;$('retry-save').disabled=false;const outstanding=pending.some(x=>latestIds.includes(x.roundId)),stored=write('zhuyin.pending.v2',pending);$('retry-save').hidden=!outstanding;$('save-status').textContent=outstanding?(stored?'紀錄已暫存在這台裝置，尚未確認存入後台。':'此裝置無法暫存，請勿關閉頁面。')+'請保持連線並重新傳送。':'老師已收到這次的完整紀錄！';rewards.refresh();if(pending.some(x=>!attempted.has(x.roundId)))flushPending();}}
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(b.dataset.mode));

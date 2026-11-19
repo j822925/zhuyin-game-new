@@ -1,6 +1,6 @@
 import {createQuestionReport} from './question-report.js?v=20261011-reports2';
 import {createReadingFarm,renderReadingFarm} from './reading-farm.bundle.js?v=20261025-homegallery1';
-import {createReadingBattle} from './reading-battle.js?v=20261011-battle1';
+import {createReadingBattle} from './reading-battle.js?v=20261119-stars';
 import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261011-battle1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20261024-retire1';
 import './asset-cache.js?v=20260928-all1';
@@ -203,7 +203,7 @@ async function start(){
  finally{starting=false;syncInputMode();$('seat').disabled=false;$('start').disabled=!lessonReady||config?.readingWrites!==true;$('reload').disabled=false;}
 }
 function finish(){
- cancel();show('result');readingBattle.result(0);const correct=rows.filter(r=>r.firstCorrect).length,stars=readingStars(correct);
+ cancel();show('result');readingBattle.result(0);const correct=rows.filter(r=>r.firstCorrect).length,stars=readingStars(correct);readingBattle.outcome(correct,readingRoundId);
  $('score').textContent=`通過 ${correct} / 5 題`;$('stars').textContent=demo?(stars?'⭐'.repeat(stars):'再接再厲'):'星星正在確認…';
  $('review').replaceChildren();for(const row of rows){const word=READING_WORDS.find(w=>w.id===row.wordId),p=document.createElement('p');p.textContent=`${row.firstCorrect?'✓':'再練練'}　${word.word}　${word.zhuyin}`;$('review').append(p);}
  if(demo){$('return-guide').hidden=!appleMobile;readingBattle.result(stars,creditDemoMonster(seat,readingRoundId,correct===5,'reading'));$('save-status').textContent=`老師試玩：本回合 ${stars} 顆星星，不傳送學生成績。`;$('retry-save').hidden=true;return;}

@@ -1,14 +1,15 @@
+import {showRoundOutcome} from './round-outcome.js';
 import {attachCopyEntries} from './hanzi-copy-entry.js?v=20261118-ink2';
 import {PRACTICE_RULE,bonusQuestion} from './hanzi-practice.js?v=20261115-hanzi2';
 import {HANZI_AUDIO} from './data/hanzi-teacher-audio.js?v=20261115-hanzi2';
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
 import {validateBank,questionPool,splitBopomofo,gradeReading} from './hanzi-bank.js';
-import {createHanziClient,createHanziDemo,createRoundStore,resultRows,taskState,compactAnswers} from './hanzi-client.js?v=20261116-hub1';
+import {createHanziClient,createHanziDemo,createRoundStore,resultRows,taskState,compactAnswers} from './hanzi-client.js?v=20261119-stars';
 import {createHandwriting} from './hanzi-handwriting.js?v=20261115-hanzi2';
 import {gradeStrokes} from './hanzi-stroke-core.js';
 import {mountCharacter} from './character-motion.js?v=20261011-battle1';
-import {createOpponent,updateOpponent,createBattle} from './character-battle.js?v=20261011-battle1';
+import {createOpponent,updateOpponent,createBattle} from './character-battle.js?v=20261119-stars';
 import {PROFILE_CHARACTERS} from './student-profile.js?v=20261011-battle1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
 
@@ -183,7 +184,7 @@ $('demo-ink').onclick=async()=>{
 
 function summaryRows(rows){$('result-answers').replaceChildren();rows.forEach(r=>{const q=r.question,status=r.status||(r.correct?'correct':'incorrect'),card=node('div',undefined,'answer-review');card.append(node('strong',(status==='correct'?'✓ ':['pending','pending_review'].includes(status)?'◷ ':'↻ ')+q.word+' · '+q.bopomofo));const desc=['pending','pending_review'].includes(status)?'這份舊紀錄尚未完成判定。':status==='correct'?'這一題答對了。':'這一題可以再練習一次。';card.append(node('p',desc+(r.hintUsed?'（曾看筆順提示）':'')));$('result-answers').append(card);});}
 function renderResult(run){
-  const rows=resultRows(run),result=run.result;round=null;show('result');$('reward-status').textContent=result.stars?'⭐ 全對！'+(demo?'試玩':'')+'獲得 '+result.stars+' 顆星'+(result.dailyReward?.capped?'（今天已達 150 星）':''):result.dailyReward?.capped?'今天已達 150 星，這回合仍有保存成績。':'';$('result-score').textContent=result.pending?'還有 '+result.pending+' 題未完成判定':result.correct+' / '+result.total+' 題答對';$('result-detail').textContent=result.corrected?'已完成 '+result.corrected+' 題訂正，成績保留第一次作答。':result.pending?'部分舊紀錄尚未完成判定。':'';$('save-status').textContent=demo?'試玩紀錄已留在這個分頁；不會送到正式班級。':'紀錄已儲存，老師可以在後台查看。';summaryRows(rows);$('again').disabled=false;$('again').textContent=params.get('from')==='daily'?'↩ 返回每日任務':params.get('from')==='notebook'?'↩ 返回錯題本':params.get('from')==='exams'?'↩ 返回老師小考':'↶ 返回營地';$('retry-save').hidden=true;$('card-reward').replaceChildren();
+  const rows=resultRows(run),result=run.result;round=null;show('result');const base=rows.filter(row=>!row.question.id?.includes('.bonus.'));if(!result.pending)showRoundOutcome($('result'),base.filter(row=>row.correct===true).length,base.length,run.id,hero.id,opponent.dataset.monster);$('reward-status').textContent=result.stars?'⭐ '+(result.correct===result.total?'全對！':'')+(demo?'試玩':'')+'獲得 '+result.stars+' 顆星'+(result.dailyReward?.capped?'（今天已達 150 星）':''):result.dailyReward?.capped?'今天已達 150 星，這回合仍有保存成績。':'';$('result-score').textContent=result.pending?'還有 '+result.pending+' 題未完成判定':result.correct+' / '+result.total+' 題答對';$('result-detail').textContent=result.corrected?'已完成 '+result.corrected+' 題訂正，成績保留第一次作答。':result.pending?'部分舊紀錄尚未完成判定。':'';$('save-status').textContent=demo?'試玩紀錄已留在這個分頁；不會送到正式班級。':'紀錄已儲存，老師可以在後台查看。';summaryRows(rows);$('again').disabled=false;$('again').textContent=params.get('from')==='daily'?'↩ 返回每日任務':params.get('from')==='notebook'?'↩ 返回錯題本':params.get('from')==='exams'?'↩ 返回老師小考':'↶ 返回營地';$('retry-save').hidden=true;$('card-reward').replaceChildren();
   if(run.kind==='exam'&&run.snapshot.rewardCardIds?.length){const box=$('card-reward');if(result.perfect){const button=node('button','✦ 領取小考卡片','primary');button.onclick=async()=>{button.disabled=true;try{const reward=await client.request('card-draw',{runId:run.id,requestId:'hanzi-card-'+run.id});box.replaceChildren();if(reward.complete){box.append(node('p','這份小考的卡片已經收齊了！'));return;}const card=PROFILE_CHARACTERS.find(c=>c.id===reward.character);if(card){const image=document.createElement('img');image.src=card.image;image.alt=card.name;box.append(image,node('p',card.name+' 已加入收藏，可以回首頁選為角色！'));}else box.append(node('p','卡片已加入收藏！'));}catch(e){fail(e);button.disabled=false;}};box.append(node('p','這次小考全對，獲得領卡資格！'),button);}else box.append(node('p','小考全對、沒有使用提示，就能領取老師設定的卡片。'));}
 }
 async function finish(){stopCorrectionAudio();show('result');$('reward-status').textContent='';$('result-score').textContent='正在整理探險筆記…';$('result-detail').textContent='';$('save-status').textContent='正在儲存這一回合…';$('retry-save').hidden=true;$('again').disabled=true;busy=true;persist();try{

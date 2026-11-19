@@ -1,3 +1,4 @@
+import {showRoundOutcome} from './round-outcome.js';
 // Personal practice after server settlement. This module never grants rewards,
 // changes scores, or deletes the teacher's original mistake records.
 import {audioSource} from './audio-source.js?v=20261102-a1';
@@ -20,7 +21,7 @@ export function createCompletion({document,storage=globalThis.sessionStorage,ran
    $('phase-title').textContent='🎉 你完成全班挑戰了！';
    const pending=s.rewarding&&s.mine?.rewardPending,stars=s.mine?.rewardStars||0,card=el('div');card.className='classroom-reward';
    card.append(el('div',s.rewarding?'⭐'.repeat(stars||1):'🎉'),el('h2',s.rewarding?stars?'獲得 '+stars+' 顆星星！':'本場沒有星星入帳':'挑戰完成！'),el('p',pending?'星星正在存入帳號；網路慢也不用擔心，系統會自動補發。':s.rewarding&&stars?'已經存入帳號，不用再領一次。':'一起把錯題學會吧！'));
-   $('feedback').append(card);
+   $('feedback').append(card);showRoundOutcome(card,s.mine?.correct??0,s.total,s.activityId);
    const b=button(review.length?'📖 開始錯題重做':'🌈 看完成畫面',()=>{progress.stage=review.length?'review':'done';persist();rerender();});$('controls').append(b);
    $('room-note').textContent=s.transport==='peer'?'本場是 P2P 試玩，不發星星、不寫正式紀錄；可以在這裡把錯題重做。':'先看看你的獎勵，再一起把錯題學會。訂正不會改變比賽分數，也不會重複發星星。';return true;
   }

@@ -1,3 +1,4 @@
+import {showRoundOutcome} from './round-outcome.js';
 import {createToneRecorder} from './tone-record-client.js?v=20261011-stars1';
 import {TONES,validateBank,poolFor,makeDeck,grade,summarize} from './tone-core.js?v=20261011-teacher1';
 import {createToneAudio} from './tone-audio.js?v=20261011-teacher1';
@@ -98,7 +99,7 @@ async function reviewTwice(){
 }
 $('retry').onclick=reviewTwice;
 $('submit').onclick=()=>{if(busy||submitted||!heard||answers.some(v=>v===null))return;results.push(grade(deck[index],answers));submitted=true;save();displayFeedback();if(results.at(-1).wholeCorrect){reviewDone=true;$('review-status').textContent='';render();}else reviewTwice();};
-function advance(){if(index+1<deck.length){index++;begin();return;}stop();show('result');const s=summarize(results);$('whole-score').textContent=`整題全對 ${s.whole} / ${s.total} 題`;$('character-score').textContent=`字的聲調答對 ${s.correct} / ${s.characters} 字`;$('award').textContent=demo?'教師試玩，不發正式星星。':'星星結算中…';recorder.enqueue({kind:'tone-record',rewardRule:REWARD_RULE,roundId,bankVersion:bank.version,drillMode:mode,length,seconds:Math.max(0,Math.round((Date.now()-startedAt)/1000)),results:results.map(r=>({id:r.id,answers:r.answers}))});clear();}
+function advance(){if(index+1<deck.length){index++;begin();return;}stop();show('result');const s=summarize(results);showRoundOutcome($('result'),s.whole,s.total,roundId);$('whole-score').textContent=`整題全對 ${s.whole} / ${s.total} 題`;$('character-score').textContent=`字的聲調答對 ${s.correct} / ${s.characters} 字`;$('award').textContent=demo?'教師試玩，不發正式星星。':'星星結算中…';recorder.enqueue({kind:'tone-record',rewardRule:REWARD_RULE,roundId,bankVersion:bank.version,drillMode:mode,length,seconds:Math.max(0,Math.round((Date.now()-startedAt)/1000)),results:results.map(r=>({id:r.id,answers:r.answers}))});clear();}
 $('next').onclick=()=>{if(!busy&&reviewDone)advance();};
 function updateReport(){const id=deck[index]?.id;$('report').disabled=reported.has(id)||reporting.has(id);$('report').textContent=reported.has(id)?'✓ 已回報':reporting.has(id)?'回報中…':'🙋 錯題回報';}
 $('report').onclick=async()=>{

@@ -1,8 +1,9 @@
 import {gradeStrokes} from './hanzi-stroke-core.js';
 
 export const COPY_RULE='hanzi-copy-name-20261116-v1';
+export const COPY_REWARD_RULE='copy-per-character-20261117-v3';
 export const COPY_TOLERANCE=Object.freeze({offset:.09,scale:.17});
-export const COPY_MODES=Object.freeze({copy:{label:'生字模仿',stars:1,limit:10,period:'day'},'name-writing':{label:'看注音，寫姓名',stars:3,limit:900,period:'lifetime'},'name-copy':{label:'姓名模仿',stars:1,limit:10,period:'day'}});
+export const COPY_MODES=Object.freeze({copy:{label:'生字模仿',starsPerCharacter:2,limit:10,period:'day'},'name-writing':{label:'看注音，寫姓名',stars:3,limit:900,period:'lifetime'},'name-copy':{label:'姓名模仿',starsPerCharacter:2,limit:1200,period:'lifetime'}});
 const point=p=>Array.isArray(p)?{x:p[0],y:p[1]}:p;
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 function sample(raw,n=32){const s=raw.map(point),lengths=[0];for(let i=1;i<s.length;i++)lengths.push(lengths.at(-1)+distance(s[i-1],s[i]));let j=1;return Array.from({length:n},(_,i)=>{const d=lengths.at(-1)*i/(n-1);while(j<lengths.length-1&&lengths[j]<d)j++;const a=s[Math.max(0,j-1)],b=s[Math.min(j,s.length-1)],t=(d-(lengths[j-1]||0))/Math.max(.000001,(lengths[j]||0)-(lengths[j-1]||0));return{x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t};});}

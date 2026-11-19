@@ -1,3 +1,4 @@
+import {showRoundOutcome} from './round-outcome.js';
 import {optimizedImage} from './data/portrait-thumbnails.js?v=20261007-ipad1';
 import './asset-cache.js?v=20260928-all1';
 import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
@@ -7,7 +8,7 @@ import {STAR_SPRITES} from './data/star-sprites.js';
 import {audioSource} from './audio-source.js?v=20261102-a1';
 import {STAR_CARDS} from './data/star-cards.js';
 import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20261011-battle1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261011-battle1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261119-stars';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
 import {showMonsterReward} from './monster-cards-ui.js?v=20261011-battle1';
 const $=id=>document.getElementById(id),SESSION=classStorageKey('zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':live');
@@ -94,7 +95,7 @@ function render(){if(!state)return;$('action').removeAttribute('data-child-home-
   const allow=s.phase==='answer'&&!s.submitted&&ws?.readyState===1&&mine;for(const b of $('choices').querySelectorAll('button[data-value]')){const wrong=turn&&(s.wrongChoices||[]).includes(b.dataset.value);b.disabled=!allow||wrong;b.classList.toggle('wrong',wrong);}
  }
  if(s.phase==='result'){stopAudio();$('result-answer').textContent='正確答案：'+s.result.target;const points=s.result.points;$('phase-detail').textContent=points.every(Boolean)?'🤝 幾乎同時答對，兩人各得 1 分！':points.some(Boolean)?s.players[points.indexOf(1)].name+' 第一次就答對，得 1 分！':turn?'再試後答對了！這題不加分，繼續加油。':'一起記住這個聲音，下題再試！';showAction(s.next[i]?'✅ 等同學':turn?'換下一位 ➜':'下一題 ➜','next',s.next[i]);}
- if(s.phase==='finished'){stopAudio();const mine=s.scores[i],other=s.scores[1-i];$('summary').textContent=(mine===other?'🤝 平手，一起完成！':mine>other?'🏆 你贏得這一場！':'🌟 很棒的練習，下次再挑戰！')+' '+mine+'：'+other+'。'+(s.settled?'已保存，獲得 '+(s.awards?.[i]?.stars??0)+' 顆星星。'+dailyAwardMessage(s.awards?.[i]):'正在保存結果，請稍候…');showAction(s.rematch[i]?'✅ 等同學同意再來一場':'再來一場！','rematch',!s.settled||s.rematch[i]);}
+ if(s.phase==='finished'){stopAudio();const mine=s.scores[i],other=s.scores[1-i];$('summary').textContent=(mine===other?'🤝 平手，一起完成！':mine>other?'🏆 你贏得這一場！':'🌟 很棒的練習，下次再挑戰！')+' '+mine+'：'+other+'。'+(s.settled?'已保存，獲得 '+(s.awards?.[i]?.stars??0)+' 顆星星。'+dailyAwardMessage(s.awards?.[i]):'正在保存結果，請稍候…');showRoundOutcome($('summary'),mine,10,s.matchId,session?.avatar,onlineOpponent.dataset.monster);showAction(s.rematch[i]?'✅ 等同學同意再來一場':'再來一場！','rematch',!s.settled||s.rematch[i]);}
  renderMotion(s);
  if(s.phase==='closed'){stopAudio();stopped=true;$('action').hidden=false;$('action').textContent='回首頁';$('action').setAttribute('data-child-home-button','');$('action').disabled=false;$('action').onclick=home;}
 }
