@@ -1,4 +1,4 @@
-const readings={森:'ㄙㄣ',林:'ㄌㄧㄣˊ',看:'ㄎㄢˋ',國:'ㄍㄨㄛˊ',字:'ㄗˋ',寫:'ㄒㄧㄝˇ',注:'ㄓㄨˋ',音:'ㄧㄣ',生:'ㄕㄥ',模:'ㄇㄛˊ',仿:'ㄈㄤˇ',姓:'ㄒㄧㄥˋ',名:'ㄇㄧㄥˊ',上:'ㄕㄤˋ',課:'ㄎㄜˋ',選:'ㄒㄩㄢˇ',練:'ㄌㄧㄢˋ',習:'ㄒㄧˊ',開:'ㄎㄞ',始:'ㄕˇ'};
+const readings={每:'ㄇㄟˇ',週:'ㄓㄡ',認:'ㄖㄣˋ',七:'ㄑㄧ',挑:'ㄊㄧㄠˇ',戰:'ㄓㄢˋ',森:'ㄙㄣ',林:'ㄌㄧㄣˊ',看:'ㄎㄢˋ',國:'ㄍㄨㄛˊ',字:'ㄗˋ',寫:'ㄒㄧㄝˇ',注:'ㄓㄨˋ',音:'ㄧㄣ',生:'ㄕㄥ',模:'ㄇㄛˊ',仿:'ㄈㄤˇ',姓:'ㄒㄧㄥˋ',名:'ㄇㄧㄥˊ',上:'ㄕㄤˋ',課:'ㄎㄜˋ',選:'ㄒㄩㄢˇ',練:'ㄌㄧㄢˋ',習:'ㄒㄧˊ',開:'ㄎㄞ',始:'ㄕˇ'};
 const tonePaths={'ˉ':'M1 5 H10','ˊ':'M2 8 L9 2','ˇ':'M1 3 L5.5 8 L10 3','ˋ':'M2 2 L9 8'};
 export function phonetic(text){
   const label=document.createElement('span');label.className='hz-ruby-title';label.setAttribute('aria-label',text);
@@ -19,6 +19,8 @@ export function phonetic(text){
   return label;
 }
 const cards={
+  learn:['每週認字','字','♪','sound'],
+  challenge:['七字認字挑戰','字','ㄗˋ','choice'],
   reading:['看國字寫注音','山','ㄕㄢˉ','sound'],
   writing:['看注音寫國字','ㄕㄢˉ','山','grid'],
   copy:['生字模仿','木','木','trace'],

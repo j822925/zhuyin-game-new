@@ -1,5 +1,5 @@
 import {showRoundOutcome} from './round-outcome.js';
-import {attachCopyEntries} from './hanzi-copy-entry.js?v=20261118-ink2';
+import {attachCopyEntries} from './hanzi-copy-entry.js?v=20261121-week1';
 import {PRACTICE_RULE,bonusQuestion} from './hanzi-practice.js?v=20261115-hanzi2';
 import {HANZI_AUDIO} from './data/hanzi-teacher-audio.js?v=20261115-hanzi2';
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
