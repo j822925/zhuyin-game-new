@@ -4,3 +4,14 @@
 #expedition[data-view=field] .exp-mob::before{content:"";position:absolute;left:50%;bottom:21px;width:48%;height:9%;border-radius:50%;background:radial-gradient(ellipse,#24362b82 0%,#293e333f 44%,transparent 73%);transform:translateX(-50%) scaleX(var(--contact,1));pointer-events:none}
 #expedition[data-view=field] .exp-mob small{position:relative}#expedition[data-view=field] .exp-mob img{transform-origin:50% 93%}#expedition[data-view=field] .exp-boss .guardian-art{transform-origin:50% 95%}
 @media(max-height:520px){.study-stage canvas{max-height:13dvh}.study-stage{min-height:46px}.study-keys button,.island-study button{min-height:29px}.study-ink{width:min(42dvh,230px)}}
+#expedition .painted-figure{position:relative;display:block;width:clamp(68px,12vh,122px);aspect-ratio:1;pointer-events:none}
+#expedition .painted-figure>img,#expedition .painted-figure>canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:none}
+#expedition .painted-figure>canvas{visibility:hidden}
+#expedition .painted-ready>img{visibility:hidden}
+#expedition .painted-ready>canvas{visibility:visible}
+#expedition .painted-guardian{height:49vh;height:49dvh;width:auto;aspect-ratio:384/448}
+#expedition .exp-mob>small{position:absolute;top:100%;left:50%;transform:translateX(-50%);white-space:nowrap;padding:2px 7px}
+#expedition[data-view=field] .exp-mob::before,#expedition[data-view=intro] .exp-boss::before{content:"";position:absolute;bottom:1.5%;left:50%;width:46%;height:7%;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,#25312665,transparent 72%);pointer-events:none}
+#expedition[data-view=intro] .exp-boss{left:50%!important;top:var(--guardian-intro-foot,68%)!important;pointer-events:none}
+
+#expedition[data-view=intro] .painted-guardian{height:var(--guardian-intro-height,49vh)}

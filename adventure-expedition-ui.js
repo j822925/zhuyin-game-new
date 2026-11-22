@@ -6,7 +6,8 @@ import {ZONE_STOREFRONTS} from './data/zone-storefront-art.js';
 import {zoneShop} from './data/zone-shops.js';
 import {FURNITURE} from './data/home-furniture.js';
 import {fieldLayout,fieldWalkable,fieldPoint,makeFieldActors,stepFieldActors} from './adventure-expedition-field.js';
-import {mountSparring,mountGuardian} from './adventure-expedition-motion.js';
+import {FIELD_CREATURES,fieldFigure,paintFieldFigure} from './adventure-painted-actors.js';
+import {mountSparring} from './adventure-expedition-motion.js';
 import {battleStageLayout} from './adventure-battle-layout.js';
 import {completeAction} from './adventure-action-feedback.js';
 import {ZONES,zoneById,MINIONS} from './data/adventure-zones.js';
@@ -18,7 +19,7 @@ import {RAW_FOOD,RECIPES} from './adventure-food-model.js';
 export function createExpedition(api){
  const dialog=document.createElement('dialog');dialog.id='expedition';dialog.setAttribute('aria-label','區域遠征');document.body.append(dialog);
  let z=null,view='field',message='',generation=0,loading=false,questionFailed=false,audio=null,raf=0,position={x:50,y:77},target=null,last=0;
- let motion=null,fieldMotion=null,resolving=false,opening=false,saveFailed=false;
+ let motion=null,resolving=false,opening=false,saveFailed=false;
  let local=false,localWon=null,actors=[],keys=new Set(),joystick=null,shopArrivalHeld=false,exitArrivalHeld=true;
  const state=()=>api.state(),exp=()=>state().expedition,run=()=>exp().runs[z?.id];
  const cards=createGuardianCards({state});
@@ -31,10 +32,21 @@ export function createExpedition(api){
   Object.assign(foe.style,{left:layout.foe.x+'px',right:'auto',top:layout.foe.y+'px',width:layout.foe.width+'px',height:layout.foe.height+'px'});
   Object.assign(player.style,{left:layout.player.x+'px',top:layout.player.y+'px',width:layout.player.width+'px',height:layout.player.height+'px'});
  }
- const layoutObserver=new ResizeObserver(fitBattle);layoutObserver.observe(dialog);
+ function fitIntro(){
+  if(dialog.dataset.view!=='intro') return;
+  const world=dialog.querySelector('.exp-world'), panel=dialog.querySelector('.exp-panel');
+  if(!world || !panel) return;
+  const top=dialog.querySelector('.exp-header').getBoundingClientRect().bottom+8;
+  const bottom=panel.getBoundingClientRect().top-18;
+  const room=Math.max(1,bottom-top);
+  const height=Math.min(dialog.clientHeight*.49,room);
+  dialog.style.setProperty('--guardian-intro-height',height+'px');
+  dialog.style.setProperty('--guardian-intro-foot',(top+(room+height)/2-world.getBoundingClientRect().top)+'px');
+ }
+ const layoutObserver=new ResizeObserver(()=>{fitBattle();fitIntro();});layoutObserver.observe(dialog);
  let releaseQuestionMusic=null,releaseSpeechMusic=null;
  function stopAudio(){audio?.pause();audio=null;releaseQuestionMusic?.();releaseQuestionMusic=null;releaseSpeechMusic?.();releaseSpeechMusic=null;if(globalThis.speechSynthesis?.speaking)speechSynthesis.cancel();}
- function close(){cards.close();forestMusic.setArea(api.scene()?.area||null);forestMusic.setBattle(false);motion?.dispose();motion=null;fieldMotion?.dispose();fieldMotion=null;resolving=false;generation++;loading=false;keys.clear();joystick=null;stopAudio();cancelAnimationFrame(raf);dialog.close();if(local&&api.scene())api.scene().castAt=0;api.stop();}
+ function close(){cards.close();forestMusic.setArea(api.scene()?.area||null);forestMusic.setBattle(false);motion?.dispose();motion=null;resolving=false;generation++;loading=false;keys.clear();joystick=null;stopAudio();cancelAnimationFrame(raf);dialog.close();if(local&&api.scene())api.scene().castAt=0;api.stop();}
  function depart(suspend=false){if(resolving)return;if(!local&&run()&&!transaction(()=>leaveExpedition(state(),{suspend}))){api.toast('💾 還沒存好，請再試一次');return;}close();if(suspend)completeAction('saved');}
  dialog.addEventListener('cancel',e=>{e.preventDefault();depart();});
  function button(label,action,cls=''){const b=document.createElement('button');b.textContent=label;b.className=cls;b.onclick=action;return b;}
@@ -49,21 +61,15 @@ export function createExpedition(api){
    if(view==='field'){dx=(keys.has('ArrowRight')||keys.has('d')?1:0)-(keys.has('ArrowLeft')||keys.has('a')?1:0);dy=(keys.has('ArrowDown')||keys.has('s')?1:0)-(keys.has('ArrowUp')||keys.has('w')?1:0);if(joystick){dx=joystick.x;dy=joystick.y;}if(dx||dy){target=null;const len=Math.hypot(dx,dy),p={x:position.x+dx/len*dt*16,y:position.y+dy/len*dt*22};if(fieldWalkable(z.id,p)){position=p;moving=true;}}else if(target){dx=target.x-position.x;dy=target.y-position.y;const d=Math.hypot(dx,dy);if(d>.3){const step=Math.min(d,dt*18),p={x:position.x+dx/d*step,y:position.y+dy/d*step};if(fieldWalkable(z.id,p)){position=p;moving=true;}else target=null;}else target=null;}
     const [sx,sy]=fieldLayout(z.id).shop,doorway=fieldPoint(z.id,{x:sx,y:sy}),distance=Math.hypot(position.x-doorway.x,position.y-doorway.y);if(distance>7)shopArrivalHeld=false;if(api.openShop&&moving&&distance<3.5&&!shopArrivalHeld){void visitShop();return;}
     const [ex,ey]=fieldLayout(z.id).entry,exitDistance=Math.hypot(position.x-ex,position.y-ey);if(exitDistance>6)exitArrivalHeld=false;if(moving&&exitDistance<3.5&&!exitArrivalHeld){depart();return;}
-    stepFieldActors(z.id,actors,dt);dialog.querySelectorAll('[data-mob]').forEach(el=>{const a=actors[Number(el.dataset.mob)];el.style.left=a.x+'%';el.style.top=a.y+'%';el.style.zIndex=Math.round(a.y);const art=run().monsters[Number(el.dataset.mob)].art;
-     const clock=api.scene().reduced.matches?0:a.clock;
-     const step=Math.sin(clock*10),glide=art===3||art===5,crawl=art===2||art===4;
-     const lift=glide?8+Math.sin(clock*4)*4:Math.abs(step)*(crawl?.65:2.2);
-     const face=a.direction===3?-1:1;
-     el.style.setProperty('--contact',String(1-lift*.018));
-     el.querySelector('img').style.transform='translateY('+-lift+'px) rotate('+step*(crawl?1.8:3)+'deg) scale('+face*(1+step*(crawl?.045:.012))+','+(1-step*(crawl?.035:.018))+')';});
+    const reduced = api.scene().reduced.matches;
+    if (!reduced) stepFieldActors(z.id,actors,dt);
+    dialog.querySelectorAll('[data-mob]').forEach(el => {
+      const a = actors[Number(el.dataset.mob)];
+      el.style.left = a.x + '%'; el.style.top = a.y + '%'; el.style.zIndex = Math.round(a.y);
+      paintFieldFigure(el.querySelector('.painted-figure'), reduced ? 0 : now/1000 + a.home.x, a.direction !== 3);
+    });
    }
-    const boss=dialog.querySelector('.exp-boss');if(boss){const floor=fieldLayout(z.id).boss,wh=world.getBoundingClientRect(),head=dialog.querySelector('.exp-header').getBoundingClientRect();const clock=api.scene().reduced.matches?0:now/1000;
-     const patrol=fieldPoint(z.id,{x:floor[0]+Math.sin(clock*.48)*2.4,y:floor[1]+Math.sin(clock*.73)*.85});
-     boss.style.left=patrol.x+'%';boss.style.zIndex=Math.round(patrol.y);
-     const float=['whale','bridge','deep'].includes(z.id),beat=Math.sin(clock*(float?2:4));
-     const pose=boss.querySelector('.guardian-art');
-     if(pose)pose.style.transform='translateY('+(-(float?6+beat*3:Math.abs(beat)*1.8))+'px) rotate('+beat*(float?1.8:.8)+'deg)';
-     boss.style.setProperty('--contact',String(float?.8-beat*.06:1));boss.style.top=Math.max(patrol.y,(head.bottom+12+boss.offsetHeight-wh.top)/wh.height*100)+'%';}
+   paintFieldFigure(dialog.querySelector('.painted-guardian'), api.scene().reduced.matches ? 0 : now/1000);
    if(view!=='battle'){cv.style.left=position.x+'%';cv.style.top=position.y+'%';}cv.style.zIndex=Math.round(view==='battle'?54:position.y);const c=cv.getContext('2d');c.clearRect(0,0,180,200);api.scene().drawPlayer(c,api.art(),{x:90,y:192,height:166,outfit:state().outfit,wand:state().wand,direction:dx<0?3:dx>0?1:dy<0?2:0,walking:moving,phase:now/100});
    dialog.dataset.playerX=position.x.toFixed(1);dialog.dataset.playerY=position.y.toFixed(1);
   }else if(cv&&local){const at=api.scene().toScreen(api.scene().player.x,api.scene().player.y);cv.style.left=at.x+'px';cv.style.top=at.y+'px';}
@@ -73,7 +79,7 @@ export function createExpedition(api){
   // Expeditions and their shops are overlays; the underlying scene stays on the island map.
   forestMusic.setArea(local?api.scene()?.area:z.id);
   forestMusic.setBattle(!!run()?.battle);
-  motion?.dispose();motion=null;fieldMotion?.dispose();fieldMotion=null;dialog.dataset.resolving=String(resolving);stopAudio();dialog.setAttribute('aria-label',local?'原地挑戰':'區域遠征');dialog.classList.toggle('exp-local',local);dialog.dataset.view=view;dialog.innerHTML='<header class="exp-header"><div></div><nav></nav></header><main class="exp-field"><div class="exp-world"><canvas class="exp-player" width="180" height="200" aria-label="我的角色"></canvas><div class="exp-monsters"></div></div></main><section class="exp-panel" aria-live="polite"></section>';
+  motion?.dispose();motion=null;dialog.dataset.resolving=String(resolving);stopAudio();dialog.setAttribute('aria-label',local?'原地挑戰':'區域遠征');dialog.classList.toggle('exp-local',local);dialog.dataset.view=view;dialog.innerHTML='<header class="exp-header"><div></div><nav></nav></header><main class="exp-field"><div class="exp-world"><canvas class="exp-player" width="180" height="200" aria-label="我的角色"></canvas><div class="exp-monsters"></div></div></main><section class="exp-panel" aria-live="polite"></section>';
   layoutObserver.disconnect();layoutObserver.observe(dialog);layoutObserver.observe(dialog.querySelector('.exp-panel'));layoutObserver.observe(dialog.querySelector('.exp-header'));
   if(!local)dialog.style.setProperty('--zone-scene',`url("${z.id==='bud'?api.art().terrain.village.src:'assets/expedition/'+z.scene+'.webp'}")`);
   const e=exp(),p=playerStats(e.level),head=dialog.querySelector('header div');head.innerHTML=`<strong>${z.icon} ${z.name}</strong><span>Lv.${e.level}　♥ ${e.hp}/${p.hp}　⚔ ${p.attack}　🛡 ${p.defense}</span><small>✦ ${state().stars}　🥄 ${state().life.nutrition.energy}/100　EXP ${e.xp}/${nextXP(e.level)||'MAX'}</small>`;
@@ -98,11 +104,11 @@ export function createExpedition(api){
   const regional=zoneShop(z.id);if(regional&&api.openShop){const door=button('',()=>void visitShop(),'exp-shop-entry'),[sx,sy]=fieldLayout(z.id).shop,at=fieldPoint(z.id,{x:sx,y:sy});door.append(portrait(ZONE_STOREFRONTS[z.id].src,regional.name));const caption=document.createElement('small');caption.textContent=regional.icon+' '+regional.name;door.append(caption);door.ariaLabel='進入'+regional.name;door.style.left=at.x+'%';door.style.top=at.y+'%';dialog.querySelector('.exp-world').append(door);}const done=r.monsters.filter(m=>m.done).length;panel.innerHTML=`<strong>${r.complete?'🤝 切磋成功！守護者還在這裡':`小怪 ${done}/${r.monsters.length}　${done===r.monsters.length?'👑 BOSS 出現了':'🔒 BOSS'}`}</strong><p>${message}</p>`;supplyHint(panel);
   if(r.complete){panel.append(button('🃏 看收藏卡',openCards),button('🗺️ 回地圖',()=>depart()));}
   const area=dialog.querySelector('.exp-monsters');
-  for(let i=0;i<r.monsters.length;i++){const m=r.monsters[i];if(m.done)continue;const mob=button('',()=>void begin(i),'exp-mob');mob.dataset.mob=String(i);mob.setAttribute('aria-label','挑戰'+MINIONS[m.art].name);mob.style.left=actors[i].x+'%';mob.style.top=actors[i].y+'%';mob.append(portrait(`assets/expedition/minions-${m.art}.webp`,MINIONS[m.art].name));mob.insertAdjacentHTML('beforeend',`<small>${['single','spelling','tone'].indexOf(m.mode)===0?'👂':m.mode==='tone'?'♫':'🧩'} ${MINIONS[m.art].name}</small>`);area.append(mob);}
-  if(done===r.monsters.length){const boss=button('',()=>{view='intro';renderIntro();},'exp-mob exp-boss');const [bx,by]=fieldLayout(z.id).boss;boss.style.left=bx+'%';boss.style.top=by+'%';boss.style.zIndex=Math.round(by);boss.ariaLabel=(bossIsFriend(state(),z.id)?'找好友切磋：':'與守護者切磋：')+z.boss;boss.append(portrait(z.human,z.boss));boss.insertAdjacentHTML('beforeend',`<small>${bossIsFriend(state(),z.id)?'🤝':'👑'} ${z.boss}</small>`);area.append(boss);fieldMotion=mountGuardian(boss.querySelector('img'),{zone:z});}
+  for(let i=0;i<r.monsters.length;i++){const m=r.monsters[i];if(m.done)continue;const mob=button('',()=>void begin(i),'exp-mob');mob.dataset.mob=String(i);mob.setAttribute('aria-label','挑戰'+MINIONS[m.art].name);mob.style.left=actors[i].x+'%';mob.style.top=actors[i].y+'%';mob.append(fieldFigure(FIELD_CREATURES[m.art],portrait(`assets/expedition/minions-${m.art}.webp`,MINIONS[m.art].name)));mob.insertAdjacentHTML('beforeend',`<small>${['single','spelling','tone'].indexOf(m.mode)===0?'👂':m.mode==='tone'?'♫':'🧩'} ${MINIONS[m.art].name}</small>`);area.append(mob);}
+  if(done===r.monsters.length){const boss=button('',()=>{view='intro';renderIntro();},'exp-mob exp-boss');const [bx,by]=fieldLayout(z.id).boss;const anchor=fieldPoint(z.id,{x:bx,y:Math.max(69,by)});boss.style.left=anchor.x+'%';boss.style.top=anchor.y+'%';boss.style.zIndex=Math.round(anchor.y);boss.ariaLabel=(bossIsFriend(state(),z.id)?'找好友切磋：':'與守護者切磋：')+z.boss;boss.append(fieldFigure(z.id,portrait(z.human,z.boss),true));boss.insertAdjacentHTML('beforeend',`<small>${bossIsFriend(state(),z.id)?'🤝':'👑'} ${z.boss}</small>`);area.append(boss);}
  }
- async function visitShop(){if(!api.openShop||local||view!=='field'||run()?.battle)return;shopArrivalHeld=true;const token=++generation;target=null;keys.clear();joystick=null;fieldMotion?.dispose();fieldMotion=null;cancelAnimationFrame(raf);stopAudio();dialog.close();api.stop();const restore=()=>{if(token!==generation)return;dialog.showModal();view='field';last=performance.now();render();};try{if(await api.openShop(z.id,restore)===false)restore();}catch{restore();message='商店暫時沒開好，請再試一次';render();}}
- function renderIntro(){const r=run();view='intro';render();view='intro';const panel=dialog.querySelector('.exp-panel'),s=enemyStats(z,true),intro=bossIsFriend(state(),z.id)?z.friendIntro:z.intro;panel.innerHTML=`<h2>👑 ${z.boss}</h2><p data-forest-dialogue>${intro}</p><small>♥ ${s.hp}　⚔ ${s.attack}　🛡 ${s.defense}　· 獸形不回滿生命</small>`;supplyHint(panel,true);panel.append(button('🔊',()=>speak(intro)),button('🤝 開始切磋',()=>void begin(r.monsters.length)),button('↩',()=>{view='field';render();}));}
+ async function visitShop(){if(!api.openShop||local||view!=='field'||run()?.battle)return;shopArrivalHeld=true;const token=++generation;target=null;keys.clear();joystick=null;cancelAnimationFrame(raf);stopAudio();dialog.close();api.stop();const restore=()=>{if(token!==generation)return;dialog.showModal();view='field';last=performance.now();render();};try{if(await api.openShop(z.id,restore)===false)restore();}catch{restore();message='商店暫時沒開好，請再試一次';render();}}
+ function renderIntro(){requestAnimationFrame(fitIntro);const r=run();view='intro';render();view='intro';const panel=dialog.querySelector('.exp-panel'),s=enemyStats(z,true),intro=bossIsFriend(state(),z.id)?z.friendIntro:z.intro;panel.innerHTML=`<h2>👑 ${z.boss}</h2><p data-forest-dialogue>${intro}</p><small>♥ ${s.hp}　⚔ ${s.attack}　🛡 ${s.defense}　· 獸形不回滿生命</small>`;supplyHint(panel,true);panel.append(button('🔊',()=>speak(intro)),button('🤝 開始切磋',()=>void begin(r.monsters.length)),button('↩',()=>{view='field';render();}));}
  function speak(text){if(!('speechSynthesis'in window))return;const release=forestMusic.hold();stopAudio();releaseSpeechMusic=release;const u=new SpeechSynthesisUtterance(text);u.lang='zh-TW';u.rate=.85;u.onend=u.onerror=release;try{speechSynthesis.speak(u);}catch{release();}}
  async function begin(slot){if(loading)return;target=null;keys.clear();joystick=null;const token=generation;loading=true;const allowed=await (globalThis.ForestAccess?.check()??true);if(token!==generation)return;loading=false;if(!allowed||!dialog.open)return;if(slot===run().monsters.length){loading=true;try{await preloadGuardianArt(z);}catch{if(token!==generation)return;message='圖片還沒載入，請再點一次挑戰。';loading=false;if(dialog.open)render();return;}if(token!==generation)return;loading=false;if(!dialog.open)return;}
   if(transaction(()=>startExpeditionBattle(state(),slot))){view='battle';message='';render();}else{message='🥄 每場需要 8 體力，可以先吃東西。';render();}}

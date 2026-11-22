@@ -1,3 +1,4 @@
+import {drawPaintedFrame} from './adventure-painted-actors.js';
 // Ground coordinates use the same scale as island-xiyu-v2 and ISLAND_ROUTES.
 export const STUDY_BEASTS = Object.freeze([
   {id:'ribbon-moth',name:'鈴紋月蛾',mode:'reading',label:'看國字寫注音',x:512,y:456,pace:0.68,color:'#a980da'},
@@ -28,7 +29,11 @@ export function drawStudyBeast(c,b,x,y,t,{scale=1,label=true,hit=0}={}){
   oval(c,1,1,air?20-lift*.24:26,5,air?'#25354430':'#273b3c48');
   if(!air)oval(c,0,-1,18,3,'#253a4033');
   c.save();c.translate(hit,-lift);
-  if(b.mode==='reading'){
+  const frame = Math.floor(t * 7) % 8;
+  const movingRight = label && Math.cos(t*b.pace) > 0;
+  if(drawPaintedFrame(c,b.id,frame,0,0,70,movingRight)){
+    // Painted bodies include their articulated fins, feet and wings.
+  }else if(b.mode==='reading'){
     for(const side of [-1,1]){
       const span=21+wing*5;
       pearl(c,side*span,-37,16,27,'#f9d9ff','#8159bc',side*.61);
