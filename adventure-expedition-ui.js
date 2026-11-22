@@ -49,9 +49,21 @@ export function createExpedition(api){
    if(view==='field'){dx=(keys.has('ArrowRight')||keys.has('d')?1:0)-(keys.has('ArrowLeft')||keys.has('a')?1:0);dy=(keys.has('ArrowDown')||keys.has('s')?1:0)-(keys.has('ArrowUp')||keys.has('w')?1:0);if(joystick){dx=joystick.x;dy=joystick.y;}if(dx||dy){target=null;const len=Math.hypot(dx,dy),p={x:position.x+dx/len*dt*16,y:position.y+dy/len*dt*22};if(fieldWalkable(z.id,p)){position=p;moving=true;}}else if(target){dx=target.x-position.x;dy=target.y-position.y;const d=Math.hypot(dx,dy);if(d>.3){const step=Math.min(d,dt*18),p={x:position.x+dx/d*step,y:position.y+dy/d*step};if(fieldWalkable(z.id,p)){position=p;moving=true;}else target=null;}else target=null;}
     const [sx,sy]=fieldLayout(z.id).shop,doorway=fieldPoint(z.id,{x:sx,y:sy}),distance=Math.hypot(position.x-doorway.x,position.y-doorway.y);if(distance>7)shopArrivalHeld=false;if(api.openShop&&moving&&distance<3.5&&!shopArrivalHeld){void visitShop();return;}
     const [ex,ey]=fieldLayout(z.id).entry,exitDistance=Math.hypot(position.x-ex,position.y-ey);if(exitDistance>6)exitArrivalHeld=false;if(moving&&exitDistance<3.5&&!exitArrivalHeld){depart();return;}
-    stepFieldActors(z.id,actors,dt);dialog.querySelectorAll('[data-mob]').forEach(el=>{const a=actors[Number(el.dataset.mob)];el.style.left=a.x+'%';el.style.top=a.y+'%';el.style.zIndex=Math.round(a.y);el.querySelector('img').style.transform='translateY('+Math.sin(a.clock*10)*1.3+'px)';});
+    stepFieldActors(z.id,actors,dt);dialog.querySelectorAll('[data-mob]').forEach(el=>{const a=actors[Number(el.dataset.mob)];el.style.left=a.x+'%';el.style.top=a.y+'%';el.style.zIndex=Math.round(a.y);const art=run().monsters[Number(el.dataset.mob)].art;
+     const clock=api.scene().reduced.matches?0:a.clock;
+     const step=Math.sin(clock*10),glide=art===3||art===5,crawl=art===2||art===4;
+     const lift=glide?8+Math.sin(clock*4)*4:Math.abs(step)*(crawl?.65:2.2);
+     const face=a.direction===3?-1:1;
+     el.style.setProperty('--contact',String(1-lift*.018));
+     el.querySelector('img').style.transform='translateY('+-lift+'px) rotate('+step*(crawl?1.8:3)+'deg) scale('+face*(1+step*(crawl?.045:.012))+','+(1-step*(crawl?.035:.018))+')';});
    }
-    const boss=dialog.querySelector('.exp-boss');if(boss){const floor=fieldLayout(z.id).boss,wh=world.getBoundingClientRect(),head=dialog.querySelector('.exp-header').getBoundingClientRect();boss.style.top=Math.max(floor[1],(head.bottom+12+boss.offsetHeight-wh.top)/wh.height*100)+'%';}
+    const boss=dialog.querySelector('.exp-boss');if(boss){const floor=fieldLayout(z.id).boss,wh=world.getBoundingClientRect(),head=dialog.querySelector('.exp-header').getBoundingClientRect();const clock=api.scene().reduced.matches?0:now/1000;
+     const patrol=fieldPoint(z.id,{x:floor[0]+Math.sin(clock*.48)*2.4,y:floor[1]+Math.sin(clock*.73)*.85});
+     boss.style.left=patrol.x+'%';boss.style.zIndex=Math.round(patrol.y);
+     const float=['whale','bridge','deep'].includes(z.id),beat=Math.sin(clock*(float?2:4));
+     const pose=boss.querySelector('.guardian-art');
+     if(pose)pose.style.transform='translateY('+(-(float?6+beat*3:Math.abs(beat)*1.8))+'px) rotate('+beat*(float?1.8:.8)+'deg)';
+     boss.style.setProperty('--contact',String(float?.8-beat*.06:1));boss.style.top=Math.max(patrol.y,(head.bottom+12+boss.offsetHeight-wh.top)/wh.height*100)+'%';}
    if(view!=='battle'){cv.style.left=position.x+'%';cv.style.top=position.y+'%';}cv.style.zIndex=Math.round(view==='battle'?54:position.y);const c=cv.getContext('2d');c.clearRect(0,0,180,200);api.scene().drawPlayer(c,api.art(),{x:90,y:192,height:166,outfit:state().outfit,wand:state().wand,direction:dx<0?3:dx>0?1:dy<0?2:0,walking:moving,phase:now/100});
    dialog.dataset.playerX=position.x.toFixed(1);dialog.dataset.playerY=position.y.toFixed(1);
   }else if(cv&&local){const at=api.scene().toScreen(api.scene().player.x,api.scene().player.y);cv.style.left=at.x+'px';cv.style.top=at.y+'px';}

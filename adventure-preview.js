@@ -1,3 +1,5 @@
+import {STUDY_BEASTS,beastPosition,hitStudyBeast} from './adventure-island-actors.js';
+import {createIslandStudy} from './adventure-island-study.js';
 import {createIslandVisits} from './island-visits-ui.js';
 import {encodeHomeSurfaceState} from './home-surface-storage.js';
 import {installMapZoom} from './adventure-map-zoom.js';
@@ -21,6 +23,19 @@ import {createExplorationUI} from './adventure-exploration-ui.js';
 import {encounterDeck,challengeChoices,expectedAnswer,challengePrompt} from './adventure-encounters.js';
 import {AREA_EXITS,createExitProximity} from './adventure-exits.js';
 const exitProximity=createExitProximity();
+const studyBeastCooldown=new Set();
+const studyBattle=createIslandStudy({
+ state:()=>state,save,changed:renderState,stop:stopMoving,
+ paintHero:(c,casting)=>scene.drawPlayer(c,art,{x:80,y:119,height:100,outfit:state.outfit,direction:3,walking:false,phase:0,wand:state.wand,casting}),
+ onWon:b=>{studyBeastCooldown.add(b.id);setTimeout(()=>studyBeastCooldown.delete(b.id),30000);}
+});
+function approachStudyBeast(b){
+ if(studyBattle.busy||studyBeastCooldown.has(b.id)||needFood())return;
+ const p=beastPosition(b,scene.reduced.matches?0:performance.now()/1000);
+ const arrive=()=>{if(!exitsBlocked()&&scene.area==='island'&&!studyBeastCooldown.has(b.id))void studyBattle.open(b);};
+ if(Math.hypot(scene.player.x-p.x,scene.player.y-p.y)<110)arrive();
+ else if(!walkTo({x:p.x,y:p.y+24},arrive))toast('先走近這條小路，再點小怪。');
+}
 let shop=null,exploration=null,expedition=null,rest=null,visits=null;
 import {ensureHomeArt,furnitureArtKeys} from './adventure-home-art.js?v=20261010-light2';
 import {ensureWardrobeArt} from './adventure-wardrobe-art.js';
@@ -119,7 +134,7 @@ function walkTo(target,onArrival=null){
   if(!path)return false;
   keys.clear();joystick.reset();route=path;arrival=onArrival;scene.marker={...target,at:performance.now()};return true;
 }
-function exitsBlocked(){return !scene||switching||scene.editing||!!round||(scene.area==='farm'&&!!arrival)||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy);}
+function exitsBlocked(){return studyBattle.busy||!scene||switching||scene.editing||!!round||(scene.area==='farm'&&!!arrival)||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy);}
 function enterExit(id){
  if(exitsBlocked())return;
  const e=AREA_EXITS[scene.area]?.find(e=>e.id===id);if(!e)return;
@@ -132,7 +147,7 @@ function enterExit(id){
 function face(dx,dy){if(Math.abs(dx)>Math.abs(dy))return dx>=0?1:3;return dy>=0?0:2;}
 function move(dt){
   if(!scene)return;
-  if(mapZoom.active){scene.player.moving=false;return;}
+  if(studyBattle.busy||mapZoom.active){scene.player.moving=false;return;}
   if(switching||scene.editing||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||(round&&round.phase!=='approach')){scene.player.moving=false;return;}
   const p=scene.player,before={x:p.x,y:p.y};
   let dx=joystick.input.x,dy=joystick.input.y;
@@ -188,7 +203,7 @@ function tick(now){
 async function init(){
   $('load-retry').hidden=true;
   try{
-    art=await loadArt();scene=new ForestScene(canvas,art);
+    art=await loadArt();scene=new ForestScene(canvas,art);scene.studyBeastCooldown=studyBeastCooldown;
     const roleId=new URLSearchParams(location.search).get('character'),rabbitDraw=scene.drawPlayer;
     await restoreCompanion(roleId);save();
     if(roleId&&!canUseCompanion(state,roleId,companionCards()))toast('🔒 點選夥伴，先解鎖小屋使用權');
@@ -202,6 +217,7 @@ $('load-retry').addEventListener('click',init);
 canvas.addEventListener('pointerdown',e=>{
   if(!scene||round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||switching||joystick.input.active)return;e.preventDefault();canvas.focus({preventScroll:true});
   const at=scene.toWorld(e.clientX,e.clientY);
+  if(scene.area==='island'){const hit=hitStudyBeast(at,scene.reduced.matches?0:performance.now()/1000,studyBeastCooldown);if(hit){approachStudyBeast(hit);return;}}
   if(scene.area==='grove'){const hit=[...(scene.encounters||[])].reverse().find(m=>m.visible&&Math.abs(at.x-m.x)<48&&at.y<m.y+12&&at.y>m.y-(m.level===2?120:100));if(hit){startBattle(hit);return;}}
   if(scene.editing){
     if(!scene.placement){const hit=[...layoutFor(state,scene.area)].sort((a,b)=>b.y-a.y).find(item=>{const f=FURNITURE.find(f=>f.id===item.id),r=furnitureVisualBounds(art,f,item);return at.x>=r.x&&at.x<=r.x+r.w&&at.y>=r.y&&at.y<=r.y+r.h;});if(hit)selectFurniture(hit.id);return;}
@@ -212,7 +228,7 @@ canvas.addEventListener('pointerdown',e=>{
 canvas.addEventListener('pointermove',e=>{if(decorPointer===e.pointerId&&scene?.editing)moveFurniture(scene.toWorld(e.clientX,e.clientY));});
 for(const event of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,()=>decorPointer=null);
 document.addEventListener('keydown',e=>{
-  if(mapZoom.active)return;
+  if(studyBattle.busy||mapZoom.active)return;
   if(wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||!scene)return;
   if(e.key==='Escape'&&scene.editing){closeDecor();return;}
   if(scene.editing||switching)return;
@@ -222,7 +238,7 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('keyup',e=>keys.delete(e.key));
 window.addEventListener('blur',()=>{keys.clear();joystick.reset();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(round?.phase==='approach')endBattle({focus:false});else stopMoving();stopAudio();}});
-$('find-monster').addEventListener('click',()=>{if(round||isInterior(scene?.area)||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||needFood())return;if(scene.area==='grove'){const m=scene.encounters.filter(m=>m.visible).sort((a,b)=>Math.hypot(a.x-scene.player.x,a.y-scene.player.y)-Math.hypot(b.x-scene.player.x,b.y-scene.player.y))[0];if(m)walkTo({x:m.x,y:m.y+40},()=>startBattle(m));else toast('🌿 小怪很快就回來');return;}walkTo({x:750,y:495},()=>{toast('蘑菇怪正在附近散步，點一下牠才會開始挑戰。');monsterButton.focus({preventScroll:true});});});
+$('find-monster').addEventListener('click',()=>{if(round||isInterior(scene?.area)||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||needFood())return;if(scene.area==='island'){const nearest=STUDY_BEASTS.filter(b=>!studyBeastCooldown.has(b.id)).sort((a,b)=>Math.hypot(a.x*3-scene.player.x,a.y*3-scene.player.y)-Math.hypot(b.x*3-scene.player.x,b.y*3-scene.player.y))[0];if(nearest)approachStudyBeast(nearest);else toast('小怪休息一下就會回來。');return;}if(scene.area==='grove'){const m=scene.encounters.filter(m=>m.visible).sort((a,b)=>Math.hypot(a.x-scene.player.x,a.y-scene.player.y)-Math.hypot(b.x-scene.player.x,b.y-scene.player.y))[0];if(m)walkTo({x:m.x,y:m.y+40},()=>startBattle(m));else toast('🌿 小怪很快就回來');return;}walkTo({x:750,y:495},()=>{toast('蘑菇怪正在附近散步，點一下牠才會開始挑戰。');monsterButton.focus({preventScroll:true});});});
 $('go-home').addEventListener('click',()=>{if((kitchen.busy||rest?.busy))return;if(round)endBattle();if(scene?.area==='grove'||scene?.area==='island'||scene?.area==='farm')switchArea('forest');else if(scene?.area==='kitchen'||scene?.area==='bedroom'||scene?.area==='bathroom')leaveKitchen();else if(scene?.area==='room')leaveRoom();else enterExit('home');});
 $('house-button').addEventListener('click',()=>enterExit('home'));
 $('room-exit').addEventListener('click',()=>scene?.area==='room'?leaveRoom():leaveKitchen());
@@ -236,7 +252,7 @@ function renderArea(){
   const indoor=isInterior(scene.area),grove=scene.area==='grove';document.body.classList.toggle('in-room',indoor);$('location-name').textContent=indoor?`${activeWalker?.role.name||'棉花兔'}的小屋`:grove?'星光林地':'暖陽村';$('location-weather').textContent=indoor?'我的家，慢慢變成喜歡的樣子':grove?'小花發著光，蘑菇怪在等你':'家門口，就有小小冒險';
   $('map-note').textContent=indoor?'點地板走走，也能布置自己的家':'☞ 點草地走走，點怪物才開戰';$('decor-open').hidden=!indoor;$('find-monster').hidden=indoor;$('go-home').textContent=indoor?'出門散步 ↗':'回家 ⌂';
   if(grove||scene.area==='farm'||scene.area==='island')$('go-home').textContent='回暖陽村 ⌂';
-  if(scene.area==='island'){$('location-name').textContent='探險島地圖';$('location-weather').textContent='自由散步，想進去時再按側邊的門';$('find-monster').hidden=true;}
+  if(scene.area==='island'){$('location-name').textContent='探險島地圖';$('location-weather').textContent='點路上的小怪挑戰，或繼續散步';$('find-monster').hidden=false;}
   if(grove)$('location-weather').textContent='👂 🧩 ♫ · 林間小怪正在等你';
   if(scene.area==='farm'){$('location-name').textContent='向日葵農場';$('location-weather').textContent='種下一點期待，帶回滿滿收穫';$('map-note').textContent='在田裡播種、澆水、採收';$('find-monster').hidden=true;canvas.setAttribute('aria-label','向日葵農場。點地面走路，在一整片田地裡分別種植不同作物。');}
   if(scene.area==='room')$('location-name').textContent='我的客廳';

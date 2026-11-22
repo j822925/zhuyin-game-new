@@ -1,3 +1,4 @@
+import {STUDY_BEASTS,beastPosition,drawStudyBeast} from './adventure-island-actors.js';
 import {GROVE_WORLD,ISLAND_WORLD,DESTINATIONS} from './adventure-exploration-model.js';
 const pending=new WeakMap();
 export async function ensureExplorationArt(art,area){let jobs=pending.get(art);if(!jobs){jobs=new Map();pending.set(art,jobs);}art.exploration??={};const keys=area==='grove'?['grove','acorn','cloud']:['island','seeds'];await Promise.all(keys.map(key=>{if(art.exploration[key])return;if(jobs.has(key))return jobs.get(key);const task=(async()=>{const image=new Image();image.src=key==='island'?'assets/exploration/island-xiyu-v2.webp':`assets/exploration/${key}-v1.webp`;await image.decode();art.exploration[key]=image;})();jobs.set(key,task);task.catch(()=>jobs.delete(key));return task;}));}
@@ -7,10 +8,18 @@ export function drawExploration(c,art,state,scene,now,battle,drawMushroom,star){
  if(!grove){const im=art.exploration.seeds,shop=DESTINATIONS.find(d=>d.id==='seeds'),h=246;c.drawImage(im,shop.x-im.width/im.height*h/2,shop.y-h,im.width/im.height*h,h);}
  const things=[],casting=scene.castAt?Math.min(1,(now-scene.castAt)/1050):0;
  things.push({y:p.y,draw:()=>scene.drawPlayer(c,art,{x:p.x,y:p.y,height:grove?116:90,outfit:state.outfit,direction:p.direction,walking:p.moving&&!scene.reduced.matches,phase:p.phase,wand:state.wand,casting})});
+ if(!grove)for(const b of STUDY_BEASTS){
+   if(scene.studyBeastCooldown?.has(b.id))continue;
+   const pos=beastPosition(b,clock);
+   things.push({y:pos.y,draw:()=>drawStudyBeast(c,b,pos.x,pos.y,clock,{scale:1.12})});
+ }
  if(grove)for(const m of scene.encounters||[]){if(!m.visible)continue;things.push({y:m.y,draw:()=>{
   const hit=m===scene.monster&&casting>.42&&casting<.83?Math.sin(casting*56)*4:0,h=m.level===2?120:100;
   if(m.art==='mushroom'){c.save();c.translate(m.x,m.y);c.scale(h/100,h/100);drawMushroom(c,art,{...m,x:0,y:0},scene.reduced.matches?0:m.phase,hit);c.restore();}
-  else{const im=art.exploration[m.art],w=im.width/im.height*h;c.fillStyle='#163a3433';c.beginPath();c.ellipse(m.x,m.y+1,26,6,0,0,Math.PI*2);c.fill();c.save();c.translate(m.x+hit,m.y);c.rotate(m.moving?Math.sin(m.phase)*.035:0);c.drawImage(im,-w/2,-h,w,h);c.restore();}
+  else{const im=art.exploration[m.art],w=im.width/im.height*h;c.fillStyle='#163a3433';c.beginPath();c.ellipse(m.x,m.y+1,26,6,0,0,Math.PI*2);c.fill();c.save();c.translate(m.x+hit,m.y);const gait=Math.sin(clock*(m.art==='cloud'?2.1:6.2)),hover=m.art==='cloud'?10+gait*5:0;
+   c.translate(0,-hover);c.scale(m.direction===3?-1:1,1);
+   c.rotate(m.moving?gait*(m.art==='cloud'?.025:.055):0);
+   c.scale(1+gait*.015,1-gait*.015);c.drawImage(im,-w/2,-h,w,h);c.restore();}
   if(m.level===2){c.fillStyle='#e9bf68';for(let i=0;i<2;i++)star(c,m.x-7+i*14,m.y-h-9,5,'#f2d47c');}
   if(battle&&m===scene.monster){c.fillStyle='#fff9ed';c.fillRect(m.x-35,m.y-h-23,70,7);c.fillStyle='#85a56f';c.fillRect(m.x-33,m.y-h-21,66*m.hp/m.maxHp,3);}
  }});}

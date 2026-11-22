@@ -281,7 +281,9 @@ export class ForestScene{
 export function drawMonster(c,art,m,phase,hit=0){
   const s=art.forest.cells[3],h=100,w=s.w/s.h*h,step=m.moving?Math.sin(phase):0;
   // Feet share one ground anchor with their contact shadows. No whole-body hover.
-  ellipse(c,m.x,m.y+1,29,6,'#33472a4d');ellipse(c,m.x,m.y,17,3,'#33472a38');
+  const shadow=c.createRadialGradient(m.x,m.y,2,m.x,m.y,31);
+  shadow.addColorStop(0,'#26392a72');shadow.addColorStop(1,'#33472a00');
+  ellipse(c,m.x,m.y+1,31,6,shadow);ellipse(c,m.x,m.y,17,3,'#33472a38');
   c.save();c.translate(m.x+hit,m.y);if(m.direction===3)c.scale(-1,1);
   for(let i=0;i<2;i++){
     const sign=i?1:-1,lift=Math.max(0,step*sign)*3,dx=step*sign*2;
