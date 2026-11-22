@@ -17,6 +17,7 @@ import {HOME_COLLECTION_ART} from './home-collection-art.js';
 import {COLLECTION_ZONE_FURNITURE} from './collection-zone-furniture.js';
 import {COLLECTION_ZONE_ART} from './collection-zone-art.js';
 import {COLLECTION_FOOD_ART} from './collection-food-art.js';
+import {LESSON_HARVEST_ART} from './lesson-harvest-art.js';
 export const HOME_STYLES=[...EXTRA_STYLES,
  {id:'daisy',name:'雛菊田園',character:'棉花兔',description:'鼠尾草綠、奶油白與小雛菊'},
  {id:'fox',name:'橡果木屋',character:'橘子狐',description:'橡果木紋、暖橘與森林青綠'},
@@ -26,6 +27,7 @@ export const HOME_ATLASES={...EXTRA_ATLASES,extraCrops:FARM_CROP_ART.extraCrops.
  ...Object.fromEntries(Object.entries(HOME_COLLECTION_ART).map(([key,v])=>[key,v.src])),
  ...Object.fromEntries(Object.entries(COLLECTION_ZONE_ART).map(([key,v])=>[key,v.src])),
  ...Object.fromEntries(Object.entries(COLLECTION_FOOD_ART).map(([key,v])=>[key,v.src])),
+ ...Object.fromEntries(Object.entries(LESSON_HARVEST_ART).map(([key,v])=>[key,v.src])),
  ...Object.fromEntries(Object.entries(HOME_COMPLETION_ART).map(([key,v])=>[key,v.src])),
  ...Object.fromEntries(Object.entries(ZONE_SHOP_ART).filter(([,v])=>v.cells).map(([key,v])=>[key,v.src])),
  ...Object.fromEntries(Object.entries(HOME_EXPANSION_ART).map(([key,v])=>[key,v.src])),

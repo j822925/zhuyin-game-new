@@ -21,7 +21,7 @@ function decorate(){
   if(b.matches('[data-decor-category]')){const category={furniture:['🪑','家具'],wallpaper:['🏡','室內風格'],clothes:['👗','服飾'],meal:['🍲','食物'],ingredients:['🥕','食材'],seeds:['🌱','種子']}[b.dataset.decorCategory];if(category){icon=category[0];b.dataset.childLabel=category[1];}}
   if(b.matches('[data-home-style]'))icon=({daisy:'🌼',fox:'🦊',moon:'🌙'})[b.dataset.homeStyle];
   if(b.matches('[id^="cook-"]'))icon='🍲';if(b.matches('[id^="eat-"],[id^="serve-"]'))icon='🥄';
-  if(b.id==='life-study')icon=/拼音/.test(b.textContent)?'🧩':/朗讀/.test(b.textContent)?'🎤':'👂';
+  if(b.id==='life-study')icon=b.dataset.lessonIcon||(/拼音/.test(b.textContent)?'🧩':/朗讀/.test(b.textContent)?'🎤':'👂');
   if(b.id==='life-fish-action')icon=/拉起/.test(b.textContent)?'🐟':/等/.test(b.textContent)?'⏳':'🎣';
   if(b.id==='tap-record')icon=['listening','hearing'].includes(b.dataset.state)?'■':['starting','processing'].includes(b.dataset.state)?'⏳':'🎤';
   if(forest&&b.matches('.topbar a.hud-button'))icon='🐰';
@@ -45,7 +45,7 @@ function mountHelp(){if(document.getElementById('picture-help'))return;const hel
  let box=document.getElementById('picture-help-dialog');if(!box){box=document.createElement('dialog');box.id='picture-help-dialog';box.innerHTML='<button class="picture-help-close" aria-label="關閉說明">✕</button><div class="picture-help-steps"></div><p></p>';box.querySelector('button').onclick=()=>{box.close();globalThis.speechSynthesis?.cancel();};document.body.append(box);}
  const area=document.getElementById('world')?.dataset.area;
  const steps=forest?(area==='farm'?'🌱 → 💧 → 👂 → 🥕 → 🧺':area==='kitchen'?'🪑 → 🍲 → ✓ → 🥄':area==='room'?'🪑　🏡　🍲':area==='island'?'🪑　👗　🌱　⛵':area==='grove'?'👂　🧩　♫ → ✦':'🏠　🌱　🎣　🌲'):'🎤 → 🗣️ → ■';
- const words=forest?(area==='farm'?'先播種，再澆水。玩種子對應的注音關卡，答對七成，回來就能收成。':area==='kitchen'?'廚房已有免費的基本料理爐。收起來的話，按椅子圖示擺回。點料理爐，選料理，再按鍋子做一份，按湯匙到客廳吃東西。':area==='room'?'背包是物品清單，能查看與擺放買好的物品。左邊小門去臥室，右邊小門去廚房。':area==='island'?'點商店走到門口。椅子是家具行，衣服是服飾店，小芽是種子店。買好的家具和衣服，回家再使用。帆船的拜訪航線正在準備。':area==='grove'?'點小怪開始挑戰。耳朵選注音，拼圖拼注音，音符選聲調。房子回村莊，地圖通往島上商店。':'點房子回家，芽苗去農場，釣竿去釣魚。'):'按麥克風。看到耳朵，再慢慢讀。讀完按方塊送出。';
+ const words=forest?(area==='farm'?'先播種，再澆水。玩種子對應的學習關卡，答對七成，回來就能收成。':area==='kitchen'?'廚房已有免費的基本料理爐。收起來的話，按椅子圖示擺回。點料理爐，選料理，再按鍋子做一份，按湯匙到客廳吃東西。':area==='room'?'背包是物品清單，能查看與擺放買好的物品。左邊小門去臥室，右邊小門去廚房。':area==='island'?'點商店走到門口。椅子是家具行，衣服是服飾店，小芽是種子店。買好的家具和衣服，回家再使用。帆船的拜訪航線正在準備。':area==='grove'?'點小怪開始挑戰。耳朵選注音，拼圖拼注音，音符選聲調。房子回村莊，地圖通往島上商店。':'點房子回家，芽苗去農場，釣竿去釣魚。'):'按麥克風。看到耳朵，再慢慢讀。讀完按方塊送出。';
  box.querySelector('.picture-help-steps').textContent=steps;box.querySelector('p').textContent=forest?'看圖示，一步一步來':'按一下・讀・再按一下';box.showModal();
  // Only installed local Chinese voices; never add paid/cloud speech requests.
  const synth=globalThis.speechSynthesis,voice=synth?.getVoices().find(v=>v.localService&&/^zh(-|_)/i.test(v.lang));if(voice){synth.cancel();const utterance=new SpeechSynthesisUtterance(words);utterance.voice=voice;utterance.lang=voice.lang;utterance.rate=.85;synth.speak(utterance);}

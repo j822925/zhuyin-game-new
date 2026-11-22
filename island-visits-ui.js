@@ -25,7 +25,10 @@ const errors={visit_closed:'島主暫時不開放參觀。',visit_not_ready:'這
 export function availableVisitGifts(state){
  // Current starter status can be newer than the server's shared gift catalog.
  // Keep complimentary furnishings and friendship keepsakes in the child's home.
- return inventoryItems(state).filter(item=>!item.starter&&!item.giftOnly&&!giftBlocked(state,catalog.find(c=>c.kind===item.kind&&c.id===item.id)));
+ return inventoryItems(state).filter(item=>{
+  const supported=catalog.find(c=>c.kind===item.kind&&c.id===item.id);
+  return !!supported&&!item.starter&&!item.giftOnly&&!giftBlocked(state,supported);
+ });
 }
 // A visitor only projects the public snapshot onto the current painted room.
 // Do not run the owner/save sanitizer here: it can grant starter furnishings or

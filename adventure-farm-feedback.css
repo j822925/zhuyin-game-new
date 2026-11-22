@@ -21,6 +21,10 @@
 @media(max-height:540px){#life-dialog.farm-panel{max-height:calc(100dvh - 100px);width:min(340px,calc(100% - 28px))}}
 
 body.picture-first #life-dialog.farm-panel #life-plant::after{content:"播種";display:inline-block;font-size:15px;margin-left:9px;vertical-align:middle}
+/* The activity name distinguishes writing, copying and arithmetic crops. */
+body.picture-first #life-dialog.farm-panel #life-study{font-size:15px!important;white-space:normal;line-height:1.5!important}
+body.picture-first #life-dialog.farm-panel #life-study::before{font-size:22px;margin-right:8px}
+body.picture-first #life-dialog.farm-panel #life-choices>button small{display:block;font-size:10px;line-height:1.45;white-space:normal}
 
 /* Fishing stays on the painted pond with one small, non-modal action strip. */
 #life-dialog.fishing-panel{position:fixed;inset:auto auto 18px 50%;transform:translateX(-50%);margin:0;width:min(330px,calc(100% - 28px));max-height:calc(100dvh - 160px);overflow-y:auto;border-radius:20px;z-index:22;box-shadow:0 6px 24px #394c3428}

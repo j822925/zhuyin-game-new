@@ -1,14 +1,16 @@
 import {COLLECTION_CROPS,COLLECTION_FISH} from './data/collection-foods.js';
+import {LESSON_CROPS} from './data/lesson-harvest-foods.js';
+import {CROP_LESSONS,isVariableFarmLesson,validFarmLessonTotal} from './data/farm-lessons.js';
+export {CROP_LESSONS} from './data/farm-lessons.js';
 import {FREE_SEEDS,SEEDS} from './adventure-exploration-model.js';
 import {STARTER_BAIT} from './adventure-bait.js';
 import {validLearningRound} from './tutor-rules.js';
 import {freshNutrition,sanitizeNutrition,spendEnergy,hasEnergy} from './adventure-food-model.js';
 // Local prototype activities use the existing home's wallet and save boundary.
 export const ACTIVITY_PRICES={pond:10,farm:10};
-export const CROP_LESSONS={single:{name:'聽音辨識',page:'index.html',questions:10},tone:{name:'聲調小劇場',page:'tone.html',questions:10},spelling:{name:'拼音工坊',page:'index.html',questions:10},reading:{name:'朗讀小舞台',page:'reading.html',questions:5}};
 export const CROP_ACCURACY=70;
 export const CROP_HARVEST_YIELD=6;
-export const CROPS={...COLLECTION_CROPS,strawberry:{name:'草莓',icon:'🍓',lesson:'single',art:0,atlas:'extraCrops'},cucumber:{name:'小黃瓜',icon:'🥒',lesson:'spelling',art:1,atlas:'extraCrops'},blueberry:{name:'藍莓',icon:'🫐',lesson:'tone',art:2,atlas:'extraCrops'},lettuce:{name:'萵苣',icon:'🥬',lesson:'reading',art:3,atlas:'extraCrops'},carrot:{name:'紅蘿蔔',icon:'🥕',lesson:'single',art:3},tomato:{name:'小番茄',icon:'🍅',lesson:'spelling',art:4},sunflower:{name:'向日葵',icon:'🌻',lesson:'spelling',art:5},corn:{name:'甜玉米',icon:'🌽',lesson:'single',art:0,atlas:'cooking'},pumpkin:{name:'南瓜',icon:'🎃',lesson:'spelling',art:1,atlas:'cooking'}};
+export const CROPS={...COLLECTION_CROPS,...LESSON_CROPS,strawberry:{name:'草莓',icon:'🍓',lesson:'single',art:0,atlas:'extraCrops'},cucumber:{name:'小黃瓜',icon:'🥒',lesson:'spelling',art:1,atlas:'extraCrops'},blueberry:{name:'藍莓',icon:'🫐',lesson:'tone',art:2,atlas:'extraCrops'},lettuce:{name:'萵苣',icon:'🥬',lesson:'reading',art:3,atlas:'extraCrops'},carrot:{name:'紅蘿蔔',icon:'🥕',lesson:'single',art:3},tomato:{name:'小番茄',icon:'🍅',lesson:'spelling',art:4},sunflower:{name:'向日葵',icon:'🌻',lesson:'spelling',art:5},corn:{name:'甜玉米',icon:'🌽',lesson:'single',art:0,atlas:'cooking'},pumpkin:{name:'南瓜',icon:'🎃',lesson:'spelling',art:1,atlas:'cooking'}};
 export const FISH={silver:{name:'圓圓鯽魚',color:'#a8c2ba',art:0,weight:25},gold:{name:'金尾魚',color:'#e6b56e',art:1,weight:17.5},star:{name:'星點魚',color:'#a4b0ce',art:2,weight:7.5},...COLLECTION_FISH};
 // Retain the original trio and split half the pond encounters among new catches.
 export function fishForRoll(n){const pool=Object.entries(FISH).filter(([id])=>id!=='star').concat([['star',FISH.star]]);let remaining=Math.max(0,Math.min(.999999,Number(n)||0))*100;for(const [id,f]of pool){remaining-=f.weight;if(remaining<0)return id;}return 'star';}
@@ -31,14 +33,19 @@ export function plotStage(plot){return !plot?'empty':!plot.watered?'seed':plot.r
 export function plantCrop(state,index,crop){if(!state.life?.farmUnlocked||!Number.isInteger(index)||index<0||index>=6||!Object.hasOwn(CROPS,crop)||state.life.plots[index])return false;if(!FREE_SEEDS.includes(crop)){if(!(state.life.seeds?.[crop]>0))return false;state.life.seeds[crop]--;}state.life.plots[index]={crop,plantId:crypto.randomUUID(),watered:false,ready:false};return true;}
 export function waterCrop(state,index){const p=state.life?.plots?.[index];if(!state.life?.farmUnlocked||!Number.isInteger(index)||!p||p.watered)return false;p.watered=true;return true;}
 // Snapshot the planted batch at the START of an existing island round.
-export function beginFarmRound(state,{owner,mode,roundId,allowClaim=false}){
+export function beginFarmRound(state,{owner,mode,roundId,total,expectedTotal=total,allowClaim=false}){
  if(!state.life?.farmUnlocked||!Object.hasOwn(CROP_LESSONS,mode)||!owner||!roundId)return null;
+ if(isVariableFarmLesson(mode)&&(!validFarmLessonTotal(mode,expectedTotal)||total!==expectedTotal))return null;
  if(state.life.learningOwner?state.life.learningOwner!==owner:!allowClaim)return null;
  const plantIds=state.life.plots.filter(p=>plotStage(p)==='growing'&&CROPS[p.crop].lesson===mode).map(p=>p.plantId);
  if(!plantIds.length)return null;state.life.learningOwner=owner;
- return {owner,mode,roundId,plantIds};
+ return {owner,mode,roundId,plantIds,...(isVariableFarmLesson(mode)?{expectedTotal}: {})};
 }
 export function farmRoundScore(result){
+ if(isVariableFarmLesson(result?.mode)){
+  if(result.kind!=='solo'||result.completed!==true||!validFarmLessonTotal(result.mode,result.total)||result.expectedTotal!==result.total||!Array.isArray(result.results)||result.results.length!==result.total||!result.results.every(r=>typeof r?.firstCorrect==='boolean'&&!r.tutorReviewOf&&!r.tutorSpacer&&!r.bonus))return null;
+  return {correct:result.results.filter(r=>r.firstCorrect).length,total:result.total};
+ }
  if(!['single','spelling','tone','reading'].includes(result?.mode)||result.kind==='race'||!Array.isArray(result.results)||result.results.length!==result.total||!result.results.every(r=>typeof r?.firstCorrect==='boolean'))return null;
  if(result.mode==='reading'?result.total!==5:!validLearningRound(result))return null;
  const base=result.results.filter(r=>!r.tutorReviewOf&&!r.tutorSpacer);
@@ -47,6 +54,7 @@ export function farmRoundScore(result){
 }
 export function settleFarmRound(state,ticket,result){
  const score=farmRoundScore(result);
+ if(isVariableFarmLesson(result?.mode)&&ticket?.expectedTotal!==result.total)return 0;
  if(!ticket||!score||state.life?.learningOwner!==ticket.owner||result.roundId!==ticket.roundId||result.mode!==ticket.mode||score.correct*100<score.total*CROP_ACCURACY||!Array.isArray(ticket.plantIds))return 0;
  let grown=0;for(const p of state.life.plots){if(plotStage(p)==='growing'&&CROPS[p.crop].lesson===ticket.mode&&ticket.plantIds.includes(p.plantId)){p.ready=true;grown++;}}return grown;
 }

@@ -22,14 +22,14 @@ test('all zone audio is verified, compact and included in optional pre-class pre
 });
 test('shipped adventure and preparation cache chains select the new build without purging existing media',()=>{
  const refs=[
-  ['index.html','game-boot.js','20261106-annual2'],['grade2.html','game-boot.js','20261102-a1'],
-  ['game-boot.js','app.js','20261102-a1'],['game-boot.js','preparation.js','20261023-zonemusic1'],
+  ['index.html','game-boot.js','20261122-farm6'],['grade2.html','game-boot.js','20261122-farm6'],
+  ['game-boot.js','app.js','20261122-farm6'],['game-boot.js','preparation.js','20261023-zonemusic1'],
   ['game-boot.js','forest-home-entry.js','20261023-zonemusic1'],['app.js','preparation.js','20261023-zonemusic1'],
   ['preparation.js','data/adventure-preload.js','20261023-zonemusic1'],['forest-home-entry.js','adventure-preview.html','20261023-zonemusic1'],
-  ['adventure-preview.html','adventure-entry.bundle.js','20261106-review1'],['adventure-entry.js','adventure-play.bundle.js','20261106-review1'],
+  ['adventure-preview.html','adventure-entry.bundle.js','20261122-farm6'],['adventure-entry.js','adventure-play.bundle.js','20261122-farm6'],
  ];
  for(const [file,target,expected]of refs)assert(read(file).includes(target+'?v='+expected),file+' -> '+target);
- assert(read('adventure-entry.bundle.js').includes('adventure-play.bundle.js?v=20261106-review1'));
+ assert(read('adventure-entry.bundle.js').includes('adventure-play.bundle.js?v=20261122-farm6'));
  const bundle=read('adventure-play.bundle.js');
  assert(bundle.includes('assets/music/zone-'));
  for(const id of Object.keys(ZONE_MUSIC_TRACKS))assert(bundle.includes('"'+id+'"'),id);

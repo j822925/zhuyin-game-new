@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {COLLECTION_CROPS,COLLECTION_FISH,COLLECTION_RECIPES,COLLECTION_SHOP_FOODS} from '../data/collection-foods.js';
+import {LESSON_CROPS,LESSON_RECIPES} from '../data/lesson-harvest-foods.js';
 import {freshState,SAVE_KEY} from '../adventure-model.js';
 import {createFarmLearningBridge} from '../farm-learning.bundle.js';
 import {createReadingFarm} from '../reading-farm.bundle.js';
@@ -17,21 +18,22 @@ const directionalLayout=[{id:'spatial-moon-corner-kitchen',x:955,y:500,facing:'r
 test('all four shipped bundles carry the complete new crop, fish and food catalogs',()=>{
  for(const file of ['adventure-entry.bundle.js','adventure-play.bundle.js','farm-learning.bundle.js','reading-farm.bundle.js']){
   const built=decode(source(file));
-  for(const catalog of [COLLECTION_CROPS,COLLECTION_FISH,COLLECTION_RECIPES,COLLECTION_SHOP_FOODS])for(const item of Object.values(catalog))assert(built.includes(item.name),file+' missing '+item.name);
+  for(const catalog of [COLLECTION_CROPS,COLLECTION_FISH,COLLECTION_RECIPES,COLLECTION_SHOP_FOODS,LESSON_CROPS,LESSON_RECIPES])for(const item of Object.values(catalog))assert(built.includes(item.name),file+' missing '+item.name);
  }
 });
 
 test('home, farm, Safari and shortcut entry chains refresh the collection reading bundle',()=>{
  // Each chain advances independently; preserve newer annual, audio and reading releases.
  const refs=[
-  ['index.html','game-boot.js','20261106-annual2'],['grade2.html','game-boot.js','20261102-a1'],
-  ['game-boot.js','app.js','20261102-a1'],['game-boot.js','reading-entry.js','20261025-homegallery1'],
+  ['index.html','game-boot.js','20261122-farm6'],['grade2.html','game-boot.js','20261122-farm6'],
+  ['game-boot.js','app.js','20261122-farm6'],['game-boot.js','reading-entry.js','20261025-homegallery1'],
   ['reading-entry.js','reading-launch.js','20261025-homegallery1'],['reading-shortcut.html','reading-launch.js','20261025-homegallery1'],
-  ['reading.html','reading-bootstrap.js','20261030-keyboard1'],['reading-bootstrap.js','reading-launch.js','20261025-homegallery1'],
-  ['reading-bootstrap.js','reading.js','20261030-keyboard1'],['reading.js','farm-learning.bundle.js','20261025-homegallery1'],
-  ['reading.js','reading-farm.bundle.js','20261025-homegallery1'],['app.js','farm-learning.bundle.js','20261025-homegallery1'],
-  ['tone.js','farm-learning.bundle.js','20261025-homegallery1'],
-  ['adventure-preview.html','adventure-entry.bundle.js','20261106-review1'],['adventure-entry.js','adventure-play.bundle.js','20261106-review1'],
+  ['reading.html','reading-bootstrap.js','20261122-farm6'],['reading-bootstrap.js','reading-launch.js','20261025-homegallery1'],
+  ['reading-bootstrap.js','reading.js','20261122-farm6'],['reading.js','farm-learning.bundle.js','20261122-farm6'],
+  ['reading.js','reading-farm.bundle.js','20261122-farm6'],['app.js','farm-learning.bundle.js','20261122-farm6'],
+  ['tone.js','farm-learning.bundle.js','20261122-farm6'],
+  ['hanzi.html','hanzi.js','20261122-farm6'],['hanzi-copy.html','hanzi-copy.js','20261122-farm6'],['arithmetic.html','arithmetic.js','20261122-farm6'],
+  ['adventure-preview.html','adventure-entry.bundle.js','20261122-farm6'],['adventure-entry.js','adventure-play.bundle.js','20261122-farm6'],
  ];
  for(const [file,name,expected]of refs){
   assert(source(file).includes(name+'?v='+expected),file+' -> '+name);

@@ -1,4 +1,5 @@
 import {showRoundOutcome} from './round-outcome.js';
+import {createFarmLessonLink,requestedFarmLesson} from './farm-lesson-link.js?v=20261122-farm6';
 import {attachCopyEntries} from './hanzi-copy-entry.js?v=20261121-week1';
 import {PRACTICE_RULE,bonusQuestion} from './hanzi-practice.js?v=20261115-hanzi2';
 import {HANZI_AUDIO} from './data/hanzi-teacher-audio.js?v=20261115-hanzi2';
@@ -30,9 +31,10 @@ let questionGeneration=0,questionLoading=false,referenceReady=false,demoPlaying=
 const templates=new Map();
 const owner=()=>JSON.stringify([currentClass,demo?'demo':fixture?'fixture':'live',(localSession||sessions.read())?.seat||'']);
 const roundStore=createRoundStore({storage:tabStorage,key:classStorageKey('zhuyin.hanzi.round.v1:'+new URL('.',location.href).pathname+':'+(demo?'demo':fixture?'fixture':'live')),getOwner:owner});
+const farm=createFarmLessonLink({family:'hanzi',demo,getSession:()=>localSession||sessions.read(),excluded:()=>!!activeTask||params.has('review')||params.has('task')});
 const opponent=createOpponent();$('opponent-slot').append(opponent);const battle=createBattle(opponent,()=>$('hero'));
 const fail=error=>{$('error').textContent=error.userMessage||messages[error.message]||'目前無法完成這個動作，請稍後再試。';console.warn('hanzi',error.message);};
-function show(name){screen=name;for(const id of ['entry','play','result'])$(id).hidden=id!==name;$('back-entry').hidden=name==='entry';$('error').textContent='';document.body.classList.toggle('is-writing',name==='play'&&questionMode()==='writing');window.scrollTo(0,0);}
+function show(name){screen=name;farm.show(name);for(const id of ['entry','play','result'])$(id).hidden=id!==name;$('back-entry').hidden=name==='entry';$('error').textContent='';document.body.classList.toggle('is-writing',name==='play'&&questionMode()==='writing');window.scrollTo(0,0);}
 function question(){return round?.questions[index];}
 function questionMode(){return question()?.mode||round?.mode||activeTask?.mode||'reading';}
 function isExam(){return activeTask?.kind==='exam';}
@@ -68,6 +70,7 @@ async function start(mode,task=null,questionIds=null){if(busy||questionLoading)r
   const signature=JSON.stringify(base);if(!pendingStart||pendingStart.signature!==signature)pendingStart={signature,requestId:crypto.randomUUID()};const payload={...base,requestId:pendingStart.requestId};
   round=await client.request(task?.kind==='exam'?'exam-start':'practice-start',payload);pendingStart=null;if(!round.questions?.length)throw Error('empty_scope');round.mode=round.run?.mode||round.mode||mode;round.roundId=round.roundId||round.run?.id;activeTask=task;index=0;answers=[];feedbacks=[];correctCount=0;wrongCount=0;submitted=false;correctionPhase='none';hintBeforeFirst=false;currentAnswer={};draftStrokes=[];submitRequestId=crypto.randomUUID();
   if(round.run?.status&&round.run.status!=='started'){renderResult(round.run);return;}
+  farm.start(round.run||{...round,id:round.roundId,kind:'practice',status:'started'});
   persist();await drawQuestion();
 }catch(e){fail(e);}finally{busy=false;if(screen==='entry')scopeCount();updateSubmit();}}
 function refreshBattle(){const max=round.questions.length;updateOpponent(opponent,MONSTERS[0],max,correctCount,{requiredLevels:[]});opponent.querySelector('.opponent-remaining').textContent='再答對 '+Math.max(0,max-correctCount)+' 題';$('hero-hp').max=max;$('hero-hp').value=Math.max(0,max-wrongCount);}
@@ -186,6 +189,7 @@ function summaryRows(rows){$('result-answers').replaceChildren();rows.forEach(r=
 function renderResult(run){
   const rows=resultRows(run),result=run.result;round=null;show('result');const base=rows.filter(row=>!row.question.id?.includes('.bonus.'));if(!result.pending)showRoundOutcome($('result'),base.filter(row=>row.correct===true).length,base.length,run.id,hero.id,opponent.dataset.monster);$('reward-status').textContent=result.stars?'⭐ '+(result.correct===result.total?'全對！':'')+(demo?'試玩':'')+'獲得 '+result.stars+' 顆星'+(result.dailyReward?.capped?'（今天已達 150 星）':''):result.dailyReward?.capped?'今天已達 150 星，這回合仍有保存成績。':'';$('result-score').textContent=result.pending?'還有 '+result.pending+' 題未完成判定':result.correct+' / '+result.total+' 題答對';$('result-detail').textContent=result.corrected?'已完成 '+result.corrected+' 題訂正，成績保留第一次作答。':result.pending?'部分舊紀錄尚未完成判定。':'';$('save-status').textContent=demo?'試玩紀錄已留在這個分頁；不會送到正式班級。':'紀錄已儲存，老師可以在後台查看。';summaryRows(rows);$('again').disabled=false;$('again').textContent=params.get('from')==='daily'?'↩ 返回每日任務':params.get('from')==='notebook'?'↩ 返回錯題本':params.get('from')==='exams'?'↩ 返回老師小考':'↶ 返回營地';$('retry-save').hidden=true;$('card-reward').replaceChildren();
   if(run.kind==='exam'&&run.snapshot.rewardCardIds?.length){const box=$('card-reward');if(result.perfect){const button=node('button','✦ 領取小考卡片','primary');button.onclick=async()=>{button.disabled=true;try{const reward=await client.request('card-draw',{runId:run.id,requestId:'hanzi-card-'+run.id});box.replaceChildren();if(reward.complete){box.append(node('p','這份小考的卡片已經收齊了！'));return;}const card=PROFILE_CHARACTERS.find(c=>c.id===reward.character);if(card){const image=document.createElement('img');image.src=card.image;image.alt=card.name;box.append(image,node('p',card.name+' 已加入收藏，可以回首頁選為角色！'));}else box.append(node('p','卡片已加入收藏！'));}catch(e){fail(e);button.disabled=false;}};box.append(node('p','這次小考全對，獲得領卡資格！'),button);}else box.append(node('p','小考全對、沒有使用提示，就能領取老師設定的卡片。'));}
+  farm.complete(run);
 }
 async function finish(){stopCorrectionAudio();show('result');$('reward-status').textContent='';$('result-score').textContent='正在整理探險筆記…';$('result-detail').textContent='';$('save-status').textContent='正在儲存這一回合…';$('retry-save').hidden=true;$('again').disabled=true;busy=true;persist();try{
   const out=await client.request(isExam()?'exam-submit':'practice-submit',{roundId:round.roundId,attemptId:round.attemptId||round.roundId,...(isExam()?{examId:activeTask.id}:{}),requestId:submitRequestId,answers:compactAnswers(answers)});
@@ -201,11 +205,13 @@ async function launchFromPlaza(){
  if(taskId){const [a,e]=await Promise.all([client.request('assignments'),client.request('exams')]);const tasks=[...(a.assignments||[]).map(t=>({...t,kind:'assignment'})),...(e.exams||[]).map(t=>({...t,kind:'exam'}))],task=tasks.find(t=>t.id===taskId);if(!task)throw Error('exam_closed');await start(task.mode,task);}
  else if(params.get('from')==='daily'&&['reading','writing'].includes(params.get('mode'))){await start(params.get('mode'));}
  else if(review){const out=await client.request('notebook'),item=out.items.find(r=>r.questionId===review&&r.mode===params.get('mode'));if(!item)throw Error('review_unavailable');const q=item.question;await start(item.mode,{kind:'notebook',lessonIds:[q.lessonId],termId:q.termId,count:1},[q.id]);}
+ else {const farmMode=requestedFarmLesson('hanzi',params.get('farmLesson'));if(farmMode)await start(farmMode);}
 }
 window.addEventListener('pagehide',()=>{persist();stopCorrectionAudio();ink?.cancelDemo();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){stopCorrectionAudio();ink?.cancelDemo();persist();}});
 
 async function boot(){
+  farm.mount();
   $('home-link').href=classUrl('./'+(demo?'?demo=1':''));$('preview-note').hidden=!(demo||fixture);if(fixture)$('preview-note').textContent='教師本機測試 · 使用虛構學生與獨立測試紀錄';
   if(fixture){const response=await fetch('/hanzi-fixture/session',{cache:'no-store'});if(!response.ok)throw Error('authentication_required');localSession=await response.json();}
   if(demo){const response=await fetch('data/hanzi-curriculum.json?v=20261115-1');if(!response.ok)throw Error('invalid_response');bank=await response.json();const valid=validateBank(bank);if(!valid.valid)throw Error('invalid_bank');client=createHanziDemo({bank,storage:tabStorage,key:classStorageKey('zhuyin.hanzi.demo.v1:'+new URL('.',location.href).pathname),gradeWriting:gradeInk});}

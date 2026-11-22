@@ -1,4 +1,4 @@
-import {CROPS,FISH} from './adventure-life-model.js';
+import {CROPS,FISH,CROP_LESSONS} from './adventure-life-model.js';
 import {BAITS} from './adventure-bait.js';
 import {zoneShop,getShopRoomArt} from './adventure-zone-shop-data.js';
 import {completeAction} from './adventure-action-feedback.js';
@@ -85,6 +85,7 @@ export function createShop(api){
    const icon=item.kind==='seeds'?'🌱':item.icon||'🐟';
    b.innerHTML=`<div class="trade-picture">${item.kind==='bait'?'<span class="trade-icon">'+(item.icon||icon)+'</span>':'<canvas width="200" height="170" aria-hidden="true"></canvas>'}<b class="trade-count">${inventory?'× '+count:'持有 '+count}</b></div><span class="trade-name">${item.name}${item.kind==='seeds'?'種子':''}</span><small>${inventory?(item.sellReason||'賣出 ✦ '+item.sellPrice):'✦ '+item.price}</small>${selected?'<em>籃內 '+selected+'</em>':''}`;
    if(!inventory&&roleLocked)b.querySelector('small').textContent='🔒 先解鎖'+({fox:'橘子狐',bear:'蜂蜜熊',rabbit:'棉花兔'}[item.character]||'夥伴');
+   if(item.kind==='seeds'){const lesson=CROP_LESSONS[CROPS[item.id]?.lesson];if(lesson){const note=document.createElement('small');note.className='seed-lesson';note.textContent=lesson.name;b.querySelector('.trade-name').after(note);}}
    b.title=item.name+' · 持有 '+count+(inventory?' · '+(item.sellReason||'賣出單價 '+item.sellPrice):' · 單價 '+item.price);grid.append(b);observer.observe(b);
   });
   return observer;

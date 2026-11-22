@@ -1,5 +1,5 @@
 import {createQuestionReport} from './question-report.js?v=20261011-reports2';
-import {createReadingFarm,renderReadingFarm} from './reading-farm.bundle.js?v=20261025-homegallery1';
+import {createReadingFarm,renderReadingFarm} from './reading-farm.bundle.js?v=20261122-farm6';
 import {createReadingBattle} from './reading-battle.js?v=20261119-stars';
 import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261011-battle1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20261024-retire1';
@@ -256,4 +256,4 @@ window.addEventListener('pageshow',()=>{if(!$('play').hidden&&!locked&&!micBusy&
  $('retry-save').onclick=flushPending;
 mountDictationTrial({trigger:$('dictation-trial'),beforeOpen:cancel});
 mountFarmReturn();load();
-import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn} from './farm-learning.bundle.js?v=20261025-homegallery1';
+import {beginIslandFarmRound,completeIslandFarmRound,mountFarmReturn} from './farm-learning.bundle.js?v=20261122-farm6';
