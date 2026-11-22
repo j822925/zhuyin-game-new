@@ -33,7 +33,7 @@ function read(key){try{return JSON.parse(storage?.getItem(key)||'null');}catch{r
 function write(key,data){try{storage?.setItem(key,JSON.stringify(data));}catch{}}
 async function request(op,data={}){
  if(demo){
-   const {weeklySet,scoreRound}=await import('./weekly-hanzi-core.js'),set=weeklySet();
+   const {weeklySet,scoreRound}=await import('./weekly-hanzi-core.js?v=20261122-textbook'),set=weeklySet();
    if(op==='weekly-set')return set;
    const k=saveKey+':preview:'+data.weekId,receipts=read(k)||{};
    if(receipts[data.roundId])return receipts[data.roundId];
