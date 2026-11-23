@@ -11,6 +11,17 @@ if(host){
     const rect=pad.getBoundingClientRect(), bound=controls.getBoundingClientRect();
     const viewport=window.visualViewport;
     const height=viewport?viewport.height:document.documentElement.clientHeight;
+    if(host.id==='handwriting' && matchMedia('(orientation: landscape) and (max-height: 540px)').matches){
+      // The controls are in the other column. Measure from the top of the square,
+      // independent of its old size or the height of the fighters and feedback.
+      const shellStyle=getComputedStyle(host.closest('.page-shell'));
+      const status=screen.querySelector('#ink-status');
+      const statusHeight=status.offsetHeight+(status.offsetHeight?parseFloat(getComputedStyle(status).marginTop):0);
+      const room=height+(viewport?.offsetTop||0)-rect.top-window.scrollY-statusHeight-parseFloat(shellStyle.paddingBottom)-8;
+      const side=Math.max(150,Math.floor(Math.min(host.parentElement.clientWidth,room)));
+      if(side!==parseInt(screen.style.getPropertyValue('--ink-side'),10))screen.style.setProperty('--ink-side',side+'px');
+      return;
+    }
     // In landscape the classroom controls sit beside the square, not below it.
     const bottom=isLesson&&matchMedia('(orientation:landscape)').matches?rect.bottom:Math.max(rect.bottom,bound.bottom);
     const shell=host.closest('.copy-shell, .page-shell');

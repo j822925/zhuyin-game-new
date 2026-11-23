@@ -54,3 +54,37 @@
   .copy-shell #practice > :is(.prompt,.feedback,.actions) {grid-column:2;max-width:100%}
   .copy-shell #practice .actions {display:grid;align-self:start;gap:8px}
 }
+
+/* On short landscape screens, keep the prompt and buttons beside the writing surface. */
+@media (orientation: landscape) and (max-height: 540px) {
+  .is-writing .page-shell {
+    position: relative;
+    padding: 0 max(6px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+  }
+  .is-writing .masthead { height: 44px; }
+  .is-writing .back-link { min-height: 44px; font-size: 14px; padding: 2px 5px; }
+  .is-writing .play-heading {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    height: 44px; margin: 0; gap: 6px; white-space: nowrap;
+  }
+  .is-writing .play-heading h1 { font-size: clamp(16px, 2.7vw, 22px); margin: 0; }
+  .is-writing .progress-badge { font-size: 14px; padding: 3px 7px; }
+  .is-writing .play-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 8fr) minmax(0, 1fr); gap: 3px; }
+  .is-writing .question-panel {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    grid-template-rows: auto auto auto; align-items: center; gap: 3px 7px; padding: 5px;
+  }
+  .is-writing #word, .is-writing #feedback, .is-writing .answer-actions { grid-column: 1; }
+  .is-writing #word { grid-row: 1; margin: 0; min-height: 0; gap: 3px; }
+  .is-writing #feedback { grid-row: 2; margin: 0; min-height: 0; }
+  .is-writing .answer-actions { grid-row: 3; gap: 4px; min-height: 0; }
+  .is-writing .answer-actions button { min-height: 44px; }
+  .is-writing .answer-actions .primary { min-width: 88px; }
+  .is-writing .word-char { font-size: 36px; }
+  .is-writing .target-pronunciation { min-width: 44px; min-height: 56px; }
+  .is-writing .target-pronunciation .zhuyin-stack { font-size: 18px; }
+  .is-writing #writing-input { grid-column: 2; grid-row: 1 / 4; align-self: start; min-width: 0; }
+  .is-writing #handwriting { width: min(100%, var(--ink-side, 225px)); }
+  .is-writing :is(#hero, #hero > .character-motion, .opponent-art) { height: clamp(54px, 15vw, 110px) !important; }
+  .is-writing :is(.fighter-name, .fighter .opponent-caption) { font-size: 12px !important; min-height: 0; }
+}
