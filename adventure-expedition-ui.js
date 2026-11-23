@@ -16,6 +16,9 @@ import {encounterDeck} from './adventure-encounters.js';
 import {spellingChoices,spellingParts} from './core.js';
 import {audioSource} from './audio-source.js?v=20261102-a1';
 import {RAW_FOOD,RECIPES} from './adventure-food-model.js';
+import {CROPS} from './adventure-life-model.js';
+import {lifeStamp} from './adventure-life-art.js';
+import {ensureHomeArt} from './adventure-home-art.js';
 export function createExpedition(api){
  const dialog=document.createElement('dialog');dialog.id='expedition';dialog.setAttribute('aria-label','區域遠征');document.body.append(dialog);
  let z=null,view='field',message='',generation=0,loading=false,questionFailed=false,audio=null,raf=0,position={x:50,y:77},target=null,last=0;
@@ -91,9 +94,57 @@ export function createExpedition(api){
  }
  function portrait(src,name,cls=''){const img=document.createElement('img');img.src=src;img.alt=name;img.className=cls;img.onerror=()=>{message='圖片暫時載入失敗，可離開後再進入。';};return img;}
  function supplyHint(panel,boss=false){const text=expeditionSupplyHint(state(),z,{boss});if(!text)return;const hint=document.createElement('small');hint.className='exp-supply-hint';hint.textContent=text;panel.append(hint);}
+ function foodPicture(item,cooked){
+  const art=api.art(),key=item.atlas||(cooked?'cooking':'life');
+  const picture=document.createElement('span');
+  picture.className='exp-food-picture';
+  picture.setAttribute('aria-hidden','true');
+  picture.textContent=item.icon||(cooked?'🍲':'🌱');
+  function paint(){
+   const atlas=art[key],cell=atlas?.cells?.[item.art];
+   if(!cell)return;
+   const canvas=document.createElement('canvas');
+   canvas.width=144;canvas.height=108;
+   const height=Math.min(104,140*cell.h/cell.w);
+   lifeStamp(canvas.getContext('2d'),atlas,item.art,72,(108+height)/2,height,140);
+   picture.replaceChildren(canvas);
+  }
+  if(art[key])paint();
+  else if(item.atlas)void ensureHomeArt(art,[key]).then(()=>{if(picture.isConnected)paint();}).catch(()=>{});
+  return picture;
+ }
+ function showFood(panel,battle){
+  const back=()=>{view=battle?'battle':'field';render();};
+  panel.innerHTML='<header class="exp-food-head"><h2>🎒 遠征食物</h2></header><small>料理補一半生命；原食材補一成。戰鬥中吃東西會用掉攻擊回合。</small>';
+  panel.firstElementChild.append(button('↩ 返回',back));
+  supplyHint(panel);
+  const notice=document.createElement('p'),grid=document.createElement('div');
+  notice.textContent=saveFailed?message:'';
+  grid.className='exp-food-grid';
+  panel.append(notice,grid);
+  for(const cooked of [false,true]){
+   const inventory=cooked?state().life.nutrition.meals:state().life.harvest;
+   for(const [id,food] of Object.entries(cooked?RECIPES:RAW_FOOD)){
+    const count=inventory[id];
+    if(!count)continue;
+    const card=button('',()=>{
+     if(transaction(()=>expeditionFood(state(),id,cooked))){
+      message='🍽️ 補充好了';back();completeAction('eat',{host:dialog,anchor:'.exp-player'});
+     }else if(saveFailed)render();
+     else notice.textContent=battle&&battle.phase!=='attack'?'🛡 防禦後才能吃東西':'已經補滿了';
+    },'exp-food-card');
+    const name=document.createElement('span'),quantity=document.createElement('small');
+    name.textContent=food.name;quantity.textContent='×'+count;
+    card.setAttribute('aria-label',food.name+'，剩下 '+count+' 份');
+    card.append(foodPicture(cooked?food:CROPS[id],cooked),name,quantity);
+    grid.append(card);
+   }
+  }
+  if(!grid.childElementCount)notice.textContent=saveFailed?message:'背包裡還沒有食物。';
+ }
  function render(){
   if(!dialog.open||!z)return;if(saveFailed)message='💾 暫時無法儲存，這次操作未生效。請再試一次。';shell();const panel=dialog.querySelector('.exp-panel'),r=run(),e=exp();if(!r)return;const b=r.battle;
-  if(view==='food'){panel.innerHTML='<h2>🎒 遠征食物</h2><small>料理補一半生命；原食材補一成。戰鬥中吃東西會用掉攻擊回合。</small>';supplyHint(panel);if(saveFailed){const hint=document.createElement('p');hint.textContent=message;panel.append(hint);}for(const cooked of [false,true])for(const [id,f] of Object.entries(cooked?RECIPES:RAW_FOOD)){const n=(cooked?state().life.nutrition.meals:state().life.harvest)[id]||0;if(!n)continue;panel.append(button(`${cooked?'🍲':'🥕'} ${f.name} ×${n}`,()=>{if(transaction(()=>expeditionFood(state(),id,cooked))){message='🍽️ 補充好了';view=b?'battle':'field';render();completeAction('eat',{host:dialog,anchor:'.exp-player'});}else{if(saveFailed){render();return;}message=b&&b.phase!=='attack'?'🛡 防禦後才能吃東西':'已經補滿了';const hint=document.createElement('p');hint.textContent=message;panel.append(hint);}}));}panel.append(button('↩',()=>{view=b?'battle':'field';render();}));return;}
+  if(view==='food'){showFood(panel,b);return;}
   if(b){view='battle';dialog.dataset.view='battle';const enemy=currentEnemy(state()),area=dialog.querySelector('.exp-field');if(!local){const hero=dialog.querySelector('.exp-player'),foe=portrait(enemy.art,enemy.name,'exp-foe');area.append(foe,hero);api.scene().drawPlayer(hero.getContext('2d'),api.art(),{x:90,y:192,height:166,outfit:state().outfit,wand:state().wand,direction:1,walking:false,phase:0});motion=mountSparring({hero,foe,characterId:state().companions.active,zone:z,beast:b.transformed,boss:enemy.boss});requestAnimationFrame(fitBattle);}panel.innerHTML=`${local?'<small>Lv.'+e.level+'　♥ '+e.hp+'/'+playerStats(e.level).hp+'　EXP '+e.xp+'/'+nextXP(e.level)+'</small>':''}<strong>${enemy.boss?'👑 ':''}${enemy.name} · Lv.${enemy.level}</strong><label>♥ ${b.hp}/${enemy.hp}<progress max="${enemy.hp}" value="${b.hp}"></progress></label><p>${message}</p>`;supplyHint(panel);
    if(b.phase==='transform'){area.classList.add('exp-transform');panel.append(button('🔊',()=>speak(z.transform)),Object.assign(document.createElement('p'),{className:'guardian-speech',textContent:z.transform}),button('🛡 準備好了',()=>{if(transaction(()=>acknowledgeTransform(state())))message='獸形：攻擊提升、防禦降低';render();}));panel.querySelector('.guardian-speech')?.setAttribute('data-forest-dialogue','');fitBattle();return;}
    panel.insertAdjacentHTML('beforeend',`<h2>${b.phase==='attack'?'⚔ 我方攻擊':'🛡 守住這一回合'}</h2>`);

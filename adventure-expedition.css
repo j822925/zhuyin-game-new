@@ -48,3 +48,14 @@
 @media(max-width:700px){#expedition .exp-shop-entry{max-width:160px;font-size:14px;padding:10px}}
 
 #expedition .exp-world .exp-return{right:auto;bottom:auto;transform:translate(-50%,-50%);padding:7px 13px;background:#fff5dccc;border:2px solid #b99c62;box-shadow:0 3px 0 #a98d6044;z-index:100}#expedition .exp-shop-entry{width:clamp(120px,13vw,200px);padding:0;border:0;background:none;box-shadow:none;display:flex;flex-direction:column;align-items:center}#expedition .exp-shop-entry img{width:100%;height:145px;object-fit:contain;filter:drop-shadow(0 5px 3px #49332433)}#expedition .exp-shop-entry small{font-size:12px;background:#fff8e5e6;border-radius:12px;padding:4px 8px;white-space:nowrap}#expedition .exp-shop-entry:not(:disabled):active,#expedition .exp-mob:not(:disabled):active{transform:translate(-50%,-100%)}#expedition .exp-world .exp-return:not(:disabled):active{transform:translate(-50%,-50%)}#expedition[data-view=field] .exp-panel p:empty{display:none}
+
+#expedition[data-view="food"] .exp-panel{display:flex;flex-direction:column;max-height:64%;overflow:hidden}
+.exp-food-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.exp-food-head h2{font-size:1.2rem}
+#expedition .exp-food-head button{margin:0;padding:5px 12px}
+.exp-food-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,96px),1fr));gap:7px;overflow-y:auto;overscroll-behavior:contain;padding:4px}
+.exp-food-grid:empty,.exp-food-head~p:empty{display:none}
+#expedition .exp-food-card{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:start;gap:3px;min-width:0;margin:0;padding:6px;font-size:15px;line-height:1.25}
+.exp-food-picture{display:grid;place-items:center;width:100%;height:64px;font-size:34px}
+.exp-food-picture canvas{width:100%;height:100%;object-fit:contain}
+.exp-food-card small{font-variant-numeric:tabular-nums}
