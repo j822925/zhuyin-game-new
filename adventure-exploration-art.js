@@ -8,6 +8,7 @@ export function drawExploration(c,art,state,scene,now,battle,drawMushroom,star){
  if(!grove){const im=art.exploration.seeds,shop=DESTINATIONS.find(d=>d.id==='seeds'),h=246;c.drawImage(im,shop.x-im.width/im.height*h/2,shop.y-h,im.width/im.height*h,h);}
  const things=[],casting=scene.castAt?Math.min(1,(now-scene.castAt)/1050):0;
  things.push({y:p.y,draw:()=>scene.drawPlayer(c,art,{x:p.x,y:p.y,height:grove?116:90,outfit:state.outfit,direction:p.direction,walking:p.moving&&!scene.reduced.matches,phase:p.phase,wand:state.wand,casting})});
+ if(!grove)scene.chapterPost?.draw(c,art,scene,things,clock);
  if(!grove)for(const b of STUDY_BEASTS){
    if(scene.studyBeastCooldown?.has(b.id))continue;
    const pos=beastPosition(b,clock);

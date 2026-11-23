@@ -28,7 +28,7 @@ function kitchenState(right=false){
 }
 
 test('real runtime selector loads only stable for every non-target account, with no candidate CSS or DOM',async()=>{
- const identities=[...Array.from({length:20},(_,index)=>({classId:'main',seat:String(115001+index)})).filter(s=>s.seat!=='115015'),{classId:'grade2',seat:'115015'},null];
+ const identities=[...Array.from({length:20},(_,index)=>({classId:'main',seat:String(990001+index)})).filter(s=>s.seat!=='990015'),{classId:'grade2',seat:'990015'},null];
  for(const student of identities){
   const {doc,nodes}=documentFixture(),storage=memory();let stable=0,candidate=0,reloads=0;
   const result=await startAdventureRelease({student,policy,cryptoImpl:webcrypto,storage,documentImpl:doc,loadStable:async()=>{stable++;},loadCandidate:async()=>{candidate++;},reload:()=>{reloads++;}});
@@ -37,9 +37,9 @@ test('real runtime selector loads only stable for every non-target account, with
 });
 
 test('teacher return flushes a real local save operation once and then runtime selects stable',async()=>{
- const original=kitchenState(),storage=memory(),selectorStorage=memory(),calls=[];let remote={enabled:true,state:structuredClone(original),stars:321,revision:7};
- const store=await openForestSync({key:forestSaveKey('main','115015'),storage,fresh:freshState,send:async data=>{calls.push(structuredClone(data));if(data.kind==='forest-load')return structuredClone(remote);assert.equal(data.kind,'forest-save');assert.equal(data.delta,0);remote={...remote,state:structuredClone(data.state),revision:8};return {stars:321,revision:8};}});
- store.classId='main';store.seat='115015';const {doc,nodes}=documentFixture();let loads=0,reloads=0,stable=0;
+ const original=kitchenState(),storage=memory(),selectorStorage=memory(),calls=[];let remote={enabled:true,state:{...structuredClone(original),chapterAccess:release.id+':journey'},stars:321,revision:7};
+ const store=await openForestSync({key:forestSaveKey('main','990015'),storage,fresh:freshState,send:async data=>{calls.push(structuredClone(data));if(data.kind==='forest-load')return structuredClone(remote);assert.equal(data.kind,'forest-save');assert.equal(data.delta,0);remote={...remote,state:structuredClone(data.state),revision:8};return {stars:321,revision:8};}});
+ store.classId='main';store.seat='990015';const {doc,nodes}=documentFixture();let loads=0,reloads=0,stable=0;
  assert.equal(await startAdventureRelease({student:store,policy,cryptoImpl:webcrypto,storage:selectorStorage,documentImpl:doc,loadStable:()=>{stable++;},loadCandidate:async()=>{loads++;},reload:()=>{reloads++;}}),'candidate');
  assert.equal(loads,1);assert.equal(calls.length,1,'selector has made no extra server requests');
  const changed=kitchenState(true);assert(store.save(encodeHomeSurfaceState(changed,FURNITURE)));
@@ -63,10 +63,10 @@ test('published stable farm bundle retains candidate left/right kitchen attachme
 });
 
 test('returning to stable from the first candidate does not opt the teacher out of the second candidate',async()=>{
- const storage=memory(),student={classId:'main',seat:'115015',flush:async()=>true};let stable=0,reloads=0;
+ const storage=memory(),student={classId:'main',seat:'990015',flush:async()=>true};let stable=0,reloads=0;
  for(const id of [PREVIOUS_CANDIDATE_ID,CANDIDATE_ID]){
   const selectedPolicy={...ADVENTURE_RELEASE_POLICY,candidate:candidateDescriptor(id)},fixture=documentFixture(),loaded=[];
-  const args={student,policy:selectedPolicy,cryptoImpl:webcrypto,storage,documentImpl:fixture.doc,loadStable:()=>{stable++;},loadCandidate:async url=>loaded.push(url),reload:()=>{reloads++;}};
+  const args={student:{...student,trialGrant:id+':journey'},policy:selectedPolicy,cryptoImpl:webcrypto,storage,documentImpl:fixture.doc,loadStable:()=>{stable++;},loadCandidate:async url=>loaded.push(url),reload:()=>{reloads++;}};
   assert.equal(await startAdventureRelease(args),'candidate');assert.deepEqual(loaded,[candidateDescriptor(id).bundle]);
   const banner=fixture.nodes.find(node=>node.id==='adventure-test-release');await banner.children[1].onclick();
   assert.equal(await startAdventureRelease({...args,documentImpl:documentFixture().doc,loadCandidate:()=>assert.fail('returned version loaded')}),'stable');

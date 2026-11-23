@@ -142,6 +142,15 @@ export function createExpedition(api){
   if(!approved&&exp().level+2<z.level){dialog.showModal();dialog.innerHTML=`<section class="exp-warning"><h2>${z.icon} ${z.name}</h2><p>建議 Lv.${z.level}～${z.maxLevel}，你目前 Lv.${exp().level}。</p><p>這裡的敵人很強，記得帶料理。</p></section>`;const box=dialog.querySelector('section');box.append(button('⚔ 仍要前往',chooseVisit),button('↩',close));}else chooseVisit();
  }
  function chooseVisit(){
+  const offer=api.chapter?.audience(z.id);
+  if(offer){if(!dialog.open)dialog.showModal();dialog.dataset.view='resume';
+    dialog.replaceChildren();const box=document.createElement('section');box.className='exp-warning';dialog.append(box);
+    const title=document.createElement('h2');title.textContent=z.name;box.append(title);
+    box.append(button('💬 '+offer,()=>{const id=z.id;close();api.chapter.visit(id);}),button('前往原野',continueVisit),button('↩ 回地圖',close));return;
+  }
+  continueVisit();
+ }
+ function continueVisit(){
   const r=run();if(r&&!r.complete&&(r.battle||!r.visitClosed&&r.monsters.some(m=>m.done))){
    if(!dialog.open)dialog.showModal();dialog.dataset.view='resume';dialog.innerHTML=`<section class="exp-warning"><h2>💾 上次的探險</h2><p>已完成 ${r.monsters.filter(m=>m.done).length}／${r.monsters.length} 隻小怪</p>${r.battle?'<p>繼續挑戰不會重扣體力；重新探險會放棄這場進度。</p>':''}</section>`;
    const box=dialog.querySelector('section');box.append(button('▶ 繼續上次',()=>enter()),button('🌱 重新探險・三隻小怪',()=>enter(true)),button('↩',close));return;

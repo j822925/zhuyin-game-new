@@ -9,17 +9,18 @@ export async function selectAdventureRelease({student,policy,cryptoImpl=globalTh
   if(!student||typeof student.classId!=='string'||typeof student.seat!=='string'||!/^\d{6}$/.test(student.seat)||!safeId(candidate?.id))return null;
   const base='./adventure-candidate-'+candidate.id;
   if(candidate.bundle!==base+'.bundle.js'||!Array.isArray(candidate.styles)||candidate.styles.some(value=>typeof value!=='string'||!new RegExp('^\\./adventure-candidate-'+candidate.id+'(?:-[a-z0-9-]+)?\\.css$').test(value)))return null;
-  if(!Array.isArray(policy.audience)||!cryptoImpl?.subtle||!storage?.getItem||!storage?.setItem)return null;
+  const direct=student.trialGrant===candidate.id+':direct';
+  if(!direct&&student.trialGrant!==candidate.id+':journey')return null;
+  if(!cryptoImpl?.subtle||!storage?.getItem||!storage?.setItem)return null;
   try{
     const bytes=new TextEncoder().encode(student.classId+':'+student.seat);
     const digest=await cryptoImpl.subtle.digest('SHA-256',bytes);
     const identity=Array.from(new Uint8Array(digest),v=>v.toString(16).padStart(2,'0')).join('');
-    if(!policy.audience.includes(identity))return null;
     const returnKey=RETURN_PREFIX+identity+':'+candidate.id;
     if(storage?.getItem(returnKey)==='1')return null;
     // Verify that recovery can be remembered before entering an experimental build.
     storage.setItem(returnKey,'0');if(storage.getItem(returnKey)!=='0')return null;
-    return Object.freeze({id:candidate.id,bundle:candidate.bundle,styles:Object.freeze([...candidate.styles]),returnKey});
+    return Object.freeze({id:candidate.id,bundle:candidate.bundle,styles:Object.freeze([...candidate.styles]),chapterShortcut:candidate.id==='baisha-v1'&&direct,returnKey});
   }catch{return null;}
 }
 
@@ -45,6 +46,7 @@ export async function startAdventureRelease({student,policy,loadStable,loadCandi
   doc.documentElement.dataset.adventureRelease=release.id;
   try{
     await Promise.all(release.styles.map(href=>loadStyle(href,doc)));
+    student.chapterShortcut=release.chapterShortcut;
     await loadCandidate(release.bundle);
   }catch(error){
     // A failed module may already have installed handlers. Never initialize a
@@ -66,5 +68,7 @@ export async function startAdventureRelease({student,policy,loadStable,loadCandi
       reload();
     }catch{button.disabled=false;label.textContent='請先完成保存';}
   };
-  panel.append(label,button);doc.body.append(panel);return 'candidate';
+  panel.append(label);
+  if(release.chapterShortcut){const start=doc.createElement('button');start.type='button';start.textContent='找星翼女帝';start.style.cssText=button.style.cssText;start.onclick=()=>doc.dispatchEvent(new Event('baisha-shortcut'));panel.append(start);}
+  panel.append(button);doc.body.append(panel);return 'candidate';
 }

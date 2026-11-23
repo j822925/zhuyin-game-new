@@ -85,6 +85,7 @@ export function freshState(){return {version:1,homeRest:freshRest(),bathroomLayo
 export function sanitizeState(raw){
   const s=freshState();if(!raw||raw.version!==1)return s;
   raw=decodeHomeSurfaceState(raw,FURNITURE);
+  if(raw.chapter?.version===1)s.chapter=structuredClone(raw.chapter);
   s.homeRest=sanitizeRest(raw.homeRest);s.expedition=sanitizeExpedition(raw.expedition);s.companions=sanitizeCompanions(raw.companions);s.world=sanitizeWorld(raw.world);
   s.stars=Number.isInteger(raw.stars)&&raw.stars>=0?raw.stars:12;
   if(raw.localTesterGrant===LOCAL_TESTER_GRANT)s.localTesterGrant=LOCAL_TESTER_GRANT;

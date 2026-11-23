@@ -45,7 +45,7 @@ export function settleStudy(state,id,save){
   if(save())return true;
   state.stars=old.stars;state.wins=old.wins;state.settled=old.settled;state.life.nutrition.energy=old.energy;return false;
 }
-function studentAccess(){
+export function studentAccess(){
   const forest=globalThis.ForestStudent;
   if(!forest?.seat||!forest.classId)throw Error('請先回學習廣場登入，再來挑戰。');
   const suffix=forest.classId==='main'?'':':class:'+forest.classId;

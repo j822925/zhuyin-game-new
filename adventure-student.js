@@ -38,7 +38,7 @@ export async function connectForestStudent({classId='main',blocked}={}){
  // A confirmed gift survives an interrupted response. Resolve it before reading a save.
  const recovery=localStorage.getItem(giftKey);
  if(recovery){try{await sendVisit(JSON.parse(recovery));localStorage.removeItem(saveKey);}catch(e){if(!giftRejected(e))throw e;}localStorage.removeItem(giftKey);}
- try{store=await openForestSync({key:saveKey,storage:localStorage,fresh:freshState,onStatus:status,onBalance:stars=>window.dispatchEvent(new CustomEvent('forest-wallet',{detail:{stars}})),send:async data=>{
+ try{store=await openForestSync({key:saveKey,storage:localStorage,fresh:freshState,onStatus:status,onRebased:()=>location.reload(),onBalance:stars=>window.dispatchEvent(new CustomEvent('forest-wallet',{detail:{stars}})),send:async data=>{
   const current=auth.read();if(current?.seat!==session.seat)throw Error('authentication_required');return api.post({...data,seat:session.seat,token:current.token});
  }});}catch(e){if(['forest_conflict','insufficient_stars','authentication_required'].includes(e.message)){status('error',e.message);return null;}throw e;}
  store.seat=session.seat;store.classId=classId;

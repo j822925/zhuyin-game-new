@@ -15,6 +15,9 @@ import {ensureRoomShell,roomShell,roomShellDoorGeometry} from './home-room-shell
 import {createActionFeedback,completeAction} from './adventure-action-feedback.js';
 import {installReadingAid} from './adventure-reading-aid.js';
 import {createHomeRest} from './adventure-rest-ui.js';
+import {createPost} from './adventure-chapter-post.js';
+import {createChapter} from './adventure-chapter-ui.js';
+import {BRIDGE_RETURN} from './adventure-chapter-model.js';
 import {createExpedition} from './adventure-expedition-ui.js?v=20261102-a1';
 import {GROVE_WORLD,GROVE_ENTRY,GROVE_EXIT,ISLAND_ENTRY,ISLAND_WORLD,islandWalkable,newEncounter,advanceEncounters,enemySpec,dismissEncounter,settleEncounter,modeIcon} from './adventure-exploration-model.js';
 import {ensureExplorationArt} from './adventure-exploration-art.js';
@@ -145,9 +148,17 @@ function enterExit(id){
  switchArea(e.target);
 }
 function face(dx,dy){if(Math.abs(dx)>Math.abs(dy))return dx>=0?1:3;return dy>=0?0:2;}
+const chapter=typeof __BAISHA_BUILD__!=='undefined'&&__BAISHA_BUILD__?createChapter({
+  state:()=>state,save,stop:stopMoving,toast,
+  paintHero:(c,pose)=>scene.drawPlayer(c,art,{outfit:state.outfit,wand:state.wand,...pose}),
+  direct:globalThis.ForestStudent?.chapterShortcut===true,
+  available:()=>!!scene&&!exitsBlocked()&&!mapZoom.active,
+  returnToBridge:()=>{const land=()=>{Object.assign(scene.player,BRIDGE_RETURN,{moving:false});Object.assign(scene.camera,BRIDGE_RETURN);exitProximity.reset('island',scene.player);stopMoving();};if(scene.area==='island')land();else void switchArea('island',land,{chapterTravel:true});}
+}):null;
+const chapterPost=chapter?createPost(chapter,walkTo):null;
 function move(dt){
   if(!scene)return;
-  if(studyBattle.busy||mapZoom.active){scene.player.moving=false;return;}
+  if(chapter?.busy||studyBattle.busy||mapZoom.active){scene.player.moving=false;return;}
   if(switching||scene.editing||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||(round&&round.phase!=='approach')){scene.player.moving=false;return;}
   const p=scene.player,before={x:p.x,y:p.y};
   let dx=joystick.input.x,dy=joystick.input.y;
@@ -167,6 +178,7 @@ function move(dt){
     if(!route.length){scene.marker=null;const cb=arrival;arrival=null;cb?.();}
   }
   const distance=Math.hypot(p.x-before.x,p.y-before.y);p.moving=distance>.001;p.phase+=distance*Math.PI*2/WALK_CYCLE_DISTANCE;if(!p.moving)p.phase=0;walked+=distance;
+  if(chapter&&scene.area==='island'&&distance>0&&!exitsBlocked())chapter.step(before,p);
   if(walked>90&&!state.visited){state.visited=true;save();renderState();}
 }
 function positionHotspots(){
@@ -193,6 +205,7 @@ function positionHotspots(){
 function tick(now){
   requestAnimationFrame(tick);const dt=Math.min(.035,(now-last)/1000);last=now;if(!scene||document.hidden)return;
   if(expedition?.busy&&!expedition.localBattle||shop?.busy)return;
+  if(chapter?.busy)return;
   move(dt);
   const nearby=exitProximity.poll(scene.area,scene.player,exitsBlocked()||mapZoom.active);if(nearby){if(nearby.interaction==='offer')exploration.offerDestination(nearby.id,true);else enterExit(nearby.id);}
   if(scene.area==='grove')advanceEncounters(scene.encounters,dt,!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||switching);
@@ -203,13 +216,13 @@ function tick(now){
 async function init(){
   $('load-retry').hidden=true;
   try{
-    art=await loadArt();scene=new ForestScene(canvas,art);scene.studyBeastCooldown=studyBeastCooldown;
+    art=await loadArt();scene=new ForestScene(canvas,art);scene.studyBeastCooldown=studyBeastCooldown;scene.chapterPost=chapterPost;
     const roleId=new URLSearchParams(location.search).get('character'),rabbitDraw=scene.drawPlayer;
     await restoreCompanion(roleId);save();
     if(roleId&&!canUseCompanion(state,roleId,companionCards()))toast('🔒 點選夥伴，先解鎖小屋使用權');
     if(roleId){const clean=new URL(location.href);clean.searchParams.delete('character');history.replaceState(null,'',clean);}
     scene.drawPlayer=withEnergyMood((c,a,options)=>{const pose={...options,outfit:equippedOutfit(state)};if(drawClothing(c,a,pose))return;return activeWalker?drawWalker(c,a,activeWalker,pose):rabbitDraw(c,a,pose);},()=>state.life.nutrition.energy);
-    $('map-loading').hidden=true;canvas.dataset.ready='true';renderState();renderArea();if(new URL(location.href).searchParams.get('returnFarm')==='1'&&state.life.farmUnlocked)switchArea('farm',()=>{const ready=state.life.plots.filter(p=>p?.ready).length;if(ready)toast(`有 ${ready} 處作物成熟了！點「採收」帶回家做料理。`);});
+    $('map-loading').hidden=true;canvas.dataset.ready='true';renderState();renderArea();chapter?.restore();if(new URL(location.href).searchParams.get('returnFarm')==='1'&&state.life.farmUnlocked)switchArea('farm',()=>{const ready=state.life.plots.filter(p=>p?.ready).length;if(ready)toast(`有 ${ready} 處作物成熟了！點「採收」帶回家做料理。`);});
   }catch(e){console.error(e);$('map-loading').querySelector('strong').textContent='森林圖片還沒準備好';$('map-loading').querySelector('p').textContent='請確認連線後再試一次。';$('load-retry').hidden=false;}
   finally{document.dispatchEvent(new Event('adventure-ui-ready'));}
 }
@@ -217,6 +230,7 @@ $('load-retry').addEventListener('click',init);
 canvas.addEventListener('pointerdown',e=>{
   if(!scene||round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||switching||joystick.input.active)return;e.preventDefault();canvas.focus({preventScroll:true});
   const at=scene.toWorld(e.clientX,e.clientY);
+  if(scene.area==='island'&&chapterPost?.tap(at))return;
   if(scene.area==='island'){const hit=hitStudyBeast(at,scene.reduced.matches?0:performance.now()/1000,studyBeastCooldown);if(hit){approachStudyBeast(hit);return;}}
   if(scene.area==='grove'){const hit=[...(scene.encounters||[])].reverse().find(m=>m.visible&&Math.abs(at.x-m.x)<48&&at.y<m.y+12&&at.y>m.y-(m.level===2?120:100));if(hit){startBattle(hit);return;}}
   if(scene.editing){
@@ -228,7 +242,7 @@ canvas.addEventListener('pointerdown',e=>{
 canvas.addEventListener('pointermove',e=>{if(decorPointer===e.pointerId&&scene?.editing)moveFurniture(scene.toWorld(e.clientX,e.clientY));});
 for(const event of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,()=>decorPointer=null);
 document.addEventListener('keydown',e=>{
-  if(studyBattle.busy||mapZoom.active)return;
+  if(chapter?.busy||studyBattle.busy||mapZoom.active)return;
   if(wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||!scene)return;
   if(e.key==='Escape'&&scene.editing){closeDecor();return;}
   if(scene.editing||switching)return;
@@ -265,12 +279,12 @@ function renderArea(){
   $('trail-sign').querySelector('strong').textContent=grove?'回家的小路':'森林小路';$('trail-sign').querySelector('small').textContent=grove?'← 暖陽村':state.groveUnlocked?'星光林地 →':'星光林地 · 未開放';
   canvas.setAttribute('aria-label',indoor?'我的小屋。拖曳搖桿、點地板或按方向鍵走路，點物品清單擺放物品。':'森林地圖。拖曳搖桿、點地板或使用方向鍵走路；怪物需要點選才會開始戰鬥。');
 }
-async function switchArea(area,onArrival=null){
+async function switchArea(area,onArrival=null,{chapterTravel=false}={}){
   if(!['forest','room','kitchen','bedroom','bathroom','grove','farm','island'].includes(area)||(area==='grove'&&!state.groveUnlocked)||(area==='farm'&&!state.life.farmUnlocked))return false;
   if(switching||!scene||scene.dining)return false;switching=true;stopMoving();closeDecor();mapZoom.reset();scene.islandView=null;
   if(area==='grove'||area==='island'){try{toast('🌲 正在展開地圖…');await ensureExplorationArt(art,area);}catch(e){switching=false;toast('地圖暫時沒載入，請再試一次。');return false;}}
   if(area==='farm'){try{toast('🌱 正在走進農場…');await Promise.all([ensureTerrain(art.terrain,'farm'),ensureHomeArt(art,['extraCrops','collectionCrops','lessonCrops'])]);}catch(e){switching=false;toast('農場圖片暫時沒載入，請再試一次。');return false;}}
-  if(area==='island'){state.world.visited=true;save();}
+  if(area==='island'&&!chapterTravel){state.world.visited=true;save();}
   if(isInterior(area)){try{toast('正在推開房間的小門…');await Promise.all([ensureHomeArt(art,['daisyHome',...(area==='bathroom'?['daisyComplete']:[]),...furnitureArtKeys(layoutFor(state,area))]),ensureRoomShell(art,state.wallpaper,area),(area==='bedroom'?ensureWardrobeArt(art,state.wallpaper):null)]);}catch(error){console.warn(error);switching=false;toast('房間圖片暫時沒載入，請再點門口試一次。');return false;}}
   clearTimeout(toastTimer);$('map-toast').hidden=true;$('scene-fade').classList.add('changing');
   return new Promise(resolve=>setTimeout(()=>{
@@ -312,7 +326,7 @@ $('grove-unlock').addEventListener('click',()=>{
 
 rest=createHomeRest({dine:id=>kitchen.eatAtHome(id),state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,walkTo,toast,blocked:()=>!scene||switching||scene.editing||!!round||wardrobe.open||trail.open||life.busy||kitchen.busy||shop?.busy||expedition?.busy||companions?.busy});
 const decor=createHomeDecor({switchArea,useInventory:(kind)=>{if(kind==='clothes')document.getElementById('wardrobe-open').click();else if(kind==='seeds')life.visit('farm');else if(kind==='fish')kitchen.cookAtHome();else kitchen.eatAtHome();},state:()=>state,scene:()=>scene,art:()=>art,stopMoving,save,renderState,toast,changed:()=>renderArea(),blocked:()=>!scene||!!round||switching||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)});
-expedition=createExpedition({openShop:(id,onReturn)=>shop.openRegion(id,onReturn),state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,toast,defeated:()=>switchArea('forest',()=>completeAction('lose',{detail:'🥄 吃點東西，補充體力'})),blocked:()=>!scene||!!round||switching||wardrobe.open||shop?.busy||companions?.busy||life.busy||(kitchen.busy||rest?.busy)});
+expedition=createExpedition({chapter,openShop:(id,onReturn)=>shop.openRegion(id,onReturn),state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,toast,defeated:()=>switchArea('forest',()=>completeAction('lose',{detail:'🥄 吃點東西，補充體力'})),blocked:()=>!scene||!!round||switching||wardrobe.open||shop?.busy||companions?.busy||life.busy||(kitchen.busy||rest?.busy)});
 const guardianCardsButton=document.createElement('button');guardianCardsButton.id='guardian-cards-open';guardianCardsButton.className='adventure-control';guardianCardsButton.dataset.uiIcon='🃏';guardianCardsButton.dataset.uiLabel='好友卡';guardianCardsButton.textContent='守護者好友卡';guardianCardsButton.setAttribute('aria-label','守護者好友卡');guardianCardsButton.onclick=()=>expedition.openCards();document.querySelector('.world-actions').append(guardianCardsButton);
 shop=createShop({state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,toast,blocked:()=>!scene||!!round||switching||wardrobe.open||companions?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||visits?.busy||exploration?.busy});
 visits=createIslandVisits({state:()=>state,art:()=>art,save,stop:stopMoving,toast,apply:next=>{state=sanitizeState(next);renderState();}});

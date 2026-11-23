@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 import {selectAdventureRelease,startAdventureRelease,rememberStableRelease} from '../adventure-release.js';
 import {ADVENTURE_RELEASE_POLICY} from '../adventure-release-policy.js';
 
-const student={classId:'main',seat:'115015'};
+const student={classId:'main',seat:'990001',trialGrant:'qa-layout2:journey'};
 const candidate={id:'qa-layout2',bundle:'./adventure-candidate-qa-layout2.bundle.js',styles:['./adventure-candidate-qa-layout2.css']};
 const policy={...ADVENTURE_RELEASE_POLICY,candidate};
 const memory=()=>{const values=new Map();return {getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v)};};
@@ -27,7 +27,8 @@ test('release remains stable until an explicit candidate is configured',async()=
 
 test('only exact authenticated class and full student identifier select the candidate',async()=>{
   assert.equal((await select()).id,candidate.id);
-  for(const identity of [null,{classId:'main',seat:'15'},{classId:'main',seat:115015},{classId:'main',seat:'115016'},{classId:'grade2',seat:'115015'},{classId:'main',seat:'115014'}])assert.equal(await select({student:identity}),null);
+  assert.equal((await select({student:{...student,seat:'990002'}})).id,candidate.id);
+  for(const identity of [null,{classId:'main',seat:'15'},{classId:'main',seat:990001},{classId:'grade2',seat:'990001'},{classId:'main',seat:'990003'}])assert.equal(await select({student:identity}),null);
   const source=readFileSync(new URL('../adventure-entry.js',import.meta.url),'utf8');
   assert(source.indexOf('await connectForestStudent')<source.indexOf('await startAdventureRelease'));
   assert.match(source,/if\(globalThis\.ForestStudent\)await startAdventureRelease/);
@@ -46,7 +47,7 @@ test('return to stable is scoped to candidate version and authenticated identity
   const storage=memory(),release=await select({storage});
   assert(rememberStableRelease(release,storage));assert.equal(await select({storage}),null);
   const next={id:'qa-layout3',bundle:'./adventure-candidate-qa-layout3.bundle.js',styles:[]};
-  assert.equal((await select({storage,policy:{...policy,candidate:next}})).id,'qa-layout3');
+  assert.equal((await select({storage,student:{...student,trialGrant:next.id+':journey'},policy:{...policy,candidate:next}})).id,'qa-layout3');
   assert.equal(rememberStableRelease(release,{setItem(){throw Error('blocked');}}),false);
 });
 
