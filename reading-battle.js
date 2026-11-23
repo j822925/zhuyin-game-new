@@ -1,4 +1,4 @@
-import {showRoundOutcome} from './round-outcome.js';
+import {showRoundOutcome} from './round-outcome.js?v=20261123-outcome1';
 import {PROFILE_CHARACTERS} from './student-profile.js?v=20261011-battle1';
 import {mountCharacter,clearCharacters,awardCharacter,celebrateCharacter} from './character-motion.js?v=20261011-battle1';
 import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261119-stars';

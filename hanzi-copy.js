@@ -1,4 +1,4 @@
-import {showRoundOutcome} from './round-outcome.js';
+import {showRoundOutcome} from './round-outcome.js?v=20261123-outcome1';
 import {createFarmLessonLink} from './farm-lesson-link.js?v=20261122-farm6';
 import {COPY_MODES,COPY_RULE,COPY_REWARD_RULE,gradeCopy,copyFeedback} from './hanzi-copy-core.js?v=20261119-stars';
 import {gradeStrokes} from './hanzi-stroke-core.js';

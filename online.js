@@ -1,4 +1,4 @@
-import {showRoundOutcome} from './round-outcome.js';
+import {showRoundOutcome} from './round-outcome.js?v=20261123-outcome1';
 import {optimizedImage} from './data/portrait-thumbnails.js?v=20261007-ipad1';
 import './asset-cache.js?v=20260928-all1';
 import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';

@@ -1,4 +1,4 @@
-import {showRoundOutcome} from './round-outcome.js';
+import {showRoundOutcome} from './round-outcome.js?v=20261123-outcome1';
 import {hanziTasks,hanziLaunch} from './hanzi-hub.js?v=20261116-copy1';
 import {arithmeticTasks,arithmeticLaunch} from './arithmetic-hub.js?v=20261116-hub1';
 import {offerReadingExamHandoff} from './exam-reading-launch.js?v=20261023-readingexam1';

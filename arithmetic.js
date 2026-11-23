@@ -1,4 +1,4 @@
-import {showRoundOutcome} from './round-outcome.js';
+import {showRoundOutcome} from './round-outcome.js?v=20261123-outcome1';
 import {createFarmLessonLink} from './farm-lesson-link.js?v=20261122-farm6';
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';

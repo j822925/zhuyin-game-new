@@ -1,4 +1,4 @@
-import {showRoundOutcome} from './round-outcome.js';
+import {showRoundOutcome} from './round-outcome.js?v=20261123-outcome1';
 import {STATIONS,TONES,active,summary,LISTEN_POLICY,LISTEN_OUTCOMES,listeningSummary,ANSWER_POLICY,roundComplete,answerSummary} from './annual-challenge-core.js?v=20261111-directscore1';
 import {INITIALS,FINALS,COMBINED} from './annual-challenge-bank.js?v=20261106-v2';
 import {stampsForStation,stampById} from './annual-challenge-stamps.js?v=20261106-v2';

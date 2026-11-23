@@ -1,4 +1,4 @@
-import {showRoundOutcome} from './round-outcome.js';
+import {showRoundOutcome} from './round-outcome.js?v=20261123-outcome1';
 import {addPreparationButton} from './preparation.js?v=20261023-zonemusic1';
 import {tutorClips} from './little-teacher.js?v=20261102-a1';
 import {warmAudio} from './asset-cache.js?v=20260928-all1';
