@@ -1,16 +1,16 @@
-import {showRoundOutcome} from './round-outcome.js?v=20261123-outcome1';
-import {optimizedImage} from './data/portrait-thumbnails.js?v=20261007-ipad1';
+import {showRoundOutcome} from './round-outcome.js?v=20261123-starenvoys1';
+import {optimizedImage} from './data/portrait-thumbnails.js?v=20261123-starenvoys1';
 import './asset-cache.js?v=20260928-all1';
 import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
 import {classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
-import {CHARACTER_CATALOG} from './data/character-catalog.js';
-import {STAR_SPRITES} from './data/star-sprites.js';
+import {CHARACTER_CATALOG} from './data/character-catalog.js?v=20261123-starenvoys1';
+import {STAR_SPRITES} from './data/star-sprites.js?v=20261123-starenvoys1';
 import {audioSource} from './audio-source.js?v=20261102-a1';
-import {STAR_CARDS} from './data/star-cards.js';
-import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20261011-battle1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261119-stars';
+import {STAR_CARDS} from './data/star-cards.js?v=20261123-starenvoys1';
+import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20261123-starenvoys1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261123-starenvoys1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
-import {showMonsterReward} from './monster-cards-ui.js?v=20261011-battle1';
+import {showMonsterReward} from './monster-cards-ui.js?v=20261123-starenvoys1';
 const $=id=>document.getElementById(id),SESSION=classStorageKey('zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':live');
 const ENDPOINT=location.hostname==='127.0.0.1'?location.origin:'https://zhuyin-api.j822925.workers.dev';
 

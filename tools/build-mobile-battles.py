@@ -30,5 +30,15 @@ def build(item):
  return id,entry,{'id':id,'bytes':file.stat().st_size,'sourcePixels':im.width*im.height,'pixels':width*height,'size':[width,height]}
 with concurrent.futures.ThreadPoolExecutor(max_workers=max(1,min(args.workers,4))) as pool:
  for id,entry,report in pool.map(build,manifest.items()):manifest[id]=entry;reports.append(report)
-(output/'data').mkdir(parents=True,exist_ok=True);(output/'data/packed-battle-frames.js').write_text("// Compact precut poses. Geometry, alpha and effect anchors remain unchanged.\nexport const PACKED_BATTLE_VERSION="+json.dumps(args.version)+";\nexport const PACKED_BATTLES="+json.dumps(manifest,separators=(',',':'))+';\n',encoding='utf8')
+data_dir = output / 'data'
+data_dir.mkdir(parents=True, exist_ok=True)
+module = (
+ "import {HANZI_ENVOY_FRAMES} from './hanzi-envoy-frames.js';\n"
+ "import {COMPANION_FRAMES} from './companion-battle-frames.js';\n"
+ "// Compact precut poses. Geometry, alpha and effect anchors remain unchanged.\n"
+ "export const PACKED_BATTLE_VERSION=" + json.dumps(args.version) + ";\n"
+ "export const PACKED_BATTLES=" + json.dumps(manifest,separators=(',',':')) + ";\n"
+ "Object.assign(PACKED_BATTLES,HANZI_ENVOY_FRAMES,COMPANION_FRAMES);\n"
+)
+(data_dir / 'packed-battle-frames.js').write_text(module,encoding='utf8')
 summary={'characters':len(manifest),'poses':sum(len(e['frames'])+bool(e.get('allyStar')) for e in manifest.values()),'bytes':sum(r['bytes'] for r in reports),'sourcePixels':sum(r['sourcePixels'] for r in reports),'pixels':sum(r['pixels'] for r in reports),'alphaPreserved':True,'reports':reports};(output/'build-report.json').write_text(json.dumps(summary),encoding='utf8');print(json.dumps({k:v for k,v in summary.items() if k!='reports'}))

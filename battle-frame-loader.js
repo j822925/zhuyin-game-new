@@ -1,5 +1,5 @@
-import {PACKED_BATTLES} from './data/packed-battle-frames.js?v=20261007-ipad1';
-import {battleAssetPath} from './data/battle-asset-url.js?v=20261011-battle1';
+import {PACKED_BATTLES} from './data/packed-battle-frames.js?v=20261123-starenvoys1';
+import {battleAssetPath} from './data/battle-asset-url.js?v=20261123-starenvoys1';
 
 // Decode only the finished poses. No full-size pixel scans on student devices.
 function decode(url,timeout){

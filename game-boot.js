@@ -1,6 +1,6 @@
-import {bootPreparation} from './preparation.js?v=20261023-zonemusic1';
+import {bootPreparation} from './preparation.js?v=20261123-starenvoys1';
 (async()=>{void bootPreparation().catch(()=>{});
-await import('./app.js?v=20261123-outcome1');
+await import('./app.js?v=20261123-starenvoys1');
 await import('./forest-home-entry.js?v=20261023-zonemusic1');
 await import('./child-navigation.js?v=20260928-all1');
 await import('./reading-entry.js?v=20261025-homegallery1');
@@ -8,7 +8,7 @@ await import('./tone-entry.js?v=20261011-teacher1');
 await import('./teacher-hub.js?v=20261106-annual2');
 await import('./annual-challenge-entry.js?v=20261106-annual2').catch(()=>{});
 await import('./arithmetic-entry.js?v=20261115-math3').catch(()=>{});
-await import('./hanzi-entry.js?v=20261116-open1').catch(()=>{});
+await import('./hanzi-entry.js?v=20261123-starenvoys1').catch(()=>{});
 await import('./helper-entry.js?v=20261022-audio1').catch(()=>{});
 await import('./island-names.js?v=20261023-exam1').catch(()=>{});
 })().catch(()=>{document.getElementById('app').innerHTML='<p>連線暫時不穩，請重新整理再試一次。</p><button onclick="location.reload()">重新讀取 ↻</button>';});

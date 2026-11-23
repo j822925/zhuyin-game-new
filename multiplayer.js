@@ -1,9 +1,9 @@
 import {Race} from './race-core.js?v=20260928-all1';
 import {audioSource} from './audio-source.js?v=20261102-a1';
 import {questionDeck,optionsFor} from './core.js?v=20261009-accounts1';
-import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20261007-ipad1';
+import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20261123-starenvoys1';
 
-import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,motionPortrait} from './character-motion.js?v=20261011-battle1';
+import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,motionPortrait} from './character-motion.js?v=20261123-starenvoys1';
 
 const animals=CHARACTERS.map(c=>[c.emoji,c.name]);
 const keys=[['a','s','d','f'],['h','j','k','l']];
@@ -30,7 +30,7 @@ export function createMultiplayer({onExit,onFinish,getOwned,getSeats,getIdentity
  function drawPicker(){
   if(!localPicker)return;
   const seats=getSeats?.()||[];for(let i=0;i<2;i++){const owned=getOwned?.(seats[i])||STARTERS;if(!owned.includes(CHARACTERS[picked[i]].id)||picked[i]===picked[1-i])picked[i]=CHARACTERS.findIndex((c,n)=>owned.includes(c.id)&&n!==picked[1-i]);}
-  picker.innerHTML='<p>各選一隻小動物；藍隊在左邊，橘隊在右邊。</p><div class="animal-teams">'+[0,1].map(i=>`<section class="team-${i}"><h3>${i===0?'◀ 藍隊':'橘隊 ▶'}</h3><div class="animal-choices">${animals.map(([emoji,name],n)=>`<button data-player="${i}" data-animal="${n}" aria-label="${i===0?'藍隊':'橘隊'}選${name}" aria-pressed="${picked[i]===n}" ${picked[1-i]===n||!(getOwned?.(seats[i])||STARTERS).includes(CHARACTERS[n].id)?'disabled':''}>${portrait(CHARACTERS[n])}</button>`).join('')}</div></section>`).join('')+'</div>';
+  picker.innerHTML='<p>各選一隻小動物；藍隊在左邊，橘隊在右邊。</p><div class="animal-teams">'+[0,1].map(i=>`<section class="team-${i}"><h3>${i===0?'◀ 藍隊':'橘隊 ▶'}</h3><div class="animal-choices">${animals.map(([emoji,name],n)=>CHARACTERS[n].hiddenUntilOwned&&!(getOwned?.(seats[i])||STARTERS).includes(CHARACTERS[n].id)?'':`<button data-player="${i}" data-animal="${n}" aria-label="${i===0?'藍隊':'橘隊'}選${name}" aria-pressed="${picked[i]===n}" ${picked[1-i]===n||!(getOwned?.(seats[i])||STARTERS).includes(CHARACTERS[n].id)?'disabled':''}>${portrait(CHARACTERS[n])}</button>`).join('')}</div></section>`).join('')+'</div>';
   picker.querySelectorAll('[data-animal]').forEach(b=>b.onclick=()=>{picked[Number(b.dataset.player)]=Number(b.dataset.animal);drawPicker();});
  }
  drawPicker();

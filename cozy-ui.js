@@ -1,4 +1,4 @@
-import {CHARACTERS,portrait} from './characters.js?v=20261007-ipad1';
+import {CHARACTERS,portrait} from './characters.js?v=20261123-starenvoys1';
 export function setupCozyUI(){
  document.body.classList.add('cozy-ui');
  document.querySelector('.top-actions').append(document.getElementById('voice-help'));

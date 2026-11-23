@@ -1,7 +1,7 @@
 // Effects use a separate transparent plane: questions never move or lose focus.
-import {BATTLE_META} from './data/battle-catalog.js?v=20261004-villains1';
-import {battleEffectOrigin} from './battle-sprite.js?v=20261011-battle1';
-import {drawConceptEffects} from './concept-battle-player.js?v=20261011-battle1';
+import {BATTLE_META} from './data/battle-catalog.js?v=20261123-starenvoys1';
+import {battleEffectOrigin} from './battle-sprite.js?v=20261123-starenvoys1';
+import {drawConceptEffects} from './concept-battle-player.js?v=20261123-starenvoys1';
 const palettes={leaf:'#bfe08e',petal:'#ffd0b7',honey:'#ffc562',cloud:'#d7e9ff',ice:'#a4e5ff',sun:'#ffdf7c',star:'#ffe6a0',moon:'#d1b6ff',bubble:'#99e5e8',rainbow:'#dfbbff',berry:'#ff9ac1',slash:'#ffe2a1',electric:'#fff292',dash:'#b6defe',wind:'#c2eee1',arrow:'#d4dc9c',music:'#ffc7ee',rock:'#dcb398',heart:'#ffb7d3'};
 const skillNames={leaf:'綠葉飛旋',petal:'花花飛舞',honey:'甜蜜光波',cloud:'雲朵突擊',ice:'冰晶飛舞',sun:'陽光出擊',star:'星光閃耀',moon:'月光魔法',bubble:'泡泡波浪',rainbow:'彩虹旋舞',berry:'莓果飛舞',slash:'流光斬',electric:'閃電衝擊',dash:'疾速突擊',wind:'旋風出擊',arrow:'追光箭',music:'音符魔法',rock:'大地震波',heart:'愛心光波'};
 function mote(c,kind,x,y,r,a,color,alpha=1){
@@ -38,7 +38,7 @@ export function startBattleEffects({actor,opponent,correct,timing}){
     c.save();c.translate(x,y-310*k);c.scale(k,k);drawConceptEffects(c,meta,'attack',t,side,0,origin?{x:0,y:310}:null,{x:(target.x-x)/k,y:310+(target.y-y)/k});c.restore();
    }
   }
-  if(ms<950){const fade=Math.min(1,ms/100,(950-ms)/220),text=correct?(mage?'棉花兔・花花飛舞':actor.dataset.rig==='knight'?'爆星・流光斬':(meta?.name||actor.dataset.name)+'・'+(skillNames[kind]||'星光出擊')):(meta?.name||'小怪物')+'・'+(skillNames[kind]||'魔法反擊');
+  if(ms<950){const fade=Math.min(1,ms/100,(950-ms)/220),text=correct?(mage?'棉花兔・花花飛舞':actor.dataset.rig==='knight'?'爆星・流光斬':(meta?.name||actor.dataset.name)+'・'+(meta?.move||skillNames[kind]||'星光出擊')):(meta?.name||'小怪物')+'・'+(skillNames[kind]||'魔法反擊');
    c.save();c.globalAlpha=Math.max(0,fade);c.font='700 15px "Microsoft JhengHei", sans-serif';const w=c.measureText(text).width+30,x=Math.max(8,Math.min(width-w-8,a.x-w/2)),y=Math.max(8,a.top);
    c.fillStyle='#131d35ec';c.fillRect(x,y,w,32);c.fillStyle=color;c.fillRect(x,y,3,32);c.textAlign='center';c.fillText(text,x+w/2,y+22);c.restore();
   }

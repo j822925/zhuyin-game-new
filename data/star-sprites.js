@@ -17,5 +17,11 @@ export const STAR_SPRITES = {
   "star-15-zhi": "assets/characters/star-envoy-sprites/star-15-zhi-v1.png",
   "star-16-chi": "assets/characters/star-envoy-sprites/star-16-chi-v1.png",
   "star-17-shi": "assets/characters/star-envoy-sprites/star-17-shi-v1.png",
-  "star-18-ri": "assets/characters/star-envoy-sprites/star-18-ri-v1.png"
+  "star-18-ri": "assets/characters/star-envoy-sprites/star-18-ri-v1.png",
+  "lesson-01-pai": "assets/hanzi-envoys-v1/lesson-01-pai/home.webp",
+  "lesson-02-fen": "assets/hanzi-envoys-v1/lesson-02-fen/home.webp",
+  "lesson-03-hai": "assets/hanzi-envoys-v1/lesson-03-hai/home.webp",
+  "lesson-04-wa": "assets/hanzi-envoys-v1/lesson-04-wa/home.webp",
+  "lesson-05-wang": "assets/hanzi-envoys-v1/lesson-05-wang/home.webp",
+  "lesson-06-hua": "assets/hanzi-envoys-v1/lesson-06-hua/home.webp"
 };

@@ -1,4 +1,5 @@
-import {optimizedImage} from './data/portrait-thumbnails.js?v=20261007-ipad1';
+import {starCardName} from './data/star-cards.js?v=20261123-starenvoys1';
+import {optimizedImage} from './data/portrait-thumbnails.js?v=20261123-starenvoys1';
 const el=(tag,text)=>{const n=document.createElement(tag);if(text)n.textContent=text;return n;};
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 export function starEgg(){
@@ -16,7 +17,7 @@ export function createStarPrize({ordinary=false}={}){
  function start(){started=Date.now();stage.className='star-prize-stage charging';stage.replaceChildren(el('h2',ordinary?'神祕夥伴來了…':'星使正在甦醒…'),starEgg());status.textContent=ordinary?'正在開蛋，請稍候。':'正在確認滿分資格與保存獎品，請稍候。';done.textContent='收進收藏 ✓';done.hidden=true;if(!dialog.open)dialog.showModal();}
  async function reveal(c,{duplicate=false}={}){
   // Only called after the server has saved the one-time prize. No client-side draw.
-  const label=ordinary?c.name:c.symbol+'之星使・'+c.name;
+  const label=ordinary?c.name:starCardName(c);
   const image=el('img');image.className='star-prize-card';image.src=optimizedImage(c.image);image.alt=label;image.width=1024;image.height=1536;image.loading='eager';
   let timer;try{await Promise.race([image.decode(),new Promise(resolve=>timer=setTimeout(resolve,1800))]);}catch{/* Saved prize remains valid even if its image is offline. */}finally{clearTimeout(timer);}
   if(dialog.open&&!reduced()){await wait(Math.max(0,1100-(Date.now()-started)));stage.className='star-prize-stage hatching';await wait(500);}

@@ -10,7 +10,7 @@ import {optimizedImage} from '../data/portrait-thumbnails.js';
 
 test('preparation covers all encounters and selectable heroes with the runtime cache key',()=>{
  const unique=new Set(BATTLE_PRELOAD);assert.equal(unique.size,BATTLE_PRELOAD.length);
- assert.equal(PROFILE_CHARACTERS.length,84);
+ assert.equal(PROFILE_CHARACTERS.length,120);
  for(const c of PROFILE_CHARACTERS){
   const id=battleCharacter(c.id);
   assert(unique.has(battleAssetPath(id)),c.id+' battle');
@@ -24,5 +24,7 @@ test('preparation covers all encounters and selectable heroes with the runtime c
   assert(fs.existsSync(new URL('../'+path.split('?')[0],import.meta.url)),path);
  }
  assert.equal(battleAssetPath('unreleased-id'),null);
- assert.equal(BATTLE_PRELOAD.filter(p=>p.includes('battle-ipad-v1/')).length,new Set(PROFILE_CHARACTERS.map(c=>battleCharacter(c.id))).size);
+ const allBattleUrls=new Set(Object.keys(PACKED_BATTLES).map(battleAssetPath));
+ const selectableBattleUrls=new Set(PROFILE_CHARACTERS.map(c=>battleAssetPath(battleCharacter(c.id))));
+ assert.deepEqual(new Set(BATTLE_PRELOAD.filter(url=>allBattleUrls.has(url))),selectableBattleUrls);
 });

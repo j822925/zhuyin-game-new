@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
 import {CHARACTERS,STARTERS,drawCharacter,redeemCharacter,characterSvg} from '../characters.js';
 const wallet=()=>({stars:15,candies:0,owned:[...STARTERS]});
-test('30 個不同角色，10 個動物、10 個精靈和 10 個冒險小隊，均有獨立原創圖片',()=>{
- assert.equal(CHARACTERS.length,30);assert.equal(new Set(CHARACTERS.map(c=>c.id)).size,30);
- for(const category of ['animal','fairy','hero'])assert.equal(CHARACTERS.filter(c=>c.category===category).length,10);
- assert.equal(new Set(CHARACTERS.map(c=>c.image)).size,30);
+test('60 個不同角色，三類各 20 位，均有獨立原創圖片',()=>{
+ assert.equal(CHARACTERS.length,60);assert.equal(new Set(CHARACTERS.map(c=>c.id)).size,60);
+ for(const category of ['animal','fairy','hero'])assert.equal(CHARACTERS.filter(c=>c.category===category).length,20);
+ assert.equal(new Set(CHARACTERS.map(c=>c.image)).size,60);
  for(const c of CHARACTERS){assert.ok(existsSync(new URL('../'+c.image,import.meta.url)));assert.ok(characterSvg(c).includes('<svg'));}
 });
 test('抽中重複角色扣 5 星星、加 1 糖果，不重複加入角色',()=>{

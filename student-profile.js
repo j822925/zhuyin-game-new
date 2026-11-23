@@ -1,11 +1,11 @@
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
-import {demoMonsters} from './monster-cards-ui.js?v=20261011-battle1';
+import {demoMonsters} from './monster-cards-ui.js?v=20261123-starenvoys1';
 import {classStorageKey} from './class-context.js?v=20261023-exam1';
-import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20261007-ipad1';
-import {STAR_CARDS} from './data/star-cards.js?v=20260928-all1';
-import {STAR_SPRITES} from './data/star-sprites.js?v=20260928-all1';
-import {mountCharacter,clearCharacters} from './character-motion.js?v=20261011-battle1';
-export const PROFILE_CHARACTERS=[...CHARACTERS,...MONSTERS.map(c=>({...c,category:'ally',emoji:'✨'})),...STAR_CARDS.map(c=>({...c,image:STAR_SPRITES[c.id],emoji:'✨',name:c.symbol+'之星使・'+c.name}))];
+import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20261123-starenvoys1';
+import {STAR_CARDS,starCardName} from './data/star-cards.js?v=20261123-starenvoys1';
+import {STAR_SPRITES} from './data/star-sprites.js?v=20261123-starenvoys1';
+import {mountCharacter,clearCharacters} from './character-motion.js?v=20261123-starenvoys1';
+export const PROFILE_CHARACTERS=[...CHARACTERS,...MONSTERS.map(c=>({...c,category:'ally',emoji:'✨'})),...STAR_CARDS.map(c=>({...c,cardImage:c.image,image:STAR_SPRITES[c.id],emoji:'✨',name:starCardName(c)}))];
 const $=id=>document.getElementById(id);
 export function createStudentProfile({demo,auth,getSeat,getSeats,getOwned,getAvatar,onChange,isHome=()=>true}){
  const cache=new Map();let version=0,openedSeat='',draftAvatar='',busy=false,loaded=false;

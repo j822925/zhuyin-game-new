@@ -1,4 +1,4 @@
-import {mountMonsterCardImage,disposeMonsterCardImages} from './monster-card-image.js?v=20261011-battle1';
+import {mountMonsterCardImage,disposeMonsterCardImages} from './monster-card-image.js?v=20261123-starenvoys1';
 import {monsterProgress,monsterLevel,monsterLevelLabel,MONSTER_LEVELS,monsterRequirements} from './data/monster-collection-rules.js?v=20261004-levels1';
 import {MONSTERS,randomMonster} from './data/monsters.js?v=20261004-villains1';
 import {classStorageKey} from './class-context.js?v=20261023-exam1';

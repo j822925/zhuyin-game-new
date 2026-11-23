@@ -1,8 +1,8 @@
 import {classStorageKey} from './class-context.js?v=20261023-exam1';
-import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20261007-ipad1';
+import {CHARACTERS,STARTERS,DRAW_COST,REDEEM_COST,portrait,drawCharacter,redeemCharacter} from './characters.js?v=20261123-starenvoys1';
 import {cappedRoundAward,rewardParticipants,taipeiDay,rewardBucket} from './learning-rewards.js?v=20261007-ipad1';
 import {startGachaAnimation} from './gacha-animation.js?v=20260928-all1';
-import {createStarPrize} from './star-prize.js?v=20261007-ipad1';
+import {createStarPrize} from './star-prize.js?v=20261123-starenvoys1';
 import {confirmReward,within} from './reward-request.js?v=20260928-all1';
 export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onChange}){
  const $=id=>document.getElementById(id),cache=new Map(),refreshVersions=new Map();let category='animal',busy=false,activeSeat='',previewPersistent=true,revealed=false,prize=null;
@@ -34,8 +34,19 @@ export function createRewards({demo,getConfig,getSeat,getSeats,jsonGet,post,onCh
   const available=CHARACTERS.filter(c=>c.category===category&&c.enabled!==false);
   $('draw-character').disabled=busy||(!revealed&&!pending()&&(w.stars<DRAW_COST||!available.length||(!demo&&!getConfig()?.rewardsWrites)));
   $('draw-character').textContent=revealed?'✓ 收好角色':pending()?'↻ 🥚 恢復上次開蛋':'★ '+DRAW_COST+' → 🥚';$('draw-character').setAttribute('aria-label',revealed?'收好角色，回到轉蛋':pending()?'恢復上次開蛋，不會重複扣星星':'花五顆星星抽角色，重複得一顆糖果');
-  $('character-gallery').innerHTML=CHARACTERS.filter(c=>c.category===category&&c.enabled!==false).map(c=>`<button class="character-card ${w.owned.includes(c.id)?'owned':'locked'}" data-character="${c.id}" aria-label="${c.name}${w.owned.includes(c.id)?'，已收集':'，五十顆糖果兌換'}" ${busy||(!w.owned.includes(c.id)&&(w.candies||0)<REDEEM_COST)?'disabled':''}>${portrait(c,'character-portrait portrait-small','lazy')}<span>${w.owned.includes(c.id)?'✓':(w.candies||0)>=REDEEM_COST?'🍬 50':'🔒'}</span><small>${c.name}</small></button>`).join('');
-  dialog.querySelectorAll('[data-character]').forEach(b=>b.onclick=()=>{const c=CHARACTERS.find(c=>c.id===b.dataset.character);if(!w.owned.includes(c.id)){exchangeId=c.id;$('exchange-character').innerHTML=portrait(c);exchange.showModal();return;}$('gacha-reveal').innerHTML=portrait(c);$('gacha-message').textContent='想使用這個角色？請回首頁點自己的頭貼，在「我的角色」選擇並儲存。';});
+  const gallery=$('character-gallery');
+  gallery.replaceChildren(...available.map(c=>{
+    const owned=w.owned.includes(c.id),secret=c.hiddenUntilOwned&&!owned;
+    const b=document.createElement('button');b.type='button';b.className='character-card '+(owned?'owned':'locked');
+    const label=secret?'神祕夥伴':c.name;
+    b.setAttribute('aria-label',label+(owned?'，已收集':'，五十顆糖果兌換'));
+    b.disabled=busy||(!owned&&(w.candies||0)<REDEEM_COST);
+    if(owned||!secret)b.dataset.character=c.id;
+    if(secret){const egg=document.createElement('strong');egg.textContent='🥚';egg.setAttribute('aria-hidden','true');b.append(egg);}else b.innerHTML=portrait(c,'character-portrait portrait-small','lazy');
+    const badge=document.createElement('span'),caption=document.createElement('small');badge.textContent=owned?'✓':(w.candies||0)>=REDEEM_COST?'🍬 50':'🔒';caption.textContent=label;b.append(badge,caption);
+    b.onclick=()=>{if(!owned){exchangeId=c.id;if(secret)$('exchange-character').textContent='🥚 神祕夥伴';else $('exchange-character').innerHTML=portrait(c);exchange.showModal();return;}$('gacha-reveal').innerHTML=portrait(c);$('gacha-message').textContent='想使用這個角色？請回首頁點自己的頭貼，在「我的角色」選擇並儲存。';};
+    return b;
+  }));
  }
  async function refresh(){
   const seats=[...new Set(getSeats().filter(Boolean))];

@@ -107,5 +107,55 @@ export const STAR_CARDS=[
     "symbol": "ㄖ",
     "name": "日曜花冠使",
     "image": "assets/characters/star-envoy-cards/batch-03/18-ri-日曜花冠使-v2.png"
+  },
+  {
+    "id": "lesson-01-pai",
+    "symbol": "拍",
+    "name": "拍光節奏使",
+    "image": "assets/characters/expansion-20261123/lesson-01-pai.webp",
+    "series": "hanzi",
+    "hiddenUntilOwned": true
+  },
+  {
+    "id": "lesson-02-fen",
+    "symbol": "分",
+    "name": "分果小使者",
+    "image": "assets/characters/expansion-20261123/lesson-02-fen.webp",
+    "series": "hanzi",
+    "hiddenUntilOwned": true
+  },
+  {
+    "id": "lesson-03-hai",
+    "symbol": "海",
+    "name": "碧海領航使",
+    "image": "assets/characters/expansion-20261123/lesson-03-hai.webp",
+    "series": "hanzi",
+    "hiddenUntilOwned": true
+  },
+  {
+    "id": "lesson-04-wa",
+    "symbol": "蛙",
+    "name": "翠潭蛙騎士",
+    "image": "assets/characters/expansion-20261123/lesson-04-wa.webp",
+    "series": "hanzi",
+    "hiddenUntilOwned": true
+  },
+  {
+    "id": "lesson-05-wang",
+    "symbol": "王",
+    "name": "晨冠小王子",
+    "image": "assets/characters/expansion-20261123/lesson-05-wang.webp",
+    "series": "hanzi",
+    "hiddenUntilOwned": true
+  },
+  {
+    "id": "lesson-06-hua",
+    "symbol": "花",
+    "name": "百花織夢使",
+    "image": "assets/characters/expansion-20261123/lesson-06-hua.webp",
+    "series": "hanzi",
+    "hiddenUntilOwned": true
   }
 ];
+
+export const starCardName = card => card.series === "hanzi" ? card.name : card.symbol + "之星使・" + card.name;

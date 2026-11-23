@@ -1,4 +1,4 @@
-import {CHARACTERS,portrait} from './characters.js?v=20261007-ipad1';
+import {CHARACTERS,portrait} from './characters.js?v=20261123-starenvoys1';
 import {currentClass} from './class-context.js?v=20261023-exam1';
 
 // This is only the home-screen visibility rule. Every live /hanzi/ operation

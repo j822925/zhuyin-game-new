@@ -1,13 +1,13 @@
 // Battle art and timing are independent of the home/wardrobe skeleton.
-import {drawBlossom} from './battle-effects.js?v=20261011-battle1';
-import {BATTLE_ART,BATTLE_META} from './data/battle-catalog.js?v=20261004-villains1';
-import {loadPackedBattle} from './battle-frame-loader.js?v=20261011-battle1';
+import {drawBlossom} from './battle-effects.js?v=20261123-starenvoys1';
+import {BATTLE_ART,BATTLE_META} from './data/battle-catalog.js?v=20261123-starenvoys1';
+import {loadPackedBattle} from './battle-frame-loader.js?v=20261123-starenvoys1';
 import {watchBattleCanvas} from './battle-render-scheduler.js?v=20261007-ipad1';
 export {BATTLE_ART};
 const conceptCache=new Map(),instances=new WeakMap();
 export function battleEffectOrigin(canvas){return instances.get(canvas)?.effectOrigin;}
 export function battleDuration(id,action){return BATTLE_META[id]?.concept?({attack:1800,guard:1400,hurt:2000,victory:1700,star:2000,defeated:1800}[action]||0):BATTLE_DURATIONS[action]||0;}
-async function loadConcept(id,originalArt=false){const key=originalArt?id+'.source':id;if(conceptCache.has(key)){const p=conceptCache.get(key);conceptCache.delete(key);conceptCache.set(key,p);return p;}const p=import('./concept-battle-player.js?v=20261011-battle1').then(async({ConceptBattleSprite})=>new ConceptBattleSprite().load(BATTLE_META[id],{originalArt}));conceptCache.set(key,p);while(conceptCache.size>3)conceptCache.delete(conceptCache.keys().next().value);p.catch(()=>{if(conceptCache.get(key)===p)conceptCache.delete(key);});return p;}
+async function loadConcept(id,originalArt=false){const key=originalArt?id+'.source':id;if(conceptCache.has(key)){const p=conceptCache.get(key);conceptCache.delete(key);conceptCache.set(key,p);return p;}const p=import('./concept-battle-player.js?v=20261123-starenvoys1').then(async({ConceptBattleSprite})=>new ConceptBattleSprite().load(BATTLE_META[id],{originalArt}));conceptCache.set(key,p);while(conceptCache.size>3)conceptCache.delete(conceptCache.keys().next().value);p.catch(()=>{if(conceptCache.get(key)===p)conceptCache.delete(key);});return p;}
 
 export const BATTLE_DURATIONS={attack:1250,hurt:1700,victory:1600,star:1900};
 const pivots={knight:[[253,431],[645,429],[1137,427],[1584,425],[242,852],[706,854],[1115,862],[1543,863]],rabbit:[[230,453],[679,453],[1142,453],[1587,453],[237,872],[663,872],[1090,872],[1544,872]]};
@@ -25,7 +25,7 @@ async function loadAtlas(id,originalArt=false){
  const key=originalArt?id+'.source':id;
  if(caches.has(key)){const cached=caches.get(key);caches.delete(key);caches.set(key,cached);return cached;}
  if(!BATTLE_ART[id])throw Error('Unknown battle character');
- const pending=(async()=>{const packed=originalArt?null:await loadPackedBattle(id);if(packed){packed.frames.allyStar=packed.allyStar;return packed.frames;}const image=new Image();image.src=BATTLE_ART[id];await image.decode();
+ const pending=(async()=>{const packed=originalArt&&!BATTLE_META[id]?.packedOnly?null:await loadPackedBattle(id);if(packed){packed.frames.allyStar=packed.allyStar;return packed.frames;}const image=new Image();image.src=BATTLE_ART[id];await image.decode();
  const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;
  const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(image,0,0);
  const {width:w,height:h}=canvas,source=ctx.getImageData(0,0,w,h),rgba=source.data,labels=new Int32Array(w*h),queue=new Int32Array(w*h),parts=[];let label=0;
@@ -71,14 +71,14 @@ export function battlePose(kind,action,t,reduced=false){
   p.x=(kind==='rabbit'?14:24)*Math.sin(clamp(t/.16)*Math.PI/2)*(1-smooth((t-.42)/.58));p.angle=(kind==='rabbit'?2:3)*(1-smooth(t/.7));
  }else if(action==='victory'){p.frame=t<.12?5:6;p.face=2;p.y=kind==='rabbit'?-9*Math.abs(Math.sin(t*Math.PI*2))*Math.sin(t*Math.PI):0;
  }else if(action==='star'){p.frame=7;p.face=2;p.y=3*(1-smooth(t*3));}
- else if(action==='defeated'){p.frame=7;p.face=1;}
+ else if(action==='defeated'){p.frame=BATTLE_META[kind]?.defeatedFrame??7;p.face=1;}
  if(kind!=='knight'&&kind!=='rabbit'){
   const meta=BATTLE_META[kind],fx=meta?.fx,enemy=meta?.enemy,direction=enemy?-1:1;
   if(action==='attack'){const rush=smooth((t-.25)/.10)*(1-smooth((t-.67)/.33));p.x=direction*(-(['slash','dash','arrow'].includes(fx)?28:12)*rush);p.y=-(['dash','petal','wind','cloud'].includes(fx)?16:5)*Math.sin(clamp((t-.27)/.4)*Math.PI);}
   if(action==='hurt'){p.x*=direction;p.angle*=direction;}
   if(action==='victory'&&['petal','bubble','sun','berry'].includes(fx))p.y=-8*Math.abs(Math.sin(t*Math.PI*2))*Math.sin(t*Math.PI);
  }
- if(reduced){p.x=p.y=p.angle=0;p.frame=action==='attack'?2:action==='hurt'?4:action==='victory'?6:['star','defeated'].includes(action)?7:0;p.face=['hurt','defeated'].includes(action)?1:['victory','star'].includes(action)?2:3;}
+ if(reduced){p.x=p.y=p.angle=0;if(action!=='defeated')p.frame=action==='attack'?2:action==='hurt'?4:action==='victory'?6:action==='star'?7:0;p.face=['hurt','defeated'].includes(action)?1:['victory','star'].includes(action)?2:3;}
  return p;
 }
 

@@ -1,4 +1,6 @@
 import {CONCEPT_BATTLES} from './concept-battle-catalog.js?v=20261004-villains1';
+import {HANZI_ENVOYS} from './hanzi-envoys.js?v=20261123-starenvoys1';
+import {CHARACTER_CATALOG} from './character-catalog.js?v=20261123-starenvoys1';
 // Authored identity-specific battle sheets; ownership remains in the character catalog.
 export const BATTLE_META={
   "knight": {
@@ -500,5 +502,8 @@ export const BATTLE_META={
   }
 };
 for(const c of CONCEPT_BATTLES)BATTLE_META[c.id]={...c,enemy:true,concept:true,image:c.attackImage};
+for (const {id, name, fx, move, battleImage} of [...HANZI_ENVOYS, ...CHARACTER_CATALOG.filter(c => c.battleImage)]) {
+  BATTLE_META[id] = {id, name, fx, move, enemy: false, packedOnly: true, defeatedFrame: 4, image: battleImage};
+}
 export const BATTLE_ART=Object.freeze(Object.fromEntries(Object.entries(BATTLE_META).map(([id,c])=>[id,c.image])));
 export function battleCharacter(id){const key=id==='star-01-bo'?'knight':id;return Object.hasOwn(BATTLE_META,key)?key:null;}

@@ -1,4 +1,4 @@
-import {optimizedImage} from './data/portrait-thumbnails.js?v=20261007-ipad1';
+import {optimizedImage} from './data/portrait-thumbnails.js?v=20261123-starenvoys1';
 const cleanups=new WeakMap();
 export function disposeMonsterCardImages(root){for(const stage of root.querySelectorAll('.monster-card-stage')){cleanups.get(stage)?.();cleanups.delete(stage);}}
 
