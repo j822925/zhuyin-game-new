@@ -1,3 +1,4 @@
+import {createExamRoundStore} from './hanzi-session-store.js?v=20261124-exams1';
 import {showRoundOutcome} from './round-outcome.js?v=20261123-starenvoys1';
 import {createFarmLessonLink,requestedFarmLesson} from './farm-lesson-link.js?v=20261122-farm6';
 import {attachCopyEntries} from './hanzi-copy-entry.js?v=20261121-week1';
@@ -6,7 +7,7 @@ import {HANZI_AUDIO} from './data/hanzi-teacher-audio.js?v=20261115-hanzi2';
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
 import {validateBank,questionPool,splitBopomofo,gradeReading} from './hanzi-bank.js';
-import {createHanziClient,createHanziDemo,createRoundStore,resultRows,taskState,compactAnswers} from './hanzi-client.js?v=20261119-stars';
+import {createHanziClient,createHanziDemo,resultRows,taskState,compactAnswers} from './hanzi-client.js?v=20261119-stars';
 import {createHandwriting} from './hanzi-handwriting.js?v=20261115-hanzi2';
 import {gradeStrokes} from './hanzi-stroke-core.js';
 import {mountCharacter} from './character-motion.js?v=20261123-starenvoys1';
@@ -30,7 +31,7 @@ let correctionPhase='none',hintBeforeFirst=false,audioCancel=null;const correcti
 let questionGeneration=0,questionLoading=false,referenceReady=false,demoPlaying=false;
 const templates=new Map();
 const owner=()=>JSON.stringify([currentClass,demo?'demo':fixture?'fixture':'live',(localSession||sessions.read())?.seat||'']);
-const roundStore=createRoundStore({storage:tabStorage,key:classStorageKey('zhuyin.hanzi.round.v1:'+new URL('.',location.href).pathname+':'+(demo?'demo':fixture?'fixture':'live')),getOwner:owner});
+const roundStore=createExamRoundStore({storage:tabStorage,key:classStorageKey('zhuyin.hanzi.round.v1:'+new URL('.',location.href).pathname+':'+(demo?'demo':fixture?'fixture':'live')),getOwner:owner});
 const farm=createFarmLessonLink({family:'hanzi',demo,getSession:()=>localSession||sessions.read(),excluded:()=>!!activeTask||params.has('review')||params.has('task')});
 const opponent=createOpponent();$('opponent-slot').append(opponent);const battle=createBattle(opponent,()=>$('hero'));
 const fail=error=>{$('error').textContent=error.userMessage||messages[error.message]||'目前無法完成這個動作，請稍後再試。';console.warn('hanzi',error.message);};
@@ -62,13 +63,19 @@ function drawScope(){scopeCount();}
 function scopeCount(){const ids=getLessons();$('scope-description').textContent=ids.length?'':'老師還沒有開放課次。';document.querySelectorAll('[data-mode]').forEach(b=>b.disabled=!ids.length||busy);}
 
 function persist(){if(restoringInk)return;if(round){storageHealthy=roundStore.save({round,index,answers,feedbacks,submitted,currentAnswer,correctionPhase,hintBeforeFirst,strokes:ink?.getStrokes()||draftStrokes,hintUsed,inputInterrupted,inputTooComplex,activeTask,submitRequestId,correctCount,wrongCount});if(!storageHealthy)$('storage-warning').textContent='這台裝置暫時無法保存進度。請保持本頁開啟，完成後送出；重新整理會遺失未送出的答案。';}}
-function enter(){questionGeneration++;stopCorrectionAudio();questionLoading=false;restoringInk=false;referenceReady=false;demoPlaying=false;battle.reset();ink?.destroy();ink=null;show('entry');$('resume').hidden=!roundStore.read();if(bank)scopeCount();updateSubmit();}
-async function start(mode,task=null,questionIds=null){if(busy||questionLoading)return;if(roundStore.read()){const resume=$('resume');resume.hidden=false;resume.textContent='先接著上次的探險 →';resume.focus();$('error').textContent='還有一回合未完成，先完成並儲存，再開始新回合。';return;}busy=true;scopeCount();updateSubmit();try{
+function renderSavedRounds(){
+ const saved=roundStore.list();$('resume').hidden=!saved.length;$('resume').textContent=saved.length?'繼續：'+(saved.at(-1).activeTask?.title||'上次練習'): '繼續上次練習';
+ let list=$('saved-rounds');if(!list){list=node('div');list.id='saved-rounds';$('resume').after(list);}list.replaceChildren();
+ for(const draft of saved.slice(0,-1)){const b=node('button','繼續：'+(draft.activeTask?.title||'上次練習'));b.onclick=()=>resumeRound(draft);list.append(b);}
+ const other=node('a','選擇其他小考 →');other.href=classUrl('exam.html');list.append(other);
+}
+function enter(){questionGeneration++;stopCorrectionAudio();questionLoading=false;restoringInk=false;referenceReady=false;demoPlaying=false;battle.reset();ink?.destroy();ink=null;show('entry');renderSavedRounds();if(bank)scopeCount();updateSubmit();}
+async function start(mode,task=null,questionIds=null){if(busy||questionLoading)return;const saved=roundStore.read(task);if(saved){await resumeRound(saved);return;}busy=true;scopeCount();updateSubmit();try{
   const lessons=task?.lessonIds||getLessons(),termId=task?.termId||bootstrap.scope?.termId,allPool=questionPool(bank,lessons,mode,{termId}),pool=mode==='writing'&&bootstrap.writingReadyItemIds?allPool.filter(q=>bootstrap.writingReadyItemIds.includes(q.itemId)):allPool;
   const count=task?.kind==='assignment'?task.count:questionIds?.length||5;
   const base=task?.kind==='exam'?{examId:task.id}:{mode,lessonIds:lessons,termId,count,practiceRule:PRACTICE_RULE,...(task?.kind==='assignment'?{assignmentId:task.id}:{}),...(questionIds?{questionIds}:{})};
   const signature=JSON.stringify(base);if(!pendingStart||pendingStart.signature!==signature)pendingStart={signature,requestId:crypto.randomUUID()};const payload={...base,requestId:pendingStart.requestId};
-  round=await client.request(task?.kind==='exam'?'exam-start':'practice-start',payload);pendingStart=null;if(!round.questions?.length)throw Error('empty_scope');round.mode=round.run?.mode||round.mode||mode;round.roundId=round.roundId||round.run?.id;activeTask=task;index=0;answers=[];feedbacks=[];correctCount=0;wrongCount=0;submitted=false;correctionPhase='none';hintBeforeFirst=false;currentAnswer={};draftStrokes=[];submitRequestId=crypto.randomUUID();
+  round=await client.request(task?.kind==='exam'?'exam-start':'practice-start',payload);pendingStart=null;if(round.run?.status&&round.run.status!=='started'){roundStore.clear(round.run.id);renderResult(round.run);return;}if(!round.questions?.length)throw Error('empty_scope');round.mode=round.run?.mode||round.mode||mode;round.roundId=round.roundId||round.run?.id;activeTask=task;index=0;answers=[];feedbacks=[];correctCount=0;wrongCount=0;submitted=false;correctionPhase='none';hintBeforeFirst=false;currentAnswer={};draftStrokes=[];submitRequestId=crypto.randomUUID();
   if(round.run?.status&&round.run.status!=='started'){renderResult(round.run);return;}
   farm.start(round.run||{...round,id:round.roundId,kind:'practice',status:'started'});
   persist();await drawQuestion();
@@ -193,12 +200,14 @@ function renderResult(run){
 }
 async function finish(){stopCorrectionAudio();show('result');$('reward-status').textContent='';$('result-score').textContent='正在整理探險筆記…';$('result-detail').textContent='';$('save-status').textContent='正在儲存這一回合…';$('retry-save').hidden=true;$('again').disabled=true;busy=true;persist();try{
   const out=await client.request(isExam()?'exam-submit':'practice-submit',{roundId:round.roundId,attemptId:round.attemptId||round.roundId,...(isExam()?{examId:activeTask.id}:{}),requestId:submitRequestId,answers:compactAnswers(answers)});
-  renderResult(out.run);roundStore.clear();
+  roundStore.clear(out.run.id);renderResult(out.run);
 }catch(e){fail(e);$('result-score').textContent=storageHealthy?'答案已保留':'請保持本頁開啟';$('result-detail').textContent='還沒確認儲存成功，請留在這個分頁重試。';$('save-status').textContent='重試會使用同一份紀錄，不會重複計分。';$('retry-save').hidden=false;$('again').disabled=true;}finally{busy=false;}}
 $('retry-save').onclick=()=>{if(!busy)finish();};$('again').onclick=()=>{if(busy||questionLoading)return;if(params.get('from')==='daily'){location.href=classUrl('daily.html');return;}if(['notebook','exams'].includes(params.get('from'))){location.href=classUrl(params.get('from')==='notebook'?'notebook.html?mode=hanzi':'exam.html');return;}round=null;enter();};
-$('resume').onclick=async()=>{if(busy||questionLoading)return;const saved=roundStore.read();if(!saved){enter();return;}busy=true;updateSubmit();try{({round,index,answers,feedbacks,submitted,currentAnswer,hintUsed,inputInterrupted,activeTask,submitRequestId,correctCount,wrongCount}=saved);correctionPhase=saved.correctionPhase||'none';hintBeforeFirst=!!saved.hintBeforeFirst;inputTooComplex=!!saved.inputTooComplex;draftStrokes=saved.strokes||[];currentAnswer=currentAnswer||{};await drawQuestion(true);}catch(e){enter();fail(e);}finally{busy=false;if(screen==='entry')scopeCount();updateSubmit();}};
+async function resumeRound(saved){if(busy||questionLoading)return;if(!saved){enter();return;}busy=true;updateSubmit();try{({round,index,answers,feedbacks,submitted,currentAnswer,hintUsed,inputInterrupted,activeTask,submitRequestId,correctCount,wrongCount}=saved);correctionPhase=saved.correctionPhase||'none';hintBeforeFirst=!!saved.hintBeforeFirst;inputTooComplex=!!saved.inputTooComplex;draftStrokes=saved.strokes||[];currentAnswer=currentAnswer||{};await drawQuestion(true);}catch(e){enter();fail(e);}finally{busy=false;if(screen==='entry')scopeCount();updateSubmit();}}
+$('resume').onclick=()=>resumeRound(roundStore.read());
 
-$('back-entry').onclick=()=>{if(busy||questionLoading||restoringInk)return;if(screen==='play')$('leave-dialog').showModal();else if(screen==='result'&&roundStore.read()){$('error').textContent='請先重新儲存這回合，避免遺失紀錄。';}else enter();};$('stay').onclick=()=>$('leave-dialog').close();$('leave').onclick=()=>{if(busy||questionLoading||restoringInk)return;persist();$('leave-dialog').close();enter();};
+
+$('back-entry').onclick=()=>{if(busy||questionLoading||restoringInk)return;if(screen==='play')$('leave-dialog').showModal();else if(screen==='result'&&round){$('error').textContent='請先重新儲存這回合，避免遺失紀錄。';}else enter();};$('stay').onclick=()=>$('leave-dialog').close();$('leave').onclick=()=>{if(busy||questionLoading||restoringInk)return;persist();$('leave-dialog').close();enter();};
 document.querySelectorAll('[data-mode]').forEach(button=>button.onclick=()=>start(button.dataset.mode));
 async function launchFromPlaza(){
  const taskId=params.get('task'),review=params.get('review');
