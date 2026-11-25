@@ -11,7 +11,7 @@ const saveKey=classStorageKey('weekly-hanzi:v1:'+base+':'+(demo?'demo':'student'
 const api=['localhost','127.0.0.1'].includes(location.hostname)?location.origin:'https://zhuyin-api.j822925.workers.dev';
 get('home').href=classUrl('hanzi.html'+(demo?'?demo=1':''));
 get('title').textContent=quiz?'七字認字挑戰':'每週認字';
-get('note').textContent=(demo?'教師試玩 · ':'')+(quiz?'七個字各答一次，全對拿 7 顆星。每週最多 70 顆。':'選一個字，點一點，聽讀音和造詞。');
+get('note').textContent=(demo?'教師試玩 · ':'')+(quiz?'中途離開要從第 1 題重來。七題全對拿 7 顆星，每週最多 70 顆。':'選一個字，點一點，聽讀音和造詞。');
 let edition,round,busy=false,timer,spoken=0,audio=new Audio();
 function element(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;}
 function button(text,fn,cls){const b=element('button',text,cls);b.type='button';b.onclick=fn;return b;}
@@ -60,21 +60,21 @@ function study(i=0,play=false){
  card.words.forEach(w=>words.append(button('♪ '+w,()=>{speak(w);letters.replaceChildren(element('span','聽單字'));for(const ch of w)letters.append(button(ch,()=>speak(ch,ch===card.char?card.reading:undefined)));})));
  panel.append(words,letters);content.append(tabs,panel);if(play)sound();
 }
-function newRound(){round={weekId:edition.weekId,roundId:crypto.randomUUID(),order:shuffled(edition.cards.map(c=>c.char)),answers:[],input:''};write(saveKey,round);question();}
+function newRound(){round={weekId:edition.weekId,roundId:crypto.randomUUID(),order:shuffled(edition.cards.map(c=>c.char)),answers:[],input:''};write(saveKey,null);question();}
 function question(){
  if(round.answers.length===7){void submit();return;}
  content.replaceChildren();const n=round.answers.length,panel=element('article',undefined,'quiz');
  const top=element('div',undefined,'quiz-head'),out=element('output',round.input||'？','answer');
  out.setAttribute('aria-label','我的注音');top.append(element('span','第 '+(n+1)+'／7 題'),element('strong',round.order[n],'prompt'),out);
  const keys=element('div',undefined,'keys');panel.append(top,keys);content.append(panel);
- const tones='ˉˊˇˋ˙';const update=value=>{round.input=value;out.textContent=value||'？';write(saveKey,round);};
+ const tones='ˉˊˇˋ˙';const update=value=>{round.input=value;out.textContent=value||'？';};
  for(const key of 'ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄧㄨㄩㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦ'+tones){
    const mark=tones.includes(key),b=button(key,()=>{if(mark)update(round.input.replace(/[ˉˊˇˋ˙]/g,'')+key);else if(round.input.replace(/[ˉˊˇˋ˙]/g,'').length<3)update(round.input.replace(/[ˉˊˇˋ˙]/g,'')+key);});
    if(mark)b.setAttribute('aria-label',['一聲','二聲','三聲','四聲','輕聲'][tones.indexOf(key)]);keys.append(b);
  }
  const actions=element('div',undefined,'actions');actions.append(button('刪一個',()=>update(round.input.slice(0,-1))),button(n===6?'完成挑戰':'下一題 →',()=>{
    if(!/[ㄅ-ㄩ]/.test(round.input)){get('status').textContent='先點注音，再送出。';return;}
-   get('status').textContent='';round.answers.push({char:round.order[n],reading:round.input});round.input='';write(saveKey,round);question();
+   get('status').textContent='';round.answers.push({char:round.order[n],reading:round.input});round.input='';if(round.answers.length===7)write(saveKey,round);question();
  },'primary'));panel.append(actions);
 }
 async function submit(){
@@ -95,10 +95,20 @@ async function load(fresh=false){
    edition=await request('weekly-set');const until=new Date(edition.changesAt).toLocaleDateString('zh-TW',{timeZone:'Asia/Taipei',month:'numeric',day:'numeric'});
    get('edition').textContent='下次換字 '+until;
    const saved=read(saveKey);
-   if(quiz){if(!fresh&&saved?.order?.length===7&&(saved.weekId===edition.weekId||saved.answers?.length===7)){round=saved;question();}else newRound();}
+   if(quiz){if(!fresh&&saved?.order?.length===7&&saved.answers?.length===7){round=saved;question();}else newRound();}
    else study();
    timer=setTimeout(()=>{if(!busy)load();},Math.max(1500,edition.changesAt-Date.now()+250));
  }catch(e){retry(e,()=>load());}
 }
+function abandonPartialRound(){
+ if(!quiz||!round||round.answers.length===7)return;
+ round=null;write(saveKey,null);content.replaceChildren();
+}
+function returnToChallenge(){
+ if(quiz&&!round&&edition&&!busy&&Date.now()<edition.changesAt)newRound();
+}
+window.addEventListener('pagehide',abandonPartialRound);
+window.addEventListener('pageshow',e=>{if(e.persisted)returnToChallenge();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)abandonPartialRound();else returnToChallenge();});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!busy&&edition&&Date.now()>=edition.changesAt)load();});
 load();

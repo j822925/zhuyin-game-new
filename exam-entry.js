@@ -17,5 +17,6 @@ export function setupExamEntry({endpoint,home,demo,monsterCollection}){
  card({href:'star-cards.html?v=20261123-starenvoys1',theme:'destination-stars',icon:'assets/icons/star-collection-v1.svg',title:'星之使者',description:'領取滿分獎勵・看看我的卡片'});
  if(monsterCollection){const {a}=card({href:'#',theme:'destination-monsters',icon:'assets/icons/monster-collection.svg',title:'可愛反派收藏',description:'隨機遇見・全對擊敗三次就能收藏'});monsterCollection.button.className='destination-card destination-monsters';monsterCollection.button.replaceChildren(...a.childNodes);a.replaceWith(monsterCollection.button);}
  card({href:'notebook.html',theme:'destination-exam',icon:'assets/icons/mistake-notebook.svg',title:'我的錯題本',description:'所有關卡的錯題・再練一次！'});
+ card({href:classUrl('guided-practice.html'),theme:'destination-exam',icon:'assets/icons/classroom-quiz.svg',title:'課堂練習',description:'跟著提示練一練，再自己答一次'});
  home.prepend(panel);
 }

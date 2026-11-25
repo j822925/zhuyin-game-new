@@ -1,11 +1,11 @@
 import {bootPreparation} from './preparation.js?v=20261123-starenvoys1';
 (async()=>{void bootPreparation().catch(()=>{});
-await import('./app.js?v=20261123-starenvoys1');
+await import('./app.js?v=20261125-guided');
 await import('./forest-home-entry.js?v=20261023-zonemusic1');
 await import('./child-navigation.js?v=20260928-all1');
 await import('./reading-entry.js?v=20261025-homegallery1');
 await import('./tone-entry.js?v=20261011-teacher1');
-await import('./teacher-hub.js?v=20261106-annual2');
+await import('./teacher-hub.js?v=20261125-guided');
 await import('./annual-challenge-entry.js?v=20261106-annual2').catch(()=>{});
 await import('./arithmetic-entry.js?v=20261115-math3').catch(()=>{});
 await import('./hanzi-entry.js?v=20261123-starenvoys1').catch(()=>{});

@@ -8,6 +8,7 @@ if(new URLSearchParams(location.search).get('demo')==='1'){
  <a href="https://zhuyin-api.j822925.workers.dev/trial/admin/"><b>👩‍🏫 指定學生重考</b><span>登入測試後台 → 建立小考 → 指定 901 或 902 重考。保留原題，獎勵不重複發放。</span></a>
  <a href="https://zhuyin-api.j822925.workers.dev/trial/"><b>🎮 學生視角・讀取優化</b><span>虛構座號 901／902，測試密碼 2580。玩關卡、參加測試小考；只保存測試紀錄。</span></a>
  <a href="https://zhuyin-api.j822925.workers.dev/trial/notebook.html"><b>📒 錯題本複習</b><span>先在測試小考或完成的練習回合答錯，再來複習。答對一次就移出錯題本。</span></a>
+ <a href="guided-practice.html?demo=1"><b>✏️ 課堂練習</b><span>試寫、看錯筆提示，再自己訂正。</span></a>
  <a href="teacher-preview/reading.html?demo=1"><b>🎙️ 朗讀小舞台</b><span>讀出注音詞語，試用麥克風與辨識。只示範，不記正式成績。</span></a>
  <a href="tone.html?demo=1"><b>🎭 聲調小劇場</b><span>998 個老師詞語與短句錄音，選每個字的聲調；提供慢速重播、無變音／有變音。不記正式成績、不發星星。</span></a>
  </div><p class="trial-note">重考／錯題本共用獨立測試班，不要填真實學生姓名或密碼。試玩星星與卡片不會轉入正式帳號。</p>`;
