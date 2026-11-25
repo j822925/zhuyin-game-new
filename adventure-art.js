@@ -1,3 +1,4 @@
+import {furnitureFor} from './data/home-furniture.js';
 import {drawHomeRest,drawHomePlay} from './adventure-rest-art.js';
 import {clothingCharacter,ensureClothingArt,drawClothing} from './adventure-clothing.js';
 import {GROVE_WORLD,ISLAND_WORLD} from './adventure-exploration-model.js';
@@ -264,10 +265,10 @@ export class ForestScene{
     const visible=furniturePreviewLayout(state,this.placement,this.area);
     for(const item of visible){const pos=attachedPosition(item,visible,FURNITURE);if(pos)Object.assign(item,pos);}
     const paintItem=item=>drawFurniture(c,this.art,item,item.id===this.placement?.id?{alpha:.9,outline:item.valid?'#658a50':'#bd795e'}:{});
-    for(const item of visible.filter(item=>FURNITURE.find(f=>f.id===item.id).wall))paintItem(item);
+    for(const item of visible.filter(item=>furnitureFor(item.id).wall))paintItem(item);
     if(!integratedShell)drawInteriorDoors(c,this.art,this.area,wall);
-    for(const item of visible.filter(item=>FURNITURE.find(f=>f.id===item.id).flat))paintItem(item);
-    const things=[...(this.area==='bedroom'?[{y:ROOM_WARDROBE.y,paint:()=>drawRoomWardrobe(c,wall,this.art)}]:[]),...visible.filter(item=>!FURNITURE.find(f=>f.id===item.id).flat&&!FURNITURE.find(f=>f.id===item.id).wall).map(item=>({y:item.on?(visible.find(p=>p.id===item.on)?.y??item.y)+.1:item.y,paint:()=>paintItem(item)})),{y:p.y,paint:()=>{
+    for(const item of visible.filter(item=>furnitureFor(item.id).flat))paintItem(item);
+    const things=[...(this.area==='bedroom'?[{y:ROOM_WARDROBE.y,paint:()=>drawRoomWardrobe(c,wall,this.art)}]:[]),...visible.filter(item=>!furnitureFor(item.id).flat&&!furnitureFor(item.id).wall).map(item=>({y:item.on?(visible.find(p=>p.id===item.on)?.y??item.y)+.1:item.y,paint:()=>paintItem(item)})),{y:p.y,paint:()=>{
       if(this.homeRest||this.editing)return;
       c.save();if(this.dining){c.translate(p.x,p.y);c.rotate(diningFrame(this.dining,now,this.reduced.matches).lean);c.translate(-p.x,-p.y);}
       this.drawPlayer(c,this.art,{x:p.x,y:p.y,height:116,outfit:state.outfit,direction:p.direction,walking:p.moving&&!this.reduced.matches,phase:p.phase,wand:state.wand&&!this.dining});c.restore();

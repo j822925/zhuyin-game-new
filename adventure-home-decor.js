@@ -7,7 +7,7 @@ import {wallPosition} from './data/home-wall-furniture.js';
 import {completeAction} from './adventure-action-feedback.js';
 import {hasEnergy} from './adventure-food-model.js';
 import {FURNITURE,layoutFor,isInterior,hasFurnitureOverlap,canPlaceFurniture,placementState,furnitureSurfacePlan,canReachInterior,placeFurniture,storeFurniture} from './adventure-model.js';
-import {HOME_STYLES} from './data/home-furniture.js';
+import {furnitureFor,HOME_STYLES} from './data/home-furniture.js';
 import {ensureHomeArt} from './adventure-home-art.js?v=20261010-light2';
 import {ensureWardrobeArt} from './adventure-wardrobe-art.js';
 import {ensureRoomShell} from './home-room-shells.js';
@@ -39,7 +39,7 @@ export function createHomeDecor(api){
   if(!['furniture','wallpaper'].includes(category)){inventoryPalette();return;}
   $('decor-store').hidden=category==='wallpaper';$('decor-place').textContent=category==='wallpaper'?'換上整套風格 ✓':'放好了 ✓';$('decor-cancel').textContent=category==='wallpaper'?'取消預覽':'取消移動';
   if(category==='wallpaper'){await wallpaperPalette();return;}
-  const token=++version,currentArea=area(),available=FURNITURE.filter(f=>state().furnitureOwned.includes(f.id));
+  const token=++version,currentArea=area(),available=state().furnitureOwned.map(id=>{const product=furnitureFor(id);return product&&{...product,id,name:id===product.id?product.name:product.name+'・第'+id.slice(id.lastIndexOf('__')+2)+'件'};}).filter(Boolean);
   const styles=new Set(available.map(f=>f.style));if(!['all','special'].includes(style)&&!styles.has(style))style='all';
   const items=available.filter(f=>style==='all'||(style==='special'?(!HOME_STYLES.some(s=>s.id===f.style)||f.zoneShop||f.giftOnly):f.style===style)).sort((a,b)=>currentArea==='kitchen'?Number(!!b.cooking)-Number(!!a.cooking):0);
   const theme=HOME_STYLES.find(s=>s.id===style);$('decor-style-note').textContent=theme?`${theme.character}的靈感・${theme.description}`:'';
@@ -48,12 +48,12 @@ export function createHomeDecor(api){
   $('furniture-palette').innerHTML=items.map(f=>{const owned=state().furnitureOwned.includes(f.id),here=layoutFor(state(),currentArea).some(p=>p.id===f.id),elsewhere=['room','kitchen','bedroom','bathroom'].some(a=>a!==currentArea&&layoutFor(state(),a).some(p=>p.id===f.id));return `<button type="button" data-furniture="${f.id}" aria-pressed="${scene().placement?.id===f.id}" aria-label="${f.name}，${owned?'已擁有':f.price+' 星幣'}"><canvas width="180" height="150" aria-hidden="true"></canvas><span>${f.wall?"🖼️ ":""}${f.name}</span><small>${owned?(here?'✓ 擺放中':elsewhere?'另一個房間':'已擁有・收納中'):`✦ ${f.price} 星幣`}</small></button>`;}).join('');
   loading=true;$('furniture-palette').setAttribute('aria-busy','true');$('furniture-palette').querySelectorAll('button').forEach(b=>b.disabled=true);
   try{await ensureHomeArt(api.art(),items.map(f=>f.atlas).filter(Boolean));if(token!==version)return;
-   $('furniture-palette').querySelectorAll('button').forEach(b=>{drawFurnitureThumb(b.querySelector('canvas'),api.art(),b.dataset.furniture);const f=FURNITURE.find(f=>f.id===b.dataset.furniture);if(f.areas&&!f.areas.includes(currentArea)){b.querySelector('small').textContent='放在'+f.areas.map(a=>({kitchen:'廚房',bathroom:'衛浴',bedroom:'臥室',room:'客廳'})[a]).join('／');b.disabled=true;}else{b.disabled=false;b.onclick=()=>select(b.dataset.furniture);}});
+   $('furniture-palette').querySelectorAll('button').forEach(b=>{drawFurnitureThumb(b.querySelector('canvas'),api.art(),b.dataset.furniture);const f=furnitureFor(b.dataset.furniture);if(f.areas&&!f.areas.includes(currentArea)){b.querySelector('small').textContent='放在'+f.areas.map(a=>({kitchen:'廚房',bathroom:'衛浴',bedroom:'臥室',room:'客廳'})[a]).join('／');b.disabled=true;}else{b.disabled=false;b.onclick=()=>select(b.dataset.furniture);}});
   }catch{if(token===version)$('decor-hint').textContent='這套家具還没載入完成，點上方風格再試一次。';}
   finally{if(token===version){loading=false;$('furniture-palette').setAttribute('aria-busy','false');}}
  }
  function select(id){
-  if(loading||category!=='furniture')return;if(!hasEnergy(state())){api.toast('🥄 先吃點東西，再布置');return;}const f=FURNITURE.find(f=>f.id===id);if(!f||!state().furnitureOwned.includes(id)||!api.art()[f.atlas||'furniture'])return;autoOrient=true;
+  if(loading||category!=='furniture')return;if(!hasEnergy(state())){api.toast('🥄 先吃點東西，再布置');return;}const f=furnitureFor(id);if(!f||!state().furnitureOwned.includes(id)||!api.art()[f.atlas||'furniture'])return;autoOrient=true;
   let pos=layoutFor(state(),area()).find(p=>p.id===id);
   // A saved direction is the child's choice. Only a new item follows its host
   // automatically; attaching it must never overwrite an explicit rotation.
@@ -64,21 +64,21 @@ export function createHomeDecor(api){
   scene().placement={facing:'front',...pos,id,x:pos?.x??640,y:pos?.y??550,valid:false};if(f.corner)Object.assign(scene().placement,floorPosition(scene().placement,f));update();
   $('furniture-palette').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.furniture===id)));
  }
- function move(at){const p=scene().placement;if(!p)return;const f=FURNITURE.find(f=>f.id===p.id),layout=layoutFor(state(),area());let snapped=null,best=Infinity;
-  if(f.small)for(const host of layout.filter(x=>x.id!==p.id))for(const [i,s]of furnitureSurfaces(FURNITURE.find(f=>f.id===host.id)).entries()){const distance=surfaceDistance(host,s,at),facing=surfacePlacement(p,{on:host.id,surface:i}).facing,plan=planSurfacePlacement(p.id,host,i,layout,FURNITURE,at,{facing});if(plan.position&&distance<45&&distance<best){best=distance;snapped=plan.position;}}
+ function move(at){const p=scene().placement;if(!p)return;const f=furnitureFor(p.id),layout=layoutFor(state(),area());let snapped=null,best=Infinity;
+  if(f.small)for(const host of layout.filter(x=>x.id!==p.id))for(const [i,s]of furnitureSurfaces(furnitureFor(host.id)).entries()){const distance=surfaceDistance(host,s,at),facing=surfacePlacement(p,{on:host.id,surface:i}).facing,plan=planSurfacePlacement(p.id,host,i,layout,FURNITURE,at,{facing});if(plan.position&&distance<45&&distance<best){best=distance;snapped=plan.position;}}
   delete p.on;delete p.surface;delete p.offsetX;const next=snapped?surfacePlacement(p,snapped):(f.wall?wallPosition(at,f,area()):floorPosition({...p,...at},f,{auto:autoOrient,area:area()}));delete p.mount;Object.assign(p,next);update();}
  function surfacePlacement(p,spot){
   if(!autoSurfaceFacing)return {...spot,facing:p.facing||'front'};
-  const host=layoutFor(state(),area()).find(item=>item.id===spot.on),surface=furnitureSurfaces(FURNITURE.find(f=>f.id===host?.id))[spot.surface];
+  const host=layoutFor(state(),area()).find(item=>item.id===spot.on),surface=furnitureSurfaces(furnitureFor(host?.id))[spot.surface];
   const facing=surface?.wing?(host.mount==='corner-right'?'right':'left'):host?.mount?.startsWith('corner-')?'front':['left','right'].includes(host?.mount)?host.mount:host?.facing||'front';
   return {...spot,facing};
  }
  function supportChoices(p,f){let box=$('decor-supports');if(!box){box=document.createElement('div');box.id='decor-supports';box.style.cssText='display:flex;gap:6px;flex-wrap:wrap;margin:8px 0';$('decor-hint').before(box);}box.replaceChildren();box.hidden=!f?.small;if(!f?.small)return;
-  for(const host of layoutFor(state(),area()).filter(x=>x.id!==p.id)){const base=FURNITURE.find(f=>f.id===host.id);furnitureSurfaces(base).forEach((surface,i)=>{const facing=surfacePlacement(p,{on:host.id,surface:i}).facing,plan=planSurfacePlacement(p.id,host,i,layoutFor(state(),area()),FURNITURE,undefined,{facing});const b=document.createElement('button');b.type='button';b.textContent=base.name+'・'+surface.name+'・'+(plan.ok?(plan.moved?'整理後可放':'可放'):plan.reason==='item-too-wide'?'物品太寬':'空間不足');b.title=surfaceCapacityText(plan);b.disabled=!plan.ok;b.style.cssText='font-size:13px;min-height:44px;padding:5px 9px';b.onclick=()=>{if(!plan.ok)return;delete p.mount;Object.assign(p,surfacePlacement(p,plan.position));update();};box.append(b);});}
+  for(const host of layoutFor(state(),area()).filter(x=>x.id!==p.id)){const base=furnitureFor(host.id);furnitureSurfaces(base).forEach((surface,i)=>{const facing=surfacePlacement(p,{on:host.id,surface:i}).facing,plan=planSurfacePlacement(p.id,host,i,layoutFor(state(),area()),FURNITURE,undefined,{facing});const b=document.createElement('button');b.type='button';b.textContent=base.name+'・'+surface.name+'・'+(plan.ok?(plan.moved?'整理後可放':'可放'):plan.reason==='item-too-wide'?'物品太寬':'空間不足');b.title=surfaceCapacityText(plan);b.disabled=!plan.ok;b.style.cssText='font-size:13px;min-height:44px;padding:5px 9px';b.onclick=()=>{if(!plan.ok)return;delete p.mount;Object.assign(p,surfacePlacement(p,plan.position));update();};box.append(b);});}
  }
  function update(){
   const placing=!!scene()?.placement&&category==='furniture';document.body.classList.toggle('decor-placing',placing);choose.hidden=!placing;controls.hidden=!placing;rooms.hidden=placing;rooms.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.room===area())));controls.replaceChildren();
-  if(placing){const p=scene().placement,f=FURNITURE.find(f=>f.id===p.id);const label=document.createElement('strong');label.textContent=f.name;controls.append(label);
+  if(placing){const p=scene().placement,f=furnitureFor(p.id);const label=document.createElement('strong');label.textContent=f.name;controls.append(label);
    for(const direction of (f.wall?[]:facingOptions(f))){const b=document.createElement('button');b.type='button';b.textContent=({front:'↓ 正面',right:'→ 向右',back:'↑ 背面',left:'← 向左'})[direction];b.setAttribute('aria-pressed',String((p.facing||'front')===direction));b.onclick=()=>{autoOrient=false;autoSurfaceFacing=false;p.facing=direction;if(!f.corner)delete p.mount;if(f.corner)Object.assign(p,floorPosition({...p,x:direction==='left'?360:920},f));update();};controls.append(b);}
    if(!f.wall&&!f.corner){const b=document.createElement('button');b.type='button';b.textContent=f.small?(autoSurfaceFacing?'🧲 跟隨檯面':'🧭 自選方向'):autoOrient?'🧲 自動靠牆':'🧲 自由放置';b.setAttribute('aria-pressed',String(f.small?autoSurfaceFacing:autoOrient));b.onclick=()=>{delete p.mount;if(f.small){autoSurfaceFacing=!autoSurfaceFacing;if(autoSurfaceFacing&&p.on)Object.assign(p,surfacePlacement(p,p));}else{autoOrient=!autoOrient;if(autoOrient)Object.assign(p,floorPosition(p,f,{auto:true,area:area()}));}update();};controls.append(b);}
   }requestAnimationFrame(resize);
@@ -90,7 +90,7 @@ export function createHomeDecor(api){
    $('decor-place').disabled=loading||!owned||state().wallpaper===w?.id;$('decor-cancel').disabled=!w;$('decor-hint').classList.remove('invalid');
    $('decor-hint').textContent=!w?'選已擁有的室內風格。新款在探險島地圖的家具行。':!owned?(state().stars<w.price?`還差 ${w.price-state().stars} 星幣。`:`正在預覽${w.name}，喜歡再買下。`):state().wallpaper===w.id?'四個房間已換好風格。':'正在預覽，按「換上整套風格」就會保存。';return;
   }
-  const p=scene()?.placement,f=FURNITURE.find(f=>f.id===p?.id),owned=!!f&&state().furnitureOwned.includes(f.id);let valid=false;
+  const p=scene()?.placement,f=furnitureFor(p?.id),owned=!!f&&state().furnitureOwned.includes(p.id);let valid=false;
   supportChoices(p,f);
   const surfacePlan=p?.on?furnitureSurfacePlan(state(),p.id,p,area()):null;
   if(p&&owned){const preview=placementState(state(),p.id,p,area());valid=(!p.on||surfacePlan?.ok)&&preview!==state()&&canPlaceFurniture(state(),p.id,surfacePlan?.position||p,area())&&canReachInterior(preview,scene().player,area());p.valid=valid;}

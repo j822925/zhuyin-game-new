@@ -1,7 +1,7 @@
+import {furnitureFor} from './data/home-furniture.js';
 import {COLLECTION_CROPS,COLLECTION_RAW_FOOD,COLLECTION_RECIPES} from './data/collection-foods.js';
 import {LESSON_CROPS,LESSON_RAW_FOOD,LESSON_RECIPES} from './data/lesson-harvest-foods.js';
 import {SHOP_FOODS} from './data/zone-shop-foods.js';
-import {FURNITURE} from './data/home-furniture.js';
 export const MAX_ENERGY=100;
 export const ENERGY_COST={fish:0,battle:8};
 export const ENERGY_DECAY_MS=60*60*1000;
@@ -26,7 +26,7 @@ export function hasEnergy(state){decayEnergy(state.life?.nutrition);return state
 export function canSpendEnergy(state,action){const cost=ENERGY_COST[action];decayEnergy(state.life?.nutrition);return Number.isInteger(cost)&&state.life?.nutrition?.energy>=cost;}
 export function spendEnergy(state,action){if(!canSpendEnergy(state,action))return false;state.life.nutrition.energy-=ENERGY_COST[action];return true;}
 export function ingredientCount(state,id){return id==='fish'?Object.values(state.life.fish).reduce((a,b)=>a+b,0):(state.life.harvest[id]||0);}
-export function canCook(state,id,{stationId,area}={}){decayEnergy(state.life?.nutrition);if(area!=='kitchen'||!state.furnitureOwned?.includes(stationId)||!FURNITURE.some(f=>f.id===stationId&&f.cooking)||!state.kitchenLayout?.some(f=>f.id===stationId))return false;const r=Object.hasOwn(RECIPES,id)&&RECIPES[id];return !!r&&!r.buyOnly&&state.life.nutrition.meals[id]<9999&&Object.entries(r.ingredients).every(([key,n])=>ingredientCount(state,key)>=n);}
+export function canCook(state,id,{stationId,area}={}){decayEnergy(state.life?.nutrition);if(area!=='kitchen'||!state.furnitureOwned?.includes(stationId)||!furnitureFor(stationId)?.cooking||!state.kitchenLayout?.some(f=>f.id===stationId))return false;const r=Object.hasOwn(RECIPES,id)&&RECIPES[id];return !!r&&!r.buyOnly&&state.life.nutrition.meals[id]<9999&&Object.entries(r.ingredients).every(([key,n])=>ingredientCount(state,key)>=n);}
 export function cookMeal(state,id,context){if(!canCook(state,id,context))return false;
  for(const [key,amount]of Object.entries(RECIPES[id].ingredients)){
   if(key==='fish'){let remaining=amount;for(const fish of Object.keys(state.life.fish)){const used=Math.min(remaining,state.life.fish[fish]);state.life.fish[fish]-=used;remaining-=used;}}

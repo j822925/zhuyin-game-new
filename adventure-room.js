@@ -1,4 +1,5 @@
-import {FURNITURE,ROOM_WARDROBE,ROOM_KITCHEN_DOOR,ROOM_BEDROOM_DOOR,WALL_DOOR,furnitureRect} from './adventure-model.js';
+import {furnitureFor} from './data/home-furniture.js';
+import {ROOM_WARDROBE,ROOM_KITCHEN_DOOR,ROOM_BEDROOM_DOOR,WALL_DOOR,furnitureRect} from './adventure-model.js';
 import {wallSide} from './data/home-wall-furniture.js';
 import {drawSpatialFurniture,drawSpatialThumb,drawSpatialDoor,furnitureVisualBounds} from './home-spatial-art.js';
 
@@ -59,7 +60,7 @@ export function drawRoomWardrobe(c,style='original',art){
   c.drawImage(image,x-width/2,y-height,width,height);
 }
 export function drawFurniture(c,art,item,{alpha=1,outline=null}={}){
-  const f=FURNITURE.find(x=>x.id===item.id),atlas=art[f.atlas||'furniture'];if(!atlas)return;const s=atlas.cells[f.index],height=f.height,width=s.w/s.h*height;
+  const f=furnitureFor(item.id),atlas=art[f.atlas||'furniture'];if(!atlas)return;const s=atlas.cells[f.index],height=f.height,width=s.w/s.h*height;
   c.save();c.globalAlpha=alpha;
   if(drawSpatialFurniture(c,art,f,item)){if(outline){const r=furnitureVisualBounds(art,f,item);c.strokeStyle=outline;c.lineWidth=3;c.setLineDash([7,5]);c.strokeRect(r.x,r.y,r.w,r.h);}c.restore();return;}
   if(f.wall){const side=f.ceiling?0:wallSide(item);c.translate(item.x,item.y);if(side)c.transform(.42,side,0,1,0,0);c.drawImage(atlas.image,s.x,s.y,s.w,s.h,-width/2,-height,width,height);if(outline){c.strokeStyle=outline;c.lineWidth=3;c.setLineDash([7,5]);c.strokeRect(-width/2,-height,width,height);}c.restore();return;}
@@ -74,7 +75,7 @@ export function drawFurniture(c,art,item,{alpha=1,outline=null}={}){
   c.restore();
 }
 export function drawFurnitureThumb(canvas,art,id){
-  const f=FURNITURE.find(x=>x.id===id),atlas=art[f.atlas||'furniture'],c=canvas.getContext('2d');c.clearRect(0,0,canvas.width,canvas.height);if(!atlas)return;const s=atlas.cells[f.index];
+  const f=furnitureFor(id),atlas=art[f.atlas||'furniture'],c=canvas.getContext('2d');c.clearRect(0,0,canvas.width,canvas.height);if(!atlas)return;const s=atlas.cells[f.index];
   if(drawSpatialThumb(c,art,f,canvas.width,canvas.height))return;
   const scale=Math.min((canvas.width-12)/s.w,(canvas.height-10)/s.h);c.drawImage(atlas.image,s.x,s.y,s.w,s.h,(canvas.width-s.w*scale)/2,canvas.height-s.h*scale-4,s.w*scale,s.h*scale);
 }

@@ -1,3 +1,4 @@
+import {furnitureFor} from './data/home-furniture.js';
 import {FURNITURE,roomWalkable,placementState,INTERIOR_AREAS,layoutKeyFor} from './adventure-model.js';
 import {RECIPES,RAW_FOOD,eatFood,hasEnergy} from './adventure-food-model.js';
 import {CROPS} from './adventure-life-model.js';
@@ -7,8 +8,8 @@ export const DINING_TABLES=FURNITURE.filter(f=>f.dining).map(f=>f.id);
 export function diningSpot(state,tableId=null){
  for(const table of state.layout||[]){
   if(tableId&&table.id!==tableId)continue;
-  if(!DINING_TABLES.includes(table.id)||!state.furnitureOwned.includes(table.id))continue;
-  const f=FURNITURE.find(f=>f.id===table.id),y=Math.min(720,table.y+12);
+  if(!furnitureFor(table.id)?.dining||!state.furnitureOwned.includes(table.id))continue;
+  const f=furnitureFor(table.id),y=Math.min(720,table.y+12);
   for(const side of [-1,1]){const x=table.x+side*96;if(roomWalkable(x,y,state,'room'))return {table:{...table},surface:{x:table.x,y:table.y+(f.surfaceLevels?furnitureSurfaces(f)[0]?.dy??-f.height*.72:-f.height*.72)},player:{x,y,direction:side===-1?1:3,moving:false,phase:0}};}
  }
  return null;
@@ -16,7 +17,7 @@ export function diningSpot(state,tableId=null){
 // Narrow zero-energy exception: restore one owned table, no purchase or free edit.
 export function restoreDiningTable(state){
  if(hasEnergy(state)||diningSpot(state))return false;
- const id=DINING_TABLES.find(id=>state.furnitureOwned.includes(id));if(!id)return false;
+ const id=state.furnitureOwned.find(id=>furnitureFor(id)?.dining);if(!id)return false;
  const next=placementState(state,id,{x:610,y:492},'room');
  for(const area of INTERIOR_AREAS)state[layoutKeyFor(area)]=next[layoutKeyFor(area)];return true;
 }

@@ -38,7 +38,7 @@ export function createShop(api){
  function lineItem(line){return mode==='sell'?inventoryItems(s(),active.id).find(v=>v.kind===line.kind&&v.id===line.id):cartItem(line.kind,line.id);}
  const price=item=>mode==='sell'?item?.sellPrice||0:item?.price||0;
  function add(item){
-  const lines=basket(),max=mode==='sell'?item.quantity:['seeds','meal','bait'].includes(item.kind)?99:1;
+  const lines=basket(),max=mode==='sell'?item.sellableQuantity:['seeds','meal','bait','furniture'].includes(item.kind)?99:1;
   let line=lines.find(l=>l.kind===item.kind&&l.id===item.id);
   if(line&&line.quantity>=Math.min(99,max)){notice='已達可選數量';void render();return;}
   if(line)line.quantity++;else lines.push({kind:item.kind,id:item.id,quantity:1});
@@ -52,7 +52,7 @@ export function createShop(api){
    const controls=document.createElement('div');controls.className='cart-quantity';
    const minus=btn('−',()=>{line.quantity--;baskets[mode]=basket().filter(x=>x.quantity>0);stage='browse';void render();});minus.ariaLabel='減少 '+(item?.name||'物品');controls.append(minus);
    const qty=document.createElement('b');qty.textContent=line.quantity;controls.append(qty);
-   const max=selling?item?.quantity||0:['seeds','meal','bait'].includes(line.kind)?99:1;
+   const max=selling?item?.sellableQuantity||0:['seeds','meal','bait','furniture'].includes(line.kind)?99:1;
    const plus=btn('+',()=>{if(item)add(item);});plus.ariaLabel='增加 '+(item?.name||'物品');plus.disabled=line.quantity>=Math.min(99,max);controls.append(plus);row.append(controls);list.append(row);
   }
   const total=basket().reduce((n,l)=>n+price(lineItem(l))*l.quantity,0),after=s().stars+(selling?total:-total);
@@ -80,10 +80,10 @@ export function createShop(api){
   list.forEach((item,i)=>{
    const count=ownedQuantity(s(),item.kind,item.id),selected=mode===(inventory?'sell':'buy')?(baskets[mode].find(l=>l.kind===item.kind&&l.id===item.id)?.quantity||0):0;
    const roleLocked=item.kind==='clothes'&&eligibility(s(),item.id)==='role-locked';
-   const locked=inventory?mode!=='sell'||!!item.sellReason:mode==='sell'||roleLocked||(count>0&&!['seeds','meal','bait'].includes(item.kind));
+   const locked=inventory?mode!=='sell'||!!item.sellReason:mode==='sell'||roleLocked||(count>0&&!['seeds','meal','bait','furniture'].includes(item.kind));
    const b=btn('',()=>add(item),'trade-slot'+(selected?' selected':''));b.dataset.index=i;b.dataset[inventory?'inventoryItem':'shopItem']=item.id;b.disabled=locked;
    const icon=item.kind==='seeds'?'🌱':item.icon||'🐟';
-   b.innerHTML=`<div class="trade-picture">${item.kind==='bait'?'<span class="trade-icon">'+(item.icon||icon)+'</span>':'<canvas width="200" height="170" aria-hidden="true"></canvas>'}<b class="trade-count">${inventory?'× '+count:'持有 '+count}</b></div><span class="trade-name">${item.name}${item.kind==='seeds'?'種子':''}</span><small>${inventory?(item.sellReason||'賣出 ✦ '+item.sellPrice):'✦ '+item.price}</small>${selected?'<em>籃內 '+selected+'</em>':''}`;
+   b.innerHTML=`<div class="trade-picture">${item.kind==='bait'?'<span class="trade-icon">'+(item.icon||icon)+'</span>':'<canvas width="200" height="170" aria-hidden="true"></canvas>'}<b class="trade-count">${inventory?'× '+count:'持有 '+count}</b></div><span class="trade-name">${item.name}${item.kind==='seeds'?'種子':''}</span><small>${inventory?(item.sellReason||(item.sellableQuantity<count?'可賣 '+item.sellableQuantity+' 件 · ':'')+'賣出 ✦ '+item.sellPrice):'✦ '+item.price}</small>${selected?'<em>籃內 '+selected+'</em>':''}`;
    if(!inventory&&roleLocked)b.querySelector('small').textContent='🔒 先解鎖'+({fox:'橘子狐',bear:'蜂蜜熊',rabbit:'棉花兔'}[item.character]||'夥伴');
    if(item.kind==='seeds'){const lesson=CROP_LESSONS[CROPS[item.id]?.lesson];if(lesson){const note=document.createElement('small');note.className='seed-lesson';note.textContent=lesson.name;b.querySelector('.trade-name').after(note);}}
    b.title=item.name+' · 持有 '+count+(inventory?' · '+(item.sellReason||'賣出單價 '+item.sellPrice):' · 單價 '+item.price);grid.append(b);observer.observe(b);

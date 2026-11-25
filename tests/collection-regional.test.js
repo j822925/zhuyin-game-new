@@ -54,11 +54,12 @@ test('all 108 purchases survive reload, appear only in their shop inventory, pla
   const expected=COLLECTION_ZONE_FURNITURE.filter(f=>f.shopZone===shop.zone).reduce((n,f)=>n+f.price,0);
   assert.equal(quoteCart(state,shop.id,lines).total,expected);assert.equal(state.stars,10000);
   assert.equal(checkoutCart(state,shop.id,lines).ok,true);assert.equal(state.stars,10000-expected);
-  assert.equal(checkoutCart(state,shop.id,lines).ok,false,'no double purchase');
+  assert.equal(checkoutCart(state,shop.id,lines).ok,true,'a second confirmed order buys another set');
+  assert.equal(state.stars,10000-2*expected);
   const restored=sanitizeState(state);
   for(const product of products){
    const f=FURNITURE.find(f=>f.id===product.id),item=inventoryItems(restored,shop.id).find(i=>i.id===product.id);
-   assert.ok(item,f.id);assert.equal(item.sellPrice,Math.floor(f.price/2));
+   assert.equal(item.quantity,2,f.id);assert.equal(item.sellPrice,Math.floor(f.price/2));
    assert.equal(inventoryItems(restored,'furniture').some(i=>i.id===f.id),false,'regional goods do not leak into main furniture inventory');
    const placed=structuredClone(restored),area=f.areas?.[0]||'room',pos={x:640,y:f.ceiling?160:f.wall?250:600};
    assert.equal(placeFurniture(placed,f.id,pos,undefined,area),true,f.id);
@@ -66,6 +67,6 @@ test('all 108 purchases survive reload, appear only in their shop inventory, pla
   }
   const total=products.reduce((sum,p)=>sum+inventoryItems(restored,shop.id).find(i=>i.id===p.id).sellPrice,0),before=restored.stars;
   assert.equal(checkoutSale(restored,shop.id,lines).ok,true);assert.equal(restored.stars,before+total);
-  for(const product of products)assert.equal(restored.furnitureOwned.includes(product.id),false);
+  for(const product of products)assert.equal(inventoryItems(restored,shop.id).find(i=>i.id===product.id).quantity,1);
  }
 });

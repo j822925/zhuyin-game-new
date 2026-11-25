@@ -1,3 +1,4 @@
+import {nextFurnitureId} from './furniture-instance.js';
 import {freshRest,sanitizeRest} from './adventure-rest-model.js';
 import {attachedPosition,freeSurfacePosition,surfaceAnchor,furnitureSurfaces,surfaceItemWidth,planSurfacePlacement} from './furniture-surfaces.js';
 import {decodeHomeSurfaceState} from './home-surface-storage.js';
@@ -9,7 +10,7 @@ import {freshWorld,sanitizeWorld,deepGroveWalkable} from './adventure-exploratio
 import {hasEnergy} from './adventure-food-model.js';
 import {freshCompanions,sanitizeCompanions} from './adventure-companions-model.js';
 import {BASIC_TOILET} from './data/bathroom-fixtures.js';
-import {FURNITURE,STARTER_FURNITURE} from './data/home-furniture.js';
+import {furnitureFor,FURNITURE,STARTER_FURNITURE} from './data/home-furniture.js';
 import {WALLPAPERS} from './data/home-wallpapers.js';
 export {FURNITURE} from './data/home-furniture.js';
 // An isolated, local-only playtest. Never reads classroom wallets or student records.
@@ -103,13 +104,13 @@ export function sanitizeState(raw){
   s.life=sanitizeLife(raw.life);
   s.wallpaperOwned=[...new Set(['original',...(Array.isArray(raw.wallpaperOwned)?raw.wallpaperOwned.filter(id=>WALLPAPERS.some(w=>w.id===id)):[])])];
   s.wallpaper=s.wallpaperOwned.includes(raw.wallpaper)?raw.wallpaper:'original';
-  s.furnitureOwned=[...new Set([...STARTER_FURNITURE,...(Array.isArray(raw.furnitureOwned)?raw.furnitureOwned.filter(id=>FURNITURE.some(f=>f.id===id)):[])])];
+  s.furnitureOwned=[...new Set([...STARTER_FURNITURE,...(Array.isArray(raw.furnitureOwned)?raw.furnitureOwned.filter(id=>furnitureFor(id)):[])])];
   // Only explicitly wall-snapped furniture moves with the new room shell.
   // This uses absolute positions rather than a one-time flag, so repeated cloud
   // loads cannot drift. Restore hosts first; their saved small objects follow below.
   const restoreHost=(item,area)=>{
     if(!item||item.on||!Number.isFinite(item.x)||!Number.isFinite(item.y))return null;
-    const f=FURNITURE.find(f=>f.id===item.id);if(!f)return null;
+    const f=furnitureFor(item.id);if(!f)return null;
     const legacy={allowDoorOverlap:true},aligned=f.wall&&!f.ceiling&&wallSide(item)!==0?wallPosition(item,f,area):canonicalMountedPosition(item,f,area),pos=aligned&&canPlaceFurniture(s,item.id,aligned,area)?aligned:item;
     return canPlaceFurniture(s,item.id,pos,area,legacy)?{id:item.id,x:pos.x,y:pos.y,...spatialFields(pos)}:null;
   };
@@ -126,11 +127,11 @@ export function sanitizeState(raw){
   // cannot strand its neighbours. Already-valid native rows never move again.
   const adjustedAttachments=new Map();
   for(const area of INTERIOR_AREAS)for(const host of layoutFor(s,area)){
-    const base=FURNITURE.find(f=>f.id===host.id),surfaces=furnitureSurfaces(base,host);
+    const base=furnitureFor(host.id),surfaces=furnitureSurfaces(base,host);
     surfaces.forEach((surface,index)=>{
       if(!surface.nativeSideSurface)return;
-      const oldWidth=furnitureSurfaces(base)[index].width,items=(Array.isArray(raw[layoutKeyFor(area)])?raw[layoutKeyFor(area)]:[]).filter(p=>p?.on===host.id&&p.surface===index&&Number.isFinite(p.offsetX)&&s.furnitureOwned.includes(p.id)&&FURNITURE.some(f=>f.id===p.id&&f.small&&Math.abs(p.offsetX)+f.fw/2<=oldWidth/2+1));
-      items.sort((a,b)=>a.offsetX-b.offsetX);const widths=items.map(p=>surfaceItemWidth(FURNITURE.find(f=>f.id===p.id),p,host,surface)),total=widths.reduce((sum,n)=>sum+n,0)+3*(items.length-1);
+      const oldWidth=furnitureSurfaces(base)[index].width,items=(Array.isArray(raw[layoutKeyFor(area)])?raw[layoutKeyFor(area)]:[]).filter(p=>p?.on===host.id&&p.surface===index&&Number.isFinite(p.offsetX)&&s.furnitureOwned.includes(p.id)&&furnitureFor(p.id)?.small&&Math.abs(p.offsetX)+furnitureFor(p.id).fw/2<=oldWidth/2+1);
+      items.sort((a,b)=>a.offsetX-b.offsetX);const widths=items.map(p=>surfaceItemWidth(furnitureFor(p.id),p,host,surface)),total=widths.reduce((sum,n)=>sum+n,0)+3*(items.length-1);
       const overlap=surface.nativeCabinetProjection&&items.some((p,i)=>i&&p.offsetX-widths[i]/2<items[i-1].offsetX+widths[i-1]/2+3-1e-7);
       if(!overlap&&!items.some(p=>!attachedPosition(p,layoutFor(s,area),FURNITURE)))return;
       if(total>surface.width)return;
@@ -146,9 +147,9 @@ export function sanitizeState(raw){
   // valid placements first, then allocate former 210/120-unit overflows largest
   // first so a small decoration cannot consume the only space for an oven.
   // No purchases are removed and no sink is counted as a usable countertop.
-  for(const area of INTERIOR_AREAS)for(const item of (Array.isArray(raw[layoutKeyFor(area)])?[...raw[layoutKeyFor(area)]]:[]).sort((a,b)=>(FURNITURE.find(f=>f.id===b?.id)?.fw||0)-(FURNITURE.find(f=>f.id===a?.id)?.fw||0))){
+  for(const area of INTERIOR_AREAS)for(const item of (Array.isArray(raw[layoutKeyFor(area)])?[...raw[layoutKeyFor(area)]]:[]).sort((a,b)=>(furnitureFor(b?.id)?.fw||0)-(furnitureFor(a?.id)?.fw||0))){
     if(!item?.on||!Number.isFinite(item.offsetX)||INTERIOR_AREAS.some(a=>layoutFor(s,a).some(p=>p.id===item.id)))continue;
-    const f=FURNITURE.find(f=>f.id===item.id),host=layoutFor(s,area).find(p=>p.id===item.on),base=FURNITURE.find(f=>f.id===host?.id);
+    const f=furnitureFor(item.id),host=layoutFor(s,area).find(p=>p.id===item.on),base=furnitureFor(host?.id);
     const effective=host&&furnitureSurfaces(base,host)[item.surface],oldWidth=base?.corner?({0:210,1:120,2:78})[item.surface]||0:effective?.nativeSideSurface?furnitureSurfaces(base)[item.surface].width:0;
     if(!f?.small||!oldWidth||!s.furnitureOwned.includes(item.id)||Math.abs(item.offsetX)+f.fw/2>oldWidth/2+1)continue;
     let pos=null;
@@ -167,11 +168,11 @@ export function sanitizeState(raw){
   }
   // Catalog ownership survives old farm bundles and marks this conversion once.
   // Already-owned (including previously purchased) toilets keep their storage choice.
-  if(!raw.furnitureOwned?.includes(BASIC_TOILET.id)&&!s.bathroomLayout.some(p=>FURNITURE.find(f=>f.id===p.id)?.rest==='toilet'||p.id.endsWith('-toilet'))){
+  if(!raw.furnitureOwned?.includes(BASIC_TOILET.id)&&!s.bathroomLayout.some(p=>furnitureFor(p.id)?.rest==='toilet'||p.id.endsWith('-toilet'))){
     if(canPlaceFurniture(s,BASIC_TOILET.id,BASIC_TOILET,'bathroom')&&!hasFurnitureOverlap(s,BASIC_TOILET.id,BASIC_TOILET,'bathroom'))s.bathroomLayout.push({...BASIC_TOILET});
   }
   // One-time starter gift. Keep existing kitchens and later storage choices intact.
-  if(raw.starterKitchenVersion!==1&&!s.kitchenLayout.some(p=>FURNITURE.find(f=>f.id===p.id)?.cooking)){
+  if(raw.starterKitchenVersion!==1&&!s.kitchenLayout.some(p=>furnitureFor(p.id)?.cooking)){
     const candidates=[{x:800,y:410}];
     for(let y=390;y<=630;y+=100)for(let x=260;x<=1000;x+=160)candidates.push({x,y});
     const spot=candidates.find(p=>canPlaceFurniture(s,'daisy-stove',p,'kitchen')&&!hasFurnitureOverlap(s,'daisy-stove',p,'kitchen'))||candidates[0];
@@ -244,16 +245,16 @@ export function findPath(start,target,checker=walkable,bounds=WORLD){
   }return null;
 }
 
-export function furnitureRect(item){const f=FURNITURE.find(f=>f.id===item.id);return f?spatialFootprint(f,item):null;}
+export function furnitureRect(item){const f=furnitureFor(item.id);return f?spatialFootprint(f,item):null;}
 function overlaps(a,b,pad=0){return a.x<b.x+b.w+pad&&a.x+a.w>b.x-pad&&a.y<b.y+b.h+pad&&a.y+a.h>b.y-pad;}
 function contains(r,x,y,pad=0){return x>r.x-pad&&x<r.x+r.w+pad&&y>r.y-pad&&y<r.y+r.h+pad;}
 export function buyFurniture(state,id){if(!hasEnergy(state))return false;
- const f=FURNITURE.find(f=>f.id===id);if(!f||state.furnitureOwned?.includes(id)||!Number.isInteger(state.stars)||state.stars<f.price)return false;
- state.stars-=f.price;(state.furnitureOwned??=[]).push(id);return true;
+ const f=furnitureFor(id);if(!f||f.id!==id||f.giftOnly||f.price<=0||!Number.isSafeInteger(state.stars)||state.stars<f.price)return false;
+ state.stars-=f.price;state.furnitureOwned.push(nextFurnitureId(state.furnitureOwned,id));return true;
 }
 export function buyAndPlaceFurniture(state,id,pos,player,area){
  const next={...state,furnitureOwned:[...state.furnitureOwned],...Object.fromEntries(INTERIOR_AREAS.map(a=>[layoutKeyFor(a),layoutFor(state,a).map(p=>({...p}))]))};
- if(!buyFurniture(next,id)||!placeFurniture(next,id,pos,player,area))return false;
+ if(!buyFurniture(next,id)||!placeFurniture(next,next.furnitureOwned[next.furnitureOwned.length-1],pos,player,area))return false;
  state.stars=next.stars;state.furnitureOwned=next.furnitureOwned;for(const area of INTERIOR_AREAS)state[layoutKeyFor(area)]=next[layoutKeyFor(area)];return true;
 }
 const KITCHEN_DOOR_CLEARANCE={x:410,y:288,w:90,h:118};
@@ -265,26 +266,26 @@ export function roomWalkable(x,y,state,area='room'){
  return true;
 }
 export function canPlaceFurniture(state,id,pos,area='room',{allowDoorOverlap=false}={}){
- const f=FURNITURE.find(f=>f.id===id);if(!f||!isInterior(area)||!state.furnitureOwned?.includes(id)||(f.areas&&!f.areas.includes(area))||!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))return false;
+ const f=furnitureFor(id);if(!f||!isInterior(area)||!state.furnitureOwned?.includes(id)||(f.areas&&!f.areas.includes(area))||!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))return false;
  if(!allowDoorOverlap&&placementBlocksDoor(f,pos,area))return false;
  if(f.wall)return wallPlacementValid(f,pos,area);
  if(pos.on){const p=attachedPosition({id,...pos},layoutFor(state,area),FURNITURE);return !!p&&p.x>=60&&p.x<=1220&&p.y>=50&&p.y<=728;}
  return spatialFloorValid(f,pos);
 }
 export function hasFurnitureOverlap(state,id,pos,area='room'){
- const f=FURNITURE.find(f=>f.id===id);if(!f||f.flat)return false;
+ const f=furnitureFor(id);if(!f||f.flat)return false;
  const r=furnitureRect({id,...pos});
- return layoutFor(state,area).some(item=>item.id!==id&&!FURNITURE.find(f=>f.id===item.id)?.flat&&!!FURNITURE.find(f=>f.id===item.id)?.wall===!!f.wall&&overlaps(r,furnitureRect(item)));
+ return layoutFor(state,area).some(item=>item.id!==id&&!furnitureFor(item.id)?.flat&&!!furnitureFor(item.id)?.wall===!!f.wall&&overlaps(r,furnitureRect(item)));
 }
 export function stoveApproach(state,item){
- const f=FURNITURE.find(f=>f.id===item?.id);if(!f?.cooking)return null;
+ const f=furnitureFor(item?.id);if(!f?.cooking)return null;
  // A countertop appliance is approached from the cabinet's floor position,
  // not from its elevated sprite (which can be outside the walking corridor).
- const host=item.on&&layoutFor(state,'kitchen').find(p=>p.id===item.on),base=host&&FURNITURE.find(f=>f.id===host.id);
+ const host=item.on&&layoutFor(state,'kitchen').find(p=>p.id===item.on),base=host&&furnitureFor(host.id);
  const points=[...(host&&base?[{x:host.x+(host.mount==='left'?1:host.mount==='right'?-1:0)*(base.fw/2+35),y:host.y+(host.mount==='left'||host.mount==='right'?0:40)}]:[]),{x:item.x,y:item.y+40},{x:item.x-f.fw/2-35,y:item.y},{x:item.x+f.fw/2+35,y:item.y}];
  return points.find(p=>findPath(KITCHEN_ENTRY,p,(x,y)=>roomWalkable(x,y,state,'kitchen')))||null;
 }
-export function canUseStove(state,id,area){return area==='kitchen'&&state.furnitureOwned?.includes(id)&&FURNITURE.some(f=>f.id===id&&f.cooking)&&state.kitchenLayout?.some(f=>f.id===id);}
+export function canUseStove(state,id,area){return area==='kitchen'&&state.furnitureOwned?.includes(id)&&furnitureFor(id)?.cooking&&state.kitchenLayout?.some(f=>f.id===id);}
 export function placementState(state,id,pos,area='room'){
  const plan=furnitureSurfacePlan(state,id,pos,area);
  // A failed proposal never partially removes an item or shifts its neighbours.
@@ -294,7 +295,7 @@ export function placementState(state,id,pos,area='room'){
  const attached=plan?.position;
  next[layoutKeyFor(area)].push({id,...(attached||{x:Math.round(pos.x/5)*5,y:Math.round(pos.y/5)*5}),...spatialFields(pos)});
  for(const item of children){
-  const childFurniture=FURNITURE.find(f=>f.id===item.id);
+  const childFurniture=furnitureFor(item.id);
   // Keep the established room restriction: kitchen-only appliances return to
   // owned storage when their table is moved into a different kind of room.
   if(childFurniture?.areas&&!childFurniture.areas.includes(area))continue;
@@ -322,11 +323,11 @@ export function canReachInterior(state,player,area='room'){
  if(!findPath(player,ROOM_ENTRY,checker))return false;
  if(area==='room'&&(!findPath(ROOM_ENTRY,ROOM_KITCHEN_APPROACH,checker)||!findPath(ROOM_ENTRY,ROOM_BEDROOM_APPROACH,checker)))return false;
  if(area==='bedroom'&&!findPath(ROOM_ENTRY,ROOM_WARDROBE_APPROACH,checker))return false;
- return area!=='kitchen'||state.kitchenLayout.filter(item=>FURNITURE.find(f=>f.id===item.id)?.cooking).every(item=>stoveApproach(state,item));
+ return area!=='kitchen'||state.kitchenLayout.filter(item=>furnitureFor(item.id)?.cooking).every(item=>stoveApproach(state,item));
 }
 export function placeFurniture(state,id,pos,player=ROOM_ENTRY,area='room'){if(!hasEnergy(state))return false;
  if(!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))return false;
- const furniture=FURNITURE.find(f=>f.id===id);
+ const furniture=furnitureFor(id);
  if(!furniture)return false;
  const plan=furnitureSurfacePlan(state,id,pos,area);if(pos.on&&!plan?.ok)return false;
  const snapped=plan?.position|| (furniture?.wall?wallPosition(pos,furniture,area):floorPosition(pos,furniture,{auto:false,area}));

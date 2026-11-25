@@ -1,3 +1,4 @@
+import {furnitureFor} from './data/home-furniture.js';
 import {STUDY_BEASTS,beastPosition,hitStudyBeast} from './adventure-island-actors.js';
 import {createIslandStudy} from './adventure-island-study.js';
 import {createIslandVisits} from './island-visits-ui.js';
@@ -197,7 +198,7 @@ function positionHotspots(){
   for(const id of ['room-kitchen','room-bedroom'])$(id).hidden=scene.area!=='room'||scene.editing;
   const sideRoom=scene.area==='kitchen'||scene.area==='bedroom'||scene.area==='bathroom';$('room-exit').classList.toggle('wall-return',sideRoom);
   if(sideRoom)wallDoorTarget('room-exit',returnDoor);else{$('room-exit').style.width='';$('room-exit').style.height='';}
-  for(const b of $('kitchen-stations').children){const item=state.kitchenLayout.find(p=>p.id===b.dataset.station);if(!item)continue;const f=FURNITURE.find(f=>f.id===item.id),at=scene.toScreen(item.x,item.y);b.style.left=at.x+'px';b.style.top=at.y+'px';b.style.width=Math.max(62,f.fw*s)+'px';b.style.height=Math.max(64,f.height*s)+'px';b.hidden=scene.area!=='kitchen'||scene.editing||(kitchen.busy||rest?.busy)||switching;}
+  for(const b of $('kitchen-stations').children){const item=state.kitchenLayout.find(p=>p.id===b.dataset.station);if(!item)continue;const f=furnitureFor(item.id),at=scene.toScreen(item.x,item.y);b.style.left=at.x+'px';b.style.top=at.y+'px';b.style.width=Math.max(62,f.fw*s)+'px';b.style.height=Math.max(64,f.height*s)+'px';b.hidden=scene.area!=='kitchen'||scene.editing||(kitchen.busy||rest?.busy)||switching;}
   exploration?.position();
   canvas.dataset.x=scene.player.x.toFixed(1);canvas.dataset.y=scene.player.y.toFixed(1);canvas.dataset.direction=String(scene.player.direction);canvas.dataset.moving=String(scene.player.moving);canvas.dataset.area=scene.area;canvas.dataset.monsterX=scene.monster.x.toFixed(1);canvas.dataset.monsterY=scene.monster.y.toFixed(1);canvas.dataset.monsterMoving=String(scene.monster.moving);
   canvas.dataset.walkFrame=String(walkFrame(scene.player.moving&&!scene.reduced.matches,scene.player.phase,clothingCharacter(equippedOutfit(state))?4:walkerFrameCount(activeWalker,scene.player.direction)));
@@ -234,7 +235,7 @@ canvas.addEventListener('pointerdown',e=>{
   if(scene.area==='island'){const hit=hitStudyBeast(at,scene.reduced.matches?0:performance.now()/1000,studyBeastCooldown);if(hit){approachStudyBeast(hit);return;}}
   if(scene.area==='grove'){const hit=[...(scene.encounters||[])].reverse().find(m=>m.visible&&Math.abs(at.x-m.x)<48&&at.y<m.y+12&&at.y>m.y-(m.level===2?120:100));if(hit){startBattle(hit);return;}}
   if(scene.editing){
-    if(!scene.placement){const hit=[...layoutFor(state,scene.area)].sort((a,b)=>b.y-a.y).find(item=>{const f=FURNITURE.find(f=>f.id===item.id),r=furnitureVisualBounds(art,f,item);return at.x>=r.x&&at.x<=r.x+r.w&&at.y>=r.y&&at.y<=r.y+r.h;});if(hit)selectFurniture(hit.id);return;}
+    if(!scene.placement){const hit=[...layoutFor(state,scene.area)].sort((a,b)=>b.y-a.y).find(item=>{const f=furnitureFor(item.id),r=furnitureVisualBounds(art,f,item);return at.x>=r.x&&at.x<=r.x+r.w&&at.y>=r.y&&at.y<=r.y+r.h;});if(hit)selectFurniture(hit.id);return;}
     decorPointer=e.pointerId;canvas.setPointerCapture(e.pointerId);moveFurniture(at);return;
   }
   walkTo(at);
@@ -270,7 +271,7 @@ function renderArea(){
   if(grove)$('location-weather').textContent='👂 🧩 ♫ · 林間小怪正在等你';
   if(scene.area==='farm'){$('location-name').textContent='向日葵農場';$('location-weather').textContent='種下一點期待，帶回滿滿收穫';$('map-note').textContent='在田裡播種、澆水、採收';$('find-monster').hidden=true;canvas.setAttribute('aria-label','向日葵農場。點地面走路，在一整片田地裡分別種植不同作物。');}
   if(scene.area==='room')$('location-name').textContent='我的客廳';
-  if(scene.area==='kitchen'){$('location-name').textContent='我的小廚房';$('location-weather').textContent='把收穫變成熱騰騰的料理';$('map-note').textContent=state.kitchenLayout.some(p=>FURNITURE.find(f=>f.id===p.id)?.cooking)?'點料理爐，開始做料理':'按椅子圖示，擺回料理爐';}
+  if(scene.area==='kitchen'){$('location-name').textContent='我的小廚房';$('location-weather').textContent='把收穫變成熱騰騰的料理';$('map-note').textContent=state.kitchenLayout.some(p=>furnitureFor(p.id)?.cooking)?'點料理爐，開始做料理':'按椅子圖示，擺回料理爐';}
   if(scene.area==='bedroom'){$('location-name').textContent='我的臥室';$('location-weather').textContent='換衣服，休息一下';}
   const sideRoom=scene.area==='kitchen'||scene.area==='bedroom'||scene.area==='bathroom';if(sideRoom)$('go-home').textContent=scene.area==='bathroom'?'回臥室 🛏️':'回客廳 ⌂';
   if(scene.area==='bathroom'){$('location-name').textContent='我的衛浴';$('location-weather').textContent='泡泡裡休息一下';$('room-exit').setAttribute('aria-label','回臥室');}else $('room-exit').setAttribute('aria-label',scene.area==='room'?'走出小屋':'回客廳');
@@ -294,7 +295,7 @@ async function switchArea(area,onArrival=null,{chapterTravel=false}={}){
     if(area==='room')toast(hasEnergy(state)?'🛏️ ← 客廳 → 🍲':'🥄 先吃點東西');
     if(area==='bedroom')toast('🛏️ 點床休息・🛁 左邊是衛浴');
     if(area==='bathroom')toast('🚽 點馬桶 +1 體力，每天 5 次；🛁 浴缸可以買回來布置');
-    if(area==='kitchen')toast(state.kitchenLayout.some(p=>FURNITURE.find(f=>f.id===p.id)?.cooking)?'點料理爐，把今天的收穫做成料理吧。':'按椅子圖示，把已有的料理爐擺回廚房。');
+    if(area==='kitchen')toast(state.kitchenLayout.some(p=>furnitureFor(p.id)?.cooking)?'點料理爐，把今天的收穫做成料理吧。':'按椅子圖示，把已有的料理爐擺回廚房。');
     if(!onArrival)completeAction('travel',{duration:1800});onArrival?.();resolve(true);
   },180));
 }
@@ -339,8 +340,8 @@ function updateDecor(){decor.update();}
 function leaveKitchen(){if(!['kitchen','bedroom','bathroom'].includes(scene?.area)||switching)return;closeDecor();enterExit(scene.area==='bathroom'?'bedroom':'living');}
 function refreshKitchenStations(){
  const box=$('kitchen-stations');box.replaceChildren();
- for(const item of state.kitchenLayout.filter(p=>FURNITURE.find(f=>f.id===p.id)?.cooking)){
-  const f=FURNITURE.find(f=>f.id===item.id),button=document.createElement('button');button.type='button';button.className='stove-hotspot';button.dataset.station=item.id;button.setAttribute('aria-label','使用'+f.name+'製作料理');button.innerHTML='<span aria-hidden="true">🍲</span>';button.hidden=true;
+ for(const item of state.kitchenLayout.filter(p=>furnitureFor(p.id)?.cooking)){
+  const f=furnitureFor(item.id),button=document.createElement('button');button.type='button';button.className='stove-hotspot';button.dataset.station=item.id;button.setAttribute('aria-label','使用'+f.name+'製作料理');button.innerHTML='<span aria-hidden="true">🍲</span>';button.hidden=true;
   button.onclick=()=>{if(scene?.area!=='kitchen'||scene.editing||(kitchen.busy||rest?.busy)||switching)return;const target=stoveApproach(state,item);if(!target||!walkTo(target,()=>kitchen.useStation(item.id)))toast('先在料理爐前面留一點走路空間吧。');};box.append(button);
  }
 }

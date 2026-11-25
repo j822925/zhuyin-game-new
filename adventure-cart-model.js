@@ -14,18 +14,22 @@ export function quoteCart(state,shop,lines){
  const seen=new Set();let total=0;
  for(const l of lines){const item=cartItem(l.kind,l.id),key=l.kind+':'+l.id;
   const allowed=zoneShop(shop)?regionalProductAllowed(shop,l.kind,l.id):!item?.zoneShop&&({furniture:['furniture','wallpaper'],clothes:['clothes'],seeds:['seeds','bait']}[shop]||[]).includes(l.kind);
-  if(!item||!allowed||seen.has(key)||!Number.isInteger(l.quantity)||l.quantity<1||l.quantity>99||(!['seeds','meal','bait'].includes(l.kind)&&l.quantity!==1))return {ok:false,reason:'商品資料需要重新選擇'};
+  if(!item||!allowed||seen.has(key)||!Number.isInteger(l.quantity)||l.quantity<1||l.quantity>99||(!['seeds','meal','bait','furniture'].includes(l.kind)&&l.quantity!==1))return {ok:false,reason:'商品資料需要重新選擇'};
   if(!energized&&!['seeds','bait'].includes(l.kind))return {ok:false,reason:'🥄 先吃點東西；體力歸零時仍可購買種子和魚餌'};
-  seen.add(key);if(l.kind==='furniture'&&state.furnitureOwned.includes(l.id)||l.kind==='wallpaper'&&state.wallpaperOwned.includes(l.id)||l.kind==='clothes'&&!['available','insufficient'].includes(eligibility(state,l.id)))return {ok:false,reason:'✓ 已擁有，或還不能使用'};
+  seen.add(key);if(l.kind==='wallpaper'&&state.wallpaperOwned.includes(l.id)||l.kind==='clothes'&&!['available','insufficient'].includes(eligibility(state,l.id)))return {ok:false,reason:'✓ 已擁有，或還不能使用'};
   if(l.kind==='seeds'&&(state.life.seeds[l.id]||0)+l.quantity>9999)return {ok:false,reason:'🎒 種子已滿'};
   if(l.kind==='bait'&&(state.life.bait?.[l.id]||0)+l.quantity>9999)return {ok:false,reason:'🎒 魚餌已滿'};
   if(l.kind==='meal'&&(state.life.nutrition.meals[l.id]||0)+l.quantity>9999)return {ok:false,reason:'🎒 食物籃已滿'};
   total+=item.price*l.quantity;
  }
+ if(total>20000)return {ok:false,reason:'請分次結帳，每次最多 20000 星幣'};
  return {ok:Number.isSafeInteger(state.stars)&&state.stars>=total,total,remaining:state.stars-total,reason:state.stars<total?'✦ 星幣不夠，再去練習或探險吧':''};
 }
 export function checkoutCart(state,shop,lines){
  const quote=quoteCart(state,shop,lines);if(!quote.ok)return quote;const next=structuredClone(state);
  for(const l of lines)for(let i=0;i<l.quantity;i++){if(l.kind==='meal'){next.stars-=SHOP_FOODS[l.id].price;next.life.nutrition.meals[l.id]=(next.life.nutrition.meals[l.id]||0)+1;continue;}const fn={furniture:buyFurniture,clothes:buyOutfit,wallpaper:buyWallpaper,seeds:buySeed,bait:buyBait}[l.kind];if(!fn(next,l.id))return {ok:false,reason:'這件商品暫時無法購買'};}
+ // Use the same saved-state byte limit as the forest wallet before charging.
+ const {stars,localTesterGrant,...saved}=next;
+ if(new TextEncoder().encode(JSON.stringify(saved)).length>48000)return {ok:false,reason:'小島存檔已滿，請先減少物品'};
  Object.assign(state,next);return {...quote,ok:true};
 }

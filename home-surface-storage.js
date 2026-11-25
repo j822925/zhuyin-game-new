@@ -1,3 +1,4 @@
+import {furnitureProductId} from './furniture-instance.js';
 import {furnitureSurfaces,surfaceItemWidth} from './furniture-surfaces.js';
 
 const layouts=['layout','kitchenLayout','bedroomLayout','bathroomLayout'];
@@ -28,17 +29,17 @@ function transform(state,catalog,decode){
   if(!Array.isArray(state[key]))continue;
   const layout=state[key],hosts=new Map(layout.filter(p=>p&&typeof p==='object').map(p=>[p.id,p])),legacyHosts=new Set();
   if(decode)for(const item of layout){
-   const f=byId.get(item?.id),host=hosts.get(item?.on),base=byId.get(host?.id);
+   const f=byId.get(furnitureProductId(item?.id)),host=hosts.get(item?.on),base=byId.get(furnitureProductId(host?.id));
    if(item?.surface!==0||!f?.small||!base?.corner||host.on||!Number.isFinite(item.offsetX))continue;
    // A partially matching legacy row must be migrated as a whole. Otherwise a
    // small prop could take the short workspace before its larger neighbour.
    if(!validPosition(item,host,base,f,0,item.offsetX)&&!decodedPosition(item,host,base,f)&&Math.abs(item.offsetX)+f.fw/2<=106)legacyHosts.add(host.id);
   }
   if(decode)for(const host of hosts.values()){
-   const base=byId.get(host.id);if(!base?.corner||host.on||legacyHosts.has(host.id))continue;
+   const base=byId.get(furnitureProductId(host.id));if(!base?.corner||host.on||legacyHosts.has(host.id))continue;
    const surfaces=furnitureSurfaces(base,host),rows=new Map();
    for(const item of layout){
-    const f=byId.get(item?.id);if(item?.on!==host.id||!f?.small)continue;
+    const f=byId.get(furnitureProductId(item?.id));if(item?.on!==host.id||!f?.small)continue;
     const trial={...item,...decodedPosition(item,host,base,f)};
     if(!validPosition(trial,host,base,f,trial.surface,trial.offsetX))continue;
     const row=rows.get(trial.surface)||[];row.push({offset:trial.offsetX,width:surfaceItemWidth(f,trial,host,surfaces[trial.surface])});rows.set(trial.surface,row);
@@ -53,7 +54,7 @@ function transform(state,catalog,decode){
   }
   next[key]=layout.map(item=>{
    if(!item||typeof item!=='object')return item;
-   const copy={...item},f=byId.get(item.id),host=hosts.get(item.on),base=byId.get(host?.id);
+   const copy={...item},f=byId.get(furnitureProductId(item.id)),host=hosts.get(item.on),base=byId.get(furnitureProductId(host?.id));
    if(!item.on||!f?.small||!host||host.on||!base?.corner||!Number.isFinite(item.offsetX))return copy;
    if(decode){
     // A valid in-memory short-worktop position is never decoded a second time.

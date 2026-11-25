@@ -1,3 +1,4 @@
+import {lookupFurniture} from './furniture-instance.js';
 import {surfaceVector,spatialFields,spatialRole,furnitureWallDepth,HOME_FLOOR} from './home-spatial-model.js';
 import {nativeCabinetGeometry,nativeBookcaseGeometry,NATIVE_CABINET_LANDMARKS_BY_STYLE} from './home-native-cabinet-geometry.js';
 // Coordinates are room units, shared by drawing, hit testing and durable saves.
@@ -47,12 +48,12 @@ export function surfaceOffsetAt(host,surface,point){const v=surfaceAxis(host,sur
 export function surfaceDistance(host,surface,point){surface=surfaceForHost(host,surface);const v=surfaceAxis(host,surface),a=surfaceAnchor(host,surface),offset=Math.max(-surface.width/2,Math.min(surface.width/2,surfaceOffsetAt(host,surface,point)));return Math.hypot(point.x-a.x-offset*v.x,point.y-a.y-offset*v.y);}
 export function attachedPosition(item,layout,catalog){
  if(!item?.on)return null;
- const f=catalog.find(f=>f.id===item.id),host=layout.find(p=>p.id===item.on),base=catalog.find(f=>f.id===host?.id),surface=furnitureSurfaces(base,host)[item.surface];
+ const f=lookupFurniture(catalog,item.id),host=layout.find(p=>p.id===item.on),base=lookupFurniture(catalog,host?.id),surface=furnitureSurfaces(base,host)[item.surface];
  if(!f?.small||!host||host.on||host.id===item.id||!surface||!Number.isFinite(item.offsetX)||Math.abs(item.offsetX)+surfaceItemWidth(f,item,host,surface)/2>surface.width/2+1)return null;
  const v=surfaceAxis(host,surface),a=surfaceAnchor(host,surface),facing=item.facing??(surface.nativeSideSurface?host.facing:undefined);return {x:a.x+item.offsetX*v.x,y:a.y+item.offsetX*v.y,on:host.id,surface:item.surface,offsetX:item.offsetX,...spatialFields({...item,facing})};
 }
 export function freeSurfacePosition(id,host,index,layout,catalog,preferredPoint,options={}){
- const f=catalog.find(f=>f.id===id),surface=furnitureSurfaces(catalog.find(f=>f.id===host.id),host)[index];if(!f?.small||!surface||host.on)return null;
+ const f=lookupFurniture(catalog,id),surface=furnitureSurfaces(lookupFurniture(catalog,host.id),host)[index];if(!f?.small||!surface||host.on)return null;
  const facing=options.facing??layout.find(p=>p.id===id)?.facing??(surface.nativeSideSurface?host.facing:undefined),itemWidth=surfaceItemWidth(f,{facing},host,surface);
  const limit=surface.width/2-itemWidth/2;if(limit<0)return null;
  const peers=layout.filter(p=>p.id!==id&&p.on===host.id&&p.surface===index);
@@ -61,7 +62,7 @@ export function freeSurfacePosition(id,host,index,layout,catalog,preferredPoint,
  let intervals=[[-limit,limit]];
  for(const peer of peers){
   if(!Number.isFinite(peer.offsetX))continue;
-  const clearance=(itemWidth+surfaceItemWidth(catalog.find(item=>item.id===peer.id),peer,host,surface))/2+3;
+  const clearance=(itemWidth+surfaceItemWidth(lookupFurniture(catalog,peer.id),peer,host,surface))/2+3;
   const from=peer.offsetX-clearance,to=peer.offsetX+clearance;
   intervals=intervals.flatMap(([a,b])=>to<a||from>b?[[a,b]]:[...(from>=a?[[a,Math.min(b,from)]]:[]),...(to<=b?[[Math.max(a,to),b]]:[])]);
  }
@@ -74,10 +75,10 @@ export function freeSurfacePosition(id,host,index,layout,catalog,preferredPoint,
 export const SURFACE_GAP=3;
 const epsilon=1e-7;
 function surfaceContext(id,host,index,layout,catalog,options={}){
- const f=catalog.find(f=>f.id===id),surface=host&&furnitureSurfaces(catalog.find(f=>f.id===host.id),host)[index];
+ const f=lookupFurniture(catalog,id),surface=host&&furnitureSurfaces(lookupFurniture(catalog,host.id),host)[index];
  if(!f?.small||!surface||host.on)return null;
  const facing=options.facing??layout.find(p=>p.id===id)?.facing??(surface.nativeSideSurface?host.facing:undefined);
- const peers=layout.filter(p=>p.id!==id&&p.on===host.id&&p.surface===index).map(p=>({...p,width:surfaceItemWidth(catalog.find(f=>f.id===p.id),p,host,surface)})).sort((a,b)=>a.offsetX-b.offsetX||a.id.localeCompare(b.id));
+ const peers=layout.filter(p=>p.id!==id&&p.on===host.id&&p.surface===index).map(p=>({...p,width:surfaceItemWidth(lookupFurniture(catalog,p.id),p,host,surface)})).sort((a,b)=>a.offsetX-b.offsetX||a.id.localeCompare(b.id));
  return {f,surface,facing,peers,itemWidth:surfaceItemWidth(f,{facing},host,surface)};
 }
 // Capacity is measured in physical tabletop units; the painted axis converts
@@ -86,7 +87,7 @@ export function surfaceCapacity(id,host,index,layout,catalog,options={}){
  const data=surfaceContext(id,host,index,layout,catalog,options);if(!data)return {fits:false,reason:'invalid-surface'};
  const {surface,peers,itemWidth}=data,occupied=peers.reduce((sum,p)=>sum+p.width,0)+Math.max(0,peers.length-1)*SURFACE_GAP;
  const required=occupied+itemWidth+(peers.length?SURFACE_GAP:0),remaining=Math.max(0,surface.width-occupied-(peers.length?SURFACE_GAP:0));
- const physicalWidth=surface.physicalWidth||surface.width,physicalRequired=(data.f.fw||20)+peers.reduce((sum,p)=>sum+(catalog.find(f=>f.id===p.id)?.fw||20),0)+peers.length*SURFACE_GAP,physicalFits=physicalRequired<=physicalWidth+epsilon;
+ const physicalWidth=surface.physicalWidth||surface.width,physicalRequired=(data.f.fw||20)+peers.reduce((sum,p)=>sum+(lookupFurniture(catalog,p.id)?.fw||20),0)+peers.length*SURFACE_GAP,physicalFits=physicalRequired<=physicalWidth+epsilon;
  const fits=required<=surface.width+epsilon,projectionLimited=!!surface.projectionLimited&&!fits&&physicalFits;
  return {width:surface.width,itemWidth,occupied,remaining,required,count:peers.length,fits,physicalWidth,physicalRequired,physicalFits,projectionLimited,reason:projectionLimited?'projection-limited':itemWidth>surface.width+epsilon?'item-too-wide':!fits?'surface-full':null};
 }
@@ -143,8 +144,8 @@ export function surfaceCapacityReport(catalog){
   for(const view of f.corner?['left','right']:['front','left','right']){
    const host={id:f.id,x:640,y:500,facing:view,...(f.corner?{mount:'corner-'+view}:view==='front'?{}:{mount:view})};
    for(const [index,surface] of furnitureSurfaces(f,host).entries()){
-    const facing=surface.wing?(view==='right'?'right':'left'):f.corner?'front':view,footprints=samples.map(([size,id])=>{const item=catalog.find(x=>x.id===id),width=surfaceItemWidth(item,{facing},host,surface);return {size,id,width,count:Math.floor((surface.width+SURFACE_GAP)/(width+SURFACE_GAP))};}),mixedWidth=footprints.reduce((n,p)=>n+p.width,0)+2*SURFACE_GAP;
-    const physicalWidth=surface.physicalWidth||surface.width,physicalRequired=samples.reduce((sum,[,id])=>sum+(catalog.find(f=>f.id===id)?.fw||20),0)+2*SURFACE_GAP;
+    const facing=surface.wing?(view==='right'?'right':'left'):f.corner?'front':view,footprints=samples.map(([size,id])=>{const item=lookupFurniture(catalog,id),width=surfaceItemWidth(item,{facing},host,surface);return {size,id,width,count:Math.floor((surface.width+SURFACE_GAP)/(width+SURFACE_GAP))};}),mixedWidth=footprints.reduce((n,p)=>n+p.width,0)+2*SURFACE_GAP;
+    const physicalWidth=surface.physicalWidth||surface.width,physicalRequired=samples.reduce((sum,[,id])=>sum+(lookupFurniture(catalog,id)?.fw||20),0)+2*SURFACE_GAP;
     rows.push({id:f.id,name:f.name,view,surface:index,surfaceName:surface.name,width:surface.width,physicalWidth,projectedSpan:surface.projectedSpan??surface.width,axis:surfaceAxis(host,surface),projectionLimited:!!surface.projectionLimited,gap:SURFACE_GAP,examples:footprints,mixed:{ids:samples.map(p=>p[1]),required:mixedWidth,fits:mixedWidth<=surface.width+epsilon,physicalRequired,physicalFits:physicalRequired<=physicalWidth+epsilon}});
    }
   }

@@ -12,7 +12,7 @@ import {ensureHomeArt} from '../adventure-home-art.js';
 import {drawHomeRest} from '../adventure-rest-art.js';
 const styles=['daisy','fox','moon','honey','ocean','berry'];
 const id=(style,role)=>'collection-'+style+'-'+role;
-test('six collections buy at published prices, retain unique ownership and never replace existing items',()=>{
+test('six collections buy at published prices, retain each purchased piece and never replace existing items',()=>{
  assert.equal(COLLECTION_FURNITURE.length,72);
  const s=freshState(),old=[...s.furnitureOwned];s.stars=10000;s.world.shops=['furniture'];
  const lines=COLLECTION_FURNITURE.map(f=>({kind:'furniture',id:f.id,quantity:1}));
@@ -21,7 +21,8 @@ test('six collections buy at published prices, retain unique ownership and never
  const restored=sanitizeState(s);
  for(const f of COLLECTION_FURNITURE){assert(restored.furnitureOwned.includes(f.id));assert.equal(FURNITURE.find(x=>x.id===f.id).price,f.price);}
  for(const item of old)assert(restored.furnitureOwned.includes(item));
- assert(!checkoutCart(s,'furniture',lines).ok);
+ assert(checkoutCart(s,'furniture',lines).ok);
+ for(const f of COLLECTION_FURNITURE)assert(s.furnitureOwned.includes(f.id+'__2'));
 });
 test('small decorations attach to TV stands and three shelf levels; moving and storing hosts preserves ownership',()=>{
  for(const style of styles){

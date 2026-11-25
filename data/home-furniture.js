@@ -1,3 +1,4 @@
+import {furnitureProductId} from '../furniture-instance.js';
 import {FARM_CROP_ART} from './farm-crop-art.js';
 import {priceFurniture} from '../adventure-economy.js';
 import {SPATIAL_FURNITURE} from './home-spatial-furniture.js';
@@ -69,3 +70,8 @@ export const FURNITURE=[
  ...COLLECTION_ZONE_FURNITURE,
 ]).map(priceFurniture).map(f=>f.id==='daisy-complete-toilet'?{...f,starter:true,price:0}:f).map(scaleHomeFurniture);
 export const STARTER_FURNITURE=FURNITURE.filter(f=>f.starter).map(f=>f.id);
+
+const productsById = new Map(FURNITURE.map(item => [item.id, item]));
+export function furnitureFor(id) {
+  return productsById.get(furnitureProductId(id));
+}

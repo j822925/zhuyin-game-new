@@ -1,3 +1,4 @@
+import {furnitureFor} from './data/home-furniture.js';
 import {playerStats} from './adventure-expedition-model.js';
 import {commitLifeChange} from './adventure-life-transaction.js';
 import {completeAction} from './adventure-action-feedback.js';
@@ -51,7 +52,7 @@ export function createKitchen(api){
   finally{if(run===foodChoiceRun)preparingFood=false;}
  }
  function render(){dialog.classList.add('food-tray');const s=api.state(),n=nutrition(),art=api.art();if(!art)return;
-  $('food-title').textContent=tab==='cook'?(FURNITURE.find(f=>f.id===stationId)?.name||'料理食譜'):'我的食物籃';$('food-energy').textContent=`現在體力 ${n.energy} / ${MAX_ENERGY}`;$('food-message').textContent=message||(tab==='cook'?'把收穫做成料理，吃下去能補更多體力。':'蔬菜可以直接吃；料理補得更多，體力全滿時會幫你留著食物。');
+  $('food-title').textContent=tab==='cook'?(furnitureFor(stationId)?.name||'料理食譜'):'我的食物籃';$('food-energy').textContent=`現在體力 ${n.energy} / ${MAX_ENERGY}`;$('food-message').textContent=message||(tab==='cook'?'把收穫做成料理，吃下去能補更多體力。':'蔬菜可以直接吃；料理補得更多，體力全滿時會幫你留著食物。');
   $('food-cook-tab').hidden=!stationId;
   $('food-message').hidden=!message;
   $('food-bag-tab').setAttribute('aria-pressed',String(tab==='bag'));$('food-cook-tab').setAttribute('aria-pressed',String(tab==='cook'));

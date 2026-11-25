@@ -9,7 +9,7 @@ import {COLLECTION_ZONE_ART} from './data/collection-zone-art.js';
 import {COLLECTION_FOOD_ART} from './data/collection-food-art.js';
 import {LESSON_HARVEST_ART} from './data/lesson-harvest-art.js';
 import {adventureMediaUrl as mediaUrl} from './adventure-media.js';
-import {HOME_ATLASES,FURNITURE} from './data/home-furniture.js';
+import {furnitureFor,HOME_ATLASES,FURNITURE} from './data/home-furniture.js';
 import {HOME_CELLS} from './data/home-atlas-cells.js';
 import {ensureSpatialArt} from './home-spatial-art.js';
 const pending=new WeakMap();
@@ -22,4 +22,4 @@ export function ensureHomeArt(art,keys=['daisyHome']){
   })();jobs.set(key,task);task.catch(()=>jobs.delete(key));return task;
  })).then(async result=>{const styles=FURNITURE.filter(f=>keys.includes(f.atlas||'furniture')).map(f=>f.style);if(styles.length)await ensureSpatialArt(art,styles);return result;});
 }
-export const furnitureArtKeys=items=>items.map(item=>FURNITURE.find(f=>f.id===item.id)?.atlas).filter(Boolean);
+export const furnitureArtKeys=items=>items.map(item=>furnitureFor(item.id)?.atlas).filter(Boolean);

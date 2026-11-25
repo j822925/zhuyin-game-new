@@ -29,7 +29,7 @@ test('new products survive purchase/save/reload, stay in their shop inventory, a
   assert.equal(owned?.quantity,1,p.id);assert.equal(owned.sellPrice,Math.floor(item.price/2),p.id);
   if(p.kind==='furniture'){
    assert(!inventoryItems(saved,'furniture').some(i=>i.id===p.id),p.id+' must not appear in general furniture store');
-   assert(!checkoutCart(saved,shop.id,[line]).ok,p.id+' must not charge twice');
+   assert(quoteCart(saved,shop.id,[line]).ok,p.id+' can be bought again');
   }
   assert(quoteSale(saved,shop.id,[line]).ok,p.id);assert(checkoutSale(saved,shop.id,[line]).ok,p.id);
   assert.equal(saved.stars,before-item.price+Math.floor(item.price/2),p.id);

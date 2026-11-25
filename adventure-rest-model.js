@@ -1,11 +1,11 @@
-import {FURNITURE} from './data/home-furniture.js';
+import {furnitureFor} from './data/home-furniture.js';
 import {decayEnergy,MAX_ENERGY} from './adventure-food-model.js';
 export const REST_REWARD={sleep:10,bath:5,toilet:1};
 export const taipeiDay=(now=Date.now())=>new Date(now+8*3600000).toISOString().slice(0,10);
 export const freshRest=()=>({sleep:null,bath:null,toilet:{day:null,count:0}});
 const validDay=d=>typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d);
 export function sanitizeRest(raw){const rest=Object.fromEntries(['sleep','bath'].map(k=>[k,validDay(raw?.[k])?raw[k]:null]));rest.toilet={day:validDay(raw?.toilet?.day)?raw.toilet.day:null,count:validDay(raw?.toilet?.day)&&Number.isInteger(raw?.toilet?.count)?Math.max(0,Math.min(5,raw.toilet.count)):0};return rest;}
-export const restFurniture=id=>FURNITURE.find(f=>f.id===id);
+export const restFurniture=id=>furnitureFor(id);
 export const restKind=f=>f?.rest||(f?.id.endsWith('-toilet')?'toilet':null);
 export const toiletRemaining=(state,now=Date.now())=>Math.max(0,5-(state.homeRest?.toilet?.day>=taipeiDay(now)?state.homeRest.toilet.count:0));
 const keys={room:'layout',bedroom:'bedroomLayout',kitchen:'kitchenLayout',bathroom:'bathroomLayout'};

@@ -1,4 +1,4 @@
-import {FURNITURE} from './data/home-furniture.js';
+import {furnitureFor} from './data/home-furniture.js';
 import {restFurniture} from './adventure-rest-model.js';
 export function drawHomeRest(c,scene,state,now){
  const e=scene.homeRest;if(!e||e.area!==scene.area)return;const f=restFurniture(e.item.id),t=(now-e.start)/1000,x=e.item.x,y=e.item.y-f.height*.52;
@@ -30,4 +30,4 @@ export function drawHomeRest(c,scene,state,now){
  }
  c.restore();
 }
-export function drawHomePlay(c,scene,state,now){const e=scene.homePlay;if(!e)return;const f=FURNITURE.find(f=>f.id===e.item.id),x=e.item.x,y=e.item.y-f.height*.65,t=(now-e.start)/1000;c.save();c.globalAlpha=Math.max(0,1-t/2.2);c.font='24px sans-serif';c.textAlign='center';for(let i=0;i<5;i++){const px=x+Math.sin(i*2+t)*48,py=y-t*25-i%2*15;if(e.kind==='bubbles'){c.strokeStyle='#b2e4e8';c.fillStyle='#e9ffff88';c.beginPath();c.arc(px,py,8+i%3*3,0,Math.PI*2);c.fill();c.stroke();}else{c.fillStyle=['#d6ad4c','#e7a4b5','#819c64'][i%3];c.fillText(e.kind==='music'?'♪':'✦',px,py);}}c.restore();}
+export function drawHomePlay(c,scene,state,now){const e=scene.homePlay;if(!e)return;const f=furnitureFor(e.item.id),x=e.item.x,y=e.item.y-f.height*.65,t=(now-e.start)/1000;c.save();c.globalAlpha=Math.max(0,1-t/2.2);c.font='24px sans-serif';c.textAlign='center';for(let i=0;i<5;i++){const px=x+Math.sin(i*2+t)*48,py=y-t*25-i%2*15;if(e.kind==='bubbles'){c.strokeStyle='#b2e4e8';c.fillStyle='#e9ffff88';c.beginPath();c.arc(px,py,8+i%3*3,0,Math.PI*2);c.fill();c.stroke();}else{c.fillStyle=['#d6ad4c','#e7a4b5','#819c64'][i%3];c.fillText(e.kind==='music'?'♪':'✦',px,py);}}c.restore();}

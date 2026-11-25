@@ -1,3 +1,4 @@
+import {furnitureFor} from './data/home-furniture.js';
 import {ForestScene} from './adventure-art.js';
 import {freshState,FURNITURE,layoutFor,isInterior,roomWalkable,walkable,findPath,equippedOutfit} from './adventure-model.js';
 import {ensureHomeArt,furnitureArtKeys} from './adventure-home-art.js';
@@ -27,8 +28,8 @@ export function availableVisitGifts(state){
  // Keep complimentary furnishings and friendship keepsakes in the child's home.
  return inventoryItems(state).filter(item=>{
   const supported=catalog.find(c=>c.kind===item.kind&&c.id===item.id);
-  return !!supported&&!item.starter&&!item.giftOnly&&!giftBlocked(state,supported);
- });
+  return (item.kind!=='furniture'||state.furnitureOwned.includes(item.id))&&!!supported&&!item.starter&&!item.giftOnly&&!giftBlocked(state,supported);
+ }).map(item=>item.kind==='furniture'?{...item,quantity:1}:item);
 }
 // A visitor only projects the public snapshot onto the current painted room.
 // Do not run the owner/save sanitizer here: it can grant starter furnishings or
@@ -38,9 +39,9 @@ export function normalizeVisitRoomLayouts(snapshot){
  const next={...snapshot},areas=['room','bedroom','kitchen','bathroom'];
  for(let index=0;index<VISIT_LAYOUTS.length;index++){
   const key=VISIT_LAYOUTS[index],area=areas[index];
-  const layout=(Array.isArray(snapshot[key])?snapshot[key]:[]).filter(item=>item&&Number.isFinite(item.x)&&Number.isFinite(item.y)&&FURNITURE.some(f=>f.id===item.id)).map(item=>{
+  const layout=(Array.isArray(snapshot[key])?snapshot[key]:[]).filter(item=>item&&Number.isFinite(item.x)&&Number.isFinite(item.y)&&furnitureFor(item.id)).map(item=>{
    if(item.on)return {...item};
-   const f=FURNITURE.find(f=>f.id===item.id),aligned=f.wall&&!f.ceiling&&wallSide(item)!==0?wallPosition(item,f,area):canonicalMountedPosition(item,f,area);
+   const f=furnitureFor(item.id),aligned=f.wall&&!f.ceiling&&wallSide(item)!==0?wallPosition(item,f,area):canonicalMountedPosition(item,f,area);
    const valid=aligned&&(!f.areas||f.areas.includes(area))&&(f.wall?wallPlacementValid(f,aligned,area):spatialFloorValid(f,aligned));
    return valid?{...item,...aligned}:{...item};
   });
