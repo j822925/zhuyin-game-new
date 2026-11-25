@@ -1,6 +1,6 @@
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
-import {createHandwriting} from './hanzi-handwriting.js?v=20261115-hanzi2';
+import {createHandwriting} from './hanzi-handwriting.js?v=20261125-guide1';
 import {gradeStrokes} from './hanzi-stroke-core.js';
 import {gradeCopy,copyFeedback} from './hanzi-copy-core.js?v=20261118-ink2';
 import {gradeReading} from './hanzi-bank.js';
@@ -41,16 +41,27 @@ function example(reference){
   const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 1 1');svg.setAttribute('aria-label',item.character+'的仿寫範例');svg.setAttribute('role','img');
   for(const d of reference.outlines||reference.strokes.map(s=>'M '+s.map(p=>p.join(' ')).join(' L '))){const path=document.createElementNS(ns,'path');path.setAttribute('d',d);path.setAttribute('fill',reference.outlines?'#274c3c':'none');if(!reference.outlines){path.setAttribute('stroke','#274c3c');path.setAttribute('stroke-width','.025');path.setAttribute('stroke-linecap','round');}svg.append(path);}return svg;
 }
+function updateTraceControls(){
+  const tracing=board?.isTracePractice()===true;
+  const toggle=$('trace-toggle');
+  toggle.hidden=mode==='read'||!board||!ref;
+  toggle.setAttribute('aria-pressed',String(tracing));
+  toggle.textContent=tracing?'關閉底字，回到挑戰':'開啟淡色底字';
+  $('trace-note').hidden=!tracing;
+  $('show-demo').hidden=mode!=='imitate'||tracing;
+  $('finish').hidden=tracing;
+}
 async function openExercise(){
   board?.destroy();board=null;mode=$('mode').value;
   interrupted=false;tooComplex=false;drawing=false;syllable='';tone=null;ref=null;
   screen('exercise');$('exercise').dataset.mode=mode;$('instruction').replaceChildren(phonetic(labels[mode]));$('board').replaceChildren();$('model').replaceChildren();
-  $('symbols').hidden=mode!=='read';$('show-demo').hidden=mode!=='imitate';$('undo').textContent=mode==='read'?'退一格':'退一筆';
+  updateTraceControls();$('symbols').hidden=mode!=='read';$('undo').textContent=mode==='read'?'退一格':'退一筆';
   try{if(mode==='read'){$('model').textContent=item.character;editReading();keypad();}
     else{const resp=await fetch('data/hanzi-strokes/U'+item.character.codePointAt(0).toString(16).toUpperCase()+'.json');if(!resp.ok)throw Error('暫時無法載入這個字的筆順，請再試一次。');
       ref=await resp.json();if(mode==='imitate')$('model').append(example(ref));else $('model').textContent=item.reading;
       board=createHandwriting($('board'),{allowDemo:mode==='imitate',loadReference:async()=>ref,onChange:i=>{interrupted=i.inputInterrupted;tooComplex=i.inputTooComplex;drawing=i.isDrawing;}});
-      await board.load(item.character);
+      if(!await board.load(item.character))throw Error('暫時無法準備這個字的筆順，請再試一次。');
+      updateTraceControls();
     }
    }catch(e){screen('choose');$('message').textContent=e.message;}
 }
@@ -72,7 +83,7 @@ async function demonstrateAndRetry(feedback){
 }
 function choose(){if(busy||pending)return;board?.destroy();board=null;screen('choose');updateChoice();}
 function showResult(out){board?.destroy();board=null;screen('result');$('feedback').textContent=(out.correct?'答對了！':'練習完成，再看看正確答案：'+item.character+'（'+item.reading+'）。')+(out.stars?' 得到 1 顆'+(demo?'試玩':'')+'星星。':' 這個字的這種練習今天已領滿 3 顆星。');}
-async function finish(){if(busy)return;busy=true;$('message').textContent='';
+async function finish(){if(busy||board?.isTracePractice())return;busy=true;$('message').textContent='';
   try{
     if(!pending){const answer=mode==='read'?editReading():{strokes:board?.getStrokes(),inputInterrupted:interrupted||drawing,inputTooComplex:tooComplex};
       if(mode==='read'&&(!syllable||tone===null))throw Error('請選注音和聲調，一聲也要點選。');
@@ -107,7 +118,14 @@ $('character').onchange=updateChoice;$('start').onclick=start;$('finish').onclic
 $('change').onclick=choose;$('back').onclick=choose;$('retry').onclick=()=>pending?finish():load();
 $('clear').onclick=()=>{if(busy||pending)return;if(mode==='read'){syllable='';tone=null;editReading();}else board?.clear();};
 $('undo').onclick=()=>{if(busy||pending)return;if(mode==='read'){if(tone!==null)tone=null;else syllable=syllable.slice(0,-1);editReading();}else board?.undo();};
-$('show-demo').onclick=async()=>{if(!busy&&board){busy=true;try{await board.showDemo();}finally{busy=false;}}};
+$('trace-toggle').onclick=()=>{
+  if(busy||pending||drawing||!board||!ref||mode==='read')return;
+  board.setTracePractice(!board.isTracePractice());
+  interrupted=false;tooComplex=false;drawing=false;
+  $('message').textContent=board.isTracePractice()?'':'換你自己寫一次。';
+  updateTraceControls();
+};
+$('show-demo').onclick=async()=>{if(!busy&&board&&!board.isTracePractice()){busy=true;try{await board.showDemo();}finally{busy=false;}}};
 window.addEventListener('pageshow',()=>{if(!validSession()&&!demo){board?.destroy();options.clear();$('character').replaceChildren();screen(null);$('message').textContent='請回學習廣場重新登入。';}});
 await load();
 

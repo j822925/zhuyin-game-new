@@ -97,11 +97,12 @@ export function createHandwriting(container, options = {}) {
   let strokes = [], activePointer = null, activeStroke = null, reference = null, character = null;
   let interruptedAt = new Set(), destroyed = false, disabled = options.disabled === true, inputTooComplex = false, loadVersion = 0, demoVersion = 0;
   let size = 300, ratio = 1, originTime = performance.now(), demoActive = false;
+  let traceGuide = null;
   let raf = 0, lastNotify = 0, demoResolve = null;
   const loadData = options.loadReference || defaultLoad;
 
   function notify(force = false) {
-    if (destroyed) return;
+    if (destroyed || traceGuide) return;
     const now = performance.now();
     if (!force && now - lastNotify < 80) return;
     lastNotify = now;
@@ -133,9 +134,36 @@ export function createHandwriting(container, options = {}) {
     context.setLineDash([]);
   }
 
+  function makeTraceGuide(ref) {
+    if (ref.outlines?.length === ref.strokes.length) {
+      return { filled: true, paths: ref.outlines.map(outline => new Path2D(outline)) };
+    }
+    const paths = ref.strokes.map(points => {
+      const path = new Path2D();
+      points.forEach(([x, y], i) => {
+        if (i === 0) path.moveTo(x, y);
+        else path.lineTo(x, y);
+      });
+      return path;
+    });
+    return { filled: false, paths };
+  }
+
   function render() {
     if (destroyed) return;
     grid(ctx);
+    if (traceGuide) {
+      ctx.save();
+      ctx.scale(size, size);
+      ctx.fillStyle = ctx.strokeStyle = '#b8c5b9';
+      ctx.lineWidth = 0.031;
+      ctx.lineCap = ctx.lineJoin = 'round';
+      for (const path of traceGuide.paths) {
+        if (traceGuide.filled) ctx.fill(path);
+        else ctx.stroke(path);
+      }
+      ctx.restore();
+    }
     for (const stroke of strokes) strokePath(ctx, stroke, '#27392e', Math.max(4, size * 0.014));
   }
 
@@ -237,6 +265,7 @@ export function createHandwriting(container, options = {}) {
       const chars = Array.from(String(nextCharacter || ''));
       if (chars.length !== 1) throw new TypeError('load expects exactly one character');
       const version = ++loadVersion;
+      if (traceGuide) api.setTracePractice(false);
       character = chars[0]; reference = null; api.clear();
       status.textContent = '正在準備筆順資料…';
       try {
@@ -260,8 +289,26 @@ export function createHandwriting(container, options = {}) {
       inputTooComplex = strokes.reduce((sum, stroke) => sum + stroke.length, 0) > HANDWRITING_INPUT_LIMITS.maxTotalPoints;
       render(); notify(true); return true;
     },
-    getStrokes() { return copyStrokes(strokes); },
+    isTracePractice() { return Boolean(traceGuide); },
+    setTracePractice(enabled) {
+      if (destroyed || Boolean(enabled) === Boolean(traceGuide)) return Boolean(traceGuide);
+      if (enabled) {
+        if (demoActive || !reference?.strokes?.length) return false;
+        // Notify the page of a blank challenge draft before making further ink private.
+        api.clear();
+        traceGuide = makeTraceGuide(reference);
+        canvas.setAttribute('aria-label', '淡色底字練習格，可以描寫，不計分');
+        render();
+      } else {
+        traceGuide = null;
+        canvas.setAttribute('aria-label', '國字手寫田字格，可以用手指或觸控筆書寫');
+        api.clear();
+      }
+      return Boolean(traceGuide);
+    },
+    getStrokes() { return traceGuide ? [] : copyStrokes(strokes); },
     restoreStrokes(raw, { inputInterrupted = false } = {}) {
+      if (traceGuide) return false;
       const restored = validateRestorableStrokes(raw);
       if (destroyed || !restored || typeof inputInterrupted !== 'boolean') return false;
       stopInput(); stopDemo();
@@ -282,11 +329,11 @@ export function createHandwriting(container, options = {}) {
     cancelDemo() { stopDemo(); },
     getReference() { return reference; },
     grade(gradeOptions = {}) {
-      return gradeStrokes(copyStrokes(strokes), reference, { ...gradeOptions,
+      return gradeStrokes(api.getStrokes(), reference, { ...gradeOptions,
         inputInterrupted: interruptedAt.size > 0 || activePointer !== null, inputTooComplex });
     },
     async showDemo() {
-      if (destroyed || !reference?.strokes?.length || options.allowDemo === false) return false;
+      if (destroyed || traceGuide || !reference?.strokes?.length || options.allowDemo === false) return false;
       stopInput(); stopDemo();
       const version = demoVersion;
       const demoStrokes = reference.strokes.map(demoPoints);
@@ -319,6 +366,7 @@ export function createHandwriting(container, options = {}) {
     },
     destroy() {
       stopInput(); stopDemo(); destroyed = true; loadVersion++;
+      if (traceGuide) { traceGuide = null; strokes = []; }
       observer?.disconnect(); view.removeEventListener('resize', resize);
       canvas.removeEventListener('pointerdown', onDown); canvas.removeEventListener('pointermove', onMove);
       canvas.removeEventListener('pointerup', onUp); canvas.removeEventListener('pointercancel', onCancel);

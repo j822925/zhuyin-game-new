@@ -121,6 +121,30 @@ test('real browser retains original ink, resizes, undoes, cancels demos, and rec
     await page.waitForFunction(() => window.demoFinished !== null);
     assert.equal(await page.evaluate(() => window.demoFinished), false);
     assert.deepEqual(await page.evaluate(() => window.pad.getStrokes()), before.ink);
+    // Trace practice stays out of the challenge draft and grade, including after a rotation.
+    await page.evaluate(async raw => {
+      await window.pad.load('右');
+      window.pad.restoreStrokes(raw);
+      window.pad.setTracePractice(true);
+      window.blankNotice = window.lastChange;
+    }, before.ink);
+    const traceCanvas = page.locator('#board canvas').first();
+    const area = await traceCanvas.boundingBox();
+    await page.mouse.move(area.x + 20, area.y + 30);
+    await page.mouse.down();
+    await page.mouse.move(area.x + 100, area.y + 120);
+    await page.mouse.up();
+    assert.deepEqual(await page.evaluate(() => [
+      window.pad.isTracePractice(), window.blankNotice.strokeCount, window.blankNotice === window.lastChange,
+      window.pad.getStrokes(), window.pad.grade().correct, window.pad.restoreStrokes(window.lastChange.strokes)
+    ]), [true, 0, true, [], null, false]);
+    await page.setViewportSize({ width: 840, height: 390 });
+    assert.equal(await page.evaluate(() => window.pad.undo()), true);
+    assert.equal(await page.evaluate(() => window.pad.isTracePractice()), true);
+    await page.evaluate(() => window.pad.setTracePractice(false));
+    assert.deepEqual(await page.evaluate(() => [window.pad.getStrokes(), window.lastChange.strokeCount]), [[], 0]);
+    assert.equal(await page.evaluate(raw => window.pad.restoreStrokes(raw), before.ink), true);
+    assert.equal(await page.evaluate(() => window.pad.grade().status), 'correct');
     await page.evaluate(() => window.pad.destroy());
     assert.equal(await page.locator('#board canvas').count(), 0);
     assert.deepEqual(errors, []);
