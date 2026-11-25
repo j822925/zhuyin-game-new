@@ -1,3 +1,4 @@
+import {CLASS_ART} from './data/guided-prize-art.js';
 import {FARM_CROP_ART} from './data/farm-crop-art.js';
 import {ZONE_SHOP_ART} from './data/zone-shop-art.js';
 import {EXTRA_CELLS} from './data/home-extra-cells.js';
@@ -18,7 +19,7 @@ export function ensureHomeArt(art,keys=['daisyHome']){
  return Promise.all([...new Set(keys)].map(key=>{
   if(art[key])return art[key];if(jobs.has(key))return jobs.get(key);
   const task=(async()=>{const image=new Image();image.src=mediaUrl(key==='kitchenGround'?'assets/adventure-prototype/kitchen-ground-v1.png':HOME_ATLASES[key]);await image.decode();
-   const result=key==='kitchenGround'?image:{image,cells:key==='wallDecor'?WALL_DECOR_ART.cells:(HOME_CELLS[key]||EXTRA_CELLS[key]||HOME_EXPANSION_ART[key]||HOME_COMPLETION_ART[key]||HOME_COLLECTION_ART[key]||COLLECTION_ZONE_ART[key]||COLLECTION_FOOD_ART[key]||LESSON_HARVEST_ART[key]||FARM_CROP_ART[key]||ZONE_SHOP_ART[key]).cells};art[key]=result;return result;
+   const result=key==='kitchenGround'?image:{image,cells:key==='wallDecor'?WALL_DECOR_ART.cells:(HOME_CELLS[key]||EXTRA_CELLS[key]||HOME_EXPANSION_ART[key]||HOME_COMPLETION_ART[key]||HOME_COLLECTION_ART[key]||COLLECTION_ZONE_ART[key]||COLLECTION_FOOD_ART[key]||LESSON_HARVEST_ART[key]||FARM_CROP_ART[key]||CLASS_ART[key]||ZONE_SHOP_ART[key]).cells};art[key]=result;return result;
   })();jobs.set(key,task);task.catch(()=>jobs.delete(key));return task;
  })).then(async result=>{const styles=FURNITURE.filter(f=>keys.includes(f.atlas||'furniture')).map(f=>f.style);if(styles.length)await ensureSpatialArt(art,styles);return result;});
 }

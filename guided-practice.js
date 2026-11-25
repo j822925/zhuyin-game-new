@@ -12,7 +12,7 @@ let visit,activitySeq=0,lastActivity;
 let plan,state,board,input='',tone='',busy=false,frame=0,replayId=0,lastInk=null,waiting=false,pending=null,generation=0,soundId=0;
 $('home').href=classUrl(currentClass==='grade2'?'grade2.html':'index.html');
 async function api(op,data={}){
- if(preview){const {trial}=await import('./guided-trial.js?v=1');return trial(op,data);}
+ if(preview){const {trial}=await import('./guided-trial.js?v=2');return trial(op,data);}
  const session=sessions.read();
  if(!owner||session?.seat!==owner.seat||session?.token!==owner.token||session.expires<=Date.now())throw Error('請回學習廣場登入，再進入課堂練習。');
  const res=await fetch(new URL('/hanzi/guided-'+op,endpoint),{method:'POST',cache:'no-store',keepalive:op==='activity',headers:{Authorization:'Bearer '+session.token,'Content-Type':'application/json'},body:JSON.stringify({...data,classId:currentClass}),signal:AbortSignal.timeout(16000)});
@@ -78,7 +78,11 @@ function controls(){
 }
 function top(){ $('title').textContent=state.title;$('progress').textContent='第 '+Math.min(state.position+1,state.total)+'／'+state.total+' 題';$('score').textContent='目前可得 '+state.score+' 分';}
 async function render(){
- clean();$('status').textContent='';if(state.completed){screen('result');$('final').textContent='練習完成！ '+state.score+' 分';$('gift').textContent=preview?'教師試玩完成，分數與禮物只作示範。':state.reward?'滿分禮物：'+state.reward.name+'。'+(state.reward.mail?'到探險島的禮物信箱領取。':'已放進探險島的收藏。'):'';return;}
+ clean();$('status').textContent='';if(state.completed){screen('result');$('final').textContent='練習完成！ '+state.score+' 分';const reward=state.reward;
+ const awards=(reward?.items||[]).map(item=>item.kind==='meal'?'完成獎：'+item.name+'（補 '+item.energy+'% 體力）':'滿分加贈：'+item.name);
+ if(!awards.length&&reward?.name)awards.push('滿分禮物：'+reward.name);
+ if(awards.length)awards.push(preview?'教師試玩，獎品僅供示範。':reward.mail?'到探險島的禮物信箱領取。':'已放進探險島的收藏。');
+ $('gift').textContent=awards.join('　');return;}
  screen('exercise');top();input='';tone='';const q=state.question;
  $('other').replaceChildren();$('model').replaceChildren();$('ink').replaceChildren();$('notice').className='';
  $('notice').textContent=state.feedback?.correct===false&&state.feedback.position===state.position?state.feedback.tip:'';

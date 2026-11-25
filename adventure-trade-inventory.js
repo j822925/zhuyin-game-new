@@ -52,7 +52,7 @@ export function inventoryItems(s,shop=null){
   else if(kind==='meal'&&!item.buyOnly)sellPrice={soup:2,tomatoFish:3,cornCup:3,pumpkinPlate:3}[item.id]||1;
   else if(!item.price||item.starter||STARTER_FURNITURE.includes(item.id))reason='初始贈品';
   else if(sellPrice===0)reason='半價不足 1 星幣，保留使用';
-  if(item.giftOnly)reason='好友紀念品';
+  if(item.giftOnly)reason=item.rewardOnly?'課堂練習獎品':'好友紀念品';
   const sellableQuantity=group?group.stored.length:quantity;
   if(kind==='furniture'&&quantity&&!sellableQuantity)reason=reason||'擺放中，先收納';
   if(kind==='clothes'&&outfitIsWorn(s,item.id))reason=reason||'穿著中';

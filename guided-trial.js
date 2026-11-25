@@ -1,3 +1,4 @@
+import {drawClassRewards} from './data/guided-rewards.js';
 import {judge,score} from './guided-grading.js';
 const questions=[
  {mode:'copy',character:'三',reading:'ㄙㄢ',word:'三'},
@@ -22,5 +23,6 @@ export async function trial(op,d){
  const g=judge(result.question,d.answer,result.question.reference);
  if(g.correct===null)return {...result,notice:g.tip};
  r.feedback={...g,position:r.position};if(g.correct)r.position++;else{const i=r.position;r.mistakes[i]={count:(r.mistakes[i]?.count||0)+1};}
+ if(r.position===questions.length)r.reward={version:2,items:drawClassRewards(!Object.keys(r.mistakes).length)};
  r.revision++;sessionStorage.setItem(key,JSON.stringify(r));return view(r);
 }

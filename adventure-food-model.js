@@ -7,7 +7,8 @@ export const ENERGY_COST={fish:0,battle:8};
 export const ENERGY_DECAY_MS=60*60*1000;
 export const RAW_FOOD={...COLLECTION_RAW_FOOD,...LESSON_RAW_FOOD,strawberry:{name:'草莓',energy:9},cucumber:{name:'小黃瓜',energy:8},blueberry:{name:'藍莓',energy:10},lettuce:{name:'萵苣',energy:6},carrot:{name:'紅蘿蔔',energy:8},tomato:{name:'小番茄',energy:6},corn:{name:'甜玉米',energy:8}};
 export const INGREDIENT_NAMES={...Object.fromEntries(Object.entries({...COLLECTION_CROPS,...LESSON_CROPS}).map(([id,crop])=>[id,crop.name])),carrot:'紅蘿蔔',tomato:'小番茄',corn:'甜玉米',pumpkin:'南瓜',fish:'魚'};
-export const RECIPES={...SHOP_FOODS,...COLLECTION_RECIPES,...LESSON_RECIPES,
+import {CLASS_MEALS} from './data/guided-rewards.js';
+export const RECIPES={...Object.fromEntries(CLASS_MEALS.map(item=>[item.id,item])),...SHOP_FOODS,...COLLECTION_RECIPES,...LESSON_RECIPES,
  soup:{name:'蔬菜暖湯',ingredients:{carrot:1,tomato:1},energy:35,art:2,description:'第一道家常料理，把今天的收穫煮成暖暖的一碗。'},
  tomatoFish:{name:'番茄烤魚',ingredients:{fish:1,tomato:2},energy:55,art:3,description:'把池塘釣到的魚，配上香甜的小番茄。'},
  cornCup:{name:'香甜玉米盅',ingredients:{corn:2,tomato:1},energy:45,art:4,description:'金黃玉米加上番茄丁，裝進小木杯。'},
@@ -26,7 +27,7 @@ export function hasEnergy(state){decayEnergy(state.life?.nutrition);return state
 export function canSpendEnergy(state,action){const cost=ENERGY_COST[action];decayEnergy(state.life?.nutrition);return Number.isInteger(cost)&&state.life?.nutrition?.energy>=cost;}
 export function spendEnergy(state,action){if(!canSpendEnergy(state,action))return false;state.life.nutrition.energy-=ENERGY_COST[action];return true;}
 export function ingredientCount(state,id){return id==='fish'?Object.values(state.life.fish).reduce((a,b)=>a+b,0):(state.life.harvest[id]||0);}
-export function canCook(state,id,{stationId,area}={}){decayEnergy(state.life?.nutrition);if(area!=='kitchen'||!state.furnitureOwned?.includes(stationId)||!furnitureFor(stationId)?.cooking||!state.kitchenLayout?.some(f=>f.id===stationId))return false;const r=Object.hasOwn(RECIPES,id)&&RECIPES[id];return !!r&&!r.buyOnly&&state.life.nutrition.meals[id]<9999&&Object.entries(r.ingredients).every(([key,n])=>ingredientCount(state,key)>=n);}
+export function canCook(state,id,{stationId,area}={}){decayEnergy(state.life?.nutrition);if(area!=='kitchen'||!state.furnitureOwned?.includes(stationId)||!furnitureFor(stationId)?.cooking||!state.kitchenLayout?.some(f=>f.id===stationId))return false;const r=Object.hasOwn(RECIPES,id)&&RECIPES[id];return !!r&&!r.buyOnly&&!r.rewardOnly&&state.life.nutrition.meals[id]<9999&&Object.entries(r.ingredients).every(([key,n])=>ingredientCount(state,key)>=n);}
 export function cookMeal(state,id,context){if(!canCook(state,id,context))return false;
  for(const [key,amount]of Object.entries(RECIPES[id].ingredients)){
   if(key==='fish'){let remaining=amount;for(const fish of Object.keys(state.life.fish)){const used=Math.min(remaining,state.life.fish[fish]);state.life.fish[fish]-=used;remaining-=used;}}

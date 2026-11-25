@@ -24,7 +24,9 @@ export const HOME_STYLES=[...EXTRA_STYLES,
  {id:'fox',name:'橡果木屋',character:'橘子狐',description:'橡果木紋、暖橘與森林青綠'},
  {id:'moon',name:'月光夢境',character:'月亮精靈',description:'柔紫、月牙與小金星'},
 ];
-export const HOME_ATLASES={...EXTRA_ATLASES,extraCrops:FARM_CROP_ART.extraCrops.src,
+import {CLASS_FURNITURE} from './guided-rewards.js';
+import {CLASS_ART} from './guided-prize-art.js';
+export const HOME_ATLASES={...Object.fromEntries(Object.entries(CLASS_ART).map(([key,v])=>[key,v.src])),...EXTRA_ATLASES,extraCrops:FARM_CROP_ART.extraCrops.src,
  ...Object.fromEntries(Object.entries(HOME_COLLECTION_ART).map(([key,v])=>[key,v.src])),
  ...Object.fromEntries(Object.entries(COLLECTION_ZONE_ART).map(([key,v])=>[key,v.src])),
  ...Object.fromEntries(Object.entries(COLLECTION_FOOD_ART).map(([key,v])=>[key,v.src])),
@@ -66,6 +68,7 @@ export const FURNITURE=[
  ...ZONE_FURNITURE,
  ...DISPLAY_FURNITURE,
  ...COLLECTION_FURNITURE,
+ ...CLASS_FURNITURE,
  ...SPATIAL_FURNITURE,
  ...COLLECTION_ZONE_FURNITURE,
 ]).map(priceFurniture).map(f=>f.id==='daisy-complete-toilet'?{...f,starter:true,price:0}:f).map(scaleHomeFurniture);
