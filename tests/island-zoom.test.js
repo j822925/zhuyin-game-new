@@ -16,8 +16,8 @@ test('pinch preserves world point below moving midpoint and clamps at shoreline 
  const z=zoomIsland(c,1024,768,1.2,from,to);
  assert.ok(Math.abs((c.x+from.x/c.scale-z.x)*z.scale-to.x)<1e-8);
  assert.ok(Math.abs((c.y+from.y/c.scale-z.y)*z.scale-to.y)<1e-8);
- const edge=zoomIsland(c,1024,768,100,from,{x:-1e6,y:1e6});assert.equal(edge.y,0);assert.ok(edge.x+1024/edge.scale<=3840);
- const rotated=islandCamera(z,768,1024);assert.ok(rotated.y+1024/rotated.scale<=2400);
+ const edge=zoomIsland(c,1024,768,100,from,{x:-1e6,y:1e6});assert.equal(edge.y,0);assert.ok(edge.x+1024/edge.scale<=ISLAND_WORLD.width+.001);
+ const rotated=islandCamera(z,768,1024);assert.ok(rotated.y+1024/rotated.scale<=ISLAND_WORLD.height+.001);
 });
 function fixture(){const calls=[];const api={camera:()=>({scale:1,x:500,y:500}),stop:()=>calls.push('stop'),start:()=>calls.push('pinch'),tap:(p,t)=>calls.push(['tap',t]),zoom:(...a)=>calls.push(['zoom',...a])};return {calls,g:createMapGesture(api)};}
 test('touch tap waits for release; adding second finger never walks or opens a shop',()=>{

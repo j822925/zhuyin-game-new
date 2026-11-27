@@ -1,7 +1,7 @@
 import {ZONES,zoneById} from './data/adventure-zones.js';
 import {enemyStats,playerStats} from './adventure-expedition-model.js';
 
-export const BRIDGE_END={x:3750,y:90}, BRIDGE_RETURN={x:3560,y:152};
+export const BRIDGE_END={x:4470,y:162}, BRIDGE_RETURN={x:4209,y:225};
 export const QUESTS=[
  ['bud','榕樹下的名牌','通梁榕根路','通梁榕樹下還有一籃小苗。你願意幫牠們把名牌掛回去嗎？','reading',[],'榕根下的小苗長出新葉了。'],
  ['sand','蟹腳印和小船','通梁潮灘','小蟹搬來的浮子好像多了一顆。能幫小船把繩子拉直嗎？','math',[],'小船浮正了！小蟹在沙上畫了一個圈。'],

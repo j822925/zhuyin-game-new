@@ -1,11 +1,12 @@
+import {PAINTED_ISLAND} from './adventure-island-pilot.js';
 import {STUDY_BEASTS,beastPosition,drawStudyBeast} from './adventure-island-actors.js';
 import {GROVE_WORLD,ISLAND_WORLD,DESTINATIONS} from './adventure-exploration-model.js';
 const pending=new WeakMap();
-export async function ensureExplorationArt(art,area){let jobs=pending.get(art);if(!jobs){jobs=new Map();pending.set(art,jobs);}art.exploration??={};const keys=area==='grove'?['grove','acorn','cloud']:['island','seeds'];await Promise.all(keys.map(key=>{if(art.exploration[key])return;if(jobs.has(key))return jobs.get(key);const task=(async()=>{const image=new Image();image.src=key==='island'?'assets/exploration/island-xiyu-v2.webp':`assets/exploration/${key}-v1.webp`;await image.decode();art.exploration[key]=image;})();jobs.set(key,task);task.catch(()=>jobs.delete(key));return task;}));}
+export async function ensureExplorationArt(art,area){let jobs=pending.get(art);if(!jobs){jobs=new Map();pending.set(art,jobs);}art.exploration??={};const keys=area==='grove'?['grove','acorn','cloud']:PAINTED_ISLAND?['island']:['island','seeds'];await Promise.all(keys.map(key=>{if(art.exploration[key])return;if(jobs.has(key))return jobs.get(key);const task=(async()=>{const image=new Image();image.src=key==='island'?(PAINTED_ISLAND?'assets/exploration/island-xiyu-gates-v3.webp':'assets/exploration/island-xiyu-v2.webp'):`assets/exploration/${key}-v1.webp`;await image.decode();art.exploration[key]=image;})();jobs.set(key,task);task.catch(()=>jobs.delete(key));return task;}));}
 export function drawExploration(c,art,state,scene,now,battle,drawMushroom,star){
  const grove=scene.area==='grove',size=grove?GROVE_WORLD:ISLAND_WORLD,p=scene.player,clock=scene.reduced.matches?0:now/1000;
  c.drawImage(art.exploration[grove?'grove':'island'],0,0,size.width,size.height);
- if(!grove){const im=art.exploration.seeds,shop=DESTINATIONS.find(d=>d.id==='seeds'),h=246;c.drawImage(im,shop.x-im.width/im.height*h/2,shop.y-h,im.width/im.height*h,h);}
+ if(!grove&&!PAINTED_ISLAND){const im=art.exploration.seeds,shop=DESTINATIONS.find(d=>d.id==='seeds'),h=246;c.drawImage(im,shop.x-im.width/im.height*h/2,shop.y-h,im.width/im.height*h,h);}
  const things=[],casting=scene.castAt?Math.min(1,(now-scene.castAt)/1050):0;
  things.push({y:p.y,draw:()=>scene.drawPlayer(c,art,{x:p.x,y:p.y,height:grove?116:90,outfit:state.outfit,direction:p.direction,walking:p.moving&&!scene.reduced.matches,phase:p.phase,wand:state.wand,casting})});
  if(!grove)scene.chapterPost?.draw(c,art,scene,things,clock);

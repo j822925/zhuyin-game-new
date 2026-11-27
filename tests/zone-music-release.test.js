@@ -26,7 +26,7 @@ test('shipped adventure and preparation cache chains select the new build withou
   ['game-boot.js','app.js','20261125-guided'],['game-boot.js','preparation.js','20261123-starenvoys1'],
   ['game-boot.js','forest-home-entry.js','20261023-zonemusic1'],['app.js','preparation.js','20261123-starenvoys1'],
   ['preparation.js','data/adventure-preload.js','20261023-zonemusic1'],['forest-home-entry.js','adventure-preview.html','20261023-zonemusic1'],
-  ['adventure-preview.html','adventure-entry.bundle.js','20261127-alltrace1'],['adventure-entry.js','adventure-play.bundle.js','20261127-alltrace1'],
+  ['adventure-preview.html','adventure-entry.bundle.js','20261127-gates1'],['adventure-entry.js','adventure-play.bundle.js','20261127-alltrace1'],
  ];
  for(const [file,target,expected]of refs)assert(read(file).includes(target+'?v='+expected),file+' -> '+target);
  assert(read('adventure-entry.bundle.js').includes('adventure-play.bundle.js?v=20261127-alltrace1'));

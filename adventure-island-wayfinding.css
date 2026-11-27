@@ -1,0 +1,44 @@
+/* Pilot map owns three separate spaces: navigation, the walkable canvas and tools. */
+body.on-painted-island .world-card{display:grid;grid-template-rows:var(--map-header,78px) minmax(0,1fr) auto auto;background:#efead5}
+body.on-painted-island .world-card>.map-stage{position:relative;grid-row:2;inset:auto;width:100%;height:100%;min-height:0;overflow:hidden}
+body.on-painted-island .world-top,body.on-painted-island .world-bottom,body.on-painted-island #map-note{display:none!important}
+body.on-painted-island .topbar{top:env(safe-area-inset-top,0px);left:8px;right:8px;align-items:center;height:var(--map-header,78px);flex-wrap:nowrap}
+body.on-painted-island .topbar #picture-help,body.on-painted-island .topbar #forest-music-toggle{position:static!important;margin:0;flex:none}
+body.on-painted-island .world-card>#island-invitation{position:relative;inset:auto;width:100%;max-width:none;grid-row:3;display:flex;gap:10px;align-items:center;padding:4px 12px;border-width:1px;border-radius:0;animation:none}
+body.on-painted-island #island-invitation[hidden]{display:none!important}
+body.on-painted-island #island-invitation .invitation-close{position:static;order:3}
+body.on-painted-island #island-invitation strong{padding:0}
+body.on-painted-island #island-invitation p{flex:1;margin:0}
+body.on-painted-island #island-invitation small{display:none}
+body.on-painted-island #island-invitation .invitation-enter{width:auto;margin-left:auto;min-width:80px}
+.island-map-dock[hidden]{display:none!important}
+.on-painted-island .island-map-dock{grid-row:4;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:4px max(8px,env(safe-area-inset-right)) max(4px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));background:#f4efd9;border-top:1px solid #c4b48f;z-index:7}
+.on-painted-island .island-map-dock>*{position:relative!important;inset:auto!important;transform:none!important;margin:0!important}
+.on-painted-island .island-map-dock .joystick{width:76px;height:76px;flex:none;background:#d3dabe}
+.on-painted-island .island-map-dock .joystick-ring{inset:6px}
+.on-painted-island .island-map-dock .joystick-hint{display:none}
+.on-painted-island .island-map-dock .world-actions{display:flex;flex-direction:row;padding:0;border:0;background:none;box-shadow:none;gap:4px}
+.on-painted-island .island-map-dock .island-zoom-controls{display:flex;gap:1px;padding:2px}
+.on-painted-island .island-map-dock .energy-hud{min-width:0;width:min(18vw,145px);padding:4px 6px}
+.on-painted-island .island-map-dock .energy-hud small{display:none}
+body .exploration-pin.painted-gate,body .exploration-pin.painted-gate:not(:disabled):active{background:none;border:0;border-radius:35%;box-shadow:none;padding:0;min-width:0;min-height:0;transform:translate(-50%,-50%);transition:none}
+.painted-gate:focus-visible{outline:3px solid #fff7bb;box-shadow:0 0 0 5px #446749!important}
+body .near-challenge,body #monster-button.near-challenge{position:absolute;z-index:6;display:grid;place-items:center;transform:translate(-50%,-100%);width:44px;height:44px;min-width:44px;min-height:44px;background:#fff5d7;border:2px solid #927343;border-radius:50%;color:#4a4737;padding:0;font:700 24px/1 system-ui;box-shadow:0 2px 4px #4b422c50;cursor:pointer}
+body .near-challenge[hidden]{display:none!important}
+@media(max-width:620px){
+ body.on-painted-island .world-card{--map-header:64px}
+ body.on-painted-island .topbar{height:64px}
+ body.on-painted-island .topbar .brand{display:none}
+ body.on-painted-island .topbar .wallet{margin-right:auto}
+ body.on-painted-island .world-card>#island-invitation{gap:4px;padding:2px 4px}
+ body.on-painted-island #island-invitation p{font-size:11px}
+ .on-painted-island .island-map-dock{display:grid;grid-template-columns:auto 1fr auto;gap:2px 4px}
+ .on-painted-island .island-map-dock .joystick{grid-column:1;grid-row:1/3;width:64px;height:64px}
+ .on-painted-island .island-map-dock .island-zoom-controls{grid-column:2;grid-row:1;justify-self:center}
+ .on-painted-island .island-map-dock .energy-hud{grid-column:2;grid-row:2;width:100%;max-width:170px;font-size:11px}
+ .on-painted-island .island-map-dock .energy-hud .combat-stats{display:none}
+ .on-painted-island .island-map-dock .world-actions{grid-column:3;grid-row:1/3;flex-direction:column}
+ html body.on-painted-island .island-map-dock .world-actions .adventure-control{width:58px!important;height:44px!important;min-height:44px!important}
+ html body.on-painted-island .island-map-dock .world-actions .adventure-control::before{font-size:17px!important}
+}
+@media(max-height:520px) and (min-width:621px){body.on-painted-island .world-card{--map-header:62px}.on-painted-island .island-map-dock .joystick{width:56px;height:56px}.on-painted-island .island-map-dock{padding-block:2px}}

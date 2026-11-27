@@ -1,6 +1,6 @@
 import {ensureClothingArt,drawClothing} from './adventure-clothing.js';
 import {ZONE_STOREFRONTS} from './data/zone-storefront-art.js';
-const HOME={x:1555,y:1338},letters=[{id:'leaf',x:1615,y:1380,bit:1},{id:'mud',x:1710,y:1394,bit:2}];
+const HOME={x:1608,y:1653},letters=[{id:'leaf',x:1701,y:1683,bit:1},{id:'mud',x:1746,y:1698,bit:2}];
 export function createPost(chapter,walkTo){
  let house=null,ready=false;
  function available(){const m=chapter.mail();return letters.filter(l=>m.stage==='search'&&!(m.letters&l.bit));}
