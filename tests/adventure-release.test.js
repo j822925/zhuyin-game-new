@@ -67,3 +67,23 @@ test('test banner saves before returning, and a rejected save does not leave the
   await button.onclick();assert.equal(reloads,0);assert.equal(button.disabled,false);assert.equal(label.textContent,'請先完成保存');
   saved=true;await button.onclick();assert.equal(reloads,1);assert.equal(await select({storage}),null);
 });
+
+test('eligible students can switch both ways while other students have no switch',async()=>{
+  const storage=memory();
+  for(const mode of ['journey','direct']){
+    const mock={...student,trialGrant:candidate.id+':'+mode,flush:async()=>true};
+    let reloads=0;
+    for(const expected of ['candidate','stable','candidate']){
+      const doc=fakeDocument(),loads=[];
+      const result=await startAdventureRelease({student:mock,policy,storage,cryptoImpl:webcrypto,documentImpl:doc,loadStable:()=>loads.push('stable'),loadCandidate:()=>loads.push('candidate'),reload:()=>reloads++});
+      assert.equal(result,expected);
+      assert.deepEqual(loads,[expected]);
+      const button=doc.nodes.find(n=>n.id==='adventure-test-release').children.at(-1);
+      assert.equal(button.textContent,expected==='stable'?'切換到試玩版':'回正式版');
+      if(reloads<2)await button.onclick();
+    }
+    const doc=fakeDocument();
+    assert.equal(await startAdventureRelease({student:{...mock,trialGrant:null},policy,storage,cryptoImpl:webcrypto,documentImpl:doc,loadStable:()=>{},loadCandidate:()=>assert.fail()}),'stable');
+    assert.equal(doc.nodes.length,0);
+  }
+});
