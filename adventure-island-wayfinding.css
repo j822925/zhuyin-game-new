@@ -42,3 +42,25 @@ body .near-challenge[hidden]{display:none!important}
  html body.on-painted-island .island-map-dock .world-actions .adventure-control::before{font-size:17px!important}
 }
 @media(max-height:520px) and (min-width:621px){body.on-painted-island .world-card{--map-header:62px}.on-painted-island .island-map-dock .joystick{width:56px;height:56px}.on-painted-island .island-map-dock{padding-block:2px}}
+
+#expedition .district-door,#expedition .district-resident{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;justify-content:end;background:transparent;border:0;box-shadow:none;padding:0;touch-action:manipulation}
+#expedition .district-door{width:clamp(58px,10%,164px);height:clamp(48px,9%,120px);z-index:4}
+#expedition .district-door small,#expedition .district-resident small{font:600 clamp(12px,1.6vw,16px)/1.25 system-ui;color:#364f40;background:#fffae9ec;border:1px solid #baac86;border-radius:18px;padding:3px 8px;white-space:nowrap}
+#expedition .district-resident{z-index:62}
+#expedition .district-resident img{width:auto;height:clamp(58px,12vh,115px);filter:drop-shadow(0 3px 2px #483d2644)}
+#expedition .district-resident .work-prop{position:absolute;top:40%;right:0;font-size:20px}
+#expedition .district-door:focus-visible,#expedition .district-resident:focus-visible{outline:3px solid #44795b;outline-offset:3px}
+#expedition .district-door:active,#expedition .district-resident:active{transform:translate(-50%,-100%)}
+#expedition[data-view=community] .exp-panel{width:min(540px,91%);bottom:max(8px,env(safe-area-inset-bottom));font-size:clamp(15px,2vw,20px)}
+#expedition[data-view=community] .exp-panel[hidden]{display:none}
+#expedition[data-view=field] .painted-guardian{height:clamp(84px,18vh,175px);width:auto}
+@media(prefers-reduced-motion:no-preference){
+ #expedition .district-resident .work-prop{animation:resident-work 2.4s ease-in-out infinite}
+ @keyframes resident-work{50%{transform:translate(2px,-4px) rotate(-8deg)}}
+}
+
+#expedition[data-mirrored-field] .exp-world{background:none}
+#expedition[data-mirrored-field] .exp-world::before{content:"";position:absolute;inset:0;transform:scaleX(-1);background:var(--zone-scene) center/100% 100% no-repeat;pointer-events:none}
+#expedition .painted-shop{width:18%;height:22%;min-width:64px;min-height:48px}
+
+#expedition .district-resident:hover,#expedition .district-door:hover{background:transparent;box-shadow:none}
