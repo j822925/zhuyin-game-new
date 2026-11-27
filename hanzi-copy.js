@@ -2,7 +2,7 @@ import {showRoundOutcome} from './round-outcome.js?v=20261123-outcome1';
 import {createFarmLessonLink} from './farm-lesson-link.js?v=20261122-farm6';
 import {COPY_MODES,COPY_RULE,COPY_REWARD_RULE,gradeCopy,copyFeedback} from './hanzi-copy-core.js?v=20261119-stars';
 import {gradeStrokes} from './hanzi-stroke-core.js';
-import {createHandwriting} from './hanzi-handwriting.js?v=20261125-guide1';
+import {createHandwriting} from './hanzi-handwriting.js?v=20261127-inkguard1';
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),demo=params.get('demo')==='1',mode=COPY_MODES[params.get('mode')]?params.get('mode'):'copy',rule=COPY_MODES[mode];

@@ -1,6 +1,6 @@
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
-import {createHandwriting} from './hanzi-handwriting.js?v=20261127-trace1';
+import {createHandwriting} from './hanzi-handwriting.js?v=20261127-inkguard1';
 import {writingPrompt,syllable,phoneticFeedback} from './guided-prompt.js';
 import {showRewardPictures} from './guided-reward-view.js';
 import {HANZI_AUDIO} from './data/hanzi-teacher-audio.js?v=20261115-hanzi2';

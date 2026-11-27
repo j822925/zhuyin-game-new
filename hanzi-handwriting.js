@@ -118,8 +118,75 @@ export function createHandwriting(container, options = {}) {
   let interruptedAt = new Set(), destroyed = false, disabled = options.disabled === true, inputTooComplex = false, loadVersion = 0, demoVersion = 0;
   let size = 300, ratio = 1, originTime = performance.now(), demoActive = false;
   let traceGuide = null;
+  let gestureSession = null;
   let raf = 0, lastNotify = 0, demoResolve = null;
   const loadData = options.loadReference || defaultLoad;
+
+  // touch-action on the canvas covers one finger. During a stroke, Safari
+  // gestures or a second contact may instead target a button or the page.
+  const captureGesture = {capture:true, passive:false};
+  const gestureEvents = ['pointerdown','pointermove','pointerup','pointercancel',
+    'touchstart','touchmove','touchend','touchcancel','gesturestart','gesturechange','gestureend',
+    'click','contextmenu','selectstart','dragstart','wheel'];
+  function consume(event) {
+    if (event.cancelable) event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+  function releaseGestures() {
+    if (!gestureSession) return;
+    view.clearTimeout(gestureSession.releaseTimer);
+    gestureSession.style.remove();
+    for (const type of gestureEvents) view.removeEventListener(type, guardGesture, true);
+    gestureSession = null;
+  }
+  function releaseAfterContact() {
+    if (!gestureSession || activePointer !== null || gestureSession.otherPointers.size) return;
+    // Let touchend and its compatibility click finish before removing the guard.
+    view.clearTimeout(gestureSession.releaseTimer);
+    gestureSession.releaseTimer = view.setTimeout(releaseGestures, 0);
+  }
+  function guardGesture(event) {
+    const session = gestureSession;
+    if (!session) return;
+    if (event.type.startsWith('pointer')) {
+      if (event.pointerId === activePointer) {
+        if (event.target === canvas) return;
+        // Keep the stroke if pointer capture was unavailable at the edge of the grid.
+        consume(event);
+        if (event.type === 'pointermove') onMove(event);
+        else if (event.type === 'pointerup' || event.type === 'pointercancel') finish(event,event.type === 'pointercancel');
+        return;
+      }
+      if (event.type === 'pointerdown') {
+        if (activePointer === null && !session.otherPointers.size) { releaseGestures(); return; }
+        session.otherPointers.add(event.pointerId);
+        try { canvas.setPointerCapture(event.pointerId); } catch { /* Fallback is the capturing listener. */ }
+      } else if (!session.otherPointers.has(event.pointerId)) return;
+      consume(event);
+      if (event.type === 'pointerup' || event.type === 'pointercancel') {
+        session.otherPointers.delete(event.pointerId);
+        releaseAfterContact();
+      }
+      return;
+    }
+    consume(event);
+  }
+  function protectGestures() {
+    if (gestureSession) return;
+    const style = document.createElement('style');
+    style.textContent = 'html,body{overscroll-behavior:none!important;touch-action:none!important}';
+    document.head.append(style);
+    gestureSession = {style,otherPointers:new Set(),releaseTimer:0};
+    for (const type of gestureEvents) view.addEventListener(type,guardGesture,captureGesture);
+  }
+  function pageInterrupted() {
+    if (activePointer !== null) completeStroke(true);
+    releaseGestures();
+  }
+  function visibilityChanged() { if (document.hidden) pageInterrupted(); }
+  view.addEventListener('blur',pageInterrupted);
+  view.addEventListener('pagehide',pageInterrupted);
+  document.addEventListener('visibilitychange',visibilityChanged);
 
   function notify(force = false) {
     if (destroyed || traceGuide) return;
@@ -245,16 +312,17 @@ export function createHandwriting(container, options = {}) {
     if (destroyed || disabled || inputTooComplex || demoActive || activePointer !== null || event.isPrimary === false || (event.pointerType === 'mouse' && event.button !== 0)) return;
     if(traceGuide?.models && strokes.length>=traceGuide.models.length)return;
     if (strokes.length >= HANDWRITING_INPUT_LIMITS.maxStrokes) { inputTooComplex = true; status.textContent = '筆畫較多，請清除後重新書寫。'; notify(true); return; }
-    event.preventDefault();
+    event.preventDefault(); event.stopPropagation();
     if(traceGuide)traceGuide.hint=false;
     activePointer = event.pointerId; activeStroke = []; strokes.push(activeStroke);
+    protectGestures();
     try { canvas.setPointerCapture(activePointer); } catch { /* Pointer may already have ended. */ }
     status.textContent = ''; addPoint(event); render(); notify(true);
   }
 
   function onMove(event) {
     if (event.pointerId !== activePointer) return;
-    event.preventDefault();
+    event.preventDefault(); event.stopPropagation();
     const events = typeof event.getCoalescedEvents === 'function' ? event.getCoalescedEvents() : [];
     for (const sample of events.length ? events : [event]) addPoint(sample);
     render(); notify();
@@ -262,13 +330,14 @@ export function createHandwriting(container, options = {}) {
 
   function finish(event, interrupted = false) {
     if (event.pointerId !== activePointer) return;
-    event.preventDefault();
+    if (event.cancelable) event.preventDefault();
+    event.stopPropagation();
     if (!interrupted) addPoint(event);
-    if(activePointer===null)return;
+    if (activePointer !== null) completeStroke(interrupted);
+  }
+  function completeStroke(interrupted) {
     if(interrupted)interruptedAt.add(strokes.length - 1);
-    const pointer = activePointer;
-    activePointer = null; activeStroke = null;
-    try { if (canvas.hasPointerCapture(pointer)) canvas.releasePointerCapture(pointer); } catch { /* no capture */ }
+    stopInput();
     if(traceGuide?.models){
       if(interrupted||!traceMatches(strokes.at(-1),traceGuide.models,strokes.length-1))rejectTraceStroke();
       else traceResult(true,strokes.length);
@@ -279,6 +348,10 @@ export function createHandwriting(container, options = {}) {
   const onCancel = event => finish(event, true);
   const onLostCapture = event => { if (activePointer === event.pointerId) finish(event, true); };
   const onContext = event => event.preventDefault();
+  // Non-passive from the start of contact, including browsers that dispatch
+  // touchstart before pointerdown or deliver touchend after pointerup.
+  const boardGestures = ['touchstart','touchmove','touchend','gesturestart','gesturechange','gestureend','click','dragstart','selectstart'];
+  for (const type of boardGestures) wrapper.addEventListener(type,consume,captureGesture);
   canvas.addEventListener('pointerdown', onDown);
   canvas.addEventListener('pointermove', onMove);
   canvas.addEventListener('pointerup', onUp);
@@ -302,6 +375,7 @@ export function createHandwriting(container, options = {}) {
     if (activePointer === null) return;
     const pointer = activePointer; activePointer = null; activeStroke = null;
     try { if (canvas.hasPointerCapture(pointer)) canvas.releasePointerCapture(pointer); } catch { /* no capture */ }
+    releaseAfterContact();
   }
 
   const api = {
@@ -413,6 +487,11 @@ export function createHandwriting(container, options = {}) {
     },
     destroy() {
       stopInput(); stopDemo(); destroyed = true; loadVersion++;
+      releaseGestures();
+      view.removeEventListener('blur',pageInterrupted);
+      view.removeEventListener('pagehide',pageInterrupted);
+      document.removeEventListener('visibilitychange',visibilityChanged);
+      for (const type of boardGestures) wrapper.removeEventListener(type,consume,true);
       if (traceGuide) { traceGuide = null; strokes = []; }
       observer?.disconnect(); view.removeEventListener('resize', resize);
       canvas.removeEventListener('pointerdown', onDown); canvas.removeEventListener('pointermove', onMove);

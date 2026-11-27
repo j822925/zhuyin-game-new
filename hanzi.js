@@ -9,7 +9,7 @@ import {currentClass,classStorageKey,classUrl} from './class-context.js?v=202610
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
 import {validateBank,questionPool,splitBopomofo,gradeReading} from './hanzi-bank.js';
 import {createHanziClient,createHanziDemo,resultRows,taskState,compactAnswers} from './hanzi-client.js?v=20261124-review1';
-import {createHandwriting} from './hanzi-handwriting.js?v=20261115-hanzi2';
+import {createHandwriting} from './hanzi-handwriting.js?v=20261127-inkguard1';
 import {gradeStrokes} from './hanzi-stroke-core.js';
 import {mountCharacter} from './character-motion.js?v=20261123-starenvoys1';
 import {createOpponent,updateOpponent,createBattle} from './character-battle.js?v=20261123-starenvoys1';
