@@ -237,7 +237,21 @@ export function createHandwriting(container, options = {}) {
   }
 
   function traceResult(correct, number) {
-    options.onTraceFeedback({correct,number,total:reference.strokes.length});
+    const total = reference.strokes.length;
+    const notice = options.traceFeedbackElement;
+    if (notice) {
+      notice.textContent = !correct ? '↻ 第 '+number+' 筆再描一次，從綠點開始。'
+        : number === total ? '✓ 描好了！關閉底字，換你自己寫。'
+        : '✓ 接著描第 '+(number+1)+' 筆。';
+    }
+    options.onTraceFeedback?.({correct,number,total});
+  }
+
+  function traceProgress() {
+    if (!traceGuide?.models) return;
+    traceGuide.hint = true;
+    if (options.traceFeedbackElement) options.traceFeedbackElement.textContent = strokes.length
+      ? '從綠點開始描第 '+(strokes.length+1)+' 筆。' : '從綠點開始描第一筆，描寫不計分。';
   }
 
   function rejectTraceStroke(){
@@ -399,7 +413,7 @@ export function createHandwriting(container, options = {}) {
     },
     clear() {
       stopInput(); stopDemo(); strokes = []; interruptedAt.clear(); inputTooComplex = false; originTime = performance.now();
-      if(traceGuide)traceGuide.hint=false;
+      traceProgress();
       render(); notify(true);
     },
     undo() {
@@ -407,7 +421,7 @@ export function createHandwriting(container, options = {}) {
       if (!strokes.length) return false;
       interruptedAt.delete(strokes.length - 1); strokes.pop();
       inputTooComplex = strokes.reduce((sum, stroke) => sum + stroke.length, 0) > HANDWRITING_INPUT_LIMITS.maxTotalPoints;
-      render(); notify(true); return true;
+      traceProgress(); render(); notify(true); return true;
     },
     isTracePractice() { return Boolean(traceGuide); },
     setTracePractice(enabled) {
@@ -417,7 +431,8 @@ export function createHandwriting(container, options = {}) {
         // Notify the page of a blank challenge draft before making further ink private.
         api.clear();
         traceGuide = makeTraceGuide(reference);
-        if(options.onTraceFeedback)traceGuide.models=reference.strokes.map(demoPoints);
+        if(options.traceFeedbackElement || options.onTraceFeedback)traceGuide.models=reference.strokes.map(demoPoints);
+        traceProgress();
         canvas.setAttribute('aria-label', '淡色底字練習格，可以描寫，不計分');
         render();
       } else {

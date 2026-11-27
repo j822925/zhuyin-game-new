@@ -1,6 +1,6 @@
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
-import {createHandwriting} from './hanzi-handwriting.js?v=20261127-inkguard1';
+import {createHandwriting} from './hanzi-handwriting.js?v=20261127-alltrace1';
 import {writingPrompt,syllable,phoneticFeedback} from './guided-prompt.js';
 import {showRewardPictures} from './guided-reward-view.js';
 import {HANZI_AUDIO} from './data/hanzi-teacher-audio.js?v=20261115-hanzi2';
@@ -68,11 +68,8 @@ function keys(){
   const b=element('button',k==='ˉ'?'一聲':k);b.onclick=()=>{if(locked())return;if('ˉˊˇˋ˙'.includes(k))tone=k;else if(input.length<3)input+=k;show();};pad.append(b);}
  const erase=element('button','退一格');erase.onclick=()=>{if(locked())return;if(tone)tone='';else input=input.slice(0,-1);show();};area.append(erase);
 }
-function traceFeedback({correct,number,total}){
- const notice=$('notice');
- notice.className=correct?'ok':'trace-retry';
- if(!correct){notice.textContent='↻ 第 '+number+' 筆再描一次，從綠點開始。';return;}
- notice.textContent=number===total?'✓ 描好了！關閉底字，換你自己寫。':'✓ 接著描第 '+(number+1)+' 筆。';
+function traceFeedback({correct}){
+ $('notice').className=correct?'ok':'trace-retry';
 }
 function locked(){return busy||waiting||!!pending;}
 function controls(){
@@ -101,7 +98,7 @@ async function render(){
  if(q.mode==='write'||q.mode==='copy'){
   if(q.mode==='copy')$('model').append(example(q));else $('context').append(writingPrompt(q));
   inkBusy=inkInterrupted=inkComplex=false;
-  board=createHandwriting($('ink'),{loadReference:async()=>q.reference,onTraceFeedback:traceFeedback,onChange:i=>{inkBusy=i.isDrawing;inkInterrupted=i.inputInterrupted;inkComplex=i.inputTooComplex;}});await board.load(q.character);
+  board=createHandwriting($('ink'),{loadReference:async()=>q.reference,traceFeedbackElement:$('notice'),onTraceFeedback:traceFeedback,onChange:i=>{inkBusy=i.isDrawing;inkInterrupted=i.inputInterrupted;inkComplex=i.inputTooComplex;}});await board.load(q.character);
  }else if(q.mode==='math'){
   $('context').textContent=q.a+(q.op==='add'?' ＋ ':' － ')+q.b+' ＝ ?';
   const field=element('input','');field.type='text';field.inputMode='numeric';field.maxLength=5;field.setAttribute('aria-label','我的答案');field.oninput=()=>input=field.value.trim();$('other').append(field);

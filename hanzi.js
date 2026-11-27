@@ -9,7 +9,7 @@ import {currentClass,classStorageKey,classUrl} from './class-context.js?v=202610
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
 import {validateBank,questionPool,splitBopomofo,gradeReading} from './hanzi-bank.js';
 import {createHanziClient,createHanziDemo,resultRows,taskState,compactAnswers} from './hanzi-client.js?v=20261124-review1';
-import {createHandwriting} from './hanzi-handwriting.js?v=20261127-inkguard1';
+import {createHandwriting} from './hanzi-handwriting.js?v=20261127-alltrace1';
 import {gradeStrokes} from './hanzi-stroke-core.js';
 import {mountCharacter} from './character-motion.js?v=20261123-starenvoys1';
 import {createOpponent,updateOpponent,createBattle} from './character-battle.js?v=20261123-starenvoys1';
@@ -100,7 +100,7 @@ async function drawQuestion(restored=false){
     if(writing){
       const restoreInterrupted=inputInterrupted,restoreInk=restored?(draftStrokes.length?draftStrokes:currentAnswer.strokes||[]):[];
       $('handwriting').style.pointerEvents='';$('handwriting').replaceChildren();$('demo-ink').hidden=isExam();$('demo-ink').textContent=hintBeforeFirst?'再看筆順':modernPractice()?'看筆順 ＋1題':'看筆順';
-      board=createHandwriting($('handwriting'),{allowDemo:!isExam(),disabled:true,loadReference:template,onChange:info=>{
+      board=createHandwriting($('handwriting'),{allowDemo:!isExam(),disabled:true,traceFeedbackElement:$('feedback'),loadReference:template,onChange:info=>{
         // The factory may call onChange before assignment; stale boards and
         // older question loads must never persist into the new question.
         if(!board||!current())return;
@@ -136,7 +136,13 @@ function renderReading(){
 }
 function updateSubmit(){
  const loading=busy||questionLoading||restoringInk,locked=submitted||demoPlaying||correctionPhase==='watch',ready=questionMode()==='writing'?referenceReady&&!!ink?.getStrokes().length&&!inputInterrupted&&!inputTooComplex:['initial','rime','tone'].every(k=>currentAnswer[k]!==undefined);
- $('submit').disabled=loading||locked||!ready;for(const id of ['undo-ink','clear-ink'])$(id).disabled=locked||loading;
+ const tracing=!!ink?.isTracePractice(), toggle=$('trace-ink');
+ toggle.hidden=questionMode()!=='writing'||submitted||correctionPhase==='watch';
+ toggle.disabled=loading||locked||!referenceReady||inputInterrupted;
+ toggle.setAttribute('aria-pressed',String(tracing));
+ toggle.textContent=tracing?'關閉底字，自己寫':'開啟淡色底字';
+ $('demo-ink').hidden=isExam()||tracing;
+ $('submit').disabled=tracing||loading||locked||!ready;for(const id of ['undo-ink','clear-ink'])$(id).disabled=locked||loading;
  $('next').disabled=loading||!submitted||demoPlaying;$('resume').disabled=loading;$('back-entry').disabled=loading;
  $('demo-ink').disabled=loading||locked||isExam()||!referenceReady||inputInterrupted||correctionPhase!=='none';
  $('correction-demo').disabled=loading||demoPlaying;
@@ -169,7 +175,7 @@ async function demonstrateCorrection(){
 }
 $('correction-demo').onclick=demonstrateCorrection;
 $('submit').onclick=async()=>{
- if(busy||submitted||correctionPhase==='watch'||demoPlaying||questionLoading)return;busy=true;updateSubmit();let showCorrection=false;
+ if(busy||submitted||ink?.isTracePractice()||correctionPhase==='watch'||demoPlaying||questionLoading)return;busy=true;updateSubmit();let showCorrection=false;
  try{
   const q=question(),writing=questionMode()==='writing',answer=writing?{strokes:ink.getStrokes(),inputInterrupted}:structuredClone(currentAnswer);
   const result=writing?ink.grade({mode:isExam()?'exam':'practice',gradingPolicy:'automatic-v1',alternatives}):gradeReading(q,answer);result.status=result.status||(result.correct?'correct':'incorrect');
@@ -188,13 +194,22 @@ $('submit').onclick=async()=>{
 $('next').onclick=async()=>{if(busy||questionLoading||!submitted||screen!=='play'||demoPlaying)return;if(index+1===round.questions.length){await finish();return;}busy=true;updateSubmit();try{index++;await drawQuestion();}catch(e){fail(e);}finally{busy=false;updateSubmit();}};
 $('undo-ink').onclick=()=>{if(!submitted&&!busy&&!questionLoading&&!demoPlaying&&correctionPhase!=='watch')ink?.undo();};
 $('clear-ink').onclick=()=>{if(!submitted&&!busy&&!questionLoading&&!demoPlaying&&correctionPhase!=='watch')ink?.clear();};
+$('trace-ink').onclick=()=>{
+ const toggle=$('trace-ink');
+ if(toggle.disabled||toggle.hidden||!ink)return;
+ $('feedback').removeAttribute('data-state');
+ if(ink.setTracePractice(!ink.isTracePractice())){
+   if(correctionPhase==='none'){hintUsed=true;persist();}
+ }else $('feedback').textContent='換你自己從空白格寫一次。';
+ updateSubmit();
+};
 $('demo-ink').onclick=async()=>{
- const board=ink,generation=questionGeneration;if(isExam()||!board||busy||submitted||questionLoading||demoPlaying||!referenceReady||inputInterrupted||correctionPhase!=='none')return;
+ const board=ink,generation=questionGeneration;if(isExam()||!board||board.isTracePractice()||busy||submitted||questionLoading||demoPlaying||!referenceReady||inputInterrupted||correctionPhase!=='none')return;
  hintUsed=true;if(modernPractice()&&!hintBeforeFirst){hintBeforeFirst=true;const snapshot=round.run?.snapshot||round.snapshot,number=round.questions.length-snapshot.baseQuestions.length+1;round.questions.push(bonusQuestion(snapshot,number));$('progress-label').textContent=(index+1)+' / '+round.questions.length;$('progress').max=round.questions.length;refreshBattle();$('feedback').textContent='多練 1 題';}
  $('demo-ink').textContent='再看筆順';persist();demoPlaying=true;updateSubmit();try{await board.showDemo();}catch(e){if(generation===questionGeneration)fail(e);}finally{if(generation===questionGeneration&&ink===board){demoPlaying=false;updateSubmit();}}
 };
 
-function summaryRows(rows){$('result-answers').replaceChildren();rows.forEach(r=>{const q=r.question,status=r.status||(r.correct?'correct':'incorrect'),card=node('div',undefined,'answer-review');card.append(node('strong',(status==='correct'?'✓ ':['pending','pending_review'].includes(status)?'◷ ':'↻ ')+q.word+' · '+q.bopomofo));const desc=['pending','pending_review'].includes(status)?'這份舊紀錄尚未完成判定。':status==='correct'?'這一題答對了。':'這一題可以再練習一次。';card.append(node('p',desc+(r.hintUsed?'（曾看筆順提示）':'')));$('result-answers').append(card);});}
+function summaryRows(rows){$('result-answers').replaceChildren();rows.forEach(r=>{const q=r.question,status=r.status||(r.correct?'correct':'incorrect'),card=node('div',undefined,'answer-review');card.append(node('strong',(status==='correct'?'✓ ':['pending','pending_review'].includes(status)?'◷ ':'↻ ')+q.word+' · '+q.bopomofo));const desc=['pending','pending_review'].includes(status)?'這份舊紀錄尚未完成判定。':status==='correct'?'這一題答對了。':'這一題可以再練習一次。';card.append(node('p',desc+(r.hintUsed?'（曾用書寫提示）':'')));$('result-answers').append(card);});}
 function renderResult(run){
   $('result').querySelector('h1').textContent=run.kind==='exam'?'我的小考成績':'練習完成！';const rows=resultRows(run),result=run.result;questionGeneration++;ink?.destroy();ink=null;round=null;show('result');const base=rows.filter(row=>!row.question.id?.includes('.bonus.'));if(!result.pending)showRoundOutcome($('result'),base.filter(row=>row.correct===true).length,base.length,run.id,hero.id,opponent.dataset.monster);$('reward-status').textContent=result.stars?'⭐ '+(result.correct===result.total?'全對！':'')+(demo?'試玩':'')+'獲得 '+result.stars+' 顆星'+(result.dailyReward?.capped?'（今天已達 150 星）':''):result.dailyReward?.capped?'今天已達 150 星，這回合仍有保存成績。':'';$('result-score').textContent=result.pending?'還有 '+result.pending+' 題未完成判定':scoreLabel(result)+' · '+result.correct+' / '+result.total+' 題答對';$('result-detail').textContent=result.corrected?'已完成 '+result.corrected+' 題訂正，成績保留第一次作答。':result.pending?'部分舊紀錄尚未完成判定。':'';$('save-status').textContent=demo?'試玩紀錄已留在這個分頁；不會送到正式班級。':'紀錄已儲存，老師可以在後台查看。';summaryRows(rows);if(run.kind==='exam')reviewDispose=mountExamReview($('result-answers'),run,{loadReference:template});$('again').disabled=false;$('again').textContent=params.get('from')==='daily'?'↩ 返回每日任務':params.get('from')==='notebook'?'↩ 返回錯題本':params.get('from')==='exams'?'↩ 返回老師小考':'↶ 返回營地';$('retry-save').hidden=true;$('card-reward').replaceChildren();
   if(run.kind==='exam'&&run.snapshot.rewardCardIds?.length){const box=$('card-reward');if(result.perfect){const button=node('button','✦ 領取小考卡片','primary');button.onclick=async()=>{button.disabled=true;try{const reward=await client.request('card-draw',{runId:run.id,requestId:'hanzi-card-'+run.id});box.replaceChildren();if(reward.complete){box.append(node('p','這份小考的卡片已經收齊了！'));return;}const card=PROFILE_CHARACTERS.find(c=>c.id===reward.character);if(card){const image=document.createElement('img');image.src=card.cardImage||card.image;image.alt=card.name;box.append(image,node('p',card.name+' 已加入收藏，可以回首頁選為角色！'));}else box.append(node('p','卡片已加入收藏！'));}catch(e){fail(e);button.disabled=false;}};box.append(node('p','這次小考全對，獲得領卡資格！'),button);}else box.append(node('p','小考全對、沒有使用提示，就能領取老師設定的卡片。'));}

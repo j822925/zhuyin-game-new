@@ -2,7 +2,7 @@ import {showRoundOutcome} from './round-outcome.js?v=20261123-outcome1';
 import {createFarmLessonLink} from './farm-lesson-link.js?v=20261122-farm6';
 import {COPY_MODES,COPY_RULE,COPY_REWARD_RULE,gradeCopy,copyFeedback} from './hanzi-copy-core.js?v=20261119-stars';
 import {gradeStrokes} from './hanzi-stroke-core.js';
-import {createHandwriting} from './hanzi-handwriting.js?v=20261127-inkguard1';
+import {createHandwriting} from './hanzi-handwriting.js?v=20261127-alltrace1';
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),demo=params.get('demo')==='1',mode=COPY_MODES[params.get('mode')]?params.get('mode'):'copy',rule=COPY_MODES[mode];
@@ -10,7 +10,6 @@ const local=['localhost','127.0.0.1','[::1]'].includes(location.hostname),endpoi
 let storage;try{storage=sessionStorage;}catch{}
 const sessions=createStudentSession({storage,key:classStorageKey('zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':live')});
 const reviewChar=params.get('review'),session=sessions.read(),owner=demo?'demo':session?.seat,key=classStorageKey('zhuyin.copy-name.v1:'+new URL('.',location.href).pathname+':'+owner+':'+mode+(reviewChar?':review:'+reviewChar:'')+(demo?':demo':''));
-const canTrace=mode==='copy'||mode==='name-copy';
 const completionReward=mode!=='name-writing'&&!reviewChar;
 const farm=createFarmLessonLink({family:'copy',demo,getSession:()=>sessions.read(),excluded:()=>!!reviewChar});
 let state,board,busy=false,drawing=false,interrupted=false,tooComplex=false,epoch=0,restoring=false;
@@ -29,7 +28,7 @@ const canContinue=()=>state?.phase==='passed'||(completionReward&&state?.phase==
 function update(){
  const tracing=isTracing();
  const done=canContinue();
- $('trace-toggle').hidden=!canTrace||!board||$('practice').hidden;
+ $('trace-toggle').hidden=!board||$('practice').hidden;
  $('practice').closest('.copy-shell').classList.toggle('trace-session',!$('trace-toggle').hidden);
  $('trace-toggle').textContent=tracing?'關閉底字，回到挑戰':'開啟淡色底字';
  $('trace-toggle').setAttribute('aria-pressed',String(tracing));
@@ -50,7 +49,7 @@ function showAnswerFeedback(){const answered=state.phase==='answered';$('feedbac
 function renderReference(ref){const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 1 1');svg.setAttribute('role','img');svg.setAttribute('aria-label',ref.character+'的田字格範例');const grid=document.createElementNS(ns,'path');grid.setAttribute('d','M .5 0 V 1 M 0 .5 H 1');grid.setAttribute('class','grid');svg.append(grid);for(const d of ref.outlines||ref.strokes.map(s=>'M '+s.map(p=>p.join(' ')).join(' L '))){const path=document.createElementNS(ns,'path');path.setAttribute('d',d);path.setAttribute('class',ref.outlines?'glyph':'line');svg.append(path);}$('reference').replaceChildren(svg);}
 async function draw(){farm.show('play');const version=++epoch;restoring=true;board?.destroy();board=null;drawing=false;interrupted=false;tooComplex=false;$('writing').replaceChildren();$('practice').hidden=false;$('result').hidden=true;$('loading').hidden=true;const item=q(),n=state.run.snapshot.questions.length;
  $('progress-label').textContent=(state.index+1)+' / '+n;$('progress').max=n;$('progress').value=state.index;$('prompt').textContent=mode==='name-writing'?item.bopomofo:'';const show=mode!=='name-writing'||state.first?.[state.index]?.grade.correct===false;$('reference-panel').hidden=!show;$('boards').classList.toggle('single',!show);renderReference(item.reference);
- const instance=createHandwriting($('writing'),{allowDemo:true,loadReference:async()=>item.reference,onChange:info=>{if(restoring||board!==instance||version!==epoch)return;drawing=info.isDrawing;interrupted=info.inputInterrupted;tooComplex=info.inputTooComplex;state.ink=info.strokes;state.interrupted=info.inputInterrupted||info.isDrawing;persist();updateButtonsOnly();}});board=instance;await board.load(item.character);if(version!==epoch)return;if(state.ink?.length){const restored=board.restoreStrokes(state.ink,{inputInterrupted:!!state.interrupted});interrupted=restored&&!!state.interrupted;if(!restored){state.ink=[];state.interrupted=false;persist();}}
+ const instance=createHandwriting($('writing'),{allowDemo:true,traceFeedbackElement:$('trace-note'),loadReference:async()=>item.reference,onChange:info=>{if(restoring||board!==instance||version!==epoch)return;drawing=info.isDrawing;interrupted=info.inputInterrupted;tooComplex=info.inputTooComplex;state.ink=info.strokes;state.interrupted=info.inputInterrupted||info.isDrawing;persist();updateButtonsOnly();}});board=instance;await board.load(item.character);if(version!==epoch)return;if(state.ink?.length){const restored=board.restoreStrokes(state.ink,{inputInterrupted:!!state.interrupted});interrupted=restored&&!!state.interrupted;if(!restored){state.ink=[];state.interrupted=false;persist();}}
  // Old drafts stored a rejected copy in ink/first, but only stored answers after correction.
  if(completionReward&&state.phase==='demo'){const answer={strokes:board.getStrokes(),inputInterrupted:interrupted,inputTooComplex:tooComplex},g=grade(answer.strokes);if(state.first[state.index]&&g.status!=='pending'){state.answers[state.index]={questionId:item.id,first:state.first[state.index].answer,final:answer};state.phase=g.correct?'passed':'answered';}else state.phase='write';persist();}
  if(state.phase==='answered'&&!state.answers[state.index]){state.phase='write';persist();}
@@ -62,10 +61,10 @@ function updateButtonsOnly(){
  $('undo').disabled=locked;
  $('clear').disabled=locked;
  $('submit').disabled=locked||isTracing()||!board?.getStrokes().length||interrupted||tooComplex;
- $('trace-toggle').disabled=locked||!canTrace||!board||state?.phase!=='write';
+ $('trace-toggle').disabled=locked||!board||state?.phase!=='write';
 }
 $('trace-toggle').onclick=()=>{
- if(!canTrace||!board||state?.phase!=='write'||controlsLocked()||drawing)return;
+ if(!board||state?.phase!=='write'||controlsLocked()||drawing)return;
  board.setTracePractice(!isTracing());
  $('feedback').textContent='';
  delete $('feedback').dataset.correct;

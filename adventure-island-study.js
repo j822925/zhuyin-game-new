@@ -87,10 +87,11 @@ export function createIslandStudy({state,save,changed,stop,paintHero,onWon,acces
     let input='',tone=null,locked=false,writing=false,interrupted=false;
     const actions=node('div','','study-actions'),keys=node('div','','study-keys'),value=node('output','');
     let alternatives=[];
+    const strike=button('出招',submit);
     const update=()=>{value.textContent=input+(tone||'')||'　';};
     const clear=()=>{input='';tone=null;update();board?.clear();};
     function submit(){
-      if(locked||run!==r||writing)return;
+      if(locked||run!==r||writing||board?.isTracePractice())return;
       if(!r.access.current()){close();return;}
       let ok=false;
       if(mode==='math')ok=input!==''&&Number(input)===sumAnswer(q.q);
@@ -108,7 +109,7 @@ export function createIslandStudy({state,save,changed,stop,paintHero,onWon,acces
       r.controls.append(value,keys);
     }else{
       const holder=node('div','','study-ink');r.controls.append(holder);
-      const pad=createHandwriting(holder,{allowDemo:true,onChange:i=>{writing=i.isDrawing;interrupted=i.inputInterrupted||i.inputTooComplex;}});board=pad;
+      const pad=createHandwriting(holder,{allowDemo:true,traceFeedbackElement:r.note,onChange:i=>{writing=i.isDrawing;interrupted=i.inputInterrupted||i.inputTooComplex;}});board=pad;
       try{const reference=await pad.load(q.character);if(run!==r)return;if(!reference)throw Error('reference-unavailable');
         alternatives=await Promise.all((q.similar||[]).map(async char=>{
           const url=new URL('./data/hanzi-strokes/U'+char.codePointAt(0).toString(16).toUpperCase()+'.json',import.meta.url);
@@ -117,9 +118,19 @@ export function createIslandStudy({state,save,changed,stop,paintHero,onWon,acces
         }));alternatives=alternatives.filter(Boolean);}
       catch{if(run===r){r.note.textContent='這個字的筆順暫時讀不到。';r.controls.replaceChildren(button('再試一次',()=>void showQuestion(r)));}return;}
       if(run!==r)return;
-      actions.append(button('看筆順',async()=>{if(locked)return;locked=true;try{await pad.showDemo();}finally{locked=false;}}));
+      const demo=button('看筆順',async()=>{if(locked||pad.isTracePractice())return;locked=true;try{await pad.showDemo();}finally{locked=false;}});
+      const trace=button('開啟淡色底字',()=>{
+        if(locked||writing||run!==r)return;
+        const tracing=pad.setTracePractice(!pad.isTracePractice());
+        trace.setAttribute('aria-pressed',String(tracing));
+        trace.textContent=tracing?'關閉底字，自己寫':'開啟淡色底字';
+        demo.hidden=tracing;
+        strike.disabled=tracing;
+        if(!tracing)r.note.textContent='換你自己從空白格寫一次。';
+      });
+      trace.setAttribute('aria-pressed','false');actions.append(demo,trace);
     }
-    actions.append(button('重寫',clear),button('出招',submit));r.controls.append(actions);
+    actions.append(button('重寫',clear),strike);r.controls.append(actions);
   }
   async function open(b){
     if(run)return;stop();

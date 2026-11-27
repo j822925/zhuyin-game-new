@@ -1,6 +1,6 @@
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
-import {createHandwriting} from './hanzi-handwriting.js?v=20261127-inkguard1';
+import {createHandwriting} from './hanzi-handwriting.js?v=20261127-alltrace1';
 import {gradeStrokes} from './hanzi-stroke-core.js';
 import {gradeCopy,copyFeedback} from './hanzi-copy-core.js?v=20261118-ink2';
 import {gradeReading} from './hanzi-bank.js';
@@ -59,7 +59,7 @@ async function openExercise(){
   try{if(mode==='read'){$('model').textContent=item.character;editReading();keypad();}
     else{const resp=await fetch('data/hanzi-strokes/U'+item.character.codePointAt(0).toString(16).toUpperCase()+'.json');if(!resp.ok)throw Error('暫時無法載入這個字的筆順，請再試一次。');
       ref=await resp.json();if(mode==='imitate')$('model').append(example(ref));else $('model').textContent=item.reading;
-      board=createHandwriting($('board'),{allowDemo:mode==='imitate',loadReference:async()=>ref,onChange:i=>{interrupted=i.inputInterrupted;tooComplex=i.inputTooComplex;drawing=i.isDrawing;}});
+      board=createHandwriting($('board'),{allowDemo:mode==='imitate',traceFeedbackElement:$('trace-note'),loadReference:async()=>ref,onChange:i=>{interrupted=i.inputInterrupted;tooComplex=i.inputTooComplex;drawing=i.isDrawing;}});
       if(!await board.load(item.character))throw Error('暫時無法準備這個字的筆順，請再試一次。');
       updateTraceControls();
     }
