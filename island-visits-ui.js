@@ -1,5 +1,10 @@
 import {furnitureFor} from './data/home-furniture.js';
-import {ForestScene} from './adventure-art.js';
+import {drawFurnitureThumb} from './adventure-room.js';
+import {ensureWallpaperThumbs} from './adventure-wallpaper.js';
+import {CROPS,FISH} from './adventure-life-model.js';
+import {RECIPES} from './adventure-food-model.js';
+import {lifeStamp} from './adventure-life-art.js';
+import {drawDoll,ForestScene} from './adventure-art.js';
 import {freshState,FURNITURE,layoutFor,isInterior,roomWalkable,walkable,findPath,equippedOutfit} from './adventure-model.js';
 import {ensureHomeArt,furnitureArtKeys} from './adventure-home-art.js';
 import {ensureWallpapers,WALLPAPERS} from './adventure-wallpaper.js';
@@ -50,7 +55,7 @@ export function normalizeVisitRoomLayouts(snapshot){
  return next;
 }
 export function createIslandVisits(api){
- const css=el('link');css.rel='stylesheet';css.href=new URL('./island-visits.css?v=20261015-facing2',import.meta.url).href;document.head.append(css);
+ const css=el('link');css.rel='stylesheet';css.href=new URL('./island-visits.css?v=20261127-giftart1',import.meta.url).href;document.head.append(css);
  const dialog=el('dialog');dialog.id='island-visits';dialog.setAttribute('aria-label','搭船拜訪同學');
  const head=el('header'),title=el('h2','⛵ 搭船拜訪'),mail=button('🎁 收禮箱',showMail),lobbyButton=button('⛵ 碼頭',lobby),close=button('✕ 返回',leave),note=el('div');note.className='visit-message';note.setAttribute('role','status');
  head.append(title,mail,lobbyButton,close);
@@ -62,6 +67,46 @@ export function createIslandVisits(api){
  dialog.append(canvas,head,note,list,nav,stick,drawer,request,socialRequest);document.body.append(dialog);
  let owner=null,snapshot=null,scene=null,connection=null,working=false,generation=0,last=0,frameId,route=[],ownPose=null,open=true;
  const peers=new Map(),walkers=new Map(),loading=new Set(),keys=new Set();
+ // Load only the pictures near the visible part of a child's inventory.
+ const pictures=new WeakMap();
+ const giftObserver=new IntersectionObserver(entries=>{
+  for(const entry of entries){
+   if(!entry.isIntersecting)continue;
+   giftObserver.unobserve(entry.target);
+   void pictures.get(entry.target)?.();
+  }
+ },{root:drawer,rootMargin:'100px'});
+ function giftPicture(item){
+  const picture=el('span');picture.className='visit-gift-picture';picture.setAttribute('aria-hidden','true');
+  if(item.kind==='bait'){picture.textContent=item.icon;return picture;}
+  const cv=el('canvas');cv.width=200;cv.height=170;picture.append(cv);
+  pictures.set(picture,async()=>{
+   pictures.delete(picture);
+   try{
+    const art=api.art(),kind=item.kind,id=item.id;
+    if(kind==='furniture'){
+     await ensureHomeArt(art,[item.atlas].filter(Boolean));
+     drawFurnitureThumb(cv,art,id);
+    }else if(kind==='clothes'){
+     await drawDoll(cv,art,{outfit:id,wand:false});
+    }else if(kind==='wallpaper'){
+     await ensureWallpaperThumbs(art,[id]);
+     cv.getContext('2d').drawImage(art.wallpaperThumbs[id],0,22,200,125);
+    }else{
+     const def=kind==='fish'?FISH[id]:kind==='meal'?RECIPES[id]:CROPS[id];
+     const key=def.atlas||(kind==='meal'?'cooking':kind==='fish'?'fish':'life');
+     if(!art[key])await ensureHomeArt(art,[key]);
+     if(!art[key]?.cells?.[def.art])throw Error('missing picture');
+     lifeStamp(cv.getContext('2d'),art[key],def.art,100,161,150,188);
+    }
+    picture.replaceChildren(cv);
+    if(item.kind==='seeds'||item.kind==='harvest'){
+     const badge=el('span',item.kind==='seeds'?'🌱':'🧺');badge.className='visit-gift-badge';picture.append(badge);
+    }
+   }catch{picture.textContent='圖片暫時無法載入';}
+  });
+  giftObserver.observe(picture);return picture;
+ }
  const store=()=>globalThis.ForestStudent;
  const currentPose=()=>scene?{...scene.player,room:scene.area}:null;
  const social=createSocialSession({seat:store()?.seat||'',getPose:currentPose,getPeers:()=>peers,send:e=>connection?.sendSocial(e),onMessage:message,onPrompt:p=>{
@@ -76,11 +121,11 @@ export function createIslandVisits(api){
  function message(s){note.textContent=s;}
  function clearConnection(){connection?.close();connection=null;peers.clear();request.hidden=true;social.reset();}
  function retryTransfer(){drawer.hidden=false;drawer.replaceChildren(el('h3','🎁 確認送禮進度'),el('p','剛才的交易可能已完成。請確認結果後再繼續，不會重複扣除。'),button('重新確認',async()=>{const next=await store().visitTransfer({});api.apply(next);drawer.hidden=true;message('✓ 禮物交易已確認');}));}
- function leave(){if(store()?.getPendingGift?.()){message('請先重新確認剛才的禮物交易。');retryTransfer();return;}generation++;clearConnection();keys.clear();joystick.reset();cancelAnimationFrame(frameId);dialog.close();api.stop();}
+ function leave(){if(store()?.getPendingGift?.()){message('請先重新確認剛才的禮物交易。');retryTransfer();return;}generation++;giftObserver.disconnect();clearConnection();keys.clear();joystick.reset();cancelAnimationFrame(frameId);dialog.close();api.stop();}
  dialog.oncancel=e=>{e.preventDefault();if(!working)leave();};
  const joystick=createJoystick(stick,{isEnabled:()=>dialog.open&&!!owner&&drawer.hidden&&!working,onStart:()=>{route=[];keys.clear();}});
  async function lobby(){
-  generation++;clearConnection();owner=null;keys.clear();route=[];drawer.hidden=true;canvas.hidden=true;nav.hidden=true;stick.hidden=true;list.hidden=false;title.textContent='⛵ 搭船拜訪';list.replaceChildren(el('p','正在查看同班小島…'));message('同班同學的小島；島主離線也可以參觀。');
+  generation++;giftObserver.disconnect();clearConnection();owner=null;keys.clear();route=[];drawer.hidden=true;canvas.hidden=true;nav.hidden=true;stick.hidden=true;list.hidden=false;title.textContent='⛵ 搭船拜訪';list.replaceChildren(el('p','正在查看同班小島…'));message('同班同學的小島；島主離線也可以參觀。');
   const result=await store().visitRequest({kind:'visit-list'});open=result.open;
   const toolbar=el('div');toolbar.className='visit-card';toolbar.append(el('strong','我的小島'),button(open?'🔓 已開放參觀':'🔒 已關閉參觀',async()=>{await store().visitRequest({kind:'visit-setting',open:!open});await lobby();}),button('👋 在家接待朋友',async()=>{if(!open){message('先開放參觀，就能在家接待朋友。');return;}await enter(store().seat,true);}));
   const grid=el('div');grid.className='visit-grid';
@@ -158,7 +203,7 @@ export function createIslandVisits(api){
   frameId=requestAnimationFrame(animate);
  }
  function label(text,x,y,icon){const c=scene.c;c.save();c.font='14px sans-serif';c.textAlign='center';c.fillStyle='#fff9e9';c.beginPath();c.roundRect(x-38,y+4,76,23,9);c.fill();c.fillStyle='#365947';c.fillText(text,x,y+20);if(icon){c.font='29px sans-serif';c.fillText(icon,x,y-123);}c.restore();}
- function drawerHead(text){drawer.hidden=false;drawer.replaceChildren(el('h3',text),button('↩ 回去逛逛',()=>{drawer.hidden=true;}));keys.clear();route=[];}
+ function drawerHead(text){giftObserver.disconnect();drawer.hidden=false;drawer.scrollTop=0;drawer.replaceChildren(el('h3',text),button('↩ 回去逛逛',()=>{giftObserver.disconnect();drawer.hidden=true;}));keys.clear();route=[];}
  async function showMail(){
   drawerHead('🎁 收禮箱');const result=await store().visitRequest({kind:'visit-mail'});const grid=el('div');grid.className='visit-grid';
   for(const gift of result.gifts){const card=el('article');card.className='visit-card';card.append(el('strong',gift.name+' × '+gift.quantity),el('small','來自 '+gift.sender),button('打開禮物',async()=>{await transfer({kind:'visit-claim',giftId:gift.id});await showMail();message('🎁 收到了！物品已放進物品清單。');}));grid.append(card);}
@@ -167,9 +212,21 @@ export function createIslandVisits(api){
  function showGifts(){
   drawerHead('🎁 送給 '+owner);const items=availableVisitGifts(api.state());
   const select=el('select');select.setAttribute('aria-label','禮物分類');for(const [id,name]of Object.entries({all:'全部可送禮物',furniture:'家具與娃娃',clothes:'服飾',wallpaper:'室內風格',seeds:'種子',harvest:'收穫',meal:'料理',fish:'魚',bait:'魚餌'})){const o=el('option',name);o.value=id;select.append(o);}
-  const grid=el('div');grid.className='visit-grid';const render=()=>{grid.replaceChildren();for(const item of items.filter(i=>select.value==='all'||i.kind===select.value)){const c=el('article');c.className='visit-card';c.append(el('span',catalog.find(v=>v.kind===item.kind&&v.id===item.id)?.icon||'🎁'),el('strong',item.name),el('small','持有 '+item.quantity),button('選這個',()=>confirmGift(item)));grid.append(c);}if(!grid.children.length)grid.append(el('p','這個分類沒有可送出的物品。'));};select.onchange=render;drawer.append(el('p','初始贈品與好友紀念品留給自己；擺放中的物品請先收納。'),select,grid);render();
+  const grid=el('div');grid.className='visit-grid';
+  const render=()=>{
+   giftObserver.disconnect();grid.replaceChildren();
+   for(const item of items.filter(i=>select.value==='all'||i.kind===select.value)){
+    const picture=giftPicture(item),card=button('',()=>confirmGift(item,picture));
+    card.className='visit-card visit-gift-choice';
+    card.setAttribute('aria-label','選擇'+item.name+'，持有 '+item.quantity);
+    card.append(picture,el('strong',item.name),el('small','持有 '+item.quantity));
+    grid.append(card);
+   }
+   if(!grid.children.length)grid.append(el('p','這個分類沒有可送出的物品。'));
+  };
+  select.onchange=render;drawer.append(el('p','初始贈品與好友紀念品留給自己；擺放中的物品請先收納。'),select,grid);render();
  }
- function confirmGift(item){drawerHead('🎁 確認禮物');const quantity=el('input');quantity.type='number';quantity.min='1';quantity.max=String(Math.min(10,item.quantity));quantity.step='1';quantity.value='1';quantity.setAttribute('aria-label','禮物數量');drawer.append(el('p','送給 '+owner+'：'+item.name),quantity,el('p','確認後會從背包取出，放到對方收禮箱。'),button('✓ 確認送出',async()=>{const n=Number(quantity.value);if(!Number.isInteger(n)||n<1||n>Math.min(10,item.quantity)){message('請選擇正確數量（最多 10 個）。');return;}await transfer({kind:'visit-give',target:owner,itemKind:item.kind,itemId:item.id,quantity:n});drawer.hidden=true;message('🎁 禮物已送進朋友的收禮箱！');}),button('重新挑選',showGifts));}
+ function confirmGift(item,picture){drawerHead('🎁 確認禮物');const quantity=el('input');quantity.type='number';quantity.min='1';quantity.max=String(Math.min(10,item.quantity));quantity.step='1';quantity.value='1';quantity.setAttribute('aria-label','禮物數量');drawer.append(picture,el('p','送給 '+owner+'：'+item.name),quantity,el('p','確認後會從背包取出，放到對方收禮箱。'),button('✓ 確認送出',async()=>{const n=Number(quantity.value);if(!Number.isInteger(n)||n<1||n>Math.min(10,item.quantity)){message('請選擇正確數量（最多 10 個）。');return;}await transfer({kind:'visit-give',target:owner,itemKind:item.kind,itemId:item.id,quantity:n});drawer.hidden=true;message('🎁 禮物已送進朋友的收禮箱！');}),button('重新挑選',showGifts));if(pictures.has(picture))giftObserver.observe(picture);}
  async function transfer(payload){const state=await store().visitTransfer(payload);api.apply(state);}
  document.addEventListener('visibilitychange',()=>{if(document.hidden){clearConnection();keys.clear();joystick.reset();if(dialog.open&&owner)message('暫停即時互動。回到碼頭可以重新接待或申請一起玩。');}});
  return {async open(){if(!store()?.visitRequest){api.toast('請從學習廣場登入後，再來搭船拜訪。');return;}api.stop();dialog.showModal();frameId=requestAnimationFrame(animate);await run(async()=>{if(store().getPendingGift?.()){retryTransfer();return;}if(!api.save()||!await store().publish())throw Error('pending_save');await lobby();});},get busy(){return dialog.open;}};
