@@ -70,10 +70,10 @@ export async function startAdventureRelease({student,policy,loadStable,loadCandi
   }
   const panel=doc.createElement('div'),label=doc.createElement('span'),button=doc.createElement('button');
   panel.id='adventure-test-release';panel.setAttribute('role','status');
-  panel.style.cssText='position:fixed!important;z-index:12000!important;bottom:max(8px,env(safe-area-inset-bottom))!important;left:50%!important;transform:translateX(-50%)!important;display:flex!important;align-items:center!important;gap:10px!important;padding:6px 10px!important;background:#fff9e9!important;border:1px solid #ac9468!important;border-radius:14px!important;color:#365c48!important;font:14px system-ui,sans-serif!important;max-width:calc(100vw - 24px)!important;box-sizing:border-box!important';
+  panel.style.cssText='position:fixed!important;z-index:12000!important;top:50%!important;right:max(6px,env(safe-area-inset-right))!important;transform:translateY(-50%)!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;text-align:center!important;gap:4px!important;padding:5px!important;background:#fff9e9!important;border:1px solid #ac9468!important;border-radius:14px!important;color:#365c48!important;font:14px system-ui,sans-serif!important;max-width:calc(100vw - 24px)!important;box-sizing:border-box!important';
   label.textContent=stable?'正式版':'老師測試版';label.style.cssText='font:14px system-ui,sans-serif!important;color:#365c48!important;white-space:nowrap!important';
   button.type='button';button.textContent=stable?'切換到試玩版':'回正式版';button.setAttribute('aria-label',stable?'保存後切換到試玩版':'保存後返回正式版');
-  button.style.cssText='all:initial!important;display:block!important;box-sizing:border-box!important;padding:10px 14px!important;min-height:44px!important;font:bold 14px system-ui,sans-serif!important;color:#fff!important;background:#365c48!important;border-radius:10px!important;cursor:pointer!important;touch-action:manipulation!important;white-space:nowrap!important';
+  button.style.cssText='all:initial!important;display:block!important;box-sizing:border-box!important;padding:6px 9px!important;text-align:center!important;min-height:44px!important;font:bold 14px system-ui,sans-serif!important;color:#fff!important;background:#365c48!important;border-radius:10px!important;cursor:pointer!important;touch-action:manipulation!important;white-space:nowrap!important';
   button.onclick=async()=>{
     button.disabled=true;
     try{
