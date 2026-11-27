@@ -34,6 +34,26 @@ function demoPoints(stroke) {
   });
 }
 
+// Compare in the coordinates of the guide. Normalizing each stroke separately
+// would let the right shape in the wrong place pass.
+function traceMatches(raw, models, index) {
+  const pen=demoPoints(raw), target=models[index];
+  if(!target?.length||!pen.length)return false;
+  const at=(line,i)=>line.length===1?line[0]:line[i];
+  const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+  const length=line=>line.reduce((sum,p,i)=>i?sum+distance(line[i-1],p):sum,0);
+  const penLength=length(raw), expectedLength=length(target);
+  if(penLength<expectedLength*.55 || penLength>expectedLength*1.8+.025)return false;
+  const offsets=Array.from({length:48},(_,i)=>distance(at(pen,i),at(target,i)));
+  const mean=values=>values.reduce((sum,n)=>sum+n,0)/values.length;
+  const error=mean(offsets);
+  if(error>.078||Math.max(...offsets)>.16||offsets[0]>.12||offsets[47]>.12)return false;
+  const distanceTo=(model,reverse)=>mean(Array.from({length:48},(_,i)=>distance(at(pen,i),at(model,reverse?47-i:i))));
+  if(distanceTo(target,true)+Math.min(.012,expectedLength*.15)<error)return false;
+  // Closely spaced parallel strokes are common. Prefer the guide the child followed.
+  return !models.some((other,i)=>i!==index && distanceTo(other,false)+.026<error);
+}
+
 function validateRestorableStrokes(input) {
   if (!Array.isArray(input) || input.length > HANDWRITING_INPUT_LIMITS.maxStrokes) return null;
   let total = 0;
@@ -149,6 +169,17 @@ export function createHandwriting(container, options = {}) {
     return { filled: false, paths };
   }
 
+  function traceResult(correct, number) {
+    options.onTraceFeedback({correct,number,total:reference.strokes.length});
+  }
+
+  function rejectTraceStroke(){
+    const number=strokes.length;
+    strokes.pop();interruptedAt.delete(number-1);inputTooComplex=false;
+    traceGuide.hint=true;
+    traceResult(false,number);
+  }
+
   function render() {
     if (destroyed) return;
     grid(ctx);
@@ -161,6 +192,13 @@ export function createHandwriting(container, options = {}) {
       for (const path of traceGuide.paths) {
         if (traceGuide.filled) ctx.fill(path);
         else ctx.stroke(path);
+      }
+      if(traceGuide.hint && strokes.length<reference.strokes.length){
+        const index=strokes.length, path=traceGuide.paths[index];
+        ctx.fillStyle=ctx.strokeStyle='#bd6034';
+        if(traceGuide.filled)ctx.fill(path);else ctx.stroke(path);
+        const first=traceGuide.models[index][0];
+        ctx.beginPath();ctx.arc(first.x,first.y,.021,0,Math.PI*2);ctx.fillStyle='#246747';ctx.fill();
       }
       ctx.restore();
     }
@@ -196,6 +234,7 @@ export function createHandwriting(container, options = {}) {
     // Do not silently decimate a child's shape to make it fit a network limit.
     if (activeStroke.length > HANDWRITING_INPUT_LIMITS.maxPointsPerStroke
       || strokes.reduce((sum, stroke) => sum + stroke.length, 0) > HANDWRITING_INPUT_LIMITS.maxTotalPoints) {
+      if(traceGuide?.models){stopInput();rejectTraceStroke();render();return;}
       inputTooComplex = true; stopInput();
       status.textContent = '這個字的筆跡太密了，請清除後再寫一次。';
       notify(true);
@@ -204,8 +243,10 @@ export function createHandwriting(container, options = {}) {
 
   function onDown(event) {
     if (destroyed || disabled || inputTooComplex || demoActive || activePointer !== null || event.isPrimary === false || (event.pointerType === 'mouse' && event.button !== 0)) return;
+    if(traceGuide?.models && strokes.length>=traceGuide.models.length)return;
     if (strokes.length >= HANDWRITING_INPUT_LIMITS.maxStrokes) { inputTooComplex = true; status.textContent = '筆畫較多，請清除後重新書寫。'; notify(true); return; }
     event.preventDefault();
+    if(traceGuide)traceGuide.hint=false;
     activePointer = event.pointerId; activeStroke = []; strokes.push(activeStroke);
     try { canvas.setPointerCapture(activePointer); } catch { /* Pointer may already have ended. */ }
     status.textContent = ''; addPoint(event); render(); notify(true);
@@ -223,11 +264,15 @@ export function createHandwriting(container, options = {}) {
     if (event.pointerId !== activePointer) return;
     event.preventDefault();
     if (!interrupted) addPoint(event);
-    else interruptedAt.add(strokes.length - 1);
+    if(activePointer===null)return;
+    if(interrupted)interruptedAt.add(strokes.length - 1);
     const pointer = activePointer;
     activePointer = null; activeStroke = null;
     try { if (canvas.hasPointerCapture(pointer)) canvas.releasePointerCapture(pointer); } catch { /* no capture */ }
-    if (interrupted) status.textContent = '這一筆中途斷開了，可以按「上一筆」再寫一次。';
+    if(traceGuide?.models){
+      if(interrupted||!traceMatches(strokes.at(-1),traceGuide.models,strokes.length-1))rejectTraceStroke();
+      else traceResult(true,strokes.length);
+    }else if (interrupted) status.textContent = '這一筆中途斷開了，可以按「上一筆」再寫一次。';
     render(); notify(true);
   }
   const onUp = event => finish(event, false);
@@ -280,6 +325,7 @@ export function createHandwriting(container, options = {}) {
     },
     clear() {
       stopInput(); stopDemo(); strokes = []; interruptedAt.clear(); inputTooComplex = false; originTime = performance.now();
+      if(traceGuide)traceGuide.hint=false;
       render(); notify(true);
     },
     undo() {
@@ -297,6 +343,7 @@ export function createHandwriting(container, options = {}) {
         // Notify the page of a blank challenge draft before making further ink private.
         api.clear();
         traceGuide = makeTraceGuide(reference);
+        if(options.onTraceFeedback)traceGuide.models=reference.strokes.map(demoPoints);
         canvas.setAttribute('aria-label', '淡色底字練習格，可以描寫，不計分');
         render();
       } else {

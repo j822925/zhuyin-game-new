@@ -1,2 +1,52 @@
 :root{font-family:system-ui,"Microsoft JhengHei",sans-serif;color:#294b40;background:#f4f4e8}*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0}main{margin:auto;max-width:1120px;padding:12px 20px}header,.top{display:flex;gap:16px;align-items:center;flex-wrap:wrap}header h1{margin:0 auto 0 0;font-size:clamp(22px,4vw,34px)}a{color:#245845}button,input{font:inherit}button,.plan{min-height:44px;cursor:pointer;background:#fffdf3;border:2px solid #c3ccb2;border-radius:13px;color:#294b40;padding:7px 14px;font-weight:650}button:disabled{opacity:.5;cursor:default}.primary,button[aria-pressed=true]{background:#28674c;color:#fff;border-color:#28674c}.plan{display:block;width:min(100%,650px);margin:10px 0;text-align:left;padding:16px}#status:empty,#context:empty,#model:empty,#notice:empty{display:none}.top{padding:6px 0;border-bottom:1px solid #b9c9ad}#score{margin-left:auto}#work{display:grid;grid-template-columns:minmax(115px,.68fr) minmax(210px,1.8fr) minmax(145px,.74fr);gap:12px;padding:8px 0}.left h2{font-size:clamp(20px,3vw,34px);margin:.3em 0}.left p{font-size:20px}#model svg{max-width:150px;width:100%;background:white;border-radius:10px}.tools{display:flex;flex-direction:column;gap:6px}#input{text-align:center;position:relative}#ink .hanzi-handwriting,#replay{width:min(100%,max(140px,calc(100dvh - 141px)))!important;max-width:580px;margin:auto;display:block}#replay{aspect-ratio:1;border:2px solid #9ba88f;border-radius:14px;background:linear-gradient(transparent 49.8%,#dedfd5 50%,transparent 50.2%),linear-gradient(90deg,transparent 49.8%,#dedfd5 50%,transparent 50.2%),white}.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(39px,1fr));gap:3px}.keys button{padding:3px;font-size:21px}output{display:block;font-size:34px;background:white;margin:5px;padding:6px;border-radius:10px}input[type=text]{width:100%;font-size:32px;padding:12px;border:2px solid #9ba88f;border-radius:12px}#notice{background:#ffefd0;padding:9px;border-radius:10px}#notice.ok{background:#d9eedc}#ink:empty{display:none}#result{padding-block:30px}#result h2{font-size:32px}
 @media(max-width:670px) and (orientation:portrait){main{padding:10px}#work{display:flex;flex-direction:column}.tools{flex-flow:row wrap}.tools #notice{width:100%}#ink .hanzi-handwriting,#replay{width:min(100%,42dvh)!important}.left{display:flex;flex-wrap:wrap;align-items:center;gap:8px}#model svg{width:66px}}@media(orientation:landscape) and (max-height:500px){main{padding:3px 9px}header h1{font-size:21px}.top{font-size:14px}.tools{gap:3px}.tools button{padding:2px 5px;min-height:35px}#ink .hanzi-handwriting,#replay{width:min(100%,max(125px,calc(100dvh - 92px)))!important}#work{gap:6px;padding:3px 0}.keys button{min-height:31px}#model svg{max-width:100px}}
+
+/* Keep the writing board its original size. The question uses its own column. */
+.left,.tools,#input{min-width:0}
+.left h2{font-size:clamp(27px,3.45vw,45px);line-height:1.18}
+#context,#other .keys button,.syllable{font-family:"BiauKai","DFKai-SB","Kaiti TC","PingFang TC","Microsoft JhengHei",sans-serif}
+#context{margin:.16em 0;font-size:clamp(48px,7.1vw,88px);line-height:1.12}
+[data-mode=math] #context{font-size:clamp(36px,4.8vw,68px);font-variant-numeric:tabular-nums}
+#model svg{max-width:200px}
+.word-column{display:inline-flex;flex-direction:column;align-items:center;gap:.09em;padding:.05em .12em;line-height:1}
+.word-character{display:block}
+.syllable{position:relative;display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1;color:#284b3d;font-weight:500}
+.syllable .zhuyin-glyph{display:block;line-height:1.03}
+.syllable .tone{position:absolute;left:100%;top:50%;transform:translate(-.05em,-40%);font-size:.76em;line-height:1}
+.syllable .neutral{order:-1;display:block;font-size:0;width:6px;height:6px;border-radius:50%;background:currentColor;margin:.1rem 0}
+.word-column>.syllable{font-size:.57em;background:#fff2cd;border:2px solid #e7c879;border-radius:.28em;padding:.12em .47em .12em .13em}
+.word-column>.syllable .tone{left:auto;right:0;transform:translateY(-40%)}
+#other output{font-size:clamp(22px,3vw,34px);line-height:1.12}
+#other output .syllable,#notice .syllable{margin-right:.55em}
+#other output .syllable:empty{display:none}
+#other .keys button{font-size:clamp(23px,2.8vw,34px);font-weight:500;line-height:1.08}
+#notice .syllable{font-size:1.06em}
+#notice.trace-retry{background:#fff0dc;border:2px solid #b85d36;font-weight:700}
+#result:not([hidden]){min-height:calc(100vh - 105px);min-height:calc(100dvh - 105px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:clamp(8px,2vh,20px)}
+#result h2,#result p{margin:0}
+#reward-pictures{display:flex;align-items:center;justify-content:center;gap:clamp(8px,3vw,42px);width:100%}
+#reward-pictures figure{flex:0 1 auto;min-width:0;margin:0}
+.reward-picture{width:min(36vw,38vh,320px);height:min(36vw,38vh,320px);display:grid;place-content:center;justify-items:center;font-size:4rem}
+.reward-picture canvas{width:100%;height:100%;min-width:0;min-height:0;object-fit:contain}
+#reward-pictures figcaption{font-size:clamp(16px,2.1vw,25px);margin-top:.28em;font-weight:650}
+#gift{max-width:45em;line-height:1.5}
+@media(orientation:landscape) and (max-height:500px){
+ .left h2{font-size:clamp(23px,3.5vw,31px);margin:.13em 0}
+ #context{font-size:clamp(42px,7.2vw,60px)}
+ #model svg{max-width:130px}
+ .word-column{gap:.06em}
+ #other output{margin:0 0 3px;font-size:22px}
+ #other .keys button{font-size:23px}
+ #result:not([hidden]){min-height:calc(100dvh - 46px);padding-block:6px;gap:5px}
+ #result h2{font-size:24px}
+ #result figcaption,#gift{font-size:15px}
+}
+@media(max-width:670px) and (orientation:portrait){
+ .left h2{font-size:26px}#context{font-size:48px}
+ #model svg{width:88px}.left{justify-content:space-between}
+ #result:not([hidden]){min-height:calc(100dvh - 84px)}
+}
+#prompt span{display:inline-block;white-space:nowrap}
+#context:has(.word-column){text-align:center}
+.syllable:not(.vertical-symbols) .tone{position:static;transform:none}
+.reward-picture{width:min(42vw,45vh,355px);height:min(42vw,45vh,355px);display:flex;flex-direction:column;align-items:center;justify-content:center}

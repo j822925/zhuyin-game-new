@@ -2,12 +2,12 @@ import {drawClassRewards} from './data/guided-rewards.js';
 import {judge,score} from './guided-grading.js';
 const questions=[
  {mode:'copy',character:'三',reading:'ㄙㄢ',word:'三'},
- {mode:'write',character:'手',reading:'ㄕㄡˇ',word:'雙手',context:'雙□'},
+ {mode:'write',character:'左',reading:'ㄗㄨㄛˇ',word:'左手',context:'□手'},
  {mode:'read',character:'山',reading:'ㄕㄢ'},
  {mode:'math',op:'add',a:5,b:3},
  {mode:'listen',character:'人',word:'人',reading:'ㄖㄣˊ'}
 ];
-const key='guided-practice.teacher-demo.v1',title='生字、注音與加法試寫';
+const key='guided-practice.teacher-demo.v2',title='生字、注音與加法試寫';
 function load(){try{return JSON.parse(sessionStorage.getItem(key))||null;}catch{return null;}}
 async function view(r){
  const q=questions[r.position],question=q?{...q}:null;

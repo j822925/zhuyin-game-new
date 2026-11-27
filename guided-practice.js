@@ -1,6 +1,8 @@
 import {currentClass,classStorageKey,classUrl} from './class-context.js?v=20261023-exam1';
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
-import {createHandwriting} from './hanzi-handwriting.js?v=20261125-guide1';
+import {createHandwriting} from './hanzi-handwriting.js?v=20261127-trace1';
+import {writingPrompt,syllable,phoneticFeedback} from './guided-prompt.js';
+import {showRewardPictures} from './guided-reward-view.js';
 import {HANZI_AUDIO} from './data/hanzi-teacher-audio.js?v=20261115-hanzi2';
 const $=id=>document.getElementById(id), labels={copy:'照著範例寫',write:'看注音寫國字',read:'看國字寫注音',listen:'聽國字拼注音',math:'算算看'};
 const endpoint=['localhost','127.0.0.1'].includes(location.hostname)?location.origin:'https://zhuyin-api.j822925.workers.dev';
@@ -12,7 +14,7 @@ let visit,activitySeq=0,lastActivity;
 let plan,state,board,input='',tone='',busy=false,frame=0,replayId=0,lastInk=null,waiting=false,pending=null,generation=0,soundId=0;
 $('home').href=classUrl(currentClass==='grade2'?'grade2.html':'index.html');
 async function api(op,data={}){
- if(preview){const {trial}=await import('./guided-trial.js?v=2');return trial(op,data);}
+ if(preview){const {trial}=await import('./guided-trial.js?v=20261127-1');return trial(op,data);}
  const session=sessions.read();
  if(!owner||session?.seat!==owner.seat||session?.token!==owner.token||session.expires<=Date.now())throw Error('請回學習廣場登入，再進入課堂練習。');
  const res=await fetch(new URL('/hanzi/guided-'+op,endpoint),{method:'POST',cache:'no-store',keepalive:op==='activity',headers:{Authorization:'Bearer '+session.token,'Content-Type':'application/json'},body:JSON.stringify({...data,classId:currentClass}),signal:AbortSignal.timeout(16000)});
@@ -61,10 +63,16 @@ function replay(){
 function keys(){
  const area=$('other');const out=element('output','請選注音和聲調');area.append(out);
  const pad=element('div','');pad.className='keys';area.append(pad);
- const show=()=>out.textContent=(input||'')+(tone||'')||'請選注音和聲調';
+ const show=()=>out.replaceChildren(input||tone?syllable(input+tone):'請選注音和聲調');
  for(const k of 'ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄧㄨㄩㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦˉˊˇˋ˙'){
   const b=element('button',k==='ˉ'?'一聲':k);b.onclick=()=>{if(locked())return;if('ˉˊˇˋ˙'.includes(k))tone=k;else if(input.length<3)input+=k;show();};pad.append(b);}
  const erase=element('button','退一格');erase.onclick=()=>{if(locked())return;if(tone)tone='';else input=input.slice(0,-1);show();};area.append(erase);
+}
+function traceFeedback({correct,number,total}){
+ const notice=$('notice');
+ notice.className=correct?'ok':'trace-retry';
+ if(!correct){notice.textContent='↻ 第 '+number+' 筆再描一次，從綠點開始。';return;}
+ notice.textContent=number===total?'✓ 描好了！關閉底字，換你自己寫。':'✓ 接著描第 '+(number+1)+' 筆。';
 }
 function locked(){return busy||waiting||!!pending;}
 function controls(){
@@ -74,7 +82,7 @@ function controls(){
  $('trace').hidden=!board||waiting;$('trace').disabled=locked();$('trace').setAttribute('aria-pressed',String(trace));$('trace').textContent=trace?'關閉底字，自己寫':'開啟淡色底字';
  $('demo').hidden=!board||waiting||trace;$('demo').disabled=locked();
  $('againReplay').hidden=!lastInk||trace||waiting;$('clear').hidden=!board||waiting;
- $('clear').textContent=showing?'換我再寫一次':'重寫';$('list').disabled=busy;
+ $('clear').textContent=showing?'換我再寫一次':trace?'重新描一次':'重寫';$('list').disabled=busy;
 }
 function top(){ $('title').textContent=state.title;$('progress').textContent='第 '+Math.min(state.position+1,state.total)+'／'+state.total+' 題';$('score').textContent='目前可得 '+state.score+' 分';}
 async function render(){
@@ -82,15 +90,18 @@ async function render(){
  const awards=(reward?.items||[]).map(item=>item.kind==='meal'?'完成獎：'+item.name+'（補 '+item.energy+'% 體力）':'滿分加贈：'+item.name);
  if(!awards.length&&reward?.name)awards.push('滿分禮物：'+reward.name);
  if(awards.length)awards.push(preview?'教師試玩，獎品僅供示範。':reward.mail?'到探險島的禮物信箱領取。':'已放進探險島的收藏。');
- $('gift').textContent=awards.join('　');return;}
+ $('gift').textContent=awards.join('　');showRewardPictures($('reward-pictures'),reward);return;}
  screen('exercise');top();input='';tone='';const q=state.question;
  $('other').replaceChildren();$('model').replaceChildren();$('ink').replaceChildren();$('notice').className='';
- $('notice').textContent=state.feedback?.correct===false&&state.feedback.position===state.position?state.feedback.tip:'';
- $('context').textContent='';$('prompt').textContent=labels[q.mode];$('sound').hidden=q.mode!=='listen';$('sound').onclick=()=>say(q);
+ $('notice').replaceChildren(phoneticFeedback(state.feedback?.correct===false&&state.feedback.position===state.position?state.feedback.tip:''));
+ $('exercise').dataset.mode=q.mode;
+ $('context').textContent='';$('prompt').replaceChildren();
+ const phrases={write:['看注音','寫國字'],read:['看國字','寫注音'],listen:['聽國字','拼注音'],copy:['看範例','寫一寫']}[q.mode];
+ if(phrases){for(const phrase of phrases)$('prompt').append(element('span',phrase));}else $('prompt').textContent=labels[q.mode];$('sound').hidden=q.mode!=='listen';$('sound').onclick=()=>say(q);
  if(q.mode==='write'||q.mode==='copy'){
-  if(q.mode==='copy')$('model').append(example(q));else $('context').textContent=q.reading+'　'+q.context;
+  if(q.mode==='copy')$('model').append(example(q));else $('context').append(writingPrompt(q));
   inkBusy=inkInterrupted=inkComplex=false;
-  board=createHandwriting($('ink'),{loadReference:async()=>q.reference,onChange:i=>{inkBusy=i.isDrawing;inkInterrupted=i.inputInterrupted;inkComplex=i.inputTooComplex;}});await board.load(q.character);
+  board=createHandwriting($('ink'),{loadReference:async()=>q.reference,onTraceFeedback:traceFeedback,onChange:i=>{inkBusy=i.isDrawing;inkInterrupted=i.inputInterrupted;inkComplex=i.inputTooComplex;}});await board.load(q.character);
  }else if(q.mode==='math'){
   $('context').textContent=q.a+(q.op==='add'?' ＋ ':' － ')+q.b+' ＝ ?';
   const field=element('input','');field.type='text';field.inputMode='numeric';field.maxLength=5;field.setAttribute('aria-label','我的答案');field.oninput=()=>input=field.value.trim();$('other').append(field);
@@ -112,14 +123,14 @@ async function send(){
  if(g.correct){waiting=true;$('notice').className='ok';$('notice').textContent='答對了！';}
  else{
   const left=Math.max(0,4-state.mistakes[sent.position].count);
-  $('notice').className='';$('notice').textContent='再試一次。'+g.tip+(left?' 這題還能拿原來的'+['','四分之一','一半','四分之三'][left]+'分數。':' 這題已扣到零分，自己答對就能繼續。');
+  $('notice').className='';$('notice').replaceChildren(phoneticFeedback('再試一次。'+g.tip+(left?' 這題還能拿原來的'+['','四分之一','一半','四分之三'][left]+'分數。':' 這題已扣到零分，自己答對就能繼續。')));
   if(board){lastInk={ink:sent.answer,feedback:g,ref:q.reference};board.clear();}else{input='';tone='';$('other').querySelector('input')&&($('other').querySelector('input').value='');const o=$('other').querySelector('output');if(o)o.textContent='再選一次';}
  }
  }catch(e){retry(e,send);}finally{busy=false;board?.setDisabled(waiting||!!pending);controls();}
  if(lastInk&&!waiting&&!pending)replay();
 }
-$('trace').onclick=()=>{if(locked()||!board)return;stopReplay();board.setTracePractice(!board.isTracePractice());$('notice').textContent=board.isTracePractice()?'跟著淡色字描寫，可多練幾次。練習不扣分。':'換你自己從空白格寫一次。';controls();};
-$('clear').onclick=()=>{if(locked())return;stopReplay();board?.clear();controls();};
+$('trace').onclick=()=>{if(locked()||!board)return;stopReplay();board.setTracePractice(!board.isTracePractice());$('notice').className='';$('notice').textContent=board.isTracePractice()?'從第一筆開始，跟著淡色字描寫。':'換你自己從空白格寫一次。';controls();};
+$('clear').onclick=()=>{if(locked())return;stopReplay();board?.clear();if(board?.isTracePractice()){$('notice').className='';$('notice').textContent='從第一筆開始描。';}controls();};
 $('demo').onclick=async()=>{if(locked()||!board||board.isTracePractice())return;stopReplay();busy=true;controls();try{await board.showDemo();}finally{busy=false;controls();}};
 $('againReplay').onclick=replay;$('submit').onclick=send;$('next').onclick=async()=>{if(waiting&&!busy)await render();};$('list').onclick=listing;$('done').onclick=listing;
 function activity(value){
