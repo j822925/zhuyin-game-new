@@ -22,3 +22,21 @@
  .cozy-ui #game.battle-layout>#player-turn{grid-column:2;grid-row:4}
  .cozy-ui #game.battle-layout .opponent-art,.cozy-ui #game.battle-layout #player-turn .playing-character,.cozy-ui #game.battle-layout #player-turn .animal-face{height:240px;width:100%}
 }
+
+/* Keep the tutor above the answer column, away from the tiles children tap. */
+.cozy-ui #game.battle-layout.spelling-active>.question-card{display:grid;grid-template-columns:130px minmax(0,1fr);gap:10px 12px}
+.cozy-ui #game.battle-layout.spelling-active #little-teacher{grid-column:1;grid-row:1;justify-self:start;align-self:center;margin:0}
+.cozy-ui #game.battle-layout.spelling-active #listen{grid-column:2;grid-row:1;justify-self:center;align-self:center;margin:0;height:78px;min-height:78px}
+.cozy-ui #game.battle-layout.spelling-active #audio-status{grid-column:1/-1;grid-row:2}
+.cozy-ui #game.battle-layout.spelling-active #spelling{grid-column:1/-1;grid-row:3;grid-template-columns:130px minmax(0,1fr);gap:8px 12px;max-width:100%;width:100%;margin:0}
+.cozy-ui #game.battle-layout.spelling-active #spelling .slots{padding-left:0;padding-right:36px}
+.cozy-ui #game.battle-layout.spelling-active #spelling .spelling-tone{left:100px}
+.cozy-ui #game.battle-layout.spelling-active #spelling .slots[data-neutral=true] .spelling-tone{left:47px}
+.cozy-ui #game.battle-layout.spelling-active #feedback{grid-column:1/-1;grid-row:4}
+.cozy-ui #game.battle-layout.spelling-active #next{grid-column:1/-1;grid-row:5}
+.cozy-ui #game.battle-layout.spelling-active .question-report{grid-column:1/-1;grid-row:6}
+@media(max-width:550px){
+ .cozy-ui #game.battle-layout.spelling-active>.question-card{grid-template-columns:142px minmax(0,1fr)}
+ .cozy-ui #game.battle-layout.spelling-active #spelling{grid-template-columns:142px minmax(0,1fr);gap:8px}
+ .cozy-ui #game.battle-layout.spelling-active #spelling .slots{padding-right:44px}
+}

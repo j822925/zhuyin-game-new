@@ -1,6 +1,6 @@
 import {mountExamReview,createExamHistory,scoreLabel} from './hanzi-exam-review.js?v=20261124-review1';
 import {createExamRoundStore} from './hanzi-session-store.js?v=20261124-exams1';
-import {showRoundOutcome} from './round-outcome.js?v=20261123-starenvoys1';
+import {showRoundOutcome} from './round-outcome.js?v=20261127-defeat1';
 import {createFarmLessonLink,requestedFarmLesson} from './farm-lesson-link.js?v=20261122-farm6';
 import {attachCopyEntries} from './hanzi-copy-entry.js?v=20261121-week1';
 import {PRACTICE_RULE,bonusQuestion} from './hanzi-practice.js?v=20261115-hanzi2';
@@ -11,9 +11,9 @@ import {validateBank,questionPool,splitBopomofo,gradeReading} from './hanzi-bank
 import {createHanziClient,createHanziDemo,resultRows,taskState,compactAnswers} from './hanzi-client.js?v=20261124-review1';
 import {createHandwriting} from './hanzi-handwriting.js?v=20261127-alltrace1';
 import {gradeStrokes} from './hanzi-stroke-core.js';
-import {mountCharacter} from './character-motion.js?v=20261123-starenvoys1';
-import {createOpponent,updateOpponent,createBattle} from './character-battle.js?v=20261123-starenvoys1';
-import {PROFILE_CHARACTERS} from './student-profile.js?v=20261123-starenvoys1';
+import {mountCharacter} from './character-motion.js?v=20261127-defeat1';
+import {createOpponent,updateOpponent,createBattle} from './character-battle.js?v=20261127-defeat1';
+import {PROFILE_CHARACTERS} from './student-profile.js?v=20261127-defeat1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
 
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),demo=params.get('demo')==='1';

@@ -1,4 +1,4 @@
-import {showRoundOutcome} from './round-outcome.js?v=20261123-starenvoys1';
+import {showRoundOutcome} from './round-outcome.js?v=20261127-defeat1';
 import {optimizedImage} from './data/portrait-thumbnails.js?v=20261123-starenvoys1';
 import './asset-cache.js?v=20260928-all1';
 import {dailyAwardMessage} from './learning-rewards.js?v=20261007-ipad1';
@@ -7,8 +7,8 @@ import {CHARACTER_CATALOG} from './data/character-catalog.js?v=20261123-starenvo
 import {STAR_SPRITES} from './data/star-sprites.js?v=20261123-starenvoys1';
 import {audioSource} from './audio-source.js?v=20261102-a1';
 import {STAR_CARDS} from './data/star-cards.js?v=20261123-starenvoys1';
-import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20261123-starenvoys1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261123-starenvoys1';
+import {mountCharacter,reactCharacter,clearCharacters} from './character-motion.js?v=20261127-defeat1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261127-defeat1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
 import {showMonsterReward} from './monster-cards-ui.js?v=20261123-starenvoys1';
 const $=id=>document.getElementById(id),SESSION=classStorageKey('zhuyin.student-session.v1:'+new URL('.',location.href).pathname+':live');

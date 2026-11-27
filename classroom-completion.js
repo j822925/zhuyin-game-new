@@ -1,4 +1,4 @@
-import {showRoundOutcome} from './round-outcome.js?v=20261123-outcome1';
+import {showRoundOutcome} from './round-outcome.js?v=20261127-defeat1';
 // Personal practice after server settlement. This module never grants rewards,
 // changes scores, or deletes the teacher's original mistake records.
 import {audioSource} from './audio-source.js?v=20261102-a1';

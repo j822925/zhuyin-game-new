@@ -1,7 +1,7 @@
-import {showRoundOutcome} from './round-outcome.js?v=20261123-starenvoys1';
-import {PROFILE_CHARACTERS} from './student-profile.js?v=20261123-starenvoys1';
-import {mountCharacter,clearCharacters,awardCharacter,celebrateCharacter} from './character-motion.js?v=20261123-starenvoys1';
-import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261123-starenvoys1';
+import {showRoundOutcome} from './round-outcome.js?v=20261127-defeat1';
+import {PROFILE_CHARACTERS} from './student-profile.js?v=20261127-defeat1';
+import {mountCharacter,clearCharacters,awardCharacter,celebrateCharacter} from './character-motion.js?v=20261127-defeat1';
+import {createOpponent,createBattle,updateOpponent} from './character-battle.js?v=20261127-defeat1';
 import {MONSTERS} from './data/monsters.js?v=20261004-villains1';
 import {showMonsterReward} from './monster-cards-ui.js?v=20261123-starenvoys1';
 

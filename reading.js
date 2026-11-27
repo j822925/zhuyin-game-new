@@ -1,6 +1,6 @@
 import {createQuestionReport} from './question-report.js?v=20261011-reports2';
 import {createReadingFarm,renderReadingFarm} from './reading-farm.bundle.js?v=20261122-farm6';
-import {createReadingBattle} from './reading-battle.js?v=20261123-starenvoys1';
+import {createReadingBattle} from './reading-battle.js?v=20261127-defeat1';
 import {startDemoMonster,creditDemoMonster} from './monster-cards-ui.js?v=20261123-starenvoys1';
 import {readingPool,readingLessonDeck,readingTaughtSymbols} from './reading-lesson.js?v=20261024-retire1';
 import './asset-cache.js?v=20260928-all1';

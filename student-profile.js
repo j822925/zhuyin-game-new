@@ -4,7 +4,7 @@ import {classStorageKey} from './class-context.js?v=20261023-exam1';
 import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20261123-starenvoys1';
 import {STAR_CARDS,starCardName} from './data/star-cards.js?v=20261123-starenvoys1';
 import {STAR_SPRITES} from './data/star-sprites.js?v=20261123-starenvoys1';
-import {mountCharacter,clearCharacters} from './character-motion.js?v=20261123-starenvoys1';
+import {mountCharacter,clearCharacters} from './character-motion.js?v=20261127-defeat1';
 export const PROFILE_CHARACTERS=[...CHARACTERS,...MONSTERS.map(c=>({...c,category:'ally',emoji:'✨'})),...STAR_CARDS.map(c=>({...c,cardImage:c.image,image:STAR_SPRITES[c.id],emoji:'✨',name:starCardName(c)}))];
 const $=id=>document.getElementById(id);
 export function createStudentProfile({demo,auth,getSeat,getSeats,getOwned,getAvatar,onChange,isHome=()=>true}){
