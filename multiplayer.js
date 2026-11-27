@@ -3,7 +3,7 @@ import {audioSource} from './audio-source.js?v=20261102-a1';
 import {questionDeck,optionsFor} from './core.js?v=20261009-accounts1';
 import {CHARACTERS,STARTERS,portrait} from './characters.js?v=20261123-starenvoys1';
 
-import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,motionPortrait} from './character-motion.js?v=20261123-starenvoys1';
+import {mountCharacter,reactCharacter,clearCharacters,prepareCharacters,awardCharacter,motionPortrait} from './character-motion.js?v=20261127-defeat1';
 
 const animals=CHARACTERS.map(c=>[c.emoji,c.name]);
 const keys=[['a','s','d','f'],['h','j','k','l']];

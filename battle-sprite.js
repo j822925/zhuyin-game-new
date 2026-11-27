@@ -1,5 +1,5 @@
 // Battle art and timing are independent of the home/wardrobe skeleton.
-import {drawBlossom} from './battle-effects.js?v=20261123-starenvoys1';
+import {drawBlossom} from './battle-effects.js?v=20261127-defeat1';
 import {BATTLE_ART,BATTLE_META} from './data/battle-catalog.js?v=20261123-starenvoys1';
 import {loadPackedBattle} from './battle-frame-loader.js?v=20261123-starenvoys1';
 import {watchBattleCanvas} from './battle-render-scheduler.js?v=20261007-ipad1';
@@ -71,7 +71,7 @@ export function battlePose(kind,action,t,reduced=false){
   p.x=(kind==='rabbit'?14:24)*Math.sin(clamp(t/.16)*Math.PI/2)*(1-smooth((t-.42)/.58));p.angle=(kind==='rabbit'?2:3)*(1-smooth(t/.7));
  }else if(action==='victory'){p.frame=t<.12?5:6;p.face=2;p.y=kind==='rabbit'?-9*Math.abs(Math.sin(t*Math.PI*2))*Math.sin(t*Math.PI):0;
  }else if(action==='star'){p.frame=7;p.face=2;p.y=3*(1-smooth(t*3));}
- else if(action==='defeated'){p.frame=BATTLE_META[kind]?.defeatedFrame??7;p.face=1;}
+ else if(action==='defeated'){p.frame=BATTLE_META[kind]?.defeatedFrame??(BATTLE_META[kind]?.enemy?7:4);p.face=1;}
  if(kind!=='knight'&&kind!=='rabbit'){
   const meta=BATTLE_META[kind],fx=meta?.fx,enemy=meta?.enemy,direction=enemy?-1:1;
   if(action==='attack'){const rush=smooth((t-.25)/.10)*(1-smooth((t-.67)/.33));p.x=direction*(-(['slash','dash','arrow'].includes(fx)?28:12)*rush);p.y=-(['dash','petal','wind','cloud'].includes(fx)?16:5)*Math.sin(clamp((t-.27)/.4)*Math.PI);}

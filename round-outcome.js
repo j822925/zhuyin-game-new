@@ -88,7 +88,7 @@ export function showRoundOutcome(host, correct, total, key, hero = 'rabbit', ene
   scene.append(replay);
   host.prepend(scene);
   // Load the rigs after the score is visible. A missing image never blocks saving.
-  Promise.all([import('./battle-sprite.js?v=20261123-starenvoys1'), import('./data/battle-catalog.js?v=20261123-starenvoys1')])
+  Promise.all([import('./battle-sprite.js?v=20261127-defeat1'), import('./data/battle-catalog.js?v=20261123-starenvoys1')])
     .then(([{BattleSprite}, {battleCharacter}]) => {
       if (!scene.isConnected) return;
       for (const [side, id, wins] of [['enemy', enemy, !won], ['hero', hero, won]]) {

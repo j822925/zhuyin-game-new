@@ -2,9 +2,9 @@ import {optimizedImage} from './data/portrait-thumbnails.js?v=20261123-starenvoy
 import {monsterRequirements,monsterLevelLabel} from './data/monster-collection-rules.js?v=20261004-levels1';
 import {BATTLE_META} from './data/battle-catalog.js?v=20261123-starenvoys1';
 
-import {reactCharacter} from './character-motion.js?v=20261123-starenvoys1';
-import {startBattleEffects} from './battle-effects.js?v=20261123-starenvoys1';
-import {mountMonster,playMonster} from './monster-motion.js?v=20261123-starenvoys1';
+import {reactCharacter} from './character-motion.js?v=20261127-defeat1';
+import {startBattleEffects} from './battle-effects.js?v=20261127-defeat1';
+import {mountMonster,playMonster} from './monster-motion.js?v=20261127-defeat1';
 
 export function createOpponent(){
  const el=document.createElement('aside');el.className='practice-opponent';el.setAttribute('aria-label','陪你挑戰的小怪物');
