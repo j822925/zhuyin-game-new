@@ -1,7 +1,10 @@
 // Optional layout fields: old free placements retain their original position.
 export const HOME_FACINGS=['front','right','back','left'];
 export const HOME_MOUNTS=['back','left','right','corner-left','corner-right'];
-export function spatialFields(p={}){return {...(HOME_FACINGS.includes(p.facing)?{facing:p.facing}:{}),...(HOME_MOUNTS.includes(p.mount)?{mount:p.mount}:{})};}
+export const TURN_NAMES=['正面','右前','右側','右後','背面','左後','左側','左前'];
+export function turnFields(p={}){return Number.isInteger(p.turn)&&p.turn>=0&&p.turn<8?{turn:p.turn}:{};}
+export function effectiveTurn(p){return turnFields(p).turn??Math.max(0,HOME_FACINGS.indexOf(p.facing))*2;}
+export function spatialFields(p={}){return {...turnFields(p),...(HOME_FACINGS.includes(p.facing)?{facing:p.facing}:{}),...(HOME_MOUNTS.includes(p.mount)?{mount:p.mount}:{})};}
 export function spatialRole(f){
  if(f.corner)return 'corner';
  if(f.role==='dining-chair'||f.role==='dining-chair-extra')return 'chair';
@@ -57,7 +60,10 @@ export function spatialFootprint(f,p){
  const side=p.mount==='left'||p.mount==='right';const w=side?Math.max(50,f.fw*.62):f.fw,h=side?f.fh+f.fw*.4:f.fh;
  return {x:p.x-w/2,y:p.y-h,w,h};
 }
-export function floorPosition(at,f,{auto=true,area='room'}={}){
+export function floorPosition(at,f,options){const result=floorAnchor(at,f,options);
+ if(f.corner){delete result.turn;return result;}
+ return {...result,...turnFields(at)};}
+function floorAnchor(at,f,{auto=true,area='room'}={}){
  let p={x:Math.round(at.x/5)*5,y:Math.round(at.y/5)*5,...spatialFields(at)};
  if(f.corner){if(!auto&&['corner-left','corner-right'].includes(at.mount))return p;const side=at.x<640?'left':'right';return {x:side==='left'?HOME_CORNER_SPACE.leftX:HOME_CORNER_SPACE.rightX,y:HOME_CORNER_SPACE.bottom,facing:side,mount:'corner-'+side};}
  if(!auto||f.flat||f.small)return p;

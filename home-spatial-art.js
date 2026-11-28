@@ -1,3 +1,4 @@
+import {turnedBounds,drawTurned} from './home-furniture-turns.js';
 import {HOME_SPATIAL_ART} from './data/home-spatial-art.js';
 import {spatialRole,fixtureRole} from './home-spatial-model.js';
 import {adventureMediaUrl} from './adventure-media.js';
@@ -20,6 +21,7 @@ export function spatialSprite(art,f,item={}){
  const cell=atlas.cells[index];return {atlas,cell,mirror:role!=='chair'&&role!=='corner'&&mirror,role};
 }
 export function furnitureVisualBounds(art,f,item){
+ const rotated=turnedBounds(art,f,item);if(rotated)return rotated;
  const painted=paintedFurnitureBounds(art,f,item);if(painted)return painted;
  const sprite=spatialSprite(art,f,item),cell=sprite?.cell||art[f.atlas||'furniture']?.cells[f.index];if(!cell)return {x:item.x-f.fw/2,y:item.y-f.height,w:f.fw,h:f.height};
  const height=item.mount==='back'&&['stove','sink'].includes(fixtureRole(f))?145:f.height;
@@ -28,6 +30,7 @@ export function furnitureVisualBounds(art,f,item){
  return {x:item.x-w/2,y:item.y-h+(h-f.height)/2,w,h};
 }
 export function drawSpatialFurniture(c,art,f,item){
+ if(drawTurned(c,art,f,item))return true;
  if(drawPaintedFurniture(c,art,f,item))return true;
  const sprite=spatialSprite(art,f,item);if(!sprite)return false;
 

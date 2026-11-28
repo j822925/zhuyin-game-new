@@ -1,3 +1,4 @@
+import {turnFields} from './home-spatial-model.js';
 export const VISIT_ROOMS=['forest','room','bedroom','kitchen','bathroom'];
 export const VISIT_LAYOUTS=['layout','bedroomLayout','kitchenLayout','bathroomLayout'];
 export const VISIT_EMOTES=['👋','😊','❤️','👏'];
@@ -7,7 +8,7 @@ const identifier=v=>typeof v==='string'&&/^[a-zA-Z0-9_-]{1,70}$/.test(v)?v:'';
 // Explicit public projection: never spread a student's save into a visit response.
 export function islandSnapshot(state={}){
  const out={version:1,wallpaper:identifier(state.wallpaper)||'original'};
- for(const key of VISIT_LAYOUTS)out[key]=(Array.isArray(state[key])?state[key]:[]).slice(0,180).filter(v=>v&&identifier(v.id)).map(v=>({id:v.id,x:bounded(v.x,0,1280),y:bounded(v.y,0,800),...(['front','right','back','left'].includes(v.facing)?{facing:v.facing}:{}),...(['back','left','right','corner-left','corner-right'].includes(v.mount)?{mount:v.mount}:{}),...(identifier(v.on)?{on:v.on,surface:bounded(v.surface,0,5),offsetX:bounded(v.offsetX,-300,300)}:{})}));
+ for(const key of VISIT_LAYOUTS)out[key]=(Array.isArray(state[key])?state[key]:[]).slice(0,180).filter(v=>v&&identifier(v.id)).map(v=>({...turnFields(v),id:v.id,x:bounded(v.x,0,1280),y:bounded(v.y,0,800),...(['front','right','back','left'].includes(v.facing)?{facing:v.facing}:{}),...(['back','left','right','corner-left','corner-right'].includes(v.mount)?{mount:v.mount}:{}),...(identifier(v.on)?{on:v.on,surface:bounded(v.surface,0,5),offsetX:bounded(v.offsetX,-300,300)}:{})}));
  return out;
 }
 export function giftStack(state,kind,create=false){

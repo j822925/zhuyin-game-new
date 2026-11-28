@@ -2,7 +2,7 @@ import {nextFurnitureId} from './furniture-instance.js';
 import {freshRest,sanitizeRest} from './adventure-rest-model.js';
 import {attachedPosition,freeSurfacePosition,surfaceAnchor,furnitureSurfaces,surfaceItemWidth,planSurfacePlacement} from './furniture-surfaces.js';
 import {decodeHomeSurfaceState} from './home-surface-storage.js';
-import {spatialFields,spatialFootprint,spatialFloorValid,floorPosition,canonicalMountedPosition,placementBlocksDoor,HOME_FLOOR,HOME_DOOR_SPACE} from './home-spatial-model.js';
+import {turnFields,spatialFields,spatialFootprint,spatialFloorValid,floorPosition,canonicalMountedPosition,placementBlocksDoor,HOME_FLOOR,HOME_DOOR_SPACE} from './home-spatial-model.js';
 import {WALK_OUTFITS} from './data/walk-outfits.js';
 import {wallPosition,wallPlacementValid,wallSide} from './data/home-wall-furniture.js';
 import {freshExpedition,sanitizeExpedition} from './adventure-expedition-model.js';
@@ -112,7 +112,7 @@ export function sanitizeState(raw){
     if(!item||item.on||!Number.isFinite(item.x)||!Number.isFinite(item.y))return null;
     const f=furnitureFor(item.id);if(!f)return null;
     const legacy={allowDoorOverlap:true},aligned=f.wall&&!f.ceiling&&wallSide(item)!==0?wallPosition(item,f,area):canonicalMountedPosition(item,f,area),pos=aligned&&canPlaceFurniture(s,item.id,aligned,area)?aligned:item;
-    return canPlaceFurniture(s,item.id,pos,area,legacy)?{id:item.id,x:pos.x,y:pos.y,...spatialFields(pos)}:null;
+    return canPlaceFurniture(s,item.id,pos,area,legacy)?{id:item.id,x:pos.x,y:pos.y,...spatialFields(f.corner?{facing:pos.facing,mount:pos.mount}:pos),...(f.corner?{}:turnFields(item))}:null;
   };
   if(Array.isArray(raw.layout)){
     s.layout=[];
@@ -287,6 +287,7 @@ export function stoveApproach(state,item){
 }
 export function canUseStove(state,id,area){return area==='kitchen'&&state.furnitureOwned?.includes(id)&&furnitureFor(id)?.cooking&&state.kitchenLayout?.some(f=>f.id===id);}
 export function placementState(state,id,pos,area='room'){
+ if(furnitureFor(id)?.corner && Number.isInteger(pos.turn)){pos={...pos};delete pos.turn;}
  const plan=furnitureSurfacePlan(state,id,pos,area);
  // A failed proposal never partially removes an item or shifts its neighbours.
  if(pos.on&&!plan?.ok)return state;
@@ -302,7 +303,7 @@ export function placementState(state,id,pos,area='room'){
   const row=next[layoutKeyFor(area)],host=row.find(p=>p.id===id),childPlan=planSurfacePlacement(item.id,host,item.surface,row,FURNITURE,undefined,{facing:item.facing,offsetX:item.offsetX});
   if(!childPlan.ok||!canPlaceFurniture(next,item.id,childPlan.position,area))return state;
   for(const change of childPlan.changes){const peer=row.find(p=>p.id===change.id);if(peer)Object.assign(peer,change);}
-  row.push({id:item.id,...childPlan.position});
+  row.push({id:item.id,...childPlan.position,...turnFields(item)});
  }return next;
 }
 export function furnitureSurfacePlan(state,id,pos,area='room'){

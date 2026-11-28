@@ -64,3 +64,7 @@ body.decor-placing .decor-actions{margin-top:auto}
  body.decorating #decor-categories{flex-wrap:nowrap;overflow-x:auto;min-height:44px;touch-action:pan-x;-webkit-overflow-scrolling:touch}
  html body.decorating #decor-panel #decor-categories button{flex:0 0 auto}
 }
+
+body.decorating #decor-position-tools .decor-turns{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;width:100%}
+body.decorating #decor-position-tools .decor-turns strong{padding:0 .25em;text-align:center;font-size:15px}
+body.decorating #decor-position-tools .decor-turns button{min-width:0;min-height:44px;padding:5px 8px}

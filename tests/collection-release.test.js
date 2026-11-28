@@ -32,8 +32,8 @@ test('home, farm, Safari and shortcut entry chains refresh the collection readin
   ['reading-bootstrap.js','reading.js','20261127-defeat1'],['reading.js','farm-learning.bundle.js','20261122-farm6'],
   ['reading.js','reading-farm.bundle.js','20261122-farm6'],['app.js','farm-learning.bundle.js','20261122-farm6'],
   ['tone.js','farm-learning.bundle.js','20261122-farm6'],
-  ['hanzi.html','hanzi.js','20261127-defeat1'],['hanzi-copy.html','hanzi-copy.js','20261127-defeat1'],['arithmetic.html','arithmetic.js','20261127-defeat1'],
-  ['adventure-preview.html','adventure-entry.bundle.js','20261129-classprizes2'],['adventure-entry.js','adventure-play.bundle.js','20261129-classprizes2'],
+  ['hanzi.html','hanzi.js','20261129-words1'],['hanzi-copy.html','hanzi-copy.js','20261127-defeat1'],['arithmetic.html','arithmetic.js','20261127-defeat1'],
+  ['adventure-preview.html','adventure-entry.bundle.js','20261129-hometurn1'],['adventure-entry.js','adventure-play.bundle.js','20261129-classprizes2'],
  ];
  for(const [file,name,expected]of refs){
   assert(source(file).includes(name+'?v='+expected),file+' -> '+name);

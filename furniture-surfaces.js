@@ -27,6 +27,7 @@ export function furnitureSurfaces(f,host){
  });
 }
 export function surfaceForHost(host,surface){
+ if(Number.isInteger(host?.turn))return surface;
  const shelf=surface?.nativeShelf&&nativeBookcaseGeometry(surface.nativeShelf.f,host)?.shelves[surface.nativeShelf.index];
  if(shelf)return {...surface,dx:shelf.x-host.x,dy:shelf.y-host.y,width:shelf.physicalWidth,physicalWidth:shelf.physicalWidth,projectedSpan:shelf.projectedSpan,axis:shelf.axis,nativeCabinetProjection:true,nativeSideSurface:true,depth:0};
  if(!surface?.nativeSide)return surface;
@@ -42,8 +43,8 @@ export function surfaceForHost(host,surface){
  return {...surface,...surface.nativeSide,dx:surface.nativeSide.dx*sign,physicalWidth:surface.physicalWidth||surface.width,projectedSpan:surface.nativeSide.width,depth:0,nativeSideSurface:true};
 }
 export function surfaceItemWidth(f,item,host,surface){const effective=surfaceForHost(host,surface),facing=item?.facing??host.facing;if(effective.nativeCabinetProjection)return f?.fw||20;return (f?.fw||20)*(effective.nativeSideSurface&&['left','right'].includes(facing)?.45:1);}
-export function surfaceAnchor(host,surface){surface=surfaceForHost(host,surface);const mirror=host.mount==='corner-right'?-1:1,sign=host.mount==='left'||(surface.wing&&host.mount==='corner-left')?1:host.mount==='right'||(surface.wing&&host.mount==='corner-right')?-1:0;return {x:host.x+(surface.dx||0)*mirror-sign*(surface.depth||0)/2,y:host.y+surface.dy};}
-function surfaceAxis(host,surface){surface=surfaceForHost(host,surface);if(surface.axis)return {x:surface.axis.x*((surface.nativeCabinetProjection?host.facing==='right':['right','corner-right'].includes(host.mount))?-1:1),y:surface.axis.y};if(surface.wing)return {x:host.mount==='corner-right'?-HOME_FLOOR.sideSlope:HOME_FLOOR.sideSlope,y:-1};if(host.mount==='corner-left')return {x:1,y:0};if(host.mount==='corner-right')return {x:-1,y:0};return surfaceVector(host);}
+export function surfaceAnchor(host,surface){if(Number.isInteger(host.turn)){const a=host.turn*Math.PI/4,x=surface.dx||0,z=surface.wing?14:0;return {x:host.x+x*Math.cos(a)+z*Math.sin(a),y:host.y+surface.dy-.34*x*Math.sin(a)+.34*z*Math.cos(a)};}surface=surfaceForHost(host,surface);const mirror=host.mount==='corner-right'?-1:1,sign=host.mount==='left'||(surface.wing&&host.mount==='corner-left')?1:host.mount==='right'||(surface.wing&&host.mount==='corner-right')?-1:0;return {x:host.x+(surface.dx||0)*mirror-sign*(surface.depth||0)/2,y:host.y+surface.dy};}
+function surfaceAxis(host,surface){if(Number.isInteger(host.turn)){const a=host.turn*Math.PI/4+(surface.wing?Math.PI/2:0);return {x:Math.cos(a),y:-.34*Math.sin(a)};}surface=surfaceForHost(host,surface);if(surface.axis)return {x:surface.axis.x*((surface.nativeCabinetProjection?host.facing==='right':['right','corner-right'].includes(host.mount))?-1:1),y:surface.axis.y};if(surface.wing)return {x:host.mount==='corner-right'?-HOME_FLOOR.sideSlope:HOME_FLOOR.sideSlope,y:-1};if(host.mount==='corner-left')return {x:1,y:0};if(host.mount==='corner-right')return {x:-1,y:0};return surfaceVector(host);}
 export function surfaceOffsetAt(host,surface,point){const v=surfaceAxis(host,surface),a=surfaceAnchor(host,surface);return ((point.x-a.x)*v.x+(point.y-a.y)*v.y)/(v.x*v.x+v.y*v.y);}
 export function surfaceDistance(host,surface,point){surface=surfaceForHost(host,surface);const v=surfaceAxis(host,surface),a=surfaceAnchor(host,surface),offset=Math.max(-surface.width/2,Math.min(surface.width/2,surfaceOffsetAt(host,surface,point)));return Math.hypot(point.x-a.x-offset*v.x,point.y-a.y-offset*v.y);}
 export function attachedPosition(item,layout,catalog){
