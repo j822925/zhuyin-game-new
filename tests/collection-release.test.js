@@ -25,15 +25,15 @@ test('all four shipped bundles carry the complete new crop, fish and food catalo
 test('home, farm, Safari and shortcut entry chains refresh the collection reading bundle',()=>{
  // Each chain advances independently; preserve newer annual, audio and reading releases.
  const refs=[
-  ['index.html','game-boot.js','20261127-defeat1'],['grade2.html','game-boot.js','20261127-defeat1'],
-  ['game-boot.js','app.js','20261127-defeat1'],['game-boot.js','reading-entry.js','20261025-homegallery1'],
+  ['index.html','game-boot.js','20261128-pou3-off1'],['grade2.html','game-boot.js','20261128-pou3-off1'],
+  ['game-boot.js','app.js','20261128-pou3-off1'],['game-boot.js','reading-entry.js','20261025-homegallery1'],
   ['reading-entry.js','reading-launch.js','20261025-homegallery1'],['reading-shortcut.html','reading-launch.js','20261025-homegallery1'],
   ['reading.html','reading-bootstrap.js','20261127-defeat1'],['reading-bootstrap.js','reading-launch.js','20261025-homegallery1'],
   ['reading-bootstrap.js','reading.js','20261127-defeat1'],['reading.js','farm-learning.bundle.js','20261122-farm6'],
   ['reading.js','reading-farm.bundle.js','20261122-farm6'],['app.js','farm-learning.bundle.js','20261122-farm6'],
   ['tone.js','farm-learning.bundle.js','20261122-farm6'],
   ['hanzi.html','hanzi.js','20261127-defeat1'],['hanzi-copy.html','hanzi-copy.js','20261127-defeat1'],['arithmetic.html','arithmetic.js','20261127-defeat1'],
-  ['adventure-preview.html','adventure-entry.bundle.js','20261128-grove2'],['adventure-entry.js','adventure-play.bundle.js','20261128-grove2'],
+  ['adventure-preview.html','adventure-entry.bundle.js','20261128-clearings1'],['adventure-entry.js','adventure-play.bundle.js','20261128-grove2'],
  ];
  for(const [file,name,expected]of refs){
   assert(source(file).includes(name+'?v='+expected),file+' -> '+name);

@@ -1,6 +1,7 @@
+import {findPath,clearSegment} from '../adventure-model.js';
 import {laneContains,laneRoute} from '../adventure-district-paths.js';
 import {battleStageLayout} from '../adventure-battle-layout.js';
-import {ISLAND_ROUTES,DESTINATIONS,islandWalkable} from '../adventure-exploration-model.js';
+import {ISLAND_WORLD,ISLAND_ROUTES,DESTINATIONS,islandWalkable} from '../adventure-exploration-model.js';
 import {islandMapPoint} from '../data/island-map-space.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -53,6 +54,25 @@ test('sandcastle lanes and dry beach stay open while painted obstacles stay soli
  for(const [x,y] of [[696,625],[941,707],[980,711],[737,416],[536,554],[567,564],[582,569]])assert(feet(x,y),[x,y].join(','));
  // Sand towers, trees, flowers, lighthouse and shop roofs, and the house beyond the bridge.
  for(const [x,y] of [[719,620],[828,625],[917,580],[974,635],[843,699],[647,527],[640,727],[677,383],[927,430],[853,310],[1070,114],[1490,54],[974,743]])assert(!feet(x,y),[x,y].join(','));
+});
+test('the open beach, its narrow southern tip and island meadows connect to the main walking area',()=>{
+ const start=islandMapPoint(932,713);
+ for(const [x,y] of [[1009,708],[897,763],[890,702],[883,127],[1042,576],[751,805]]){
+  const target=islandMapPoint(x,y);
+  const path=findPath(start,target,islandWalkable,ISLAND_WORLD);
+  assert(path?.length,'unreachable ground at '+[x,y]);
+  assert.deepEqual(path.at(-1),target);
+  let from=start;
+  for(const to of path){assert(clearSegment(from,to,islandWalkable));from=to;}
+ }
+ // Cross the beach around the rock, inland of the breaking waves.
+ const west=islandMapPoint(968,704),east=islandMapPoint(982,704);
+ assert(!clearSegment(west,east,islandWalkable));
+ assert(findPath(west,east,islandWalkable,ISLAND_WORLD)?.length>1);
+ for(const [x,y] of [[884,723],[908,736],[890,747],[975,704],[1005,717],[975,740],[913,757],[887,84],[607,200],[851,150],[900,578],[1028,550]]){
+  const p=islandMapPoint(x,y);
+  assert(!islandWalkable(p.x,p.y),'walkable obstacle at '+[x,y]);
+ }
 });
 test('ground navigation reaches every resident and shop',()=>{
  const point=([x,y])=>({x,y});
