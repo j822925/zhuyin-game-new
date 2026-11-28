@@ -170,3 +170,5 @@ body .painted-gate[data-near=true] small,body .painted-gate:focus-visible small,
 
 #expedition[data-view=battle][data-region-battle] .exp-field{bottom:auto;height:var(--battle-ground-height,60%);background-position:center 78%}
 #expedition[data-view=battle][data-region-battle]{background:#e8e2d2 var(--zone-scene) center/cover}
+
+@media(min-width:700px){#expedition[data-zone=whale][data-view=field] .exp-header{justify-content:space-between}}
