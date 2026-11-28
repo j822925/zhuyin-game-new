@@ -1,9 +1,54 @@
 import {PAINTED_ISLAND} from './adventure-island-pilot.js';
 import {STUDY_BEASTS,beastPosition,drawStudyBeast} from './adventure-island-actors.js';
-import {GROVE_WORLD,ISLAND_WORLD,DESTINATIONS} from './adventure-exploration-model.js';
+import {ENEMIES,GROVE_WORLD,ISLAND_WORLD,DESTINATIONS} from './adventure-exploration-model.js';
 const pending=new WeakMap();
-export async function ensureExplorationArt(art,area){let jobs=pending.get(art);if(!jobs){jobs=new Map();pending.set(art,jobs);}art.exploration??={};const keys=area==='grove'?['grove','acorn','cloud']:PAINTED_ISLAND?['island']:['island','seeds'];await Promise.all(keys.map(key=>{if(art.exploration[key])return;if(jobs.has(key))return jobs.get(key);const task=(async()=>{const image=new Image();image.src=key==='island'?(PAINTED_ISLAND?'assets/exploration/island-xiyu-open-v5.webp':'assets/exploration/island-xiyu-v2.webp'):`assets/exploration/${key}-v1.webp`;await image.decode();art.exploration[key]=image;})();jobs.set(key,task);task.catch(()=>jobs.delete(key));return task;}));}
-export function drawExploration(c,art,state,scene,now,battle,drawMushroom,star){
+export async function ensureExplorationArt(art,area){
+ let jobs=pending.get(art);
+ if(!jobs){jobs=new Map();pending.set(art,jobs);}
+ art.exploration??={};
+ const files=area==='grove'
+   ? [['grove','assets/exploration/grove-v1.webp'],...ENEMIES.map(m=>[m.id,'assets/grove-creatures-v1/'+m.id+'.webp'+(m.art==='cloud'?'?v=hover1':'')])]
+   : [['island',PAINTED_ISLAND?'assets/exploration/island-xiyu-open-v5.webp':'assets/exploration/island-xiyu-v2.webp']];
+ if(area!=='grove'&&!PAINTED_ISLAND)files.push(['seeds','assets/exploration/seeds-v1.webp']);
+ await Promise.all(files.map(([key,url])=>{
+   if(art.exploration[key])return;
+   if(!jobs.has(key)){
+     const image=new Image();image.src=url;
+     const ready=image.decode().then(()=>{art.exploration[key]=image;}).finally(()=>jobs.delete(key));
+     jobs.set(key,ready);
+   }
+   return jobs.get(key);
+ }));
+}
+
+function drawGroveCreature(c,image,m,height,hit,reduced,clock){
+ const sw=image.naturalWidth/9,sh=image.naturalHeight/4;
+ const floats=m.art==='cloud';
+ const cycle=clock/(m.level===2?3.2:2.8)+(m.slot||0)*.21;
+ let frame=8,lift=0;
+ if(!reduced){
+  if(floats){
+   frame=Math.floor(cycle*8)%8;
+   lift=4*Math.sin(2*Math.PI*cycle);
+  }else if(m.moving)frame=Math.floor((m.walkDistance||0)/4)%8;
+ }
+ const row=(m.away?2:0)+(m.direction===3?1:0);
+ const scale=height/150;
+ c.save();
+ c.translate(m.x,m.y);
+ c.scale(scale,scale);
+ c.save();
+ c.scale(1,.23);
+ const shade=c.createRadialGradient(0,0,2,0,0,38);
+ shade.addColorStop(0,'rgba(45,36,28,.37)');
+ shade.addColorStop(.58,'rgba(51,43,31,.19)');
+ shade.addColorStop(1,'rgba(51,43,31,0)');
+ c.fillStyle=shade;c.fillRect(-38,-38,76,76);c.restore();
+ // The sprite and ground shadow share an anchor. Only the cloud body rises.
+ c.drawImage(image,frame*sw,row*sh,sw,sh,-sw/2+hit/scale,13-sh-lift,sw,sh);
+ c.restore();
+}
+export function drawExploration(c,art,state,scene,now,battle,star){
  const grove=scene.area==='grove',size=grove?GROVE_WORLD:ISLAND_WORLD,p=scene.player,clock=scene.reduced.matches?0:now/1000;
  c.drawImage(art.exploration[grove?'grove':'island'],0,0,size.width,size.height);
  if(!grove&&!PAINTED_ISLAND){const im=art.exploration.seeds,shop=DESTINATIONS.find(d=>d.id==='seeds'),h=246;c.drawImage(im,shop.x-im.width/im.height*h/2,shop.y-h,im.width/im.height*h,h);}
@@ -17,11 +62,7 @@ export function drawExploration(c,art,state,scene,now,battle,drawMushroom,star){
  }
  if(grove)for(const m of scene.encounters||[]){if(!m.visible)continue;things.push({y:m.y,draw:()=>{
   const hit=m===scene.monster&&casting>.42&&casting<.83?Math.sin(casting*56)*4:0,h=m.level===2?120:100;
-  if(m.art==='mushroom'){c.save();c.translate(m.x,m.y);c.scale(h/100,h/100);drawMushroom(c,art,{...m,x:0,y:0},scene.reduced.matches?0:m.phase,hit);c.restore();}
-  else{const im=art.exploration[m.art],w=im.width/im.height*h;c.fillStyle='#163a3433';c.beginPath();c.ellipse(m.x,m.y+1,26,6,0,0,Math.PI*2);c.fill();c.save();c.translate(m.x+hit,m.y);const gait=Math.sin(clock*(m.art==='cloud'?2.1:6.2)),hover=m.art==='cloud'?10+gait*5:0;
-   c.translate(0,-hover);c.scale(m.direction===3?-1:1,1);
-   c.rotate(m.moving?gait*(m.art==='cloud'?.025:.055):0);
-   c.scale(1+gait*.015,1-gait*.015);c.drawImage(im,-w/2,-h,w,h);c.restore();}
+  drawGroveCreature(c,art.exploration[m.id],m,h,hit,scene.reduced.matches,clock);
   if(m.level===2){c.fillStyle='#e9bf68';for(let i=0;i<2;i++)star(c,m.x-7+i*14,m.y-h-9,5,'#f2d47c');}
   if(battle&&m===scene.monster){c.fillStyle='#fff9ed';c.fillRect(m.x-35,m.y-h-23,70,7);c.fillStyle='#85a56f';c.fillRect(m.x-33,m.y-h-21,66*m.hp/m.maxHp,3);}
  }});}

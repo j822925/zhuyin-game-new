@@ -218,7 +218,7 @@ export class ForestScene{
     c.setTransform(this.dpr,0,0,this.dpr,0,0);c.fillStyle=isInterior(this.area)?'#d9dfcb':this.area==='island'?'#46b6c8':'#abc48d';c.fillRect(0,0,this.width,this.height);c.scale(scale,scale);c.translate(-this.camera.x,-this.camera.y);
     if(isInterior(this.area)){this.renderRoom(c,now,state);return;}
     if(this.area==='farm'){drawFarm(c,this.art,state,this,now);return;}
-    if(this.area==='grove'||this.area==='island'){drawExploration(c,this.art,state,this,now,battle,drawMonster,star);return;}
+    if(this.area==='grove'||this.area==='island'){drawExploration(c,this.art,state,this,now,battle,star);return;}
     c.drawImage(this.ground,0,0,WORLD.width,WORLD.height);
     if(this.area==='forest')drawVillageLife(c,this.art,state,now,this);
     const clock=this.reduced.matches?0:now/1000;

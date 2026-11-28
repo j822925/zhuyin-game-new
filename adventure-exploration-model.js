@@ -44,6 +44,24 @@ export function islandWalkable(x,y){
  return ISLAND_ROUTES.some(line=>line.some((b,i)=>i>0&&segmentDistance(point,line[i-1],b)<radius));
 }
 export function newEncounter(slot,rng=Math.random,previous=null){const choices=ENEMIES.filter(e=>e.id!==previous),spec=choices[Math.min(choices.length-1,Math.floor(rng()*choices.length))];const home=GROVE_PATH[[3,6,10][slot]],x=home.x+(rng()-.5)*45,y=home.y+(rng()-.5)*45;return {slot,id:spec.id,...spec,x,y,home:{x,y},maxHp:spec.hp,visible:true,direction:0,phase:0,moving:false,wait:1+rng()*2,respawn:0};}
-export function advanceEncounters(list,dt,paused=false,rng=Math.random){if(paused)return;for(let i=0;i<list.length;i++){const m=list[i];if(!m.visible){m.respawn-=dt;if(m.respawn<=0)list[i]=newEncounter(m.slot,rng,m.id);continue;}m.wait-=dt;m.moving=false;if(m.wait>0)continue;const a=m.phase*.19+i*2;const x=m.home.x+Math.sin(a)*38,y=m.home.y+Math.cos(a*.8)*24;if(deepGroveWalkable(x,y)){m.direction=x<m.x?3:1;m.x=x;m.y=y;m.moving=true;}m.phase+=dt*2.5;}}
+export function advanceEncounters(list,dt,paused=false,rng=Math.random){
+ for(let i=0;i<list.length;i++){
+  const m=list[i];
+  m.moving=false;
+  if(paused)continue;
+  if(!m.visible){m.respawn-=dt;if(m.respawn<=0)list[i]=newEncounter(m.slot,rng,m.id);continue;}
+  m.wait-=dt;if(m.wait>0)continue;
+  const a=m.phase*.19+i*2;
+  m.phase+=dt*2.5;
+  const dx=m.home.x+Math.sin(a)*38-m.x,dy=m.home.y+Math.cos(a*.8)*24-m.y;
+  const distance=Math.hypot(dx,dy);
+  if(distance<.001)continue;
+  const step=Math.min(distance,dt*24),x=m.x+dx*step/distance,y=m.y+dy*step/distance;
+  if(!deepGroveWalkable(x,y))continue;
+  if(Math.abs(dx)>distance*.15)m.direction=dx<0?3:1;
+  if(Math.abs(dy)>distance*.24)m.away=dy<0;
+  m.x=x;m.y=y;m.walkDistance=(m.walkDistance||0)+step;m.moving=true;
+ }
+}
 export function dismissEncounter(m,won,rng=Math.random){if(won){m.visible=false;m.respawn=12+rng()*10;}else{m.hp=m.maxHp;m.wait=2;}}
 export function settleEncounter(state,roundId,enemyId){const spec=ENEMIES.find(e=>e.id===enemyId);if(!spec||typeof roundId!=='string'||!roundId||state.settled.includes(roundId))return false;state.stars=state.stars+spec.reward;state.wins=Math.min(9999,state.wins+1);state.settled.push(roundId);state.settled=state.settled.slice(-50);return true;}
