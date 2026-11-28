@@ -4,6 +4,7 @@ import {ISLAND_ROUTES,DESTINATIONS,islandWalkable} from '../adventure-exploratio
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync} from 'node:fs';
+import {AREA_EXITS,createExitProximity} from '../adventure-exits.js';
 import {ZONES} from '../data/adventure-zones.js';
 import {neighborhoods,neighborhoodArt,regionalBattleArt} from '../data/island-neighborhoods.js';
 import {districtLayout} from '../data/neighborhood-landmarks.js';
@@ -35,10 +36,11 @@ test('every shop, guardian clearing and residential gate has a reachable approac
 });
 
 
-test('signed thresholds are walkable, building faces are solid and trails bypass the arches',()=>{
+test('open passages are reachable, shops stay solid and all painted routes connect',()=>{
  for(const d of DESTINATIONS){
   assert(islandWalkable(d.entry.x,d.entry.y),d.id);
-  if(d.id!=='harbor')assert(!islandWalkable(d.x,d.y),d.id);
+  if(d.threshold)assert(islandWalkable(d.threshold.x,d.threshold.y),d.id);
+  else if(d.id!=='harbor')assert(!islandWalkable(d.x,d.y),d.id);
  }
  for(const line of ISLAND_ROUTES)for(let i=1;i<line.length;i++){
   const a=line[i-1],b=line[i],steps=Math.ceil(Math.hypot(b.x-a.x,b.y-a.y)/6);
@@ -60,5 +62,17 @@ test('regional sparring keeps the far enemy and near hero above the answer panel
   const {foe,player}=battleStageLayout(w,h,h*.54,h*.12);
   assert(foe.x+foe.width<player.x-player.width/2);
   assert(foe.y>=h*.12&&foe.y+foe.height<player.y&&player.y<h*.54);
+ }
+});
+
+test('walking into a district opens it once, with a separate landing on return',()=>{
+ for(const d of DESTINATIONS){
+  const exit=AREA_EXITS.island.find(e=>e.id===d.id);
+  if(!d.zone){assert.equal(exit.interaction,'offer');continue;}
+  const tracker=createExitProximity();
+  tracker.reset('island',d.entry);
+  assert.equal(tracker.poll('island',d.entry),null,d.id);
+  assert.equal(tracker.poll('island',d.threshold)?.id,d.id);
+  assert.equal(tracker.poll('island',d.threshold),null,d.id);
  }
 });

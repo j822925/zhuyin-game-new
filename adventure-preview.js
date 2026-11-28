@@ -148,7 +148,7 @@ function enterExit(id){
  if(exitsBlocked())return;
  const e=AREA_EXITS[scene.area]?.find(e=>e.id===id);if(!e)return;
  stopMoving();
- if(e.target==='destination'){scene.player.x=e.x;scene.player.y=e.y;exitProximity.reset(scene.area,scene.player);exploration.openDestination(id);return;}
+ if(e.target==='destination'){const landing=DESTINATIONS.find(d=>d.id===id)?.entry||e;scene.player.x=landing.x;scene.player.y=landing.y;exitProximity.reset(scene.area,scene.player);exploration.openDestination(id);return;}
  if(e.target==='pond'||e.target==='farm'){life.visit(e.target);return;}
  if(e.target==='grove'&&!state.groveUnlocked){openTrail();return;}
  switchArea(e.target);

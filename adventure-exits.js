@@ -11,7 +11,9 @@ export const AREA_EXITS={
  bathroom:[exit('bedroom',ROOM_KITCHEN_APPROACH,'bedroom')],
  farm:[exit('village',{x:625,y:730},'forest')],
  grove:[exit('village',GROVE_ENTRY,'forest',85),exit('island',GROVE_EXIT,'island',85)],
- island:DESTINATIONS.map(d=>({...exit(d.id,d.entry,d.kind==='route'?'grove':'destination',64),interaction:'offer'})),
+ island:DESTINATIONS.map(d=>d.threshold
+  ? exit(d.id,d.threshold,'destination',d.zone==='bridge'?19:32)
+  : {...exit(d.id,d.entry,d.kind==='route'?'grove':'destination',64),interaction:'offer'}),
 };
 // Latch until the player leaves the doorway: no bounce on arrival, reopen on
 // closing a shop, or repeated locked-entry prompt while standing still.
