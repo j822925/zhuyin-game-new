@@ -39,7 +39,8 @@ export const GROVE_ROUTES=[GROVE_PATH,...[
 export function deepGroveWalkable(x,y){if(!Number.isFinite(x)||!Number.isFinite(y)||x<30||y<40||x>2530||y>1730)return false;return GROVE_ROUTES.some(path=>path.slice(1).some((b,i)=>segmentDistance({x,y},path[i],b)<100));}
 export function islandWalkable(x,y){
  if(!Number.isFinite(x)||!Number.isFinite(y)||x<20||y<20||x>=ISLAND_WORLD.width-20||y>=ISLAND_WORLD.height-20)return false;
- const point={x,y},radius=PAINTED_ISLAND?60:108;
+ if(PAINTED_ISLAND&&painted.blockedByLandmark(x,y))return false;
+ const point={x,y},radius=PAINTED_ISLAND?43:108;
  return ISLAND_ROUTES.some(line=>line.some((b,i)=>i>0&&segmentDistance(point,line[i-1],b)<radius));
 }
 export function newEncounter(slot,rng=Math.random,previous=null){const choices=ENEMIES.filter(e=>e.id!==previous),spec=choices[Math.min(choices.length-1,Math.floor(rng()*choices.length))];const home=GROVE_PATH[[3,6,10][slot]],x=home.x+(rng()-.5)*45,y=home.y+(rng()-.5)*45;return {slot,id:spec.id,...spec,x,y,home:{x,y},maxHp:spec.hp,visible:true,direction:0,phase:0,moving:false,wait:1+rng()*2,respawn:0};}

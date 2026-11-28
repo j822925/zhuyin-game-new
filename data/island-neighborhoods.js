@@ -12,5 +12,7 @@ const districts={
  deep:['紫潮晶巷','53','歐泊月姬','正在排列月石','🔮','桌上有七顆月石，我把三顆送去飾品店，還有四顆可以拼成小月亮。','把最亮的那一顆放在尖尖的地方，你看，像不像？']
 };
 export const neighborhoods=Object.fromEntries(Object.entries(districts).map(([id,[name,sprite,resident,work,icon,...lines]])=>[id,{name,sprite,resident,work,icon,lines}]));
-export const neighborhoodArt=(id,village=false)=>'assets/neighborhoods/'+id+(village?'-village':'-field')+'.webp';
+export const neighborhoodArt=(id,village=false)=>'assets/regions-v2/'+id+(village?'-village':'-field')+'.webp';
 
+
+export const regionalBattleArt=id=>'assets/regions-v2/'+id+'-battle.webp';

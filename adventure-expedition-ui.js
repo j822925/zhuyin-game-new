@@ -1,6 +1,7 @@
+import {laneContains,laneRoute} from './adventure-district-paths.js';
 import {PAINTED_ISLAND} from './adventure-island-pilot.js';
 import {showNeighborhood,doorway} from './adventure-neighborhood.js';
-import {neighborhoodArt,neighborhoods} from './data/island-neighborhoods.js';
+import {neighborhoodArt,neighborhoods,regionalBattleArt} from './data/island-neighborhoods.js';
 import {createGuardianCards} from './adventure-guardian-cards.js';
 import {preloadGuardianArt} from './adventure-expedition-media.js';
 import {forestMusic} from './adventure-music.js';
@@ -27,14 +28,15 @@ export function createExpedition(api){
  let z=null,view='field',message='',generation=0,loading=false,questionFailed=false,audio=null,raf=0,position={x:50,y:77},target=null,last=0;
  let motion=null,resolving=false,opening=false,saveFailed=false;
  let local=false,localWon=null,actors=[],keys=new Set(),joystick=null,shopArrivalHeld=false,exitArrivalHeld=true;
+ let steps=[];
  const roaming=()=>view==='field'||view==='community';
  const isVillage=()=>view==='community';
- function stopWalk(){keys.clear();joystick=null;target=null;stopAudio();}
+ function stopWalk(){steps=[];keys.clear();joystick=null;target=null;stopAudio();}
  function changeDistrict(village){
-  stopWalk();const layout=fieldLayout(z.id),[x,y]=village?layout.return:layout.gate;
-  position={x,y:y+(village?-7:7)};view=village?'community':'field';render();dialog.focus({preventScroll:true});
+  stopWalk();const layout=fieldLayout(z.id),[x,y]=village?layout.villageSpawn:layout.gateApproach;
+  position={x,y};view=village?'community':'field';render();dialog.focus({preventScroll:true});
  }
- function villagePoint(p){return {x:Math.max(7,Math.min(93,p.x)),y:Math.max(40,Math.min(95,p.y))};}
+ function canRoam(p){return isVillage()?laneContains(fieldLayout(z.id),p,true):fieldWalkable(z.id,p);}
  const state=()=>api.state(),exp=()=>state().expedition,run=()=>exp().runs[z?.id];
  const cards=createGuardianCards({state});
  function openCards(){if(resolving||(!dialog.open&&api.blocked()))return;keys.clear();joystick=null;target=null;api.stop();stopAudio();cards.open();}
@@ -57,7 +59,14 @@ export function createExpedition(api){
   dialog.style.setProperty('--guardian-intro-height',height+'px');
   dialog.style.setProperty('--guardian-intro-foot',(top+(room+height)/2-world.getBoundingClientRect().top)+'px');
  }
- const layoutObserver=new ResizeObserver(()=>{fitBattle();fitIntro();});layoutObserver.observe(dialog);
+ function fitRoaming(){
+  if(!dialog.open||!roaming()||!PAINTED_ISLAND)return;
+  const header=dialog.querySelector('.exp-header'),panel=dialog.querySelector('.exp-panel');
+  if(!header||!panel)return;
+  dialog.style.setProperty('--region-header',Math.ceil(header.getBoundingClientRect().bottom-dialog.getBoundingClientRect().top)+'px');
+  dialog.style.setProperty('--region-footer',Math.max(60,isVillage()?0:Math.ceil(panel.getBoundingClientRect().height+18))+'px');
+ }
+ const layoutObserver=new ResizeObserver(()=>{fitBattle();fitIntro();fitRoaming();});layoutObserver.observe(dialog);
  let releaseQuestionMusic=null,releaseSpeechMusic=null;
  function stopAudio(){audio?.pause();audio=null;releaseQuestionMusic?.();releaseQuestionMusic=null;releaseSpeechMusic?.();releaseSpeechMusic=null;if(globalThis.speechSynthesis?.speaking)speechSynthesis.cancel();}
  function close(){cards.close();forestMusic.setArea(api.scene()?.area||null);forestMusic.setBattle(false);motion?.dispose();motion=null;resolving=false;generation++;loading=false;keys.clear();joystick=null;stopAudio();cancelAnimationFrame(raf);dialog.close();if(local&&api.scene())api.scene().castAt=0;api.stop();}
@@ -70,9 +79,16 @@ export function createExpedition(api){
   if(document.hidden||cards.busy){last=now;raf=requestAnimationFrame(drawPlayer);return;}
   if(local&&api.scene().castAt&&now-api.scene().castAt>1050)api.scene().castAt=0;
   const cv=dialog.querySelector('.exp-player'),world=dialog.querySelector('.exp-world');
-  if(world){const width=Math.max(dialog.clientWidth,dialog.clientHeight*1.5),height=width/1.5;world.style.width=width+'px';world.style.height=height+'px';world.style.left=(roaming()?Math.min(0,Math.max(dialog.clientWidth-width,dialog.clientWidth/2-position.x/100*width)):(dialog.clientWidth-width)/2)+'px';world.style.top=(roaming()?Math.min(0,Math.max(dialog.clientHeight-height,dialog.clientHeight*.62-position.y/100*height)):(dialog.clientHeight-height)/2)+'px';}
+  if(world){
+   const field=world.parentElement;
+   const fw=field.clientWidth,fh=field.clientHeight,overview=PAINTED_ISLAND&&roaming()&&fw>=fh;
+   const width=overview?Math.min(fw,fh*1.5):Math.max(fw,fh*1.5),height=width/1.5;
+   const camera=(frame,size,foot,center)=>!roaming()||size<=frame?(frame-size)/2:Math.min(0,Math.max(frame-size,frame*center-foot/100*size));
+   world.style.width=width+'px';world.style.height=height+'px';
+   world.style.left=camera(fw,width,position.x,.5)+'px';world.style.top=camera(fh,height,position.y,.62)+'px';
+  }
   if(cv&&!local&&!(view==='battle'&&motion)){let moving=false,dx=0,dy=0;
-   if(roaming()&&(!isVillage()||dialog.querySelector('.exp-panel').hidden)){dx=(keys.has('ArrowRight')||keys.has('d')?1:0)-(keys.has('ArrowLeft')||keys.has('a')?1:0);dy=(keys.has('ArrowDown')||keys.has('s')?1:0)-(keys.has('ArrowUp')||keys.has('w')?1:0);if(joystick){dx=joystick.x;dy=joystick.y;}if(dx||dy){target=null;const len=Math.hypot(dx,dy),p={x:position.x+dx/len*dt*16,y:position.y+dy/len*dt*22};if(isVillage()||fieldWalkable(z.id,p)){position=isVillage()?villagePoint(p):p;moving=true;}}else if(target){dx=target.x-position.x;dy=target.y-position.y;const d=Math.hypot(dx,dy);if(d>.3){const step=Math.min(d,dt*18),p={x:position.x+dx/d*step,y:position.y+dy/d*step};if(isVillage()||fieldWalkable(z.id,p)){position=isVillage()?villagePoint(p):p;moving=true;}else target=null;}else target=null;}
+   if(roaming()&&(!isVillage()||dialog.querySelector('.exp-panel').hidden)){dx=(keys.has('ArrowRight')||keys.has('d')?1:0)-(keys.has('ArrowLeft')||keys.has('a')?1:0);dy=(keys.has('ArrowDown')||keys.has('s')?1:0)-(keys.has('ArrowUp')||keys.has('w')?1:0);if(joystick){dx=joystick.x;dy=joystick.y;}if(dx||dy){steps=[];target=null;const len=Math.hypot(dx,dy),p={x:position.x+dx/len*dt*16,y:position.y+dy/len*dt*22};if(canRoam(p)){position=p;moving=true;}}else if(target){dx=target.x-position.x;dy=target.y-position.y;const d=Math.hypot(dx,dy);if(d>.3){const step=Math.min(d,dt*18),p={x:position.x+dx/d*step,y:position.y+dy/d*step};if(canRoam(p)){position=p;moving=true;}else {target=null;steps=[];}}else target=steps.shift()||null;}
     if(isVillage()){
      const [x,y]=fieldLayout(z.id).return;
      if(moving&&Math.hypot(position.x-x,position.y-y)<3.5){changeDistrict(false);return;}
@@ -101,13 +117,14 @@ export function createExpedition(api){
   forestMusic.setBattle(!!run()?.battle);
   motion?.dispose();motion=null;dialog.dataset.resolving=String(resolving);stopAudio();dialog.setAttribute('aria-label',local?'原地挑戰':'區域遠征');dialog.classList.toggle('exp-local',local);dialog.dataset.view=view;dialog.innerHTML='<header class="exp-header"><div></div><nav></nav></header><main class="exp-field"><div class="exp-world"><canvas class="exp-player" width="180" height="200" aria-label="我的角色"></canvas><div class="exp-monsters"></div></div></main><section class="exp-panel" aria-live="polite"></section>';
   layoutObserver.disconnect();layoutObserver.observe(dialog);layoutObserver.observe(dialog.querySelector('.exp-panel'));layoutObserver.observe(dialog.querySelector('.exp-header'));
-  dialog.toggleAttribute('data-mirrored-field',PAINTED_ISLAND&&!local&&view!=='community'&&fieldLayout(z.id).mirror);
-  if(!local)dialog.style.setProperty('--zone-scene',`url("${PAINTED_ISLAND?neighborhoodArt(z.id,isVillage()):z.id==='bud'?api.art().terrain.village.src:'assets/expedition/'+z.scene+'.webp'}")`);
+  const regionalFight=PAINTED_ISLAND&&!local&&(view==='battle'||!!run()?.battle)&&view!=='food';
+  dialog.toggleAttribute('data-region-battle',regionalFight);
+  if(!local)dialog.style.setProperty('--zone-scene',`url("${regionalFight?regionalBattleArt(z.id):PAINTED_ISLAND?neighborhoodArt(z.id,isVillage()):z.id==='bud'?api.art().terrain.village.src:'assets/expedition/'+z.scene+'.webp'}")`);
   const e=exp(),p=playerStats(e.level),head=dialog.querySelector('header div');head.innerHTML=`<strong>${z.icon} ${z.name}</strong><span>Lv.${e.level}　♥ ${e.hp}/${p.hp}　⚔ ${p.attack}　🛡 ${p.defense}</span><small>✦ ${state().stars}　🥄 ${state().life.nutrition.energy}/100　EXP ${e.xp}/${nextXP(e.level)||'MAX'}</small>`;
   const nav=dialog.querySelector('nav');nav.append(button('🎒',()=>{view='food';render();}),button('🃏',openCards),button('💾 ↩',()=>depart(true)));nav.children[0].ariaLabel='遠征食物';nav.children[1].ariaLabel='守護者好友卡';nav.children[2].ariaLabel=local?'儲存並離開挑戰':'存檔休息，下次繼續這次遠征';
   const musicButton=button(forestMusic.state().enabled?'♫ 音樂':'♫ 靜音',()=>{document.getElementById('forest-music-toggle')?.click();musicButton.textContent=forestMusic.state().enabled?'♫ 音樂':'♫ 靜音';});musicButton.ariaLabel='背景音樂開關';nav.append(musicButton);
-  const field=dialog.querySelector('.exp-field');field.onclick=event=>{if(event.target.closest('button')||!roaming()||local||isVillage()&&!dialog.querySelector('.exp-panel').hidden)return;const b=field.querySelector('.exp-world').getBoundingClientRect();const point={x:(event.clientX-b.left)/b.width*100,y:(event.clientY-b.top)/b.height*100};target=isVillage()?villagePoint(point):fieldPoint(z.id,point);dialog.focus({preventScroll:true});};
-  if(!local&&roaming()){const stick=button('✿',()=>{},'exp-stick');stick.ariaLabel='區域移動搖桿';field.append(stick);const move=e=>{const r=stick.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;joystick=Math.hypot(x,y)>6?{x,y}:null;};stick.onpointerdown=e=>{e.preventDefault();stick.setPointerCapture(e.pointerId);move(e);};stick.onpointermove=e=>{if(stick.hasPointerCapture(e.pointerId))move(e);};for(const name of ['pointerup','pointercancel','lostpointercapture'])stick.addEventListener(name,()=>joystick=null);}
+  const field=dialog.querySelector('.exp-field');field.onclick=event=>{if(event.target.closest('button')||!roaming()||local||isVillage()&&!dialog.querySelector('.exp-panel').hidden)return;const b=field.querySelector('.exp-world').getBoundingClientRect();const point={x:(event.clientX-b.left)/b.width*100,y:(event.clientY-b.top)/b.height*100};if(PAINTED_ISLAND){steps=laneRoute(fieldLayout(z.id),position,point,isVillage());target=steps.shift()||null;}else target=fieldPoint(z.id,point);dialog.focus({preventScroll:true});};
+  if(!local&&roaming()){const stick=button('✿',()=>{},'exp-stick');stick.ariaLabel='區域移動搖桿';(PAINTED_ISLAND?dialog:field).append(stick);const move=e=>{const r=stick.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;joystick=Math.hypot(x,y)>6?{x,y}:null;};stick.onpointerdown=e=>{e.preventDefault();stick.setPointerCapture(e.pointerId);move(e);};stick.onpointermove=e=>{if(stick.hasPointerCapture(e.pointerId))move(e);};for(const name of ['pointerup','pointercancel','lostpointercapture'])stick.addEventListener(name,()=>joystick=null);}
   cancelAnimationFrame(raf);raf=requestAnimationFrame(drawPlayer);
  }
  function portrait(src,name,cls=''){const img=document.createElement('img');img.src=src;img.alt=name;img.className=cls;img.onerror=()=>{message='圖片暫時載入失敗，可離開後再進入。';};return img;}
@@ -167,7 +184,7 @@ export function createExpedition(api){
    return;
   }
   if(view==='food'){showFood(panel,b);return;}
-  if(b){view='battle';dialog.dataset.view='battle';const enemy=currentEnemy(state()),area=dialog.querySelector('.exp-field');if(!local){const hero=dialog.querySelector('.exp-player'),foe=portrait(enemy.art,enemy.name,'exp-foe');area.append(foe,hero);api.scene().drawPlayer(hero.getContext('2d'),api.art(),{x:90,y:192,height:166,outfit:state().outfit,wand:state().wand,direction:1,walking:false,phase:0});motion=mountSparring({hero,foe,characterId:state().companions.active,zone:z,beast:b.transformed,boss:enemy.boss});requestAnimationFrame(fitBattle);}panel.innerHTML=`${local?'<small>Lv.'+e.level+'　♥ '+e.hp+'/'+playerStats(e.level).hp+'　EXP '+e.xp+'/'+nextXP(e.level)+'</small>':''}<strong>${enemy.boss?'👑 ':''}${enemy.name} · Lv.${enemy.level}</strong><label>♥ ${b.hp}/${enemy.hp}<progress max="${enemy.hp}" value="${b.hp}"></progress></label><p>${message}</p>`;supplyHint(panel);
+  if(b){view='battle';dialog.dataset.view='battle';const enemy=currentEnemy(state()),area=dialog.querySelector('.exp-field');if(!local){const hero=dialog.querySelector('.exp-player'),foe=portrait(enemy.art,enemy.name,'exp-foe');area.append(foe,hero);api.scene().drawPlayer(hero.getContext('2d'),api.art(),{x:90,y:192,height:166,outfit:state().outfit,wand:state().wand,direction:PAINTED_ISLAND?3:1,walking:false,phase:0});motion=mountSparring({hero,foe,characterId:state().companions.active,zone:z,beast:b.transformed,boss:enemy.boss});requestAnimationFrame(fitBattle);}panel.innerHTML=`${local?'<small>Lv.'+e.level+'　♥ '+e.hp+'/'+playerStats(e.level).hp+'　EXP '+e.xp+'/'+nextXP(e.level)+'</small>':''}<strong>${enemy.boss?'👑 ':''}${enemy.name} · Lv.${enemy.level}</strong><label>♥ ${b.hp}/${enemy.hp}<progress max="${enemy.hp}" value="${b.hp}"></progress></label><p>${message}</p>`;supplyHint(panel);
    if(b.phase==='transform'){area.classList.add('exp-transform');panel.append(button('🔊',()=>speak(z.transform)),Object.assign(document.createElement('p'),{className:'guardian-speech',textContent:z.transform}),button('🛡 準備好了',()=>{if(transaction(()=>acknowledgeTransform(state())))message='獸形：攻擊提升、防禦降低';render();}));panel.querySelector('.guardian-speech')?.setAttribute('data-forest-dialogue','');fitBattle();return;}
    panel.insertAdjacentHTML('beforeend',`<h2>${b.phase==='attack'?'⚔ 我方攻擊':'🛡 守住這一回合'}</h2>`);
    if(b.question?.mode==='tone'&&!b.question.sourceId)b.question=null;

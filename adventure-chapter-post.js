@@ -1,6 +1,7 @@
+import {islandMapPoint} from './data/island-map-space.js';
 import {ensureClothingArt,drawClothing} from './adventure-clothing.js';
 import {ZONE_STOREFRONTS} from './data/zone-storefront-art.js';
-const HOME={x:1608,y:1653},letters=[{id:'leaf',x:1701,y:1683,bit:1},{id:'mud',x:1746,y:1698,bit:2}];
+const HOME=islandMapPoint(536,551),letters=[{id:'leaf',...islandMapPoint(567,561),bit:1},{id:'mud',...islandMapPoint(582,566),bit:2}];
 export function createPost(chapter,walkTo){
  let house=null,ready=false;
  function available(){const m=chapter.mail();return letters.filter(l=>m.stage==='search'&&!(m.letters&l.bit));}

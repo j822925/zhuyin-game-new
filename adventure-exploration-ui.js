@@ -17,7 +17,11 @@ export function createExplorationUI(api){
  const onward=button('grove-world','走到森林盡頭前往探險島地圖','🗺️ <small>探險島地圖</small>',()=>api.enter('island'));
  const nodes=DESTINATIONS.map(d=>{
   const b=button('world-'+d.id,d.name,PAINTED_ISLAND?'':d.icon+'<small>'+d.name+'</small>',()=>offerDestination(d.id));
-  if(PAINTED_ISLAND)b.classList.add('painted-gate');return b;
+  if(PAINTED_ISLAND){
+   b.classList.add('painted-gate');b.title=d.name;
+   const step=document.createElement('span');step.className='gate-marker';step.ariaHidden='true';step.textContent='⌃';
+   const name=document.createElement('small');name.textContent=d.name;b.append(step,name);
+  }return b;
  });
  const challenges=(PAINTED_ISLAND?STUDY_BEASTS:[]).map(beast=>button('challenge-'+beast.id,'挑戰'+beast.name,'⚔',()=>api.study(beast)));
  const enemies=Array.from({length:3},(_,i)=>button('encounter-'+i,'森林小怪','⚔',()=>api.battle(api.scene().encounters[i])));
@@ -31,10 +35,11 @@ export function createExplorationUI(api){
   }
   const active=s.area==='island'&&!api.blocked();
   DESTINATIONS.forEach((d,i)=>{
-   const node=nodes[i],pt=s.toScreen(d.x,d.y);
+   const node=nodes[i],pt=s.toScreen(d.entry.x,d.entry.y);
    node.hidden=!active||pt.x<0||pt.y<0||pt.x>s.width||pt.y>s.height;
    if(node.hidden)return;
-   const size=Math.max(32,Math.min(125,150*s.camera.scale));
+   node.dataset.near=String(Math.hypot(s.player.x-d.entry.x,s.player.y-d.entry.y)<190);
+   const size=Math.max(32,Math.min(72,94*s.camera.scale));
    node.style.width=size+'px';node.style.height=size+'px';
    node.style.left=pt.x+'px';node.style.top=pt.y+'px';
   });

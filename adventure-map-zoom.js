@@ -1,8 +1,9 @@
+import {PAINTED_ISLAND} from './adventure-island-pilot.js';
 import {ISLAND_WORLD} from './adventure-exploration-model.js';
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 export function islandZoomLimits(width,height){
  const normal=Math.max(.55,Math.min(.92,width/1280));
- return {min:Math.min(width/ISLAND_WORLD.width,height/ISLAND_WORLD.height)*.92,max:normal*2,normal};
+ return {min:Math.min(width/ISLAND_WORLD.width,height/ISLAND_WORLD.height)*.92,max:normal*(PAINTED_ISLAND?1.6:2),normal};
 }
 export function islandCamera(camera,width,height){
  const {min,max}=islandZoomLimits(width,height),scale=clamp(camera.scale,min,max);

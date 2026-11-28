@@ -1,3 +1,4 @@
+import {islandMapScale} from './data/island-map-space.js';
 import {PAINTED_ISLAND} from './adventure-island-pilot.js';
 import {drawPaintedFrame} from './adventure-painted-actors.js';
 // Ground coordinates use the same scale as island-xiyu-v2 and ISLAND_ROUTES.
@@ -7,11 +8,11 @@ export const STUDY_BEASTS = Object.freeze([
   {id:'coral-horse',name:'珊瑚海馬',mode:'name',label:'看注音寫姓名',x:539,y:575,pace:0.64,color:'#eb9079'},
   {id:'bead-armadillo',name:'珠算犰狳',mode:'math',label:'加減玩',x:712,y:191,pace:0.75,color:'#bf8a45'}
 ]);
-const paintedBeasts={'ribbon-moth':[580,568],'ink-cuttle':[779,375],'coral-horse':[700,719],'bead-armadillo':[1005,284]};
+const paintedBeasts={'ribbon-moth':[580,562],'ink-cuttle':[779,376],'coral-horse':[701,711],'bead-armadillo':[1005,282]};
 export function beastPosition(b,time){
   const phase=time*b.pace;
   const [x,y]=PAINTED_ISLAND?paintedBeasts[b.id]:[b.x,b.y];
-  return {x:x*3+Math.sin(phase)*19,y:y*3+Math.sin(phase*.61)*8,phase};
+  return {x:x*islandMapScale+Math.sin(phase)*19,y:y*islandMapScale+Math.sin(phase*.61)*8,phase};
 }
 function oval(c,x,y,rx,ry,ink,angle=0){
   c.fillStyle=ink;c.beginPath();c.ellipse(x,y,rx,ry,angle,0,Math.PI*2);c.fill();

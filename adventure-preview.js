@@ -21,7 +21,7 @@ import {createPost} from './adventure-chapter-post.js';
 import {createChapter} from './adventure-chapter-ui.js';
 import {BRIDGE_RETURN} from './adventure-chapter-model.js';
 import {createExpedition} from './adventure-expedition-ui.js?v=20261102-a1';
-import {GROVE_WORLD,GROVE_ENTRY,GROVE_EXIT,ISLAND_ENTRY,ISLAND_WORLD,islandWalkable,newEncounter,advanceEncounters,enemySpec,dismissEncounter,settleEncounter,modeIcon} from './adventure-exploration-model.js';
+import {GROVE_WORLD,GROVE_ENTRY,GROVE_EXIT,ISLAND_ENTRY,ISLAND_WORLD,DESTINATIONS,islandWalkable,newEncounter,advanceEncounters,enemySpec,dismissEncounter,settleEncounter,modeIcon} from './adventure-exploration-model.js';
 import {ensureExplorationArt} from './adventure-exploration-art.js';
 import {createShop} from './adventure-cart-ui.js';
 import {createExplorationUI} from './adventure-exploration-ui.js';
@@ -126,7 +126,7 @@ function syncEnergyAccess(){
 $('companions-open').addEventListener('click',e=>{e.preventDefault();if(!hasEnergy(state)){needFood();return;}companions.open();});
 installAdventureControls();
 if(PAINTED_ISLAND){
- const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('./adventure-island-wayfinding.css?v=20261127-districts1',import.meta.url);document.head.append(sheet);
+ const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('./adventure-island-wayfinding.css?v=20261128-atlas1',import.meta.url);document.head.append(sheet);
  monsterButton.textContent='⚔';monsterButton.classList.add('near-challenge');
 }
 function stopMoving(){route=[];arrival=null;keys.clear();joystick.reset();if(scene){scene.player.moving=false;scene.player.phase=0;scene.marker=null;}}
@@ -241,6 +241,10 @@ function tapIsland(at){
     if(!PAINTED_ISLAND||Math.hypot(p.x-scene.player.x,p.y-scene.player.y)<=145)approachStudyBeast(hit);
     else walkTo({x:p.x,y:p.y+24});
     return;
+  }
+  if(PAINTED_ISLAND){
+   const door=DESTINATIONS.find(d=>Math.abs(at.x-d.x)<65&&Math.abs(at.y-d.y)<76);
+   if(door){exploration.offerDestination(door.id);return;}
   }
   walkTo(at);
 }
