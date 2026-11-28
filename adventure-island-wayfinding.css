@@ -53,7 +53,10 @@ body .near-challenge[hidden]{display:none!important}
 #expedition .district-door:active,#expedition .district-resident:active{transform:translate(-50%,-100%)}
 #expedition[data-view=community] .exp-panel{width:min(540px,91%);bottom:max(8px,env(safe-area-inset-bottom));font-size:clamp(15px,2vw,20px)}
 #expedition[data-view=community] .exp-panel[hidden]{display:none}
-#expedition[data-view=field] .painted-guardian{height:clamp(84px,18vh,175px);width:auto}
+/* Keep the feet on the surveyed landmark as the figure grows above it. */
+#expedition[data-view=field] .painted-guardian{height:min(clamp(104px,28vh,300px),47vw);width:auto}
+@media(min-height:521px){#expedition[data-view=field] .painted-guardian{max-height:var(--guardian-headroom,28vh)}}
+#expedition[data-view=field] .exp-boss>small{position:absolute;top:100%;left:50%;transform:translateX(-50%)}
 @media(prefers-reduced-motion:no-preference){
  #expedition .district-resident .work-prop{animation:resident-work 2.4s ease-in-out infinite}
  @keyframes resident-work{50%{transform:translate(2px,-4px) rotate(-8deg)}}

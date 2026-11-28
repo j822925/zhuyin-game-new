@@ -222,7 +222,19 @@ export function createExpedition(api){
   if(r.complete){panel.append(button('🃏 看收藏卡',openCards),button('🗺️ 回地圖',()=>depart()));}
   const area=dialog.querySelector('.exp-monsters');
   for(let i=0;i<r.monsters.length;i++){const m=r.monsters[i];if(m.done)continue;const mob=button('',()=>void begin(i),'exp-mob');mob.dataset.mob=String(i);mob.setAttribute('aria-label','挑戰'+MINIONS[m.art].name);mob.style.left=actors[i].x+'%';mob.style.top=actors[i].y+'%';mob.append(fieldFigure(FIELD_CREATURES[m.art],portrait(`assets/expedition/minions-${m.art}.webp`,MINIONS[m.art].name)));mob.insertAdjacentHTML('beforeend',`<small>${['single','spelling','tone'].indexOf(m.mode)===0?'👂':m.mode==='tone'?'♫':'🧩'} ${MINIONS[m.art].name}</small>`);area.append(mob);}
-  if(done===r.monsters.length){const boss=button('',()=>{view='intro';renderIntro();},'exp-mob exp-boss');const [bx,by]=fieldLayout(z.id).boss;const anchor=fieldPoint(z.id,{x:bx,y:PAINTED_ISLAND?by:Math.max(69,by)});boss.style.left=anchor.x+'%';boss.style.top=anchor.y+'%';boss.style.zIndex=Math.round(anchor.y);boss.ariaLabel=(bossIsFriend(state(),z.id)?'找好友切磋：':'與守護者切磋：')+z.boss;boss.append(fieldFigure(z.id,portrait(z.human,z.boss),true));boss.insertAdjacentHTML('beforeend',`<small>${bossIsFriend(state(),z.id)?'🤝':'👑'} ${z.boss}</small>`);area.append(boss);}
+  if(done===r.monsters.length){
+   const boss=button('',()=>{view='intro';renderIntro();},'exp-mob exp-boss');
+   const [bx,by]=fieldLayout(z.id).boss;
+   const anchor=fieldPoint(z.id,{x:bx,y:PAINTED_ISLAND?by:Math.max(69,by)});
+   // High platforms need extra space above the figure for the field controls.
+   if(PAINTED_ISLAND)boss.style.setProperty('--guardian-headroom',(anchor.y-9)+'vh');
+   boss.style.left=anchor.x+'%';boss.style.top=anchor.y+'%';boss.style.zIndex=Math.round(anchor.y);
+   const friend=bossIsFriend(state(),z.id);
+   boss.ariaLabel=(friend?'找好友切磋：':'與守護者切磋：')+z.boss;
+   boss.append(fieldFigure(z.id,portrait(z.human,z.boss),true));
+   boss.insertAdjacentHTML('beforeend',`<small>${friend?'🤝':'👑'} ${z.boss}</small>`);
+   area.append(boss);
+  }
  }
  async function visitShop(){if(!api.openShop||local||view!=='field'||run()?.battle)return;shopArrivalHeld=true;const token=++generation;target=null;keys.clear();joystick=null;cancelAnimationFrame(raf);stopAudio();dialog.close();api.stop();const restore=()=>{if(token!==generation)return;dialog.showModal();view='field';last=performance.now();render();};try{if(await api.openShop(z.id,restore)===false)restore();}catch{restore();message='商店暫時沒開好，請再試一次';render();}}
  function renderIntro(){requestAnimationFrame(fitIntro);const r=run();view='intro';render();view='intro';const panel=dialog.querySelector('.exp-panel'),s=enemyStats(z,true),intro=bossIsFriend(state(),z.id)?z.friendIntro:z.intro;panel.innerHTML=`<h2>👑 ${z.boss}</h2><p data-forest-dialogue>${intro}</p><small>♥ ${s.hp}　⚔ ${s.attack}　🛡 ${s.defense}　· 獸形不回滿生命</small>`;supplyHint(panel,true);panel.append(button('🔊',()=>speak(intro)),button('🤝 開始切磋',()=>void begin(r.monsters.length)),button('↩',()=>{view='field';render();}));}

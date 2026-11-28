@@ -128,7 +128,7 @@ function syncEnergyAccess(){
 $('companions-open').addEventListener('click',e=>{e.preventDefault();if(!hasEnergy(state)){needFood();return;}companions.open();});
 installAdventureControls();
 if(PAINTED_ISLAND){
- const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('./adventure-island-wayfinding.css?v=20261128-spar1',import.meta.url);document.head.append(sheet);
+ const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('./adventure-island-wayfinding.css?v=20261128-guardians1',import.meta.url);document.head.append(sheet);
  monsterButton.textContent='⚔';monsterButton.classList.add('near-challenge');
 }
 function stopMoving(){route=[];arrival=null;keys.clear();joystick.reset();if(scene){scene.player.moving=false;scene.player.phase=0;scene.marker=null;}}
