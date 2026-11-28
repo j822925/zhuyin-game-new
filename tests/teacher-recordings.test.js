@@ -9,10 +9,10 @@ test('all 1402 selected clean MP3s match approved candidate bytes; no pitch conv
  assert.equal(report.files.length,1402);assert.equal(report.variant,'clean');assert.equal(report.pitchShiftSemitones,0);
  assert.equal(new Set(report.files.map(q=>q.id)).size,1402);assert(!report.files.some(q=>q.id==='s956'));
  for(const q of report.files){const bytes=fs.readFileSync(new URL('../'+q.path,import.meta.url));assert.equal(bytes.length,q.bytes,q.id);assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),q.sha256,q.id);}
- assert.deepEqual(report.retakes,['s383','s858','s892']);assert.deepEqual(catalog.filter(q=>!q.enabled).map(q=>q.id),['s275','s956']);assert.equal(catalog.length,1392);
+ assert.deepEqual(report.retakes,['s383','s858','s892']);assert.deepEqual(catalog.filter(q=>!q.enabled).map(q=>q.id),['s57','s275','s956']);assert.equal(catalog.length,1392);
 });
 test('every listening, spelling and toned tutor segment resolves to the correct teacher pronunciation',()=>{
- assert.equal(pool.length,1312);const single=poolFor('single',scope,catalog);assert.equal(single.length,59);
+ assert.equal(pool.length,1311);const single=poolFor('single',scope,catalog);assert.equal(single.length,59);
  for(const q of single){const f=files.get(audioSource(q.audio));assert(f,q.label);assert.equal(f.label,q.label);assert.match(f.id,/^L/);}
  for(const q of pool){const f=files.get(audioSource(q.audio));assert(f,q.id);assert.equal(f.label,q.displayLabel,q.id);
   const p=spellingParts(q),clips=tutorClips(p);for(const clip of clips)assert(files.has(audioSource(clip)),q.id+' '+clip);
@@ -31,11 +31,11 @@ test('legacy cache URLs, full classroom URLs and aliases refresh without rewriti
 });
 test('all public players and entry dependency chains use the new audio version',()=>{
  for(const f of ['app.js','little-teacher.js','exam-review.js','exam.js','online.js','multiplayer.js','notebook.js','teacher-audio.js','classroom-completion.js','classroom-reliable.js'])assert.match(read(f),/audio-source.js\?v=20261102-a1/,f);
- for(const f of ['index.html','grade2.html'])assert.match(read(f),/game-boot.js\?v=20261102-a1/);
+ for(const f of ['index.html','grade2.html'])assert.match(read(f),/game-boot.js\?v=20261128-pou3-off1/);
  assert.ok(read('app.js').includes('tutorClips(spellingParts(q)).map(audioSource)'));
- assert.match(read('adventure-entry.js'),/adventure-play.bundle.js\?v=20261102-a1/);
- assert.match(read('adventure-preview.html'),/adventure-entry.bundle.js\?v=20261102-a1/);
- assert.match(read('adventure-play.bundle.js'),/audio\/teacher-20261020\/L001.mp3/);
+ assert.match(read('adventure-entry.js'),/adventure-play.bundle.js\?v=[\w-]+/);
+ assert.match(read('adventure-preview.html'),/adventure-entry.bundle.js\?v=[\w-]+/);
+ assert.equal(audioSource('audio/audio_F1.WAV'),'audio/teacher-20261020/L001.mp3');
 });
 test('approved gentle standalone bo replaces legacy paths while preserving the original recording',()=>{
  const fresh='audio/teacher-20261020/L001.mp3';

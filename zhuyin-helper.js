@@ -30,7 +30,7 @@ async function json(path) {
   } finally { clearTimeout(timer); }
 }
 function ready() {
-  return readyPromise ||= json('./data/syllables.json?v=20261018-teacher1').then(rows => {
+  return readyPromise ||= json('./data/syllables.json?v=20261128-pou3-off1').then(rows => {
     index = createSoundIndex(rows); updateBoard(); return index;
   }).catch(error => { readyPromise = null; throw error; });
 }
