@@ -54,7 +54,7 @@ body .near-challenge[hidden]{display:none!important}
 #expedition[data-view=community] .exp-panel{width:min(540px,91%);bottom:max(8px,env(safe-area-inset-bottom));font-size:clamp(15px,2vw,20px)}
 #expedition[data-view=community] .exp-panel[hidden]{display:none}
 /* Keep the feet on the surveyed landmark as the figure grows above it. */
-#expedition[data-view=field] .painted-guardian{height:min(clamp(104px,28vh,300px),47vw);width:auto}
+#expedition[data-view=field] .painted-guardian{height:min(clamp(104px,var(--guardian-size,28vh),330px),47vw);width:auto}
 @media(min-height:521px){#expedition[data-view=field] .painted-guardian{max-height:var(--guardian-headroom,28vh)}}
 #expedition[data-view=field] .exp-boss>small{position:absolute;top:100%;left:50%;transform:translateX(-50%)}
 @media(prefers-reduced-motion:no-preference){
@@ -94,14 +94,14 @@ body .painted-gate[data-near=true] small,body .painted-gate:focus-visible small,
 
 /* Handwriting battles keep the two fighters above a dedicated writing surface. */
 .island-study.writing-battle[open]{
- --pad-size:min(53vh,max(58vw,350px),440px);
+ --pad-size:min(50vh,max(58vw,350px),410px);
  display:flex;flex-direction:column;align-items:center;isolation:isolate;
  inset:0;margin:0;width:100%;height:100%;max-width:none;max-height:none;border:0;border-radius:0;
  padding: max(8px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));
 }
 .writing-battle::before{
  content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
- background:#73917e var(--study-background) center/cover no-repeat;
+ background:#dddac8;
 }
 .writing-battle>header,.writing-panel,.writing-enemy{background:#fff9eaf5;color:#29483d;border-radius:16px}
 .writing-battle>header{align-self:stretch;padding:4px 9px}
@@ -111,7 +111,7 @@ body .painted-gate[data-near=true] small,body .painted-gate:focus-visible small,
 .writing-battle .study-stage canvas:last-child{right:clamp(0px,11%,190px);bottom:1%}
 .writing-enemy{position:absolute;left:clamp(0px,12%,200px);top:60%;display:grid;gap:3px;padding:3px 9px;font-size:clamp(13px,2vh,18px)}
 .writing-enemy progress{width:100px;height:9px;accent-color:#709760}
-.writing-panel{width:min(760px,100%);box-sizing:border-box;padding:8px 12px;border:1px solid #b7aa83;box-shadow:0 3px 14px #29392830}
+.writing-panel{width:min(690px,100%);box-sizing:border-box;padding:8px 12px;border:1px solid #b7aa83;box-shadow:0 3px 14px #29392830}
 .writing-panel h2{font-size:clamp(19px,3.3vh,29px);line-height:1.2;margin:0}
 .writing-panel .study-note{min-height:1.2em;font-size:clamp(13px,2vh,17px);margin:3px 0}
 .writing-panel .study-controls{display:flex;align-items:center;justify-content:center;gap:clamp(8px,2vw,24px);min-height:var(--pad-size)}
@@ -141,3 +141,32 @@ body .painted-gate[data-near=true] small,body .painted-gate:focus-visible small,
  .writing-panel .study-actions{grid-template-columns:1fr}
  .writing-panel .study-actions button{min-height:36px}
 }
+
+/* The fighters and the painted ground share one frame, independent of the answer panel. */
+.writing-battle .study-stage{background:var(--study-background) center 77%/cover no-repeat;border-radius:14px;margin:3px 0}
+.writing-battle .study-stage canvas:first-child{top:auto;bottom:25%}
+.writing-battle .study-stage canvas:last-child{bottom:5%}
+.writing-battle .writing-enemy{top:auto;bottom:16%}
+.writing-battle:is([data-mode=math],[data-mode=reading]) .study-controls{display:grid;gap:3px;min-height:0}
+.writing-battle:is([data-mode=math],[data-mode=reading]) .study-actions{display:flex;justify-content:center;width:100%;max-width:none}
+.writing-battle .study-controls output{font-size:20px;min-height:1em}
+.writing-battle .study-keys button{font-size:clamp(15px,2.5vh,21px);min-height:32px}
+@media(max-height:520px){.writing-battle[data-mode=reading] .study-keys{grid-template-columns:repeat(10,1fr)}.writing-battle .study-keys button{min-height:25px}}
+
+#expedition[data-view=community] .exp-field{touch-action:none;background:#727e66}
+#expedition[data-view=community] .district-resident img{height:var(--resident-height);width:auto}
+#expedition[data-view=community] .district-resident small{position:absolute;top:100%;font-size:12px}
+#expedition[data-view=community] .district-resident .work-prop{font-size:clamp(10px,1vw,15px)}
+
+.writing-battle:is([data-mode=single],[data-mode=spelling],[data-mode=tone]) .study-controls{display:grid;min-height:0;gap:5px}
+.writing-battle .study-keys:not([data-kind]),.mixed-question .study-keys:not([data-kind]){display:flex;justify-content:center;flex-wrap:wrap}
+.mixed-question{text-align:center}.mixed-question>p{margin:2px}.mixed-question .study-keys button{min-width:0;min-height:32px;margin:0;padding:2px 4px;font-size:clamp(16px,2.4vh,22px)}
+.mixed-question .study-actions{display:flex;gap:4px;flex-wrap:wrap}.mixed-question .study-actions button{min-height:34px;padding:4px}
+.mixed-question .study-ink{width:min(49vh,60vw,395px)}
+#expedition[data-region-battle] .exp-panel:has(.mixed-question){max-height:74%;width:min(650px,96%);overflow:auto;padding:5px 10px}
+#expedition .exp-panel:has(.mixed-question) h2{font-size:18px;margin:1px}
+#expedition .exp-panel:has(.mixed-question) label progress{height:5px}
+@media(min-width:700px){.mixed-question .study-controls:has(.study-ink){display:flex;align-items:center;justify-content:center;gap:8px}.mixed-question .study-controls:has(.study-ink) .study-actions{max-width:160px}}
+
+#expedition[data-view=battle][data-region-battle] .exp-field{bottom:auto;height:var(--battle-ground-height,60%);background-position:center 78%}
+#expedition[data-view=battle][data-region-battle]{background:#e8e2d2 var(--zone-scene) center/cover}

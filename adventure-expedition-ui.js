@@ -1,3 +1,5 @@
+import {mixedBattleWidget} from './adventure-mixed-widget.js';
+import {communityZoom} from './adventure-community-camera.js';
 import {battleSnapshot} from './adventure-battle-presentation.js';
 import {laneContains,laneRoute} from './adventure-district-paths.js';
 import {PAINTED_ISLAND} from './adventure-island-pilot.js';
@@ -29,7 +31,7 @@ export function createExpedition(api){
  let z=null,view='field',message='',generation=0,loading=false,questionFailed=false,audio=null,raf=0,position={x:50,y:77},target=null,last=0;
  let motion=null,resolving=false,opening=false,saveFailed=false;
  let local=false,localWon=null,actors=[],keys=new Set(),joystick=null,shopArrivalHeld=false,exitArrivalHeld=true;
- let steps=[];
+ let steps=[],communityView=null;
  const roaming=()=>view==='field'||view==='community';
  const isVillage=()=>view==='community';
  function stopWalk(){steps=[];keys.clear();joystick=null;target=null;stopAudio();}
@@ -40,6 +42,7 @@ export function createExpedition(api){
  function canRoam(p){return isVillage()?laneContains(fieldLayout(z.id),p,true):fieldWalkable(z.id,p);}
  const state=()=>api.state(),exp=()=>state().expedition,run=()=>exp().runs[z?.id];
  const presentation=api.presentation;
+ const mixed=mixedBattleWidget(api.questionSource);
  const placeName=()=>local?(z.id==='local-grove'?'星光林地':'暖陽村'):z.name;
  function battlefield(){
   if(!local)return regionalBattleArt(z.id);
@@ -62,6 +65,7 @@ export function createExpedition(api){
   if(!dialog.open||(local&&!presentation)||view!=='battle')return;
   const foe=dialog.querySelector('.exp-foe'),player=dialog.querySelector('.exp-player'),panel=dialog.querySelector('.exp-panel'),header=dialog.querySelector('.exp-header');if(!foe||!player||!panel)return;
   const box=dialog.getBoundingClientRect(),layout=battleStageLayout(box.width,box.height,panel.getBoundingClientRect().top-box.top,header.getBoundingClientRect().bottom-box.top);
+  if(presentation)dialog.style.setProperty('--battle-ground-height',(panel.getBoundingClientRect().top-box.top)+'px');
   Object.assign(foe.style,{left:layout.foe.x+'px',right:'auto',top:layout.foe.y+'px',width:layout.foe.width+'px',height:layout.foe.height+'px'});
   Object.assign(player.style,{left:layout.player.x+'px',top:layout.player.y+'px',width:layout.player.width+'px',height:layout.player.height+'px'});
  }
@@ -79,7 +83,7 @@ export function createExpedition(api){
  const layoutObserver=new ResizeObserver(()=>{fitBattle();fitIntro();});layoutObserver.observe(dialog);
  let releaseQuestionMusic=null,releaseSpeechMusic=null;
  function stopAudio(){audio?.pause();audio=null;releaseQuestionMusic?.();releaseQuestionMusic=null;releaseSpeechMusic?.();releaseSpeechMusic=null;if(globalThis.speechSynthesis?.speaking)speechSynthesis.cancel();}
- function close(){presentation?.close();cards.close();forestMusic.setArea(api.scene()?.area||null);forestMusic.setBattle(false);motion?.dispose();motion=null;resolving=false;generation++;loading=false;keys.clear();joystick=null;stopAudio();cancelAnimationFrame(raf);dialog.close();if(local&&api.scene())api.scene().castAt=0;api.stop();}
+ function close(){mixed.reset();presentation?.close();cards.close();forestMusic.setArea(api.scene()?.area||null);forestMusic.setBattle(false);motion?.dispose();motion=null;resolving=false;generation++;loading=false;keys.clear();joystick=null;stopAudio();cancelAnimationFrame(raf);dialog.close();if(local&&api.scene())api.scene().castAt=0;api.stop();}
  function depart(suspend=false){if(resolving||presentation?.busy)return;if(!local&&run()&&!transaction(()=>leaveExpedition(state(),{suspend}))){api.toast('💾 還沒存好，請再試一次');return;}const finish=()=>{close();if(suspend)completeAction('saved');};if(presentation&&run()?.battle)void presentation.changeScene(finish);else finish();}
  dialog.addEventListener('cancel',e=>{e.preventDefault();if(isVillage())changeDistrict(false);else depart();});
  function button(label,action,cls=''){const b=document.createElement('button');b.textContent=label;b.className=cls;b.onclick=action;return b;}
@@ -106,8 +110,13 @@ export function createExpedition(api){
     const lower=position.y<28||(position.y<39&&dialog.hasAttribute('data-low-controls'));
     if(lower!==dialog.hasAttribute('data-low-controls'))dialog.toggleAttribute('data-low-controls',lower);
    }
-   world.style.width=width+'px';world.style.height=height+'px';
-   world.style.left=camera(fw,width,position.x,.5)+'px';world.style.top=camera(fh,height,position.y,.62)+'px';
+   const village=isVillage()&&communityView?communityView(position):null;
+   world.style.width=(village?.width??width)+'px';world.style.height=(village?.height??height)+'px';
+   world.style.left=(village?.left??camera(fw,width,position.x,.5))+'px';world.style.top=(village?.top??camera(fh,height,position.y,.62))+'px';
+   if(village){
+    cv.style.height=(village.height*(.041+position.y*.0004))+'px';cv.style.width='auto';
+    world.style.setProperty('--resident-height',(village.height*(.036+fieldLayout(z.id).resident[1]*.00035))+'px');
+   }
   }
   if(cv&&!local&&!(view==='battle'&&motion)){let moving=false,dx=0,dy=0;
    if(roaming()&&(!isVillage()||dialog.querySelector('.exp-panel').hidden)){dx=(keys.has('ArrowRight')||keys.has('d')?1:0)-(keys.has('ArrowLeft')||keys.has('a')?1:0);dy=(keys.has('ArrowDown')||keys.has('s')?1:0)-(keys.has('ArrowUp')||keys.has('w')?1:0);if(joystick){dx=joystick.x;dy=joystick.y;}if(dx||dy){steps=[];target=null;const len=Math.hypot(dx,dy),p={x:position.x+dx/len*dt*16,y:position.y+dy/len*dt*22};if(canRoam(p)){position=p;moving=true;}}else if(target){dx=target.x-position.x;dy=target.y-position.y;const d=Math.hypot(dx,dy);if(d>.3){const step=Math.min(d,dt*18),p={x:position.x+dx/d*step,y:position.y+dy/d*step};if(canRoam(p)){position=p;moving=true;}else {target=null;steps=[];}}else target=steps.shift()||null;}
@@ -134,6 +143,8 @@ export function createExpedition(api){
   raf=requestAnimationFrame(drawPlayer);
  }
  function shell(){
+  mixed.hide();
+  communityView=null;
   // Expeditions and their shops are overlays; the underlying scene stays on the island map.
   forestMusic.setArea(local?api.scene()?.area:z.id);
   forestMusic.setBattle(!!run()?.battle);
@@ -145,7 +156,7 @@ export function createExpedition(api){
   const e=exp(),p=playerStats(e.level),head=dialog.querySelector('header div');head.innerHTML=`<strong>${z.icon} ${presentation?placeName():z.name}</strong><span>Lv.${e.level}　♥ ${e.hp}/${p.hp}　⚔ ${p.attack}　🛡 ${p.defense}</span><small>✦ ${state().stars}　🥄 ${state().life.nutrition.energy}/100　EXP ${e.xp}/${nextXP(e.level)||'MAX'}</small>`;
   const nav=dialog.querySelector('nav');nav.append(button('🎒',()=>{view='food';render();}),button('🃏',openCards),button('💾 ↩',()=>depart(true)));nav.children[0].ariaLabel='遠征食物';nav.children[1].ariaLabel='守護者好友卡';nav.children[2].ariaLabel=local?'儲存並離開挑戰':'存檔休息，下次繼續這次遠征';
   const musicButton=button(forestMusic.state().enabled?'♫ 音樂':'♫ 靜音',()=>{document.getElementById('forest-music-toggle')?.click();musicButton.textContent=forestMusic.state().enabled?'♫ 音樂':'♫ 靜音';});musicButton.ariaLabel='背景音樂開關';nav.append(musicButton);
-  const field=dialog.querySelector('.exp-field');field.onclick=event=>{if(event.target.closest('button')||!roaming()||local||isVillage()&&!dialog.querySelector('.exp-panel').hidden)return;const b=field.querySelector('.exp-world').getBoundingClientRect();const point={x:(event.clientX-b.left)/b.width*100,y:(event.clientY-b.top)/b.height*100};if(PAINTED_ISLAND){steps=laneRoute(fieldLayout(z.id),position,point,isVillage());target=steps.shift()||null;}else target=fieldPoint(z.id,point);dialog.focus({preventScroll:true});};
+  const field=dialog.querySelector('.exp-field');field.onclick=event=>{if(event.target.closest('button')||!roaming()||local||isVillage()&&!dialog.querySelector('.exp-panel').hidden)return;const b=field.querySelector('.exp-world').getBoundingClientRect();const point={x:(event.clientX-b.left)/b.width*100,y:(event.clientY-b.top)/b.height*100};if(isVillage()&&(point.x<0||point.y<0||point.x>100||point.y>100))return;if(PAINTED_ISLAND){steps=laneRoute(fieldLayout(z.id),position,point,isVillage());target=steps.shift()||null;}else target=fieldPoint(z.id,point);dialog.focus({preventScroll:true});};
   if(!local&&roaming()){const stick=button('✿',()=>{},'exp-stick');stick.ariaLabel='區域移動搖桿';(PAINTED_ISLAND?dialog:field).append(stick);const move=e=>{const r=stick.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;joystick=Math.hypot(x,y)>6?{x,y}:null;};stick.onpointerdown=e=>{e.preventDefault();stick.setPointerCapture(e.pointerId);move(e);};stick.onpointermove=e=>{if(stick.hasPointerCapture(e.pointerId))move(e);};for(const name of ['pointerup','pointercancel','lostpointercapture'])stick.addEventListener(name,()=>joystick=null);}
   cancelAnimationFrame(raf);raf=requestAnimationFrame(drawPlayer);
  }
@@ -203,12 +214,15 @@ export function createExpedition(api){
   if(!dialog.open||!z)return;if(saveFailed)message='💾 暫時無法儲存，這次操作未生效。請再試一次。';shell();const panel=dialog.querySelector('.exp-panel'),r=run(),e=exp();if(!r)return;const b=r.battle;
   if(isVillage()){
    showNeighborhood({id:z.id,world:dialog.querySelector('.exp-world'),header:dialog.querySelector('header div'),nav:dialog.querySelector('nav'),panel,layout:fieldLayout(z.id),leave:()=>changeDistrict(false),stop:stopWalk,speak});
+   const field=dialog.querySelector('.exp-field');
+   communityView=communityZoom(field,dialog.querySelector('nav'),stopWalk,(x,y)=>field.onclick({target:field,clientX:x,clientY:y}),()=>position);
    return;
   }
   if(view==='food'){showFood(panel,b);return;}
   if(b){view='battle';dialog.dataset.view='battle';const enemy=currentEnemy(state()),area=dialog.querySelector('.exp-field');if(!local||presentation){const hero=dialog.querySelector('.exp-player'),foe=portrait(foeArt(enemy),enemy.name,'exp-foe');area.append(foe,hero);api.scene().drawPlayer(hero.getContext('2d'),api.art(),{x:90,y:192,height:166,moodTop:2,outfit:state().outfit,wand:state().wand,direction:PAINTED_ISLAND?3:1,walking:false,phase:0});motion=mountSparring({hero,foe,characterId:state().companions.active,zone:z,beast:b.transformed,boss:enemy.boss});requestAnimationFrame(fitBattle);}panel.innerHTML=`${local&&!presentation?'<small>Lv.'+e.level+'　♥ '+e.hp+'/'+playerStats(e.level).hp+'　EXP '+e.xp+'/'+nextXP(e.level)+'</small>':''}<strong>${enemy.boss?'👑 ':''}${enemy.name} · Lv.${enemy.level}</strong><label>♥ ${b.hp}/${enemy.hp}<progress max="${enemy.hp}" value="${b.hp}"></progress></label><p>${message}</p>`;supplyHint(panel);
    if(b.phase==='transform'){area.classList.add('exp-transform');panel.append(button('🔊',()=>speak(z.transform)),Object.assign(document.createElement('p'),{className:'guardian-speech',textContent:z.transform}),button('🛡 準備好了',()=>{if(transaction(()=>acknowledgeTransform(state())))message='獸形：攻擊提升、防禦降低';render();}));panel.querySelector('.guardian-speech')?.setAttribute('data-forest-dialogue','');fitBattle();return;}
    panel.insertAdjacentHTML('beforeend',`<h2>${b.phase==='attack'?'⚔ 我方攻擊':'🛡 守住這一回合'}</h2>`);
+   if(presentation){void mixed.show(panel,[generation,z.id,b.slot,b.turn].join('-'),(correct,hint)=>resolveAnswer(b,correct,hint));fitBattle();return;}
    if(b.question?.mode==='tone'&&!b.question.sourceId)b.question=null;
    if(b.question)showQuestion(panel,b);else{const retry=button(questionFailed?'↻ 重新載入題目':'⏳ 題目準備中',()=>{questionFailed=false;void prepareQuestion();});retry.dataset.questionLoad='';retry.disabled=loading;panel.append(retry,button('↩ 先離開挑戰',()=>depart(true)));if(!questionFailed)void prepareQuestion();}fitBattle();return;
   }
@@ -227,7 +241,10 @@ export function createExpedition(api){
    const [bx,by]=fieldLayout(z.id).boss;
    const anchor=fieldPoint(z.id,{x:bx,y:PAINTED_ISLAND?by:Math.max(69,by)});
    // High platforms need extra space above the figure for the field controls.
-   if(PAINTED_ISLAND)boss.style.setProperty('--guardian-headroom',(anchor.y-9)+'vh');
+   if(PAINTED_ISLAND){
+    boss.style.setProperty('--guardian-headroom',(anchor.y-9)+'vh');
+    if(z.id==='shell')boss.style.setProperty('--guardian-size','31vh');
+   }
    boss.style.left=anchor.x+'%';boss.style.top=anchor.y+'%';boss.style.zIndex=Math.round(anchor.y);
    const friend=bossIsFriend(state(),z.id);
    boss.ariaLabel=(friend?'找好友切磋：':'與守護者切磋：')+z.boss;
@@ -240,7 +257,7 @@ export function createExpedition(api){
  function renderIntro(){requestAnimationFrame(fitIntro);const r=run();view='intro';render();view='intro';const panel=dialog.querySelector('.exp-panel'),s=enemyStats(z,true),intro=bossIsFriend(state(),z.id)?z.friendIntro:z.intro;panel.innerHTML=`<h2>👑 ${z.boss}</h2><p data-forest-dialogue>${intro}</p><small>♥ ${s.hp}　⚔ ${s.attack}　🛡 ${s.defense}　· 獸形不回滿生命</small>`;supplyHint(panel,true);panel.append(button('🔊',()=>speak(intro)),button('🤝 開始切磋',()=>void begin(r.monsters.length)),button('↩',()=>{view='field';render();}));}
  function speak(text){if(!('speechSynthesis'in window))return;const release=forestMusic.hold();stopAudio();releaseSpeechMusic=release;const u=new SpeechSynthesisUtterance(text);u.lang='zh-TW';u.rate=.85;u.onend=u.onerror=release;try{speechSynthesis.speak(u);}catch{release();}}
  async function begin(slot){if(loading)return;target=null;keys.clear();joystick=null;const token=generation;loading=true;const allowed=await (globalThis.ForestAccess?.check()??true);if(token!==generation)return;loading=false;if(!allowed||!dialog.open)return;if(slot===run().monsters.length){loading=true;try{await preloadGuardianArt(z);}catch{if(token!==generation)return;message='圖片還沒載入，請再點一次挑戰。';loading=false;if(dialog.open)render();return;}if(token!==generation)return;loading=false;if(!dialog.open)return;}
-  if(transaction(()=>startExpeditionBattle(state(),slot))){view='battle';message='';await startStage(render);}else{message='🥄 每場需要 8 體力，可以先吃東西。';render();}}
+  if(transaction(()=>startExpeditionBattle(state(),slot))){mixed.reset();view='battle';message='';await startStage(render);}else{message='🥄 每場需要 8 體力，可以先吃東西。';render();}}
  async function prepareQuestion(){
   const b=run()?.battle;if(!b||b.question||loading||b.phase==='transform')return;loading=true;const token=generation;const retry=dialog.querySelector('[data-question-load]');if(retry){retry.disabled=true;retry.textContent='⏳ 題目準備中';}
   try{const mode=currentEnemy(state()).mode,{deck,pool}=await encounterDeck({mode,level:z.index===0?1:2,hp:1}),q=deck[0];
@@ -259,10 +276,16 @@ export function createExpedition(api){
   for(const choice of q.choices)grid.append(button(choice.label,async()=>{
    if(resolving||run()?.battle!==b||b.question!==q)return;
    if(q.mode==='spelling'&&q.part==='initial'&&choice.value===q.answer){transaction(()=>{q.part='final';q.answer=q.finalAnswer;q.choices=q.finalChoices;return true;});render();return;}
-   const before=battleSnapshot(state()),previousLevel=before.level,previousPhase=b.phase,enemyName=currentEnemy(state()).name;const result=transaction(()=>answerExpedition(state(),choice.value===q.answer));if(!result){if(saveFailed)render();return;}
+   return resolveAnswer(b,choice.value===q.answer,'再聽一次：'+q.answer);
+  }));
+ }
+ async function resolveAnswer(b,correct,hint){
+   if(resolving||run()?.battle!==b)return;
+   const before=battleSnapshot(state()),previousLevel=before.level,previousPhase=b.phase,enemyName=currentEnemy(state()).name;const result=transaction(()=>answerExpedition(state(),correct));if(!result){if(saveFailed)render();return;}
+   if(presentation)mixed.hide();
    const after=battleSnapshot(state());
    if(motion){resolving=true;dialog.dataset.resolving='true';dialog.focus({preventScroll:true});dialog.scrollTop=0;dialog.querySelectorAll('button').forEach(el=>el.disabled=true);const token=generation;const completed=await motion.play(result);resolving=false;dialog.dataset.resolving='false';if(!completed||token!==generation||!dialog.open)return;}
-   message=result.correct?(result.won?`🎉 ✦ +${result.stars}　EXP +${result.xp}`:'✓ 很棒！'):`再聽一次：${q.answer}`;
+   message=result.correct?(result.won?`🎉 ✦ +${result.stars}　EXP +${result.xp}`:'✓ 很棒！'):hint;
    if(presentation&&(result.won||result.lost)){
     stopAudio();forestMusic.setBattle(false);
     const notices=[];
@@ -275,7 +298,6 @@ export function createExpedition(api){
     });return;
    }
    if(result.lost){close();api.defeated();return;}if(local&&result.won){const callback=localWon;close();callback?.();completeAction(exp().level>previousLevel?'level':'win',{detail:'✦ +'+result.stars+'　EXP +'+result.xp});return;}if(local&&result.correct&&previousPhase==='attack')api.scene().castAt=performance.now();if(result.newFriend)message='🤝 '+z.boss+' 成為好友了！好友卡已加入收藏。';else if(result.friend)message='🤝 切磋成功！下次再一起練習吧。';if(result.gift)message+=' 🎁 '+FURNITURE.find(f=>f.id===result.gift)?.name+'，已放入家具收藏！';else if(result.giftOwned)message+=' 🎁 這份紀念品已收藏。';view=run().battle?'battle':'field';render();completeAction(result.card?'card':result.friend?'spar':result.won?(exp().level>previousLevel?'level':'win'):result.correct?(previousPhase==='attack'?'attack':'defend'):'retry',{host:dialog,anchor:'.exp-player',detail:result.won?'✦ +'+result.stars+'　EXP +'+result.xp+(exp().level>previousLevel?'　Lv.'+exp().level:''):undefined});
-  }));
  }
  async function open(id,{approved=false}={}){
   if(opening||dialog.open||api.blocked())return;loading=false;local=false;localWon=null;dialog.classList.remove('exp-local');z=zoneById(id);if(!z)return;generation++;message='';questionFailed=false;api.stop();

@@ -1,3 +1,4 @@
+import {mixedBattleWidget} from './adventure-mixed-widget.js';
 import {battleSnapshot} from './adventure-battle-presentation.js';
 import {allFriends,answerChallenge,beginChallenge,bridgeEntered,chapterEvent,cleanChapter,freshChapter,mailbox,prepareSkill,questOffer,QUESTS} from './adventure-chapter-model.js';
 import {gradeReading} from './hanzi-bank.js';
@@ -10,6 +11,7 @@ export function createChapter(api){
  const dialog=document.createElement('dialog');dialog.className='baisha-chapter';dialog.setAttribute('aria-label','跨越星門長橋');document.body.append(dialog);
  const get=()=>api.state().chapter||freshChapter();
  let shortcutVisit=false;
+ const mixed=mixedBattleWidget(api.questionSource);
  let disposeMap=null,request=null,audio=null,revision=0,busy=false;
  function write(change){
    const state=api.state(),before=state.chapter,next=cleanChapter(before);
@@ -17,8 +19,8 @@ export function createChapter(api){
    state.chapter=next;if(api.save())return result;
    if(before)state.chapter=before;else delete state.chapter;api.toast('進度還在保存，請稍後再試。');return false;
  }
- function stop(){revision++;disposeMap?.();disposeMap=null;request?.abort();request=null;audio?.pause();audio=null;globalThis.speechSynthesis?.cancel();}
- function close(){stop();dialog.close();api.stop();}
+ function stop(){mixed.hide();revision++;disposeMap?.();disposeMap=null;request?.abort();request=null;audio?.pause();audio=null;globalThis.speechSynthesis?.cancel();}
+ function close(){mixed.reset();stop();dialog.close();api.stop();}
  function page(title,kind='talk'){
    stop();api.stop();dialog.replaceChildren();dialog.dataset.page=kind;
    if(!dialog.open)dialog.showModal();
@@ -114,6 +116,11 @@ export function createChapter(api){
    api.paintHero(hero.getContext('2d'),{x:90,y:205,height:170,direction:3,walking:false,phase:0});
    if(notice)line(box,notice);
    button(dialog.querySelector('header'),'稍後再來',leaveBattle);
+   const answers=document.createElement('div');
+   if(api.presentation){
+     const skill=structuredClone(b);if(prepareSkill(api.state(),skill))button(box,skill.skillReady==='fox'?'使出送信快步':'準備蜂巢護盾',()=>{if(write(c=>prepareSkill(api.state(),c.battle)))void battle('技能準備好了。');});
+     box.append(answers);void mixed.show(answers,[b.roundId,b.turn,b.hp,b.heroHP,b.transformed].join('/'),submit);return;
+   }
    if(!b.question){
      const token=revision;request=new AbortController();const signal=request.signal;
      line(box,'正在準備題目…');
@@ -126,7 +133,7 @@ export function createChapter(api){
    if(q.audio)button(box,'🔊 聽題目',()=>{audio?.pause();audio=new Audio(audioSource(q.audio));audio.play().catch(()=>{if(!box.isConnected)return;line(box,'音檔暫時無法播放，可以重聽。');if(b.id!=='empress'&&!box.querySelector('[data-guide]'))button(box,'改跟星光做',guide).dataset.guide='1';});});
    const skill=structuredClone(b);
    if(prepareSkill(api.state(),skill))button(box,skill.skillReady==='fox'?'使出送信快步':'準備蜂巢護盾',()=>{if(write(c=>prepareSkill(api.state(),c.battle)))void battle('技能準備好了。');});
-   const answers=document.createElement('div');answers.className='bs-answers';box.append(answers);
+   answers.className='bs-answers';box.append(answers);
    if(q.keys){
      let syllable='',tone=null;const field=line(answers,'□');field.className='bs-input';
      const refresh=()=>{field.textContent=(syllable||'□')+(tone||'');};
@@ -142,7 +149,7 @@ export function createChapter(api){
    function submit(correct,hint){
      if(get().battle?.roundId!==b.roundId||!answers.isConnected)return;
      const before=battleSnapshot(api.state());
-     const result=write(c=>answerChallenge(api.state(),c,correct));
+     const result=write(c=>{if(api.presentation)c.battle.question={prompt:'隨機題',choices:['出招'],answer:'出招',retried:c.battle.question?.retried===true};return answerChallenge(api.state(),c,correct);});
      if(!result)return;
      if(result==='won'||result==='lost'){
        const won=result==='won';
