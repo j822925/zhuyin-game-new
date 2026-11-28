@@ -1,3 +1,4 @@
+import {regionalBattleArt} from './data/island-neighborhoods.js';
 import {battleSnapshot} from './adventure-battle-presentation.js';
 import {createStudentSession} from './student-session.js';
 import {createHandwriting} from './hanzi-handwriting.js';
@@ -88,6 +89,7 @@ export function createIslandStudy({presentation,state,save,changed,stop,paintHer
     if(!r.access.current()){close();return;}
     board?.destroy();board=null;
     const q=r.questions[r.index],mode=r.b.mode;
+    dialog.classList.remove('study-hit');
     r.prompt.textContent=q.prompt;r.count.textContent=(r.index+1)+' / '+r.questions.length;r.note.textContent='';r.controls.replaceChildren();
     let input='',tone=null,locked=false,writing=false,interrupted=false;
     const actions=node('div','','study-actions'),keys=node('div','','study-keys'),value=node('output','');
@@ -103,7 +105,7 @@ export function createIslandStudy({presentation,state,save,changed,stop,paintHer
       else if(mode==='reading')ok=tone!==null&&gradeReading(q,input+tone).correct;
       else if(board&&!interrupted&&board.getStrokes().length)ok=board.grade({gradingPolicy:'automatic-v1',alternatives}).correct===true;
       if(!ok){r.note.textContent=mode==='math'?mathHint(q.q):mode==='reading'?'再看看括號裡的字，記得選聲調。':'再看一次注音，用手指重新寫。';clear();return;}
-      locked=true;r.strike=performance.now();r.note.textContent='答對！星光擊中 '+r.b.name;
+      locked=true;r.strike=performance.now();dialog.classList.add('study-hit');r.note.textContent='答對！星光擊中 '+r.b.name;
       r.hp.value=r.questions.length-r.index-1;r.index++;r.controls.replaceChildren();
       if(board){board.destroy();board=null;}
       timeout=setTimeout(()=>{if(run!==r)return;if(r.index===r.questions.length)finish(r);else void showQuestion(r);},540);
@@ -140,20 +142,31 @@ export function createIslandStudy({presentation,state,save,changed,stop,paintHer
   async function open(b){
     if(run)return;stop();
     const r={b,id:'island-'+crypto.randomUUID(),index:0,strike:-10000};run=r;
+    const fieldWriting=Boolean(presentation)&&(b.mode==='writing'||b.mode==='name');
+    const background=fieldWriting?regionalBattleArt(b.mode==='writing'?'shell':'sand'):null;
+    dialog.classList.toggle('writing-battle',fieldWriting);
+    dialog.classList.remove('study-hit');
+    dialog.style.setProperty('--study-background',background?'url("'+background+'")':'none');
     dialog.replaceChildren();const top=node('header'),title=node('strong',b.label);r.count=node('span','');
     top.append(title,r.count,button('回地圖',close));const stage=node('div','','study-stage'),left=node('canvas'),right=node('canvas');
     left.width=right.width=160;left.height=right.height=130;left.ariaLabel=b.name;right.ariaLabel='我的角色';
     const middle=node('div','','study-center');r.prompt=node('h2',b.name);r.hp=node('progress');middle.append(r.prompt,r.hp);
     stage.append(left,middle,right);r.note=node('div','準備題目中…','study-note');r.note.setAttribute('role','status');
-    r.controls=node('div','','study-controls');dialog.append(top,stage,r.note,r.controls);
-    if(presentation)await presentation.changeScene(()=>{if(run===r)dialog.showModal();});else dialog.showModal();
+    r.controls=node('div','','study-controls');
+    if(fieldWriting){
+      const panel=node('section','','writing-panel');
+      const enemy=node('div','','writing-enemy');
+      enemy.append(node('strong',b.name),r.hp);stage.replaceChildren(left,enemy,right);
+      panel.append(r.prompt,r.note,r.controls);dialog.append(top,stage,panel);
+    }else dialog.append(top,stage,r.note,r.controls);
+    if(presentation)await presentation.changeScene(()=>{if(run===r)dialog.showModal();},background);else dialog.showModal();
     if(run!==r)return;
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
     let last=-100;
     function frame(now){if(run!==r)return;raf=requestAnimationFrame(frame);if(document.hidden||now-last<42)return;last=now;
       const c=left.getContext('2d');c.clearRect(0,0,160,130);const dt=now-r.strike;
       drawStudyBeast(c,b,80,109,reduced?0:now/1000,{scale:1.36,label:false,hit:!reduced&&dt<330?-8*Math.sin(Math.PI*dt/330):0});
-      const h=right.getContext('2d');h.clearRect(0,0,160,130);paintHero(h,!reduced&&dt<330);
+      const h=right.getContext('2d');h.clearRect(0,0,160,130);paintHero(h,!reduced&&dt>=0&&dt<330?dt/330:0);
       if(dt<420){c.fillStyle='#f6c346';c.font='bold 32px sans-serif';c.fillText('✦',98,45);}
     }frame(performance.now());
     try{
