@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>詞語注音挑戰｜國字森林</title>
+<link rel="stylesheet" href="character-motion.css?v=20261007-ipad1"><link rel="stylesheet" href="monster-cards.css?v=20261011-battle1"><link rel="stylesheet" href="battle-rpg.css?v=20261011-battle1">
+<link rel="stylesheet" href="word-challenge.css?v=1"></head><body><main>
+<header><a id="home" href="hanzi.html">← 國字森林</a><h1>詞語注音挑戰</h1><strong id="progress"></strong></header>
+<p id="notice" role="status" aria-live="polite"></p>
+<section id="arena" hidden>
+  <aside class="fighter" id="enemy" aria-label="敵方"></aside>
+  <article><p class="instruction">點詞語聽一聽，拼出框裡那個字的注音。</p>
+    <button id="word" type="button"></button>
+    <div class="answer-row"><output id="answer" aria-label="我的注音"></output><button id="erase" type="button">⌫ 刪一個</button></div>
+    <div id="keys" aria-label="注音鍵盤"></div><div id="tones" aria-label="選聲調"></div>
+    <p id="feedback" role="status" aria-live="polite"></p>
+    <button id="submit" class="primary" type="button">送出</button><button id="next" class="primary" type="button" hidden>下一題 →</button>
+  </article>
+  <aside class="fighter ally" aria-label="我方"><div id="hero"></div><span id="hero-name"></span><progress id="health" max="5" value="5" aria-label="我方能量"></progress></aside>
+</section>
+<section class="result-panel" id="result" hidden><h2>挑戰完成</h2><p id="score"></p><p id="stars"></p><button id="again" class="primary">再玩一次</button></section>
+<button id="retry" hidden>重新連線</button>
+<footer><details><summary>玩法與詞語來源</summary><p>每回合 5 題。第一次答對 3～4 題得 1 顆星，全對得 3 顆星，每天最多 15 顆。</p>
+<p>中華民國教育部（Ministry of Education, R.O.C.）。<a href="https://dict.concised.moe.edu.tw/">《國語辭典簡編本》</a>（版本編號 dict_concised_2014_20260929）。<a href="docs/word-challenge-moe.pdf">完整使用說明</a> · <a href="https://creativecommons.org/licenses/by-nd/3.0/tw/">創用 CC 姓名標示－禁止改作 3.0 臺灣</a></p></details></footer>
+</main><script type="module" src="word-challenge.js?v=1"></script></body></html>

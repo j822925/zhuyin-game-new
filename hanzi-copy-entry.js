@@ -1,5 +1,5 @@
 import {COPY_MODES} from './hanzi-copy-core.js?v=20261116-copy1';
-import {cover,phonetic} from './hanzi-covers.js?v=20261121-week1';
+import {cover,phonetic} from './hanzi-covers.js?v=20261129-words1';
 export async function attachCopyEntries({host,endpoint,classId,classUrl,session,demo}){
   host.querySelector('.entry-title').replaceChildren(phonetic('國字森林'));const grid=host.querySelector('.mode-grid');
   for(const b of grid.querySelectorAll('[data-mode]'))cover(b,b.dataset.mode);
@@ -10,6 +10,7 @@ export async function attachCopyEntries({host,endpoint,classId,classUrl,session,
   }
   add('learn','weekly-hanzi.html');
   add('challenge','weekly-hanzi.html');
+  add('word-challenge','word-challenge.html');
   add('classroom','hanzi-classroom.html');
   let status={copyReady:true,nameReady:demo};
   if(!demo){try{const r=await fetch(new URL('/hanzi/copy/bootstrap',endpoint),{method:'POST',cache:'no-store',credentials:'omit',headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.token},body:JSON.stringify({classId})});

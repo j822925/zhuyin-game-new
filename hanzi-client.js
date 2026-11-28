@@ -3,7 +3,7 @@ import {questionPool,gradeReading} from './hanzi-bank.js';
 
 export function createHanziClient({endpoint,classId,getSession,fetchImpl=globalThis.fetch,timeoutMs=20000}){
   return {async request(action,payload={}){
-    if(!/^(bootstrap|practice-start|practice-submit|assignments|exams|exam-results|exam-start|exam-submit|notebook|card-draw)$/.test(action))throw Error('invalid_action');
+    if(!/^(bootstrap|word-start|word-answer|practice-start|practice-submit|assignments|exams|exam-results|exam-start|exam-submit|notebook|card-draw)$/.test(action))throw Error('invalid_action');
     const session=getSession();if(!session||session.expires<=Date.now())throw Error('authentication_required');
     const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
     try{
