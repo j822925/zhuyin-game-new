@@ -35,11 +35,11 @@ export function createExplorationUI(api){
   }
   const active=s.area==='island'&&!api.blocked();
   DESTINATIONS.forEach((d,i)=>{
-   const node=nodes[i],pt=s.toScreen(d.entry.x,d.entry.y);
+   const node=nodes[i],marker=d.threshold||d.entry,pt=s.toScreen(marker.x,marker.y);
    node.hidden=!active||pt.x<0||pt.y<0||pt.x>s.width||pt.y>s.height;
    if(node.hidden)return;
    node.dataset.near=String(Math.hypot(s.player.x-d.entry.x,s.player.y-d.entry.y)<190);
-   const size=Math.max(32,Math.min(72,94*s.camera.scale));
+   const size=Math.max(36,Math.min(48,72*s.camera.scale));
    node.style.width=size+'px';node.style.height=size+'px';
    node.style.left=pt.x+'px';node.style.top=pt.y+'px';
   });

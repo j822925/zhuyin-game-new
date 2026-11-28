@@ -215,7 +215,14 @@ function tick(now){
   if(expedition?.busy&&!expedition.localBattle||shop?.busy)return;
   if(chapter?.busy)return;
   move(dt);
-  const nearby=exitProximity.poll(scene.area,scene.player,exitsBlocked()||mapZoom.active);if(nearby){if(nearby.interaction==='offer')exploration.offerDestination(nearby.id,true);else enterExit(nearby.id);}
+  const nearby=exitProximity.poll(scene.area,scene.player,exitsBlocked()||mapZoom.active);
+  if(nearby){
+    // A tap beyond a doorway can follow its road without interrupting the walk.
+    const goal=PAINTED_ISLAND&&scene.area==='island'&&route.at(-1);
+    if(!goal||Math.hypot(goal.x-nearby.x,goal.y-nearby.y)<=nearby.radius){
+      if(nearby.interaction==='offer')exploration.offerDestination(nearby.id,true);else enterExit(nearby.id);
+    }
+  }
   if(scene.area==='grove')advanceEncounters(scene.encounters,dt,!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||switching);
   else if(scene.area==='forest')advanceMonster(scene.monster,dt,!!round||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||(life.busy||(kitchen.busy||rest?.busy))||isInterior(scene.area)||scene.area==='farm'||monsterHovered||switching);
   scene.render(now,state,!!round&&round.phase!=='approach');positionHotspots();mapZoom.update();life.position(now);kitchen.tick(now);rest?.tick(now);rest?.position();syncEnergyAccess();
@@ -245,7 +252,7 @@ function tapIsland(at){
     return;
   }
   if(PAINTED_ISLAND){
-   const door=DESTINATIONS.find(d=>Math.abs(at.x-d.x)<65&&Math.abs(at.y-d.y)<76);
+   const door=DESTINATIONS.find(d=>{const p=d.threshold||d;return Math.abs(at.x-p.x)<45&&Math.abs(at.y-p.y)<48;});
    if(door){exploration.offerDestination(door.id);return;}
   }
   walkTo(at);

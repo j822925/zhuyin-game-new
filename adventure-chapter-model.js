@@ -1,8 +1,9 @@
+import {PAINTED_ISLAND} from './adventure-island-pilot.js';
 import {islandMapPoint} from './data/island-map-space.js';
 import {ZONES,zoneById} from './data/adventure-zones.js';
 import {enemyStats,playerStats} from './adventure-expedition-model.js';
 
-export const BRIDGE_END=islandMapPoint(1490,54), BRIDGE_RETURN=islandMapPoint(1403,75);
+export const BRIDGE_END=islandMapPoint(1490,PAINTED_ISLAND?28:54), BRIDGE_RETURN=islandMapPoint(1403,75);
 export const QUESTS=[
  ['bud','榕樹下的名牌','通梁榕根路','通梁榕樹下還有一籃小苗。你願意幫牠們把名牌掛回去嗎？','reading',[],'榕根下的小苗長出新葉了。'],
  ['sand','蟹腳印和小船','通梁潮灘','小蟹搬來的浮子好像多了一顆。能幫小船把繩子拉直嗎？','math',[],'小船浮正了！小蟹在沙上畫了一個圈。'],

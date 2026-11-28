@@ -1,6 +1,7 @@
 import {laneContains,laneRoute} from '../adventure-district-paths.js';
 import {battleStageLayout} from '../adventure-battle-layout.js';
 import {ISLAND_ROUTES,DESTINATIONS,islandWalkable} from '../adventure-exploration-model.js';
+import {islandMapPoint} from '../data/island-map-space.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync} from 'node:fs';
@@ -46,6 +47,12 @@ test('open passages are reachable, shops stay solid and all painted routes conne
   const a=line[i-1],b=line[i],steps=Math.ceil(Math.hypot(b.x-a.x,b.y-a.y)/6);
   for(let j=0;j<=steps;j++)assert(islandWalkable(a.x+(b.x-a.x)*j/steps,a.y+(b.y-a.y)*j/steps));
  }
+});
+test('sandcastle lanes and dry beach stay open while painted obstacles stay solid',()=>{
+ const feet=(x,y)=>{const p=islandMapPoint(x,y);return islandWalkable(p.x,p.y);};
+ for(const [x,y] of [[696,625],[941,707],[980,711],[737,416],[536,554],[567,564],[582,569]])assert(feet(x,y),[x,y].join(','));
+ // Sand towers, trees, flowers, lighthouse and shop roofs, and the house beyond the bridge.
+ for(const [x,y] of [[719,620],[828,625],[917,580],[974,635],[843,699],[647,527],[640,727],[677,383],[927,430],[853,310],[1070,114],[1490,54],[974,743]])assert(!feet(x,y),[x,y].join(','));
 });
 test('ground navigation reaches every resident and shop',()=>{
  const point=([x,y])=>({x,y});
