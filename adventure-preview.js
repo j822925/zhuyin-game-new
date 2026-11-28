@@ -29,7 +29,9 @@ import {encounterDeck,challengeChoices,expectedAnswer,challengePrompt} from './a
 import {AREA_EXITS,createExitProximity} from './adventure-exits.js';
 const exitProximity=createExitProximity();
 const studyBeastCooldown=new Set();
-const studyBattle=createIslandStudy({
+import {createBattlePresentation} from './adventure-battle-presentation.js';
+const presentation=PAINTED_ISLAND?createBattlePresentation():null;
+const studyBattle=createIslandStudy({presentation,
  state:()=>state,save,changed:renderState,stop:stopMoving,
  paintHero:(c,casting)=>scene.drawPlayer(c,art,{x:80,y:119,height:100,outfit:state.outfit,direction:3,walking:false,phase:0,wand:state.wand,casting}),
  onWon:b=>{studyBeastCooldown.add(b.id);setTimeout(()=>studyBeastCooldown.delete(b.id),30000);}
@@ -126,7 +128,7 @@ function syncEnergyAccess(){
 $('companions-open').addEventListener('click',e=>{e.preventDefault();if(!hasEnergy(state)){needFood();return;}companions.open();});
 installAdventureControls();
 if(PAINTED_ISLAND){
- const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('./adventure-island-wayfinding.css?v=20261128-atlas1',import.meta.url);document.head.append(sheet);
+ const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href=new URL('./adventure-island-wayfinding.css?v=20261128-spar1',import.meta.url);document.head.append(sheet);
  monsterButton.textContent='⚔';monsterButton.classList.add('near-challenge');
 }
 function stopMoving(){route=[];arrival=null;keys.clear();joystick.reset();if(scene){scene.player.moving=false;scene.player.phase=0;scene.marker=null;}}
@@ -154,7 +156,7 @@ function enterExit(id){
  switchArea(e.target);
 }
 function face(dx,dy){if(Math.abs(dx)>Math.abs(dy))return dx>=0?1:3;return dy>=0?0:2;}
-const chapter=typeof __BAISHA_BUILD__!=='undefined'&&__BAISHA_BUILD__?createChapter({
+const chapter=typeof __BAISHA_BUILD__!=='undefined'&&__BAISHA_BUILD__?createChapter({presentation,
   state:()=>state,save,stop:stopMoving,toast,
   paintHero:(c,pose)=>scene.drawPlayer(c,art,{outfit:state.outfit,wand:state.wand,...pose}),
   direct:globalThis.ForestStudent?.chapterShortcut===true,
@@ -364,7 +366,7 @@ $('grove-unlock').addEventListener('click',()=>{
 
 rest=createHomeRest({dine:id=>kitchen.eatAtHome(id),state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,walkTo,toast,blocked:()=>!scene||switching||scene.editing||!!round||wardrobe.open||trail.open||life.busy||kitchen.busy||shop?.busy||expedition?.busy||companions?.busy});
 const decor=createHomeDecor({switchArea,useInventory:(kind)=>{if(kind==='clothes')document.getElementById('wardrobe-open').click();else if(kind==='seeds')life.visit('farm');else if(kind==='fish')kitchen.cookAtHome();else kitchen.eatAtHome();},state:()=>state,scene:()=>scene,art:()=>art,stopMoving,save,renderState,toast,changed:()=>renderArea(),blocked:()=>!scene||studyBattle.busy||chapter?.busy||!!round||switching||wardrobe.open||companions?.busy||expedition?.busy||shop?.busy||visits?.busy||exploration?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)});
-expedition=createExpedition({chapter,openShop:(id,onReturn)=>shop.openRegion(id,onReturn),state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,toast,defeated:()=>switchArea('forest',()=>completeAction('lose',{detail:'🥄 吃點東西，補充體力'})),blocked:()=>!scene||!!round||switching||wardrobe.open||shop?.busy||companions?.busy||life.busy||(kitchen.busy||rest?.busy)});
+expedition=createExpedition({chapter,presentation,openShop:(id,onReturn)=>shop.openRegion(id,onReturn),state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,toast,defeated:()=>switchArea('forest',()=>completeAction('lose',{detail:'🥄 吃點東西，補充體力'})),blocked:()=>!scene||!!round||switching||wardrobe.open||shop?.busy||companions?.busy||life.busy||(kitchen.busy||rest?.busy)});
 const guardianCardsButton=document.createElement('button');guardianCardsButton.id='guardian-cards-open';guardianCardsButton.className='adventure-control';guardianCardsButton.dataset.uiIcon='🃏';guardianCardsButton.dataset.uiLabel='好友卡';guardianCardsButton.textContent='守護者好友卡';guardianCardsButton.setAttribute('aria-label','守護者好友卡');guardianCardsButton.onclick=()=>expedition.openCards();document.querySelector('.world-actions').append(guardianCardsButton);
 shop=createShop({state:()=>state,scene:()=>scene,art:()=>art,save,changed:renderState,stop:stopMoving,toast,blocked:()=>!scene||!!round||switching||wardrobe.open||companions?.busy||trail.open||life.busy||(kitchen.busy||rest?.busy)||visits?.busy||exploration?.busy});
 visits=createIslandVisits({state:()=>state,art:()=>art,save,stop:stopMoving,toast,apply:next=>{state=sanitizeState(next);renderState();}});

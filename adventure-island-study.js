@@ -1,3 +1,4 @@
+import {battleSnapshot} from './adventure-battle-presentation.js';
 import {createStudentSession} from './student-session.js';
 import {createHandwriting} from './hanzi-handwriting.js';
 import {gradeReading,questionPool} from './hanzi-bank.js';
@@ -61,7 +62,7 @@ export function studentAccess(){
     return questionsFor(mode,await r.json());
   }};
 }
-export function createIslandStudy({state,save,changed,stop,paintHero,onWon,access=studentAccess}){
+export function createIslandStudy({presentation,state,save,changed,stop,paintHero,onWon,access=studentAccess}){
   const dialog=document.createElement('dialog');dialog.className='island-study';dialog.ariaLabel='小怪答題挑戰';
   document.body.append(dialog);
   const node=(tag,txt,cls)=>{const e=document.createElement(tag);e.textContent=txt||'';if(cls)e.className=cls;return e;};
@@ -72,10 +73,14 @@ export function createIslandStudy({state,save,changed,stop,paintHero,onWon,acces
   function finish(r){
     if(run!==r||r.paid)return;
     if(!r.access.current()){close();return;}
+    const before=battleSnapshot(state());
     if(!settleStudy(state(),r.id,save)){
       r.note.textContent='還沒存好，請再試一次。';r.controls.replaceChildren(button('再試一次',()=>finish(r)));return;
     }
     r.paid=true;changed();onWon(r.b);r.prompt.textContent='挑戰成功！';
+    if(presentation){
+      const after=battleSnapshot(state());presentation.show({before,after,result:{won:true,stars:after.stars-before.stars},enemy:r.b.name,place:'探險島',keepsake:'✅ 完成 '+r.index+' 題',onReturn:close});return;
+    }
     r.note.textContent='獲得 '+studyReward(state().expedition.level)+' 枚星幣';r.controls.replaceChildren(button('回到地圖',close));
   }
   async function showQuestion(r){
@@ -140,7 +145,9 @@ export function createIslandStudy({state,save,changed,stop,paintHero,onWon,acces
     left.width=right.width=160;left.height=right.height=130;left.ariaLabel=b.name;right.ariaLabel='我的角色';
     const middle=node('div','','study-center');r.prompt=node('h2',b.name);r.hp=node('progress');middle.append(r.prompt,r.hp);
     stage.append(left,middle,right);r.note=node('div','準備題目中…','study-note');r.note.setAttribute('role','status');
-    r.controls=node('div','','study-controls');dialog.append(top,stage,r.note,r.controls);dialog.showModal();
+    r.controls=node('div','','study-controls');dialog.append(top,stage,r.note,r.controls);
+    if(presentation)await presentation.changeScene(()=>{if(run===r)dialog.showModal();});else dialog.showModal();
+    if(run!==r)return;
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
     let last=-100;
     function frame(now){if(run!==r)return;raf=requestAnimationFrame(frame);if(document.hidden||now-last<42)return;last=now;

@@ -1,3 +1,4 @@
+import {battleSnapshot} from './adventure-battle-presentation.js';
 import {allFriends,answerChallenge,beginChallenge,bridgeEntered,chapterEvent,cleanChapter,freshChapter,mailbox,prepareSkill,questOffer,QUESTS} from './adventure-chapter-model.js';
 import {gradeReading} from './hanzi-bank.js';
 import {zoneById} from './data/adventure-zones.js';
@@ -95,7 +96,9 @@ export function createChapter(api){
    if(busy)return;busy=true;const generation=revision;
    try{
      if(!(await (globalThis.ForestAccess?.check()??true))||generation!==revision)return;
-     if(write(c=>beginChallenge(api.state(),c,id)))await battle();
+     if(write(c=>beginChallenge(api.state(),c,id))){
+       if(api.presentation)await api.presentation.changeScene(()=>{void battle();});else await battle();
+     }
      else api.toast('先完成原來的挑戰，再來幫忙。');
    }finally{busy=false;}
  }
@@ -138,14 +141,24 @@ export function createChapter(api){
    }else for(const choice of q.choices)button(answers,choice||'∅',()=>submit(choice===q.answer,q.hint));
    function submit(correct,hint){
      if(get().battle?.roundId!==b.roundId||!answers.isConnected)return;
+     const before=battleSnapshot(api.state());
      const result=write(c=>answerChallenge(api.state(),c,correct));
      if(!result)return;
-     if(result==='won'){
+     if(result==='won'||result==='lost'){
+       const won=result==='won';
+       const next=()=>{
+       if(!won){textPage(name,['歇一歇，準備好再來。'],[['好的',leaveBattle]]);return;}
        if(b.id==='empress'){visit('bridge');return;}
        if(b.id==='fog'){textPage('星翼女帝',['看，橋腳露出來了！榕樹下的小路和沙灘也看得見了。','捲霧獸的力氣變小了。遠處還有霧，但我們已經找回一段路了！'],[['去看看',shore]],zoneById('bridge').human);return;}
        textPage(name,['找到了！把信物送到'+QUESTS.find(q=>q.id===b.id).place+'吧。'],[['帶上信物',shore]]);return;
+       };
+       if(api.presentation){
+         const after=battleSnapshot(api.state());
+         const keepsake=won?(b.id==='empress'?'🤝 星翼女帝願意跟你一起守護長橋。':b.id==='fog'?'🌤 霧散了，白沙的道路重新開放！':'🎁 找到任務信物！'):'可以休息後再來挑戰。';
+         api.presentation.show({before,after,result:{won,lost:!won},enemy:name,place:b.id==='empress'?'星門長橋':'白沙',keepsake,onReturn:next});
+       }else next();
+       return;
      }
-     if(result==='lost'){textPage(name,['歇一歇，準備好再來。'],[['好的',leaveBattle]]);return;}
      void battle(result==='transform'?'星翼真身，降臨！':result==='retry'?(hint||'再試一次，看看題目裡的提示。'):result==='miss'?'下一回合再試試。':'答對了！');
    }
    function guide(){if(write(c=>{c.battle.question=guidedQuestion();return true;}))void battle();}

@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import {freshState} from '../adventure-model.js';
+import {battleSnapshot} from '../adventure-battle-presentation.js';
 import {ZONES} from '../data/adventure-zones.js';
-import {enterExpedition,startExpeditionBattle,answerExpedition,expeditionSupplyHint} from '../adventure-expedition-model.js';
+import {currentEnemy,enterExpedition,startExpeditionBattle,answerExpedition,expeditionSupplyHint} from '../adventure-expedition-model.js';
 
 // Exercise the real question handlers and transaction rollback. Layout and audio
 // are irrelevant here; no browser storage, network or real student is involved.
@@ -18,7 +19,7 @@ function fixture(mode='single'){
  s.expedition.runs.bud.battle.question=q;
  let permitted=false,saves=0,renders=0,panel;
  const element=()=>({children:[],append(...children){this.children.push(...children);}});
- const c={structuredClone,Math,Number,performance,saveFailed:false,message:'',resolving:false,motion:null,local:false,generation:0,view:'battle',z:ZONES[0],FURNITURE:[],
+ const c={presentation:null,battleSnapshot,currentEnemy,structuredClone,Math,Number,performance,saveFailed:false,message:'',resolving:false,motion:null,local:false,generation:0,view:'battle',z:ZONES[0],FURNITURE:[],
   state:()=>s,exp:()=>s.expedition,run:()=>s.expedition.runs.bud,answerExpedition,
   api:{save:()=>{saves++;return permitted;},changed:()=>{}},
   document:{createElement:element,createTextNode:text=>({textContent:text})},

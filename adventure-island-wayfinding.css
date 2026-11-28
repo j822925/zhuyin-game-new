@@ -73,7 +73,18 @@ body .painted-gate[data-near=true] small,body .painted-gate:focus-visible small,
 #expedition[data-region-battle] .exp-battle-player{transform:translate(-50%,-100%)}
 #expedition[data-region-battle] .exp-foe.guardian-art{transform:scaleX(-1)}
 
-#expedition:is([data-view=field],[data-view=community]){background:#e9e5d3}
-#expedition:is([data-view=field],[data-view=community]) .exp-field{top:var(--region-header,92px);bottom:var(--region-footer,60px);overflow:hidden}
+#expedition:is([data-view=field],[data-view=community]){background:#657858 var(--zone-scene) center/cover no-repeat}
+#expedition:is([data-view=field],[data-view=community]) .exp-field{inset:0;overflow:hidden}
 #expedition:is([data-view=field],[data-view=community]) .exp-stick{width:52px;height:52px;bottom:4px;left:max(8px,env(safe-area-inset-left));border-width:4px;background:#d2dcc6}
 #expedition[data-view=field] .exp-panel{background:#fff9e8;bottom:7px;max-width:calc(100% - 146px)}
+
+#expedition:is([data-view=field],[data-view=community]) .exp-header{background:transparent}
+#expedition:is([data-view=field],[data-view=community]) .exp-header>div{pointer-events:none}
+#expedition[data-low-controls]:is([data-view=field],[data-view=community]) .exp-header{top:auto;bottom:max(6px,env(safe-area-inset-bottom));align-items:end;padding-left:74px}
+#expedition[data-low-controls][data-view=field] .exp-panel{top:max(6px,env(safe-area-inset-top));bottom:auto}
+#expedition[data-low-controls][data-view=community] .exp-panel:not([hidden]){bottom:90px}
+
+@media(min-width:700px){
+ #expedition[data-view=field] .exp-header{justify-content:flex-end}
+ #expedition[data-view=field][data-gate-right] .exp-header{justify-content:flex-start}
+}
