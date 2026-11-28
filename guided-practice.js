@@ -2,7 +2,7 @@ import {currentClass,classStorageKey,classUrl} from './class-context.js?v=202610
 import {createStudentSession} from './student-session.js?v=20261009-accounts1';
 import {createHandwriting} from './hanzi-handwriting.js?v=20261127-alltrace1';
 import {writingPrompt,syllable,phoneticFeedback} from './guided-prompt.js';
-import {showRewardPictures} from './guided-reward-view.js';
+import {showRewardPictures} from './guided-reward-view.js?v=20261129-classprizes2';
 import {HANZI_AUDIO} from './data/hanzi-teacher-audio.js?v=20261115-hanzi2';
 const $=id=>document.getElementById(id), labels={copy:'照著範例寫',write:'看注音寫國字',read:'看國字寫注音',listen:'聽國字拼注音',math:'算算看'};
 const endpoint=['localhost','127.0.0.1'].includes(location.hostname)?location.origin:'https://zhuyin-api.j822925.workers.dev';
@@ -14,7 +14,7 @@ let visit,activitySeq=0,lastActivity;
 let plan,state,board,input='',tone='',busy=false,frame=0,replayId=0,lastInk=null,waiting=false,pending=null,generation=0,soundId=0;
 $('home').href=classUrl(currentClass==='grade2'?'grade2.html':'index.html');
 async function api(op,data={}){
- if(preview){const {trial}=await import('./guided-trial.js?v=20261127-1');return trial(op,data);}
+ if(preview){const {trial}=await import('./guided-trial.js?v=20261129-classprizes2');return trial(op,data);}
  const session=sessions.read();
  if(!owner||session?.seat!==owner.seat||session?.token!==owner.token||session.expires<=Date.now())throw Error('請回學習廣場登入，再進入課堂練習。');
  const res=await fetch(new URL('/hanzi/guided-'+op,endpoint),{method:'POST',cache:'no-store',keepalive:op==='activity',headers:{Authorization:'Bearer '+session.token,'Content-Type':'application/json'},body:JSON.stringify({...data,classId:currentClass}),signal:AbortSignal.timeout(16000)});

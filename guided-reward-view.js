@@ -1,5 +1,5 @@
-import {CLASS_ART} from './data/guided-prize-art.js';
-import {CLASS_FURNITURE,CLASS_MEALS} from './data/guided-rewards.js';
+import {CLASS_ART} from './data/guided-prize-art.js?v=20261129-classprizes2';
+import {CLASS_FURNITURE,CLASS_MEALS} from './data/guided-rewards.js?v=20261129-classprizes2';
 
 const current=new Map([...CLASS_MEALS,...CLASS_FURNITURE].map(item=>[item.id,item]));
 const images=new Map();

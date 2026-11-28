@@ -8,9 +8,9 @@ import {freshState,sanitizeState,placeFurniture,buyFurniture} from '../adventure
 import {RECIPES,eatFood,canCook} from '../adventure-food-model.js';
 import {cartItem} from '../adventure-cart-model.js';
 
-test('ten exclusive, illustrated foods restore the specified portion and never waste food at full energy',()=>{
+test('all thirty exclusive, illustrated foods restore the specified portion and never waste food at full energy',()=>{
  const state=freshState(),n=state.life.nutrition;
- assert.equal(CLASS_MEALS.length,10);
+ assert.equal(CLASS_MEALS.length,30);
  for(const meal of CLASS_MEALS){
   assert.equal(Object.values(RECIPES).filter(r=>r.name===meal.name).length,1);
   assert.ok(meal.energy>=70 && meal.energy<=100);
@@ -23,8 +23,8 @@ test('ten exclusive, illustrated foods restore the specified portion and never w
   assert.equal(sanitizeState(state).life.nutrition.meals[meal.id],1);
  }
 });
-test('ten exclusive furniture pieces can be stored, placed and reloaded, including duplicate rewards',()=>{
- assert.equal(CLASS_FURNITURE.length,10);
+test('all thirty exclusive furniture pieces can be stored, placed and reloaded, including duplicate rewards',()=>{
+ assert.equal(CLASS_FURNITURE.length,30);
  for(const item of CLASS_FURNITURE){
   const s=freshState();s.stars=1000;s.layout=[];
   assert.equal(FURNITURE.filter(f=>f.name===item.name).length,1);
@@ -39,4 +39,8 @@ test('ten exclusive furniture pieces can be stored, placed and reloaded, includi
   assert.equal(atlas.cells.length,10);
   assert.ok(existsSync(new URL('../'+atlas.src,import.meta.url)));
  }
+ const all=[...CLASS_MEALS,...CLASS_FURNITURE];
+ assert.equal(new Set(all.map(i=>i.id)).size,60);
+ assert.equal(new Set(all.map(i=>i.atlas+'/'+(i.art??i.index))).size,60);
+ for(const i of all)assert.ok(CLASS_ART[i.atlas].cells[i.art??i.index]?.w>0,i.id);
 });

@@ -1,4 +1,4 @@
-import {drawClassRewards} from './data/guided-rewards.js';
+import {drawClassRewards} from './data/guided-rewards.js?v=20261129-classprizes2';
 import {judge,score} from './guided-grading.js';
 const questions=[
  {mode:'copy',character:'三',reading:'ㄙㄢ',word:'三'},
